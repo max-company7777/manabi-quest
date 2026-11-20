@@ -621,7 +621,7 @@ const SKILL={ほのお:['もえる ちから','atkp','こうげき',5,'%'],み�
   やみ:['かげうち','double','ダブルアタック',4,'%'],ひかり:['ひかりの みちびき','xp','けいけんち',8,'%'],にじ:['にじの きせき','gold','ゴールド',10,'%']};
 const elOf=k=>{const s=SP[k];if(!s)return 'もり';if(s.el)return s.el;const v=k.split('_')[1];return s.el=v?(v==='にじ'?(BASEEL[s.art]||'ひかり'):(ELMAP[v]||v)):(BASEEL[k]||'もり')};
 const elMult=(a,d)=>a==='にじ'?1.5:(STRONG[a]||[]).includes(d)?1.5:(STRONG[d]||[]).includes(a)?.75:1;
-const ULTSK={raijin:['いかずちの さばき','crit','クリティカル',3,'%'],abyss:['しんかいの いやし','heal','たおすと HP かいふく',3,'%'],omega:['ぎんがの ちから','atkp','こうげき',5,'%']};
+const ULTSK={raijin:['いかずちの さばき','crit','クリティカル',3,'%'],abyss:['しんかいの いやし','heal','たおすと HP かいふく',3,'%'],omega:['ぎんがの ちから','atkp','こうげき',5,'%'],riol5:['しんりゅうの ほのお','atkp','こうげき',5,'%'],sana5:['てんしの いのり','heal','たおすと HP かいふく',3,'%']};
 function skillOf(m){const s=SP[m.sp],e=elOf(m.sp),sk=ULTSK[m.sp]||SKILL[e],f=[1,1.5,2.2,3.2,4.5,7][s.rar]*(s.boss?1.3:1)*(1+Math.min(m.lv,100)/200);return{n:sk[0],k:sk[1],t:sk[2],v:Math.round(sk[3]*f),u:sk[4],e}}
 const pskill=k=>partyMons().reduce((a,m)=>{const sk=skillOf(m);return a+(sk.k===k?sk.v:0)},0);
 const elTag=k=>{const e=elOf(k);return `<span class="elt" style="--ec:${ELS[e].c}">${ELS[e].i}${e}</span>`};
@@ -1020,6 +1020,22 @@ function renderPlayers(){
   $('addM').style.display=G.profiles.some(p=>p.master)?'none':'';
 }
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function giftCode(){
+  showModal(`<div class="mt">🎁 プレゼント コード</div><p>コードを いれると とくべつな なかまが もらえるよ！</p>
+    <input class="field" id="gcIn" maxlength="20" placeholder="コード" autocapitalize="characters" style="text-transform:uppercase;text-align:center;letter-spacing:2px">
+    <div id="gcMsg" style="min-height:20px;color:#ff8a7a;font-size:13px"></div>
+    <button class="btn orange big" id="gcOk">うけとる</button><button class="btn gray" id="cl">とじる</button>`,
+    {cl:closeModal,gcOk:()=>{const c=$('gcIn').value.toUpperCase().replace(/[^A-Z0-9]/g,''),g=GIFTS[c];P.codes=P.codes||{};
+      if(!g){$('gcMsg').textContent='コードが ちがうみたい…';snd(200,.2,'square',.05);return}
+      if(P.codes[c]){$('gcMsg').textContent='この コードは もう つかったよ';return}
+      P.codes[c]=1;const m={id:uid(),sp:g.sp,lv:1,xp:0,bond:0};P.mons.push(m);P.dex.owned[g.sp]=1;P.dex.seen[g.sp]=1;
+      const inP=P.party.length<partyMax();if(inP)P.party.push(m.id);save();
+      fanfare();setTimeout(()=>[784,988,1175,1568].forEach((f,i)=>snd(f,.2,'square',.05,0,i*.12)),400);vib(200);
+      showModal(`<div class="mt">🎉 プレゼント！</div><div class="evostage"><div class="evo-b flip" style="animation:none;opacity:1">${monsterSVG(g.sp)}</div></div>
+        <p><b style="font-size:22px;color:#ffd23f">${SP[g.sp].name}</b>が なかまに なった！<br><small>${g.msg}</small></p>
+        <small style="color:var(--sub)">${inP?'パーティに いれたよ':'ボックスの「なかま」に いるよ'}・レア度が あがるたびに しんかして さいごは きゅうきょくに！</small>
+        <button class="btn green big" id="cl">やったー！</button>`,{cl:()=>{closeModal();renderHome()}})}});
+  setTimeout(()=>{const i=$('gcIn');if(i)i.focus()},100)}
 function profileForm(p){
   let age=p?p.age:4,color=p?p.color:COLORS[0],hair=(p&&p.hair)||'short',hc=(p&&p.hc)||HAIRC[0],skin=(p&&p.skin)||SKINS[0];
   const ages=[4,5,6,7,8,9];
@@ -1033,7 +1049,7 @@ function profileForm(p){
     <div class="lbl">ふくの いろ</div><div class="colors" id="fCol">${COLORS.map(c=>`<button class="col" data-c="${c}" style="background:${c}"></button>`).join('')}</div>
     ${p?`<div class="row"><button class="btn ${p.voice?'green':'gray'}" id="fVoice">🗣️ よみあげ ${p.voice?'ON':'OFF'}</button><button class="btn ${G.snd?'green':'gray'}" id="fSnd">🔊 こうかおん ${G.snd?'ON':'OFF'}</button></div>`:''}
     <button class="btn green big" id="fOk">${p?'OK':'つくる！'}</button>
-    ${p?'<button class="btn gray" id="fSwitch">👥 ぼうけんしゃを かえる</button><button class="btn gray" id="fData">💾 データの ひっこし</button><button class="btn gray" id="fCloud">☁️ かぞくで きょうゆう</button>':'<button class="btn gray" id="fCancel">やめる</button>'}`,
+    ${p?'<button class="btn gray" id="fSwitch">👥 ぼうけんしゃを かえる</button><button class="btn gray" id="fData">💾 データの ひっこし</button><button class="btn gray" id="fCloud">☁️ かぞくで きょうゆう</button><button class="btn orange" id="fCode">🎁 プレゼント コード</button>':'<button class="btn gray" id="fCancel">やめる</button>'}`,
     {fOk:()=>{const name=$('fName').value.trim()||'ゆうしゃ';
         if(p){p.name=name;if(p.age!==age){const d=age<=4?0:age<=6?1:age===7?2:3;p.diff={math:d,eng:d,kanji:d}}p.age=age;
           if(p.eq.a.name==='ぬののふく')p.eq.a.color=color;Object.assign(p,{color,hair,hc,skin});save();closeModal();renderHome()}
@@ -1042,6 +1058,7 @@ function profileForm(p){
      fSwitch:()=>{closeModal();G.cur=null;save();show('players');renderPlayers()},
      fData:()=>dataMove(),
      fCloud:()=>cloudSetup(),
+     fCode:()=>giftCode(),
      fVoice:()=>{p.voice=!p.voice;save();profileForm(p)},
      fSnd:()=>{G.snd=!G.snd;save();profileForm(p)}});
   const sync=()=>{document.querySelectorAll('#fAge .opt').forEach(b=>b.classList.toggle('sel',+b.dataset.a===age));
@@ -1242,10 +1259,16 @@ Object.assign(MONART,{
  '.wbwbbbbbbbbbbbbbooooo..','..bbbbbbbbsbbbbbbbooo...','.....bbbbbbbbbbbbbbo....','......bbllllbbbsbbbb....','......bllllllbbbbbbbb...','.....bblllllllbbbbbbbb..','.....bblllllllbbbsbbbbb.',
  '.....bbllllllbbbbbb.bbb.','......bbllllbbbbbb...bb.','......bbbbbbbbbbb.....bo','.......bb..bb........oo.','.......bb..bb...........','......bbb.bbb...........','.....ww..ww.............']}
 });
+Object.assign(MONART,{"riol0":{"size":18,"p":{"b":"#e8602c","d":"#3a4a7a","h":"#b8322a","s":"#f6d0a8","t":"#e8602c","l":"#ffa040"},"m":["..................","....whhhhhhhhw....","....hhhhhhhhhh....","...hhhhhhhhhhhh...","...hhhhhhhhhhhh...","...hhsshsshsshh...","...hssekssekssh...","...hsskksskkssh...","....spssssssps....","....ssssrrssss....",".....ssssssss.....","....sbbbbbbbbs....","....sbbbbbbbbs....",".....bbbbbbbb..t..",".....WWWyyWWW..t..","......dddddd..t...","......dddddd......","......WWWWWW......"]},"sana0":{"size":18,"p":{"b":"#ffa8c8","l":"#ffd0e0","d":"#e86aa0","h":"#8a4a2a","s":"#f6d0a8"},"m":["..................",".....hhhhhhhhr....","....hhhhhhhhrhr...","...hhhhhhhhhhrh...","..hhhhhhhhhhhhhh..","..hhhsshsshsshhh..","..hhsseksseksshh..","..hhsskksskksshh..","..hhspsssssspshh..","..hhssssrrsssshh..","..hh.ssssssss.hh..","..hh.sbbbbbbs.hh..","...h.sbbbbbbs.h...",".....sddrrdds.....",".....lbblbblb.....",".....lbblbblb.....",".....lbblbblb.....","....lllWllWlll...."]},"riol1":{"size":18,"p":{"b":"#e8602c","d":"#3a4a7a","h":"#b8322a","s":"#f6d0a8","t":"#d9442f","l":"#ffb060","v":"#a8321a"},"m":["...w..........w...","....whhhhhhhhw....","....hhhhhhhhhh....","...hhhhhhhhhhhh...","...hhhhhhhhhhhh...","...hhsshsshsshh...","...hssekssekssh...","...hsskksskkssh...","....spssssssps....","....ssssrrssss....","...v.ssssssss.v...","..vvsbbbbbbbbsvv..","....sblblblbbs.t..",".....bbbbbbbb..t..",".....WWWyyWWW..t..","......dddddd..t...","......dddddd......","......WWWWWW......"]},"sana1":{"size":18,"p":{"b":"#ff8fb8","l":"#ffd0e0","d":"#e05a90","h":"#8a4a2a","s":"#f6d0a8"},"m":["..................","....gpgygpgygp....","....hhhhhhhhhh....","...hhhhhhhhhhhh...","..hhhhhhhhhhhhhh..","..hhhsshsshsshhh..","..hhsseksseksshh..","..hhsskksskksshh..","..hhspsssssspshh..","..hhssssrrsssshh..","..hh.ssssssss.hh..","..hh.sbbwwbbs.hh..","...h.sbbbbbbs.h...",".....sddrrdds.....",".....lbblbblb.....",".....lbblbblb.....",".....lbblbblb.....","....lllWllWlll...."]},"riol2":{"size":20,"p":{"a":"#c0392b","d":"#2a2a4a","h":"#a02a20","s":"#f6d0a8","t":"#c0392b","l":"#ff7a4a","v":"#7a1a10","b":"#c0392b"},"m":["....................","....w..........w....",".....whhhhhhhhw.....",".....hhhhhhhhhh.....","....hhhhhhhhhhhh....","....hhhhhhhhhhhh....","....hhsshsshsshh....","....hssekssekssh....","....hsskksskkssh....",".....spssssssps.....",".....ssssrrssss.....","...vv.ssssssss.vv...",".vvvaaaaaaaaaaaavvv.",".vvvsalalalalaasvvv.","..v.saaaaaaaaaas.vt.",".....aaaaaaaaaa...t.",".....WWWWyyWWWW..yt.","......ddd..ddd..tt..","......ddd..ddd......","......WWW..WWW......"]},"sana2":{"size":20,"p":{"b":"#ff7ab8","l":"#ffd0ea","d":"#d94a8f","h":"#7a3a20","s":"#f6d0a8"},"m":[".........yy.........",".......yyllyy.......","......hhhhhhhh......",".....hhhhhhhhhh.....","....hhhhhhhhhhhh....","...hhhhhhhhhhhhhh...","...hhhsshsshsshhh...","...hhsseksseksshh...","...hhsskksskksshh...","...hhspsssssspshh...","...hhssssrrsssshh...","...hh.ssssssss.hh...","...hhlbbbwwbbblhh...","....hsbbbbbbbbsh....",".....sdddyyddds.....",".....lbblbblbbl.....",".....lbblbblbbl.....","....lbblbblbblbb....","....lbblbblbblbb....","...lllllWllWlllll..."]},"riol3":{"size":22,"p":{"m":"#c8d0e0","d":"#4a5068","h":"#a02a20","s":"#f6d0a8","t":"#c0392b","c":"#b0202a","v":"#7a1a10","b":"#c8d0e0"},"m":[".....w..........w.....",".....w..........w.....","......whhhhhhhhw......","......hhhhhhhhhh......",".....hhhhhhhhhhhh.....",".....hhhhhhhhhhhh.....",".....hhsshsshsshh.....",".....hssekssekssh.....",".....hsskksskkssh.....","....m.spssssssps......","....m.ssssrrssss......","....mv.ssssssss.vv....","..vvmmmmmmmmmmmmmvvv..",".vvymymmmmrrmmmmsvvvt.",".vvvvsmmmmrrmmmmsvvvt.",".vv...mmmmmmmmmm...tv.","......yyyyyyyyyy..yt..",".......dddccddd..tt...",".......dddccddd.......",".......dddccddd.......",".......mmmccmmm.......",".......kkk..kkk......."]},"sana3":{"size":22,"p":{"b":"#ff6fb0","l":"#ffd0ea","d":"#c83a80","h":"#e8b040","s":"#f6d0a8","g":"#4ad0ff"},"m":[".......y.yyyy.y.......",".......yyyggyyy.......",".......hhhhhhhh.......","......hhhhhhhhhh......",".....hhhhhhhhhhhh.....","....hhhhhhhhhhhhhh....","....hhhsshsshsshhh....","....hhsseksseksshh....","....hhsskksskksshh....","....hhspsssssspshh....","....hhssssrrsssshh....","....hh.ssssssss.hh....","....hhlbbbwwbbblhh....",".....hsbbbbbbbbsh.....","......sdddyyddds......","......lbblbblbbl......","......lbblbblbbl......",".....lbblbblbblbb.....",".....lbblbblbblbb.....","....lbblbblbblbblb....","....lbblbblbblbblb....","...ywywywywyyywywyw..."]},"riol4":{"size":24,"p":{"y":"#f0c020","b":"#c0202a","d":"#5a1a1a","h":"#8a1a1a","s":"#f6d0a8","t":"#c0202a","v":"#b02838"},"m":["........................",".....w............w.....",".....w...y.yy.y...w.....","......w..yyrryy..w......",".......wwhhhhhhww.......",".......hhhhhhhhhh.......","......hhhhhhhhhhhh......","......hhhhhhhhhhhh......","......hhsshsshsshh......","......hssekssekssh......",".....vhsskksskksshv.....","...vvvvspsssssspsvvvv...",".vvvvvvssssrrssssvvvvvv.","vvvvvvv.ssssssss.vvvvvvv","vvvvvvybbbbbbbbbbyvvvvvv","vvvv..syyyyrryyyys..vvov","vv....syyyyrryyyys....tv",".......yyyyyyyyyy....t..",".......yyyyyyyyyy..y.t..","........ddd..ddd..ttt...","........ddd..ddd........","........ddd..ddd........","........yyy..yyy........","........kkk..kkk........"]},"sana4":{"size":24,"p":{"b":"#c060e0","l":"#f0c0ff","d":"#7a2aa0","h":"#e8b040","s":"#f6d0a8","c":"#5a2a8a"},"m":["........................","...........yy...........","........y.yyyy.y........","........yyyrryyy........","........hhhhhhhh........",".......hhhhhhhhhh.......","......hhhhhhhhhhhh......",".....hhhhhhhhhhhhhh.....",".....hhhsshsshsshhh.....",".....hhsseksseksshh.....",".....hhsskksskksshl.....",".....hhspsssssspslyl....",".....hhssssrrsssshy.....","....chhcsssssssschyc....","....chhlbbbwwbbblhyc....","....cchsbbbbbbbbshyc....","....cccsdddyydddscyc....","....ccclbblbblbblccc....","....ccclbblbblbblccc....","....cclbblbblbblbbcc....","....cclbblbblbblbbcc....","....clbblbblbblbblbc....","....clbblbblbblbblbc....","....wywywyyywywywywy...."]},"riol5":{"size":24,"p":{"w":"#f4f4ff","y":"#ffd23f","d":"#c8a040","h":"#ff5a2a","s":"#f6d0a8","t":"#ff5a2a","l":"#7af0ff","o":"#ff9a2a","b":"#ffd23f"},"m":["...........o............",".....w............w.....",".o...w...y.yy.y...w.....","......w..yyllyy..w....o.",".......wwhhhhhhww.......",".......hhhhhhhhhh.......","......hhhhhhhhhhhh......","......hhhhhhhhhhhh......","......hhsshsshsshh......","......hssekssekssh......",".....lhsskksskksshl.....","...llllspsssssspsllll...",".llllllssssrrssssllllll.","lllllll.ssssssss.lllllll","llllllwyyyyyyyyyywllllll","llll..swwwwrrwwwws..llol","ll....swwwwoowwwws...otl",".......yyyyyyyyyy....t..","..o....yyyyyyyyyy..y.t..","........dddwwddd..ttt...","........dddwwddd........","........dddwwddd........","........wwwwwwww........","........kkk..kkk........"]},"sana5":{"size":24,"p":{"b":"#fff0f8","l":"#ffd0ea","d":"#ffb0d0","h":"#ffe070","s":"#f6d0a8"},"m":[".........y....y.........","...........yy...........","........y.yyyy.y......y.",".y......yyyrryyy........","........hhhhhhhh........",".......hhhhhhhhhh.......","......hhhhhhhhhhhh......",".....hhhhhhhhhhhhhh.....",".....hhhsshsshsshhh.....",".....hhsseksseksshh.....",".....hhsskksskksshl.....",".....hhspsssssspslyl....",".....hhssssrrsssshy.....","...wwhh.ssssssss.hyww...",".wwwwhhlbbbwwbbblhywwww.","wwwwwwhsbbbbbbbbshywwyww","wwwwww.sdddyyddds.ywwwww","wwww...lbblbblbbl...wwww","ww.....lbblbblbbl.....ww","..y...lbblbblbblbb......","......lbblbblbblbb......",".....lbblbblbblbblb.....",".....lbblbblbblbblb.....","....wywywyyywywywywy...."]}});
 const ULTS=[{k:'raijin',need:50},{k:'abyss',need:100},{k:'omega',need:151}];
 SPECIES.push(['raijin','raijin','らいじん ドラゴン',5,1,{}],['abyss','abyss','アビス・リヴァイアサン',5,1,{}],['omega','omega','オメガ・ギャラクシア',5,1,{}]);
 const STD_N=151;
 const SP={};SPECIES.forEach(([k,art,name,rar,boss,p])=>SP[k]={k,art,name,rar,boss:!!boss,p});
+/* ---- special (gift-code) monsters: not wild, not in the 151 dex ---- */
+const SPECIALS={riol:{el:'ほのお',names:['リオル','ドラゴン リオル','つばさの リオル','りゅうきし リオル','りゅうおう リオル','しんりゅう リオル']},
+  sana:{el:'ひかり',names:['サナ','おはなの サナ','ドレスの サナ','プリンセス サナ','ロイヤル プリンセス サナ','てんしの プリンセス サナ']}};
+for(const c in SPECIALS)SPECIALS[c].names.forEach((n,r)=>{const k=c+r;SP[k]={k,art:k,name:n,rar:r,boss:false,p:{},el:SPECIALS[c].el,special:c}});
+const GIFTS={RIOL2026:{sp:'riol0',msg:'ドラゴンの ちからを もつ おとこのこ。そだてると りゅうの おうさまに…！'},SANA2026:{sp:'sana0',msg:'やさしい おんなのこ。そだてると プリンセスに…！'}};
 const NORMALS=SPECIES.filter(s=>!s[4]).map(s=>s[0]),BOSSES=SPECIES.filter(s=>s[4]).map(s=>s[0]);
 function pickSpecies(pool,d){const rar=rollRar(d,false);let c=pool.filter(k=>SP[k].rar===rar);if(!c.length)c=pool.filter(k=>SP[k].rar<=rar);return pick(c.length?c:pool)}
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
@@ -1432,8 +1455,8 @@ function dupModal(){const list=dupList();if(!list.length){toast('まとめて �
     {no:closeModal,yes:()=>{const got=doBye(list);closeModal();toast(`👋 ${list.length}たいと おわかれ 🪙+${got}`);renderBox()}})}
 
 /* ---- evolution ---- */
-const EVOLV=[10,20,35,50],EVOBOND=[30,60,100,150];
-const EVOC={};
+const EVOLV=[10,20,35,50,70],EVOBOND=[30,60,100,150,200];
+const EVOC={};for(const c of ['riol','sana'])for(let r=0;r<6;r++)EVOC[c+r]=r<5?c+(r+1):null;
 function evoOf(k){if(k in EVOC)return EVOC[k];const s=SP[k];let r=null;
   if(s&&s.rar<4){const c=SPECIES.filter(t=>t[1]===s.art&&!!t[4]===s.boss&&t[3]>s.rar&&t[3]<5);
     if(c.length){const mr=Math.min(...c.map(t=>t[3])),cc=c.filter(t=>t[3]===mr),same=cc.find(t=>elOf(t[0])===elOf(k));r=(same||cc[0])[0]}}
