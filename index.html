@@ -212,6 +212,17 @@ input{font:inherit}
 .frbar i.on{background:linear-gradient(135deg,#7af0ff,#ff4fd8);box-shadow:0 0 6px #7af0ff}
 
 .dcode{height:110px;font-size:11px;text-align:left;word-break:break-all;font-family:monospace}
+
+.adcard{padding:10px;display:flex;flex-direction:column;gap:8px}
+.adtop{display:flex;gap:10px;align-items:center}.adtop .av{width:58px;flex:none}.adtop .av .hs{width:100%}
+.adinfo{flex:1;min-width:0}.adinfo .nm{font-size:19px}.adinfo .nm small{font-size:12px;color:var(--sub)}.adinfo>small{font-size:12px;color:var(--sub)}
+.adst{display:flex;gap:10px;font-size:12px;color:var(--sub)}.adst b{font-size:16px;color:#fff;margin-left:2px}
+.adgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;text-align:center}
+.adgrid div{background:#0005;border-radius:5px;padding:5px 2px;line-height:1.25}.adgrid small{display:block;font-size:10px;color:var(--sub)}.adgrid b{font-size:15px}
+.adsub{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:12px}.adsub small{color:var(--sub);font-size:10px}
+.adweak{font-size:12px;color:#ffb0a0;background:#e8413c22;border-left:4px solid #e8413c;padding:5px 8px;border-radius:4px;font-family:'M PLUS Rounded 1c',sans-serif}
+.adparty{display:flex;align-items:center;gap:4px;flex-wrap:wrap}.adparty>div{width:34px}.adparty img{width:100%;display:block}.adparty small{font-size:11px;color:var(--sub);flex:1;min-width:120px}
+
 /* party / box */
 .flip svg,.flip img{transform:scaleX(-1)}
 .pix{image-rendering:pixelated;image-rendering:crisp-edges}
@@ -347,9 +358,16 @@ input{font:inherit}
       <button class="btn" id="weakBtn">📕 にがて <span id="weakN">0</span></button>
       <button class="btn" id="statBtn">📊 きろく</button>
       <button class="btn" id="boxBtn">📦 ボックス</button>
+      <button class="btn orange" id="adminBtn" style="display:none">👑 みんな</button>
       <button class="btn" id="setBtn">⚙️ せってい</button>
     </div>
   </div>
+</section>
+
+<!-- admin -->
+<section id="admin" class="screen">
+  <header class="hud"><button class="btn x" id="adBack">◀</button><div style="font-size:18px">👑 みんなの ようす</div></header>
+  <div class="homebody" id="adBody"></div>
 </section>
 
 <!-- box -->
@@ -871,11 +889,17 @@ function dataExport(){
     <textarea class="field dcode" id="dcode" readonly>${code}</textarea><button class="btn green big" id="cp">📋 コピーする</button><button class="btn gray" id="cl">とじる</button>`,
     {cp:()=>{const t=$('dcode');t.select();try{navigator.clipboard.writeText(code).then(()=>toast('コピーしたよ！'),()=>{document.execCommand&&document.execCommand('copy');toast('コピーしたよ！')})}catch(e){try{document.execCommand('copy');toast('コピーしたよ！')}catch(_){toast('ながおしで コピーしてね')}}},cl:closeModal});
 }
+function parseCode(v){let obj=null;try{obj=JSON.parse(decodeURIComponent(escape(atob(v.trim().replace(/^MQ1:/,'').replace(/\s/g,'')))))}catch(e){}if(!obj||!Array.isArray(obj.profiles)){toast('コードが ただしくないよ');return null}return obj}
 function dataImport(){
-  showModal(`<div class="mt">📥 データを よみこむ</div><p style="font-size:13px">ひっこしコードを はりつけてね。<br><b style="color:#ff8a8a">いまの データは ぜんぶ うわがき されるよ。</b></p>
-    <textarea class="field dcode" id="dcode" placeholder="MQ1:..."></textarea><button class="btn orange big" id="ok">よみこむ</button><button class="btn gray" id="cl">やめる</button>`,
-    {ok:()=>{const v=$('dcode').value.trim();let obj=null;try{obj=JSON.parse(decodeURIComponent(escape(atob(v.replace(/^MQ1:/,'').replace(/\s/g,'')))))}catch(e){}
-       if(!obj||!Array.isArray(obj.profiles)){toast('コードが ただしくないよ');return}
+  showModal(`<div class="mt">📥 データを よみこむ</div><p style="font-size:13px">ひっこしコードを はりつけてね。</p>
+    <textarea class="field dcode" id="dcode" placeholder="MQ1:..."></textarea>
+    <button class="btn green big" id="mg">➕ くわえる</button><small style="color:var(--sub)">いまの ぼうけんしゃは のこして、コードの ぼうけんしゃを ついか（おなじ ひとは さいしんに こうしん）</small>
+    <button class="btn orange" id="ok">🔄 ぜんぶ おきかえる</button><small style="color:#ff8a8a">いまの データは ぜんぶ きえて、コードの データに なるよ</small>
+    <button class="btn gray" id="cl">やめる</button>`,
+    {mg:()=>{const obj=parseCode($('dcode').value);if(!obj)return;let a=0,u=0;
+       obj.profiles.forEach(np=>{if(np.master&&G.profiles.some(p=>p.master))return;const i=G.profiles.findIndex(p=>p.id===np.id);if(i>=0){G.profiles[i]=np;u++}else{G.profiles.push(np);a++}});
+       const keep=G.cur;save();closeModal();if(P){P=G.profiles.find(p=>p.id===keep)||P;ensureP(P)}toast(`ついか ${a}にん・こうしん ${u}にん`);if($('admin').classList.contains('on'))showAdmin();else if(!P){show('players');renderPlayers()}},
+     ok:()=>{const obj=parseCode($('dcode').value);if(!obj)return;
        Object.keys(G).forEach(k=>delete G[k]);Object.assign(G,{profiles:[],cur:null,snd:true},obj);G.cur=null;P=null;save();closeModal();show('players');renderPlayers();toast(`${G.profiles.length}にんの データを よみこんだよ！`)},
      cl:closeModal});
 }
@@ -908,7 +932,7 @@ function renderHome(){
     showModal(it?`<div class="mt">${SLOTN[k]}</div>${itemCard(it)}${enhBtn(it)}<div class="row"><button class="btn green" id="ch">📦 ボックスから えらぶ（${n}）</button><button class="btn gray" id="un">はずす</button></div><button class="btn gray" id="cl">とじる</button>`
       :`<div class="mt">${SLOTN[k]}</div><p>${n?'ボックスに '+n+'こ あるよ':'まだ もっていないよ。<br>モンスターを たおして たからばこを さがそう！'}</p>${n?'<button class="btn green big" id="ch">📦 ボックスから えらぶ</button>':''}<button class="btn gray" id="cl">とじる</button>`,
       {cl:closeModal,enh:()=>doEnh(it,()=>{renderHome();$('hSlotsL').querySelector('[data-s="'+k+'"]')?.click()||$('hSlotsR').querySelector('[data-s="'+k+'"]')?.click()}),ch:()=>{closeModal();boxF=k;openBox('items')},un:()=>{if(P.box.length>=boxCap()){toast('ボックスが いっぱい！');return}P.box.push(it);P.eq[k]=null;save();closeModal();renderHome()}})});
-  renderParty();
+  renderParty();$('adminBtn').style.display=P.master?'':'none';
   const m=Math.min(mission(),P.todayCorrect);
   $('mis').innerHTML=`<div>📜 きょうの ミッション：${mission()}もん せいかい</div><div class="pbar"><i style="width:${m/mission()*100}%"></i></div>
     ${P.claimed?'<small>✅ クリア！ また あした！</small>':m>=mission()?'<button class="btn orange claim" id="claimBtn">🎁 ほうしゅうを うけとる</button>':`<small>${m} / ${mission()}　クリアで レア いじょうの そうびが もらえる！</small>`}`;
@@ -925,10 +949,12 @@ function renderHome(){
 }
 $('who').onclick=()=>profileForm(P);
 $('setBtn').onclick=()=>profileForm(P);
-$('statBtn').onclick=showStats;
+$('statBtn').onclick=()=>showStats();
+$('adminBtn').onclick=()=>showAdmin();
+$('adBack').onclick=()=>{show('home');renderHome()};
 $('boxBtn').onclick=()=>{boxF='all';openBox('items')};
 $('bxBack').onclick=()=>{show('home');renderHome()};
-$('stBack').onclick=()=>{show('home');renderHome()};
+$('stBack').onclick=()=>{if(statP){statP=null;showAdmin()}else{show('home');renderHome()}};
 $('sPrev').onclick=()=>{selStage--;renderHome()};
 $('sNext').onclick=()=>{selStage++;renderHome()};
 $('goBtn').onclick=()=>{snd(440,.1);startBattle(P.subj,P.diff[P.subj],selStage,false)};
@@ -1206,6 +1232,7 @@ function catOf(subj,key){
   const k=key.match(/^k([234])/);return k?{2:'かんじ1年（よみ）',3:'かんじ2年（よみ）',4:'かんじ3年（じゅくご）'}[k[1]]:'こくご';
 }
 function record(q,ok,t){
+  P.lastPlay=Date.now();
   const S=P.stats||(P.stats={cats:{},days:{},items:{}});const subj=q.subj||'math';
   const ck=subj+'|'+catOf(subj,q.key),c=S.cats[ck]||(S.cats[ck]={n:0,ok:0,t:0});c.n++;if(ok)c.ok++;c.t+=Math.min(t,30);
   const d=dkey(new Date()),dd=S.days[d]||(S.days[d]={}),ds=dd[subj]||(dd[subj]={n:0,ok:0});ds.n++;if(ok)ds.ok++;
@@ -1227,10 +1254,11 @@ function tipFor(name){
   return '★を1つ下げて正解を重ね、自信をつけるのも効果的です。';
 }
 let statF='all';
-function showStats(){show('stats');renderStats()}
+let statP=null;
+function showStats(t){statP=t||null;show('stats');renderStats()}
 function renderStats(){
-  const S=P.stats||{cats:{},days:{},items:{}},F=statF;
-  $('stWho').textContent=P.name+' の がくしゅう きろく';
+  const T=statP||P,S=T.stats||{cats:{},days:{},items:{}},F=statF;
+  $('stWho').textContent=T.name+' の がくしゅう きろく';
   $('stTabs').innerHTML=[['all','ぜんぶ'],['math','さんすう'],['eng','えいご'],['kanji','こくご']].map(([k,n])=>`<button class="btn db${F===k?' sel':''}" data-f="${k}">${n}</button>`).join('');
   document.querySelectorAll('#stTabs .db').forEach(b=>b.onclick=()=>{statF=b.dataset.f;renderStats()});
   const cats=Object.entries(S.cats).filter(([k])=>F==='all'||k.startsWith(F+'|')).map(([k,v])=>({subj:k.split('|')[0],name:k.split('|')[1],n:v.n,ok:v.ok,t:v.t,rate:v.ok/v.n,avg:v.t/v.n}));
@@ -1258,6 +1286,45 @@ function renderStats(){
   // missed items
   const miss=Object.values(S.items).filter(it=>it.miss>0&&(F==='all'||it.subj===F)).sort((a,b)=>b.miss-a.miss||b.miss/b.n-a.miss/a.n).slice(0,12);
   $('stMiss').innerHTML=miss.map(it=>`<span class="chip">${esc(it.label)} → ${esc(it.a)} <b style="color:#e8413c">✕${it.miss}</b></span>`).join('')||'<small style="color:var(--sub)">まちがえた もんだいは まだ ないよ</small>';
+}
+
+
+/* ---- master: everyone's status ---- */
+function agoTxt(ts){if(!ts)return 'まだ';const d=Math.floor((new Date().setHours(0,0,0,0)-new Date(ts).setHours(0,0,0,0))/864e5);return d<=0?'きょう':d===1?'きのう':d+'にちまえ'}
+function profSummary(p){
+  ensureP(p);const S=p.stats||{cats:{},days:{},items:{}};let n=0,ok=0;for(const c of Object.values(S.cats)){n+=c.n;ok+=c.ok}
+  let wn=0,wok=0;for(let i=0;i<7;i++){const d=new Date();d.setDate(d.getDate()-i);const e=S.days[dkey(d)]||{};for(const k in e){wn+=e[k].n;wok+=e[k].ok}}
+  const td=S.days[dkey(new Date())]||{};let tn=0;for(const k in td)tn+=td[k].n;
+  const subj={};for(const [k,v] of Object.entries(S.cats)){const sb=k.split('|')[0];subj[sb]=subj[sb]||{n:0,ok:0};subj[sb].n+=v.n;subj[sb].ok+=v.ok}
+  const weak=Object.entries(S.cats).map(([k,v])=>({sb:k.split('|')[0],name:k.split('|')[1],n:v.n,rate:v.ok/v.n})).filter(c=>c.n>=5&&c.rate<.8).sort((a,b)=>a.rate-b.rate).slice(0,2);
+  return{n,ok,wn,wok,tn,subj,weak,owned:SPECIES.filter(s=>s[3]<5&&p.dex.owned[s[0]]).length,ult:ULTS.filter(u=>p.dex.owned[u.k]).length,
+    eq:SLOTS.filter(k=>p.eq[k]).length,box:p.box.length,eggs:p.eggs.length}
+}
+function showAdmin(){
+  show('admin');const ps=G.profiles.filter(p=>!p.master);
+  const pct=(a,b)=>b?Math.round(a/b*100)+'%':'−',col=r=>r<.6?'#e8413c':r<.8?'#ffb020':'#58d14a',SN={math:'さんすう',eng:'えいご',kanji:'こくご'};
+  let h=`<div class="panel stbox"><small style="color:var(--sub)">この たんまつで あそんでいる ぼうけんしゃの ようすです。<br>べつの たんまつ（スマホ・タブレット）の ぼうけんしゃは、そちらで「💾 データの ひっこし → かきだす」をして、ここで「よみこむ → ➕ くわえる」を すると みられます。</small><button class="btn green" id="adImp">📥 べつの たんまつの データを くわえる</button></div>`;
+  if(!ps.length)h+='<div class="panel stbox"><p>まだ ぼうけんしゃが いないよ</p></div>';
+  ps.forEach(p=>{const s=profSummary(p),pm=partyMons(p),ago=agoTxt(p.lastPlay||(p.lastDay?new Date(p.lastDay.replace(/-/g,'/')).getTime():0));
+    h+=`<div class="panel adcard">
+      <div class="adtop"><div class="av">${heroSVG(p.eq,p)}</div>
+        <div class="adinfo"><div class="nm">${esc(p.name)} <small>${p.age}さい</small></div>
+          <div class="adst"><span>Lv<b>${p.lv}</b></span><span>パワー<b style="color:var(--gold)">${power(p.eq,p.lv,p)}</b></span><span>🔥<b>${p.streak}</b>にち</span></div>
+          <small>さいごに あそんだ：<b style="color:${ago==='きょう'?'#58d14a':ago==='きのう'||ago==='まだ'?'#fff':'#ffb020'}">${ago}</b>　きょう ${s.tn}もん</small></div></div>
+      <div class="adgrid">
+        <div><small>この7日</small><b>${s.wn}もん</b><small>せいかい ${pct(s.wok,s.wn)}</small></div>
+        <div><small>これまで</small><b>${s.n}もん</b><small>せいかい <span style="color:${s.n?col(s.ok/s.n):'#fff'}">${pct(s.ok,s.n)}</span></small></div>
+        <div><small>なかま</small><b>${s.owned}/151</b><small>🌟 ${s.ult}/3</small></div>
+        <div><small>そうび</small><b>${s.eq}/10</b><small>ボックス ${s.box}・🥚${s.eggs}</small></div>
+      </div>
+      <div class="adsub">${['math','eng','kanji'].map(k=>{const v=s.subj[k];return `<span>${SN[k]} ★${(p.diff[k]||0)+1} <b style="color:${v?col(v.ok/v.n):'#888'}">${v?pct(v.ok,v.n):'−'}</b> <small>ST${p.best[k]}</small></span>`}).join('')}</div>
+      ${s.weak.length?`<div class="adweak">⚠️ にがて：${s.weak.map(w=>`${SN[w.sb]}「${w.name}」${Math.round(w.rate*100)}%`).join('、')}</div>`:''}
+      ${pm.length?`<div class="adparty">${pm.map(m=>`<div class="flip" title="${SP[m.sp].name}">${monsterSVG(m.sp)}</div>`).join('')}<small>なかま：${pm.map(m=>SP[m.sp].name+' Lv'+m.lv).join('・')}</small></div>`:''}
+      <button class="btn" data-sid="${p.id}">📊 くわしい きろくを みる</button>
+    </div>`});
+  $('adBody').innerHTML=h;
+  $('adImp').onclick=dataImport;
+  document.querySelectorAll('#adBody [data-sid]').forEach(b=>b.onclick=()=>showStats(G.profiles.find(p=>p.id===+b.dataset.sid)));
 }
 
 /* =============== battle =============== */
