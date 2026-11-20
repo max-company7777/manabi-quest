@@ -1396,15 +1396,16 @@ function enhAllFlow(items,title,cb){const pl=enhPlan(items,P.gold);
       toast(`⚒️ +${pl.total} きょうか！ パワー +${items.reduce((a,it)=>a+ip(it),0)-before}`);cb&&cb()}})}
 const spentOn=it=>{let t=0;const base=(10+(it.lv||Math.round(it.p/RAR[it.rar].m))*3)*(it.rar+1);for(let i=0;i<(it.plus||0);i++)t+=Math.round(base*Math.pow(1.25,i));return t};
 const xferCost=it=>Math.max(10,Math.round(spentOn(it)*.25));
+const withPlus=(it,cur)=>cur&&cur.plus>0?Object.assign({},it,{plus:(it.plus||0)+cur.plus}):it;
 function equipFlow(it,cur,apply){
   if(cur&&cur.plus>0){const n=cur.plus;it.plus=(it.plus||0)+n;cur.plus=0;snd(880,.08,'square',.05);snd(1320,.15,'square',.05,0,.08);apply();setTimeout(()=>toast(`⚒️ +${n} を ひきついだよ！`),300);return}
   apply();
 }
 function boxItemModal(idx){
-  const it=P.box[idx];if(!it)return;const cur=P.eq[it.slot],now=power(),neq=Object.assign({},P.eq,{[it.slot]:it}),nxt=power(neq),diff=nxt-now;
+  const it=P.box[idx];if(!it)return;const cur=P.eq[it.slot],now=power(),neq=Object.assign({},P.eq,{[it.slot]:withPlus(it,cur)}),nxt=power(neq),diff=nxt-now;
   showModal(`<div class="mt">${SLOTN[it.slot]}</div>${itemCard(it)}
     <div class="powchg">パワー ${now} → <b class="${diff>=0?'up':'down'}">${nxt}（${diff>=0?'▲':'▼'}${Math.abs(diff)}）</b></div>
-    ${cur?`<small style="color:var(--sub)">いまの ${SLOTN[it.slot]}「${cur.name}」は ボックスに もどるよ</small>`:''}
+    ${cur&&cur.plus>0&&!it.plus?`<small style="color:#ffd23f">⚒️ そうびすると いまの +${cur.plus} を ひきつぐよ</small><br>`:''}${cur?`<small style="color:var(--sub)">いまの ${SLOTN[it.slot]}「${cur.name}」は ボックスに もどるよ</small>`:''}
     ${enhBtn(it)}<div class="row"><button class="btn green big" id="eq">そうびする</button><button class="btn gray big" id="sl">うる 🪙${it.price||1}</button></div><button class="btn gray" id="cl">とじる</button>`,
     {enhmax:()=>{closeModal();enhAllFlow([it],'できるだけ きょうか',()=>{renderBox();boxItemModal(P.box.indexOf(it))})},enh:()=>doEnh(it,()=>{renderBox();boxItemModal(P.box.indexOf(it))}),eq:()=>equipFlow(it,cur,()=>{P.box.splice(P.box.indexOf(it),1);if(cur)P.box.push(cur);P.eq[it.slot]=it;save();closeModal();renderBox();toast('パワー '+power()+'！')}),
      sl:()=>{P.box.splice(idx,1);P.gold+=it.price||1;coin();save();closeModal();renderBox()},cl:closeModal},'r'+it.rar);
@@ -1865,11 +1866,11 @@ function defeat(){
 }
 function showDrop(it,cb,title='たからばこ！'){
   if(it.rar>=2)fanfare();else coin();P.dex.items[ikey(it)]=1;
-  const cur=P.eq[it.slot],now=power(),neq=Object.assign({},P.eq,{[it.slot]:it}),nxt=power(neq),diff=nxt-now;
+  const cur=P.eq[it.slot],now=power(),neq=Object.assign({},P.eq,{[it.slot]:withPlus(it,cur)}),nxt=power(neq),diff=nxt-now;
   showModal(`<div class="chest">${chestIcon(it.rar)}</div><div class="mt">${title}</div>${itemCard(it,true)}
     <div class="cmp"><div>${heroSVG(P.eq,P)}</div><div class="arrow">▶</div><div>${heroSVG(neq,P)}</div></div>
     <div class="powchg">パワー ${now} → <b class="${diff>=0?'up':'down'}">${nxt}（${diff>=0?'▲':'▼'}${Math.abs(diff)}）</b></div>
-    ${cur?`<small style="color:var(--sub)">いまの ${SLOTN[it.slot]}：${iname(cur)}（パワー ${iscore(cur)}）</small>`:''}
+    ${cur&&cur.plus>0&&!it.plus?`<small style="color:#ffd23f">⚒️ そうびすると いまの +${cur.plus} を ひきつぐよ</small><br>`:''}${cur?`<small style="color:var(--sub)">いまの ${SLOTN[it.slot]}：${iname(cur)}（パワー ${iscore(cur)}）</small>`:''}
     <div class="row"><button class="btn green big" id="eq">そうびする</button><button class="btn purple big" id="bx">📦 ボックスへ</button></div><button class="btn gray" id="sl">うる 🪙${it.price}</button>`,
     {eq:()=>equipFlow(it,cur,()=>{if(cur&&P.box.length<boxCap())P.box.push(cur);P.eq[it.slot]=it;save();if(B){updHud();updHeroHp()}closeModal();toast(`パワー ${power()}！`);cb&&cb()}),
      bx:()=>{if(P.box.length>=boxCap()){toast('ボックスが いっぱい！');return}P.box.push(it);save();closeModal();toast('ボックスに しまったよ');cb&&cb()},
