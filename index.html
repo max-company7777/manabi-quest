@@ -239,6 +239,19 @@ input{font:inherit}
 .metag{font-size:10px;background:#58d14a;color:#123;border-radius:3px;padding:0 4px;vertical-align:middle}
 .rkv{text-align:right;line-height:1.1}.rkv b{font-size:24px;color:var(--gold)}.rkv small{display:block;font-size:10px;color:var(--sub)}
 
+
+.evob{background:#0005;border:2px solid #7a4bd1;border-radius:6px;padding:8px;display:flex;flex-direction:column;gap:5px;text-align:left}
+.evob.ready{border-color:#ffd23f;box-shadow:0 0 12px #ffd23f88}
+.evr{font-size:12px}.evr .pbar{height:10px;margin-top:2px}
+.evb{position:absolute;bottom:14px;right:2px;font-style:normal;font-size:13px;animation:pulse 1s infinite}
+.evostage{position:relative;width:160px;height:160px;margin:0 auto}
+.evostage>div{position:absolute;inset:0}.evostage img{width:100%;height:auto;display:block}
+.evo-a{animation:evoA 2.6s forwards}.evo-b{opacity:0;animation:evoB 2.6s forwards}
+@keyframes evoA{0%{opacity:1;filter:none}15%,35%,55%,75%{opacity:1;filter:brightness(8)}25%,45%,65%{opacity:0}85%,100%{opacity:0}}
+@keyframes evoB{0%,20%{opacity:0}25%,45%,65%{opacity:1;filter:brightness(8)}35%,55%,75%{opacity:0}85%{opacity:1;filter:brightness(8)}100%{opacity:1;filter:drop-shadow(0 0 10px #ffd23f)}}
+.evotxt{opacity:0;animation:evoT .4s 2.6s forwards;display:flex;flex-direction:column;gap:8px}
+@keyframes evoT{to{opacity:1}}
+
 /* party / box */
 .flip svg,.flip img{transform:scaleX(-1)}
 .pix{image-rendering:pixelated;image-rendering:crisp-edges}
@@ -1146,7 +1159,7 @@ function syncMaster(p){
   if(!p.master)return;const all=catalog(),have=new Set([...p.box,...SLOTS.map(k=>p.eq[k]).filter(Boolean)].map(ikey));
   all.forEach(i=>{if(!have.has(ikey(i)))p.box.push(i);p.dex.items[ikey(i)]=1});
   SPECIES.forEach(s=>{if(!p.mons.some(m=>m.sp===s[0]))p.mons.push({id:uid(),sp:s[0],lv:100,xp:0});p.dex.owned[s[0]]=1;p.dex.seen[s[0]]=1});
-  p.mons.forEach(m=>m.lv=Math.max(m.lv,100));p.lv=Math.max(p.lv,100);
+  p.mons.forEach(m=>{m.lv=Math.max(m.lv,100);m.bond=Math.max(m.bond||0,999)});p.lv=Math.max(p.lv,100);
 }
 function makeMaster(){
   const p=ensureP(newProfile('マスター',9,'#e8c13a'));Object.assign(p,{master:true,lv:100,gold:99999,hair:'spiky',hc:'#e2b04a',best:{math:30,eng:30,kanji:30}});
@@ -1164,7 +1177,7 @@ function makeMaster(){
 function renderParty(){
   const pm=partyMons(),inc=P.eggs.filter(e=>e.inc);
   let h=`<div><div class="pph">なかま <small>パワー ${partyPow()}</small></div><div class="prow">`;
-  for(let i=0;i<3;i++){const m=pm[i];h+=m?`<button class="pslot" data-t="mons" style="--rc:${RAR[SP[m.sp].rar].c}"><div class="pms flip">${monsterSVG(m.sp)}</div><small>${elIcon(m.sp)}Lv${m.lv}</small></button>`
+  for(let i=0;i<3;i++){const m=pm[i];h+=m?`<button class="pslot" data-t="mons" style="--rc:${RAR[SP[m.sp].rar].c}"><div class="pms flip">${monsterSVG(m.sp)}</div><small>${evoReady(m)?'✨':elIcon(m.sp)}Lv${m.lv}</small></button>`
     :`<button class="pslot empty" data-t="mons"><div class="pms">＋</div><small>あき</small></button>`}
   h+=`</div></div><div><div class="pph">ふかき <small>せいかいで かえる</small></div><div class="prow">`;
   for(let i=0;i<3;i++){const e=inc[i];h+=e?`<button class="pslot" data-t="eggs" style="--rc:${RAR[e.rar].c}"><div class="pms">${eggIcon(e)}</div><div class="ebar"><i style="width:${Math.min(100,e.prog/e.need*100)}%"></i></div></button>`
@@ -1193,7 +1206,7 @@ function renderBox(){
     for(let i=0;i<3;i++){const m=pm[i];h+=m?`<button class="pslot mc" data-id="${m.id}" style="--rc:${RAR[SP[m.sp].rar].c}"><div class="pms flip">${monsterSVG(m.sp)}</div><small>${elIcon(m.sp)}${SP[m.sp].name}<br>Lv${m.lv}</small></button>`:`<div class="pslot empty"><div class="pms">＋</div><small>あき</small></div>`}
     h+=`</div><div class="elchart">${Object.keys(STRONG).filter(e=>STRONG[e].length).map(e=>`<span>${ELS[e].i}→${STRONG[e].map(x=>ELS[x].i).join('')}</span>`).join('')}<span>🌈→ぜんぶ（きゅうきょくだけ）</span></div><small style="color:var(--sub)">→ の あいてに なかまの こうげきが 1.5ばい！</small></div><div class="sth" style="padding:0 4px">📦 ボックス</div>`;
     const rest=P.mons.filter(m=>!P.party.includes(m.id)).sort((a,b)=>SP[b.sp].rar-SP[a.sp].rar||b.lv-a.lv);
-    h+=`<div class="bgrid">${rest.map(m=>`<button class="bcell mc" data-id="${m.id}" style="--rc:${RAR[SP[m.sp].rar].c}"><div class="flip">${monsterSVG(m.sp)}</div><b>Lv${m.lv}</b><i class="eb">${elIcon(m.sp)}</i>${m.fav?'<i class="fv">🔒</i>':''}</button>`).join('')||'<small style="color:var(--sub)">ボスを たおすと たまごを おとすことが あるよ</small>'}</div>`;
+    h+=`<div class="bgrid">${rest.map(m=>`<button class="bcell mc" data-id="${m.id}" style="--rc:${RAR[SP[m.sp].rar].c}"><div class="flip">${monsterSVG(m.sp)}</div><b>Lv${m.lv}</b><i class="eb">${elIcon(m.sp)}</i>${m.fav?'<i class="fv">🔒</i>':''}${evoReady(m)?'<i class="evb">✨</i>':''}</button>`).join('')||'<small style="color:var(--sub)">ボスを たおすと たまごを おとすことが あるよ</small>'}</div>`;
     const dl=dupList();if(dl.length)h+=`<button class="btn purple" id="dupBye">👋 ダブりを まとめて おわかれ（${dl.length}たい）</button>`;
   }else if(boxTab==='eggs'){
     const inc=P.eggs.filter(e=>e.inc),rest=P.eggs.filter(e=>!e.inc);
@@ -1249,6 +1262,32 @@ function dupModal(){const list=dupList();if(!list.length){toast('まとめて �
     <p>${list.length}たい → おれい <b class="goldt" style="font-size:20px">🪙${g}</b></p>
     <button class="btn gray big" id="no">やめる</button><button class="btn purple" id="yes">👋 まとめて おわかれする</button>`,
     {no:closeModal,yes:()=>{const got=doBye(list);closeModal();toast(`👋 ${list.length}たいと おわかれ 🪙+${got}`);renderBox()}})}
+
+/* ---- evolution ---- */
+const EVOLV=[10,20,35,50],EVOBOND=[30,60,100,150];
+const EVOC={};
+function evoOf(k){if(k in EVOC)return EVOC[k];const s=SP[k];let r=null;
+  if(s&&s.rar<4){const c=SPECIES.filter(t=>t[1]===s.art&&!!t[4]===s.boss&&t[3]>s.rar&&t[3]<5);
+    if(c.length){const mr=Math.min(...c.map(t=>t[3])),cc=c.filter(t=>t[3]===mr),same=cc.find(t=>elOf(t[0])===elOf(k));r=(same||cc[0])[0]}}
+  return EVOC[k]=r}
+const evoNeed=m=>{const r=SP[m.sp].rar;return{lv:EVOLV[r],bond:EVOBOND[r]}};
+const evoReady=m=>{const n=evoOf(m.sp);if(!n)return false;const q=evoNeed(m);return m.lv>=q.lv&&(m.bond||0)>=q.bond};
+function evoBlock(m){const n=evoOf(m.sp);if(!n)return SP[m.sp].rar>=5?'':'<small style="color:var(--sub)">これいじょう しんか しない すがただよ</small>';
+  const q=evoNeed(m),b=m.bond||0,ok=evoReady(m),known=P.dex.owned[n]||P.dex.seen[n];
+  return `<div class="evob${ok?' ready':''}"><div class="sth">✨ しんか ${known?`→ <span style="color:${RAR[SP[n].rar].h}">${SP[n].name}</span>`:'→ ？？？'}</div>
+    <div class="evr"><span>レベル ${Math.min(m.lv,q.lv)}/${q.lv}</span><div class="pbar"><i style="width:${Math.min(100,m.lv/q.lv*100)}%;background:var(--xp)"></i></div></div>
+    <div class="evr"><span>いっしょに せいかい ${Math.min(b,q.bond)}/${q.bond}</span><div class="pbar"><i style="width:${Math.min(100,b/q.bond*100)}%"></i></div></div>
+    ${ok?'<button class="btn orange big" id="evo">✨ しんかする！</button>':'<small style="color:var(--sub)">パーティに いれて もんだいに せいかいすると「いっしょに せいかい」が ふえるよ</small>'}</div>`}
+function doEvolve(id){const m=P.mons.find(x=>x.id===id);if(!m||!evoReady(m))return;const from=m.sp,to=evoOf(from),before=ownedStd();
+  m.sp=to;m.bond=0;P.dex.owned[to]=1;P.dex.seen[to]=1;save();
+  [523,659,784,1047,1319].forEach((f,i)=>snd(f,.2,'square',.05,0,i*.25));vib(200);
+  showModal(`<div class="mt">✨ おや…？</div><div class="evostage"><div class="evo-a flip">${monsterSVG(from)}</div><div class="evo-b flip">${monsterSVG(to)}</div></div>
+    <div class="evotxt"><p>${SP[from].name}が<br><b style="color:${RAR[SP[to].rar].h};font-size:22px">${SP[to].name}</b>に しんかした！</p>
+    <div>${elTag(to)}</div><p style="font-size:13px">なかまパワー <b style="color:var(--gold)">${monPow(m)}</b>・${RAR[SP[to].rar].n}</p>
+    <button class="btn green big" id="ok">やったー！</button></div>`,
+    {ok:()=>{closeModal();const nu=ULTS.filter(u=>before<u.need&&ownedStd()>=u.need);if(nu.length)showUltUnlock(nu,()=>{renderBox()});else renderBox()}},'r'+SP[to].rar);
+}
+function bondUp(){partyMons().forEach(m=>{const was=evoReady(m);m.bond=(m.bond||0)+1;if(!was&&evoReady(m))setTimeout(()=>toast(`✨ ${SP[m.sp].name}が しんか できるよ！`),900)})}
 function monModal(id){
   const m=P.mons.find(x=>x.id===id);if(!m)return;const s=SP[m.sp],inP=P.party.includes(id);
   showModal(`<div class="hatch flip">${monsterSVG(m.sp)}</div><div style="color:${RAR[s.rar].h};font-size:14px">${RAR[s.rar].n}${s.boss?'・ボス':''}</div><div class="mt">${s.name}</div>
@@ -1256,11 +1295,12 @@ function monModal(id){
     <small style="color:var(--sub)">${elIcon(m.sp)} は ${(STRONG[elOf(m.sp)]||[]).map(e=>ELS[e].i+e).join('・')||'ぜんぶ'}に つよい（ダメージ 1.5ばい）</small>
     <p>Lv ${m.lv>=MONMAX?'MAX':m.lv}　なかまパワー <b style="color:var(--gold)">${monPow(m)}</b></p>
     <div class="pbar"><i style="width:${m.xp/monXpNeed(m)*100}%;background:var(--xp)"></i></div><small style="color:var(--sub)">パーティで モンスターを たおすと レベルアップ</small>
+    ${evoBlock(m)}
     ${inP?'<button class="btn gray big" id="out">パーティから はずす</button>':'<button class="btn green big" id="in">パーティに いれる</button>'}
     <div class="row"><button class="btn ${m.fav?'orange':'gray'}" id="fav">${m.fav?'🔒 おきにいり ちゅう':'🔓 おきにいりに する'}</button>${canBye(m)?`<button class="btn gray" id="bye">👋 おわかれ</button>`:''}</div>
     ${!canBye(m)?`<small style="color:var(--sub)">${inP?'パーティの なかまとは おわかれ できないよ':'おきにいりの なかまとは おわかれ できないよ'}</small>`:''}
     <button class="btn gray" id="cl">とじる</button>`,
-    {fav:()=>{m.fav=!m.fav;save();monModal(id);renderBox()},bye:()=>byeModal(id),in:()=>{if(P.party.length<3){P.party.push(id);save();closeModal();renderBox();return}
+    {evo:()=>doEvolve(id),fav:()=>{m.fav=!m.fav;save();monModal(id);renderBox()},bye:()=>byeModal(id),in:()=>{if(P.party.length<3){P.party.push(id);save();closeModal();renderBox();return}
         const pm=partyMons();showModal(`<div class="mt">だれと いれかえる？</div><div class="prow big">${pm.map((x,i)=>`<button class="pslot" id="sw${i}" style="--rc:${RAR[SP[x.sp].rar].c}"><div class="pms flip">${monsterSVG(x.sp)}</div><small>${SP[x.sp].name}</small></button>`).join('')}</div><button class="btn gray" id="cl">やめる</button>`,
           Object.assign({cl:closeModal},...pm.map((x,i)=>({['sw'+i]:()=>{P.party[i]=id;save();closeModal();renderBox()}}))))},
      out:()=>{P.party=P.party.filter(x=>x!==id);save();closeModal();renderBox()},cl:closeModal},'r'+s.rar);
@@ -1546,7 +1586,7 @@ function answer(btn,v){
     setTimeout(()=>monAttack(nextQ),1300)}
 }
 function correct(t){
-  const q=B.q;B.combo++;P.total++;P.todayCorrect++;if(q.review)reduceWeak(q);progressEggs();
+  const q=B.q;B.combo++;P.total++;P.todayCorrect++;if(q.review)reduceWeak(q);progressEggs();bondUp();
   const rg=Math.round(maxHp()*fxSum('regen')/100);if(rg&&B.hp<maxHp()){B.hp=Math.min(maxHp(),B.hp+rg);updHeroHp();setTimeout(()=>floatTxt('🌿+'+rg,'hero','xp'),200)}
   if(P.todayCorrect===mission()&&!P.claimed)setTimeout(()=>toast('📜 ミッション たっせい！'),600);
   let dmg=atk()*(1+Math.min(B.combo-1,10)*(.1+ringB()/100));const fast=t<(B.lv===0?5:3);if(fast)dmg*=1.3+fastB()/100;
