@@ -821,7 +821,10 @@ function drawHat(P1,hat){const G='#ffd23f',pk='#ff6fa8',W='#f4f4f4';
   if(hat==='wizard'){const V='#6a3ab0';for(let x=3;x<=12;x++)P1(x,-1,V);for(let x=5;x<=10;x++)P1(x,-2,V);for(let x=6;x<=9;x++)P1(x,-3,V);P1(7,-4,V);P1(8,-4,V);P1(8,-5,V);P1(7,-3,G);P1(6,-2,G)}
   if(hat==='crown'){for(let x=4;x<=11;x++)P1(x,-1,G);[[4,-2],[6,-2],[7,-3],[8,-3],[9,-2],[11,-2],[7,-2],[8,-2]].forEach(([x,y])=>P1(x,y,G));P1(7,-1,'#e8413c',false);P1(10,-1,'#4aa0ff',false);P1(5,-1,'#58d14a',false)}
 }
-const HDROP=[12,13,22,23,24,25],HSC=1.7;
+const HDROP=[12,13,22,23,24,25],HSC=2;
+function ds2(m){const B=new Map();for(const[x,y,c]of m.values()){if(typeof c!=='string'||c[0]!=='#')continue;const k=Math.floor(x/2)+','+Math.floor(y/2);(B.get(k)||B.set(k,[]).get(k)).push(c)}
+  const o=new Map();for(const[k,cs]of B){if(cs.length<2)continue;let r=0,g=0,b=0;for(const c of cs){const n=parseInt(c.slice(1,7),16);r+=n>>16;g+=n>>8&255;b+=n&255}const L=cs.length,[bx,by]=k.split(',').map(Number);
+    o.set(k,[bx,by,shade('#'+[r,g,b].map(v=>Math.round(v/L).toString(16).padStart(2,'0')).join(''),(hsh(bx,by)-.5)*.16)])}return o}
 function heroSVG(eq,look){
   if(typeof look==='string')look={color:look};
   const D={color:'#d94a4a',hair:'short',hc:'#3b2414',skin:'#f6d0a8'},L=Object.assign({},D,look||{});
@@ -901,7 +904,7 @@ function heroSVG(eq,look){
   // chunky (vinyl-figure) proportions: big head, short body
   const hd=new Map(),bd=new Map(),fy=y=>y-HDROP.filter(d=>d<y).length,mv=(src,dst)=>{for(const[x,y,c]of src.values())if(!HDROP.includes(y))dst.set(x+','+fy(y),[x,fy(y),c])};
   for(const[k,v]of m)(v[1]<8&&(v[1]<0||(v[0]>=3&&v[0]<=12))?hd.set(k,v):0);for(const k of hd.keys())m.delete(k);mv(m,bd);const hb=new Map();mv(hm,hb);
-  return `<svg class="hs${AU&&!auc?' aura-rb':''}" viewBox="-7.5 -18 37 46" shape-rendering="crispEdges" style="${glow};overflow:visible">${rects(bd)}${shS}<g transform="translate(8 8) scale(${HSC}) translate(-8 -8)">${rects(hd)}${eyes}</g>${wS}${rects(hb)}${petS}${fx}</svg>`;
+  return `<svg class="hs${AU&&!auc?' aura-rb':''}" viewBox="-8 -18 37 46" shape-rendering="crispEdges" style="${glow};overflow:visible"><g transform="scale(2)">${rects(ds2(bd))}</g>${shS}<g transform="translate(8 8) scale(${HSC}) translate(-8 -8)">${rects(hd)}${eyes}</g>${wS}<g transform="scale(2)">${rects(ds2(hb))}</g>${petS}${fx}</svg>`;
 }
 function slotHTML(slot,it,mini){
   const ic=it?itemIcon(Object.assign({slot},it)):itemIcon(GHOST[slot],true);
