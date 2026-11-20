@@ -1,7 +1,7 @@
 // まなびクエスト service worker
 // ゲーム本体(index.html)は「ネット優先」：つながっていれば常に最新、オフラインなら保存済みの版を使う。
 // そのため更新時は index.html を上書きするだけでよく、このファイルを書き換える必要はありません。
-const CACHE = 'mq-cache-v1';
+const CACHE = 'mq-cache-v2';
 const SHELL = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
 
 self.addEventListener('install', e => {
@@ -18,6 +18,8 @@ self.addEventListener('fetch', e => {
   const req = e.request;
   if (req.method !== 'GET') return;
   const url = new URL(req.url);
+  // Firebase など外部との通信はキャッシュせず、そのままネットへ（フォントとSDK本体だけキャッシュ）
+  if (url.origin !== location.origin && !/^(fonts\.googleapis\.com|fonts\.gstatic\.com|www\.gstatic\.com)$/.test(url.hostname)) return;
   const isPage = req.mode === 'navigate' || (url.origin === location.origin && (url.pathname.endsWith('/') || url.pathname.endsWith('.html')));
   if (isPage) {
     // ネット優先（4秒で諦めてキャッシュ）
