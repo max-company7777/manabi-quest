@@ -276,6 +276,13 @@ input{font:inherit}
 .db{position:relative}.db.easy{opacity:.6}.mst{position:absolute;top:-6px;right:-4px;font-style:normal;font-size:12px}
 .easyw{font-size:12px;color:#ffb020;margin-top:4px;font-family:'M PLUS Rounded 1c',sans-serif}
 
+
+.evobanner{display:flex;align-items:center;gap:8px;background:linear-gradient(90deg,#7a4bd1,#d9771e);border:3px solid #ffd23f;border-radius:6px;padding:6px 10px;color:#fff;font-size:15px;box-shadow:0 0 14px #ffd23f88;animation:pulse 1.4s infinite;width:100%;text-align:left}
+.evi{display:flex;gap:2px}.evi span{width:30px;display:block}.evi img{width:100%;display:block}
+.evt b{white-space:nowrap}.evt{flex:1}.evt b{color:#ffd23f}.evgo{font-size:13px;white-space:nowrap}
+.pslot.evok{border-color:#ffd23f;box-shadow:0 0 10px #ffd23f;position:relative}
+.evtag{position:absolute;top:-8px;left:50%;transform:translateX(-50%);font-style:normal;font-size:10px;background:#ffd23f;color:#3a2000;border-radius:3px;padding:0 4px;white-space:nowrap;animation:pulse 1s infinite}
+
 /* party / box */
 .flip svg,.flip img{transform:scaleX(-1)}
 .pix{image-rendering:pixelated;image-rendering:crisp-edges}
@@ -398,6 +405,7 @@ input{font:inherit}
       </div>
       <div class="slots" id="hSlotsR"></div>
     </div>
+    <button class="evobanner" id="hEvo" style="display:none"></button>
     <div class="panel partyp" id="hParty"></div>
     <div class="panel mis" id="mis"></div>
     <div class="subj" id="subj"></div>
@@ -1047,7 +1055,10 @@ function renderHome(){
     showModal(it?`<div class="mt">${SLOTN[k]}</div>${itemCard(it)}${enhBtn(it)}<div class="row"><button class="btn green" id="ch">📦 ボックスから えらぶ（${n}）</button><button class="btn gray" id="un">はずす</button></div><button class="btn gray" id="cl">とじる</button>`
       :`<div class="mt">${SLOTN[k]}</div><p>${n?'ボックスに '+n+'こ あるよ':'まだ もっていないよ。<br>モンスターを たおして たからばこを さがそう！'}</p>${n?'<button class="btn green big" id="ch">📦 ボックスから えらぶ</button>':''}<button class="btn gray" id="cl">とじる</button>`,
       {cl:closeModal,enh:()=>doEnh(it,()=>{renderHome();$('hSlotsL').querySelector('[data-s="'+k+'"]')?.click()||$('hSlotsR').querySelector('[data-s="'+k+'"]')?.click()}),ch:()=>{closeModal();boxF=k;openBox('items')},un:()=>{if(P.box.length>=boxCap()){toast('ボックスが いっぱい！');return}P.box.push(it);P.eq[k]=null;save();closeModal();renderHome()}})});
-  renderParty();$('adminBtn').style.display=P.master?'':'none';
+  renderParty();{const ev=P.mons.filter(evoReady),eb=$('hEvo');
+    if(ev.length){eb.style.display='';eb.innerHTML=`<span class="evi">${ev.slice(0,3).map(m=>`<span class="flip">${monsterSVG(m.sp)}</span>`).join('')}</span><span class="evt">✨ しんか できる なかまが <b>${ev.length}たい</b> いるよ！</span><span class="evgo">みる ▶</span>`;
+      eb.onclick=()=>{openBox('mons');if(ev.length===1)monModal(ev[0].id)}}else eb.style.display='none'}
+  $('adminBtn').style.display=P.master?'':'none';
   const TS=P.todaySubj||{},mp=misPer(),done=Object.keys(SUBJ).every(k=>(TS[k]||0)>=mp);
   $('mis').innerHTML=`<div>📜 きょうの ミッション <small style="color:var(--sub)">（それぞれ ${mp}もん せいかい）</small></div>
     <div class="misrow">${Object.keys(SUBJ).map(k=>{const n=Math.min(mp,TS[k]||0);return `<div class="mis1${n>=mp?' ok':''}"><span>${SUBJ[k].n}${n>=mp?' ✅':''}</span><div class="pbar"><i style="width:${n/mp*100}%"></i></div><small>${n}/${mp}・★${recLv(k)+1}いじょう</small></div>`}).join('')}</div>
@@ -1256,13 +1267,13 @@ function makeMaster(){
 function renderParty(){
   const pm=partyMons(),inc=P.eggs.filter(e=>e.inc);
   let h=`<div><div class="pph">なかま <small>パワー ${partyPow()}</small></div><div class="prow">`;
-  for(let i=0;i<partyMax();i++){const m=pm[i];h+=m?`<button class="pslot" data-t="mons" style="--rc:${RAR[SP[m.sp].rar].c}"><div class="pms flip">${monsterSVG(m.sp)}</div><small>${evoReady(m)?'✨':elIcon(m.sp)}Lv${m.lv}</small></button>`
+  for(let i=0;i<partyMax();i++){const m=pm[i];h+=m?`<button class="pslot${evoReady(m)?' evok':''}" data-t="mons" data-id="${m.id}" style="--rc:${RAR[SP[m.sp].rar].c}"><div class="pms flip">${monsterSVG(m.sp)}</div><small>${evoReady(m)?'✨':elIcon(m.sp)}Lv${m.lv}</small>${evoReady(m)?'<i class="evtag">しんか!</i>':''}</button>`
     :`<button class="pslot empty" data-t="mons"><div class="pms">＋</div><small>あき</small></button>`}
   h+=`</div></div><div><div class="pph">ふかき <small>せいかいで かえる</small></div><div class="prow">`;
   for(let i=0;i<3;i++){const e=inc[i];h+=e?`<button class="pslot" data-t="eggs" style="--rc:${RAR[e.rar].c}"><div class="pms">${eggIcon(e)}</div><div class="ebar"><i style="width:${Math.min(100,e.prog/e.need*100)}%"></i></div></button>`
     :`<button class="pslot empty" data-t="eggs"><div class="pms" style="opacity:.4">${eggIcon({rar:0,prog:0,need:1})}</div><small>あき</small></button>`}
   h+='</div></div>';$('hParty').innerHTML=h;
-  document.querySelectorAll('#hParty .pslot').forEach(b=>b.onclick=()=>openBox(b.dataset.t));
+  document.querySelectorAll('#hParty .pslot').forEach(b=>b.onclick=()=>{openBox(b.dataset.t);if(b.classList.contains('evok'))monModal(b.dataset.id)});
 }
 
 /* ---- box screen ---- */
@@ -1282,7 +1293,7 @@ function renderBox(){
     $('bxCount').textContent=`なかま ${P.mons.length}たい`;
     const pm=partyMons();
     h+=`<div class="panel stbox"><div class="sth">⚔️ パーティ <small>（${partyMax()}たいまで いっしょに たたかう）</small></div><div class="prow big">`;
-    for(let i=0;i<partyMax();i++){const m=pm[i];h+=m?`<button class="pslot mc" data-id="${m.id}" style="--rc:${RAR[SP[m.sp].rar].c}"><div class="pms flip">${monsterSVG(m.sp)}</div><small>${elIcon(m.sp)}${SP[m.sp].name}<br>Lv${m.lv}</small></button>`:`<div class="pslot empty"><div class="pms">＋</div><small>あき</small></div>`}
+    for(let i=0;i<partyMax();i++){const m=pm[i];h+=m?`<button class="pslot mc${evoReady(m)?' evok':''}" data-id="${m.id}" style="--rc:${RAR[SP[m.sp].rar].c}"><div class="pms flip">${monsterSVG(m.sp)}</div><small>${elIcon(m.sp)}${SP[m.sp].name}<br>Lv${m.lv}</small>${evoReady(m)?'<i class="evtag">しんか!</i>':''}</button>`:`<div class="pslot empty"><div class="pms">＋</div><small>あき</small></div>`}
     h+=`</div><div class="elchart">${Object.keys(STRONG).filter(e=>STRONG[e].length).map(e=>`<span>${ELS[e].i}→${STRONG[e].map(x=>ELS[x].i).join('')}</span>`).join('')}<span>🌈→ぜんぶ（きゅうきょくだけ）</span></div><small style="color:var(--sub)">→ の あいてに なかまの こうげきが 1.5ばい！</small></div><div class="sth" style="padding:0 4px">📦 ボックス</div>`;
     const rest=P.mons.filter(m=>!P.party.includes(m.id)).sort((a,b)=>SP[b.sp].rar-SP[a.sp].rar||b.lv-a.lv);
     h+=`<div class="bgrid">${rest.map(m=>`<button class="bcell mc" data-id="${m.id}" style="--rc:${RAR[SP[m.sp].rar].c}"><div class="flip">${monsterSVG(m.sp)}</div><b>Lv${m.lv}</b><i class="eb">${elIcon(m.sp)}</i>${m.fav?'<i class="fv">🔒</i>':''}${evoReady(m)?'<i class="evb">✨</i>':''}</button>`).join('')||'<small style="color:var(--sub)">ボスを たおすと たまごを おとすことが あるよ</small>'}</div>`;
