@@ -229,6 +229,16 @@ input{font:inherit}
 
 .byewarn{background:#e8413c33;border:2px solid #e8413c;border-radius:6px;padding:6px;color:#ffb0a0;font-size:14px}
 .fv{position:absolute;top:1px;left:2px;font-style:normal;font-size:11px}
+
+.rktabs{display:grid;grid-template-columns:repeat(5,1fr);gap:4px}.rktabs .db{font-size:11px;padding:8px 0}
+.rkrow{display:flex;align-items:center;gap:8px;padding:8px 10px}
+.rkrow.top1{border-color:#ffd23f;box-shadow:0 0 14px #ffd23f66}.rkrow.top2{border-color:#c9c9c9}.rkrow.top3{border-color:#c0703a}
+.rkrow.me{background:#3a4a2c}
+.rkm{width:38px;text-align:center;font-size:26px}.rkav{width:44px;flex:none}.rkav .hs{width:100%}
+.rkn{flex:1;min-width:0}.rkn b{font-size:17px}.rkn small{display:block;font-size:11px;color:var(--sub);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.metag{font-size:10px;background:#58d14a;color:#123;border-radius:3px;padding:0 4px;vertical-align:middle}
+.rkv{text-align:right;line-height:1.1}.rkv b{font-size:24px;color:var(--gold)}.rkv small{display:block;font-size:10px;color:var(--sub)}
+
 /* party / box */
 .flip svg,.flip img{transform:scaleX(-1)}
 .pix{image-rendering:pixelated;image-rendering:crisp-edges}
@@ -365,8 +375,19 @@ input{font:inherit}
       <button class="btn" id="statBtn">📊 きろく</button>
       <button class="btn" id="boxBtn">📦 ボックス</button>
       <button class="btn orange" id="adminBtn" style="display:none">👑 みんな</button>
+      <button class="btn" id="rankBtn">🏆 ランキング</button>
       <button class="btn" id="setBtn">⚙️ せってい</button>
     </div>
+  </div>
+</section>
+
+<!-- rank -->
+<section id="rank" class="screen">
+  <header class="hud"><button class="btn x" id="rkBack">◀</button><div style="font-size:18px">🏆 かぞく ランキング</div></header>
+  <div class="homebody">
+    <div class="rktabs" id="rkTabs"></div>
+    <div class="panel stbox" id="rkInfo"></div>
+    <div id="rkList" style="display:flex;flex-direction:column;gap:8px"></div>
   </div>
 </section>
 
@@ -957,6 +978,8 @@ function renderHome(){
 $('who').onclick=()=>profileForm(P);
 $('setBtn').onclick=()=>profileForm(P);
 $('statBtn').onclick=()=>showStats();
+$('rankBtn').onclick=()=>showRank();
+$('rkBack').onclick=()=>{show('home');renderHome()};
 $('adminBtn').onclick=()=>showAdmin();
 $('adBack').onclick=()=>{show('home');renderHome()};
 $('boxBtn').onclick=()=>{boxF='all';openBox('items')};
@@ -1389,6 +1412,37 @@ async function renderCloudBox(){
     <div class="row"><button class="btn" id="cbRe">🔄 さいしんに する</button><button class="btn purple" id="cbSet">⚙️ コード</button></div>`;
   $('cbRe').onclick=renderCloudBox;$('cbSet').onclick=cloudSetup;
   $('remoteCards').innerHTML=rs.map(adCard).join('');bindAdCards();
+}
+
+
+/* ---- family ranking ---- */
+const RKS=[['week','📝 この7にち','せいかい','もん'],['lv','⭐ レベル','Lv',''],['pow','⚔️ パワー','パワー',''],['dex','📖 ずかん','なかま','しゅ'],['streak','🔥 れんぞく','れんぞく','にち']];
+let rkTab='week',rkRemote=null,rkLoading=false;
+function weekOk(p){const S=p.stats||{days:{}};let ok=0;for(let i=0;i<7;i++){const d=new Date();d.setDate(d.getDate()-i);const e=(S.days||{})[dkey(d)]||{};for(const k in e)ok+=e[k].ok}return ok}
+function rkVal(p,k){ensureP(p);return k==='week'?weekOk(p):k==='lv'?p.lv:k==='pow'?power(p.eq,p.lv,p):k==='dex'?ownedStd(p):(p.streak||0)}
+async function showRank(){
+  show('rank');rkRemote=null;renderRank();
+  if(FB_CONFIG&&G.fam){rkLoading=true;renderRank();await syncUp();const r=await syncDown();rkLoading=false;rkRemote=r;renderRank()}
+}
+function renderRank(){
+  $('rkTabs').innerHTML=RKS.map(([k,n])=>`<button class="btn db${rkTab===k?' sel':''}" data-k="${k}">${n}</button>`).join('');
+  document.querySelectorAll('#rkTabs .db').forEach(b=>b.onclick=()=>{rkTab=b.dataset.k;renderRank()});
+  const map=new Map();
+  G.profiles.filter(p=>!p.master).forEach(p=>map.set(p.id,{p,dev:G.devName||'この たんまつ',local:true}));
+  (rkRemote||[]).filter(p=>!p.master).forEach(p=>{if(!map.has(p.id))map.set(p.id,{p,dev:p._remote,upd:p._upd})});
+  const def=RKS.find(r=>r[0]===rkTab),rows=[...map.values()].map(o=>Object.assign(o,{v:rkVal(o.p,rkTab)})).sort((a,b)=>b.v-a.v||b.p.lv-a.p.lv);
+  const me=P&&!P.master?P.id:null;
+  $('rkInfo').innerHTML=!FB_CONFIG?'<small style="color:var(--sub)">この たんまつの ぼうけんしゃだけの ランキングだよ</small>'
+    :!G.fam?'<small style="color:var(--sub)">いまは この たんまつの ぼうけんしゃだけ。「⚙️ せってい → ☁️ かぞくで きょうゆう」で かぞくコードを いれると、ほかの たんまつの かぞくも でてくるよ！</small>'
+    :rkLoading?'<small style="color:var(--sub)">☁️ かぞくの データを よみこみちゅう…</small>'
+    :rkRemote===null?'<small style="color:#ffb020">かぞくの データを よみこめなかった（オフライン？）。この たんまつの ぶんだけ だしているよ</small><button class="btn" id="rkRe">🔄 もういちど</button>'
+    :`<small style="color:var(--sub)">☁️ かぞく ${rows.length}にんの ランキング</small><button class="btn" id="rkRe">🔄 さいしんに する</button>`;
+  if($('rkRe'))$('rkRe').onclick=showRank;
+  let rk=0,prev=null;
+  $('rkList').innerHTML=rows.map((o,i)=>{if(o.v!==prev){rk=i+1;prev=o.v}const medal=rk===1?'🥇':rk===2?'🥈':rk===3?'🥉':rk+'い';
+    return `<div class="panel rkrow${rk<=3?' top'+rk:''}${o.p.id===me?' me':''}"><div class="rkm">${medal}</div><div class="rkav">${heroSVG(o.p.eq,o.p)}</div>
+      <div class="rkn"><b>${esc(o.p.name)}</b>${o.p.id===me?' <span class="metag">じぶん</span>':''}<small>${o.p.age}さい・${esc(o.dev||'')}${o.upd?'・'+agoTxt(o.upd):''}</small></div>
+      <div class="rkv"><small>${def[2]}</small><b>${o.v}</b><small>${def[3]}</small></div></div>`}).join('')||'<div class="panel stbox"><p>まだ ぼうけんしゃが いないよ</p></div>';
 }
 
 /* ---- master: everyone's status ---- */
