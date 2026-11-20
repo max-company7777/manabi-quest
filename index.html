@@ -1297,12 +1297,8 @@ function doEnh(it,cb){const c=enhCost(it);if(P.gold<c){toast('ゴールドが �
 const spentOn=it=>{let t=0;const base=(10+(it.lv||Math.round(it.p/RAR[it.rar].m))*3)*(it.rar+1);for(let i=0;i<(it.plus||0);i++)t+=Math.round(base*Math.pow(1.25,i));return t};
 const xferCost=it=>Math.max(10,Math.round(spentOn(it)*.25));
 function equipFlow(it,cur,apply){
-  if(!cur||!(cur.plus>0)){apply();return}const c=xferCost(cur);
-  showModal(`<div class="mt">⚒️ きょうかを ひきつぐ？</div><p style="font-size:14px">いまの「${iname(cur)}」の<br><b style="color:#7bea5a;font-size:20px">+${cur.plus}</b> を あたらしい そうびに うつせるよ</p>
-    <div class="item" style="--rc:${RAR[it.rar].c}"><div class="ie">${itemIcon(it)}</div><div><div class="inm">${it.name} <span style="color:#7bea5a">+${(it.plus||0)+cur.plus}</span></div><div class="is">パワー ${iscore(it)} → ${iscore(Object.assign({},it,{plus:(it.plus||0)+cur.plus}))}</div></div></div>
-    <button class="btn orange big" id="xy"${P.gold<c?' disabled style="opacity:.5"':''}>⚒️ ひきつぐ（🪙${c}）</button><small style="color:var(--sub)">もっている ゴールド 🪙${P.gold}</small>
-    <button class="btn gray" id="xn">ひきつがないで そうびする</button>`,
-    {xy:()=>{if(P.gold<c){toast('ゴールドが たりないよ');return}P.gold-=c;it.plus=(it.plus||0)+cur.plus;cur.plus=0;snd(880,.08,'square',.05);snd(1320,.15,'square',.05,0,.08);apply()},xn:apply});
+  if(cur&&cur.plus>0){const n=cur.plus;it.plus=(it.plus||0)+n;cur.plus=0;snd(880,.08,'square',.05);snd(1320,.15,'square',.05,0,.08);apply();setTimeout(()=>toast(`⚒️ +${n} を ひきついだよ！`),300);return}
+  apply();
 }
 function boxItemModal(idx){
   const it=P.box[idx];if(!it)return;const cur=P.eq[it.slot],now=power(),neq=Object.assign({},P.eq,{[it.slot]:it}),nxt=power(neq),diff=nxt-now;
