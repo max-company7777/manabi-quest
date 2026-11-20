@@ -1762,12 +1762,19 @@ function startBattle(subj,lv,stage,weakOnly){
   updHud();updHeroHp();updCombo();spawn();
   if(!weakOnly&&!counts(subj,lv))setTimeout(()=>toast(`★${recLv(subj)+1}いじょうで たまご・しんかが すすむよ`),1600);else if(!weakOnly&&mastered(subj,lv))setTimeout(()=>toast('🎓 マスターずみ：★を あげると ごほうび アップ'),1600);
 }
+/* monsters scale to the player's real strength: gear still helps (fewer hits), but no endless one-shots */
+const HITS=[[1.5,3.5,1.2],[2,4.5,1.5],[2.5,6,1.6],[2.5,6,1.6],[2.5,6,1.6]],DIEW=[[14,9],[12,8],[10,6],[10,6],[10,6]];
+function scaleMon(mo){const L=Math.min(B.lv,4),[hn,hb,hmin]=HITS[L],[dn,db]=DIEW[L];
+  const cm=1+Math.min(B.combo,10)*(.1+ringB()/100),E=atk()*cm+petAtk()+partyPow(),std=4+mo.lv*6.2;
+  let h=(mo.boss?hb:hn)*Math.pow(Math.min(1,std/E),.35)*(1+.15*mo.rar)*(mo.ult?1.8:1);h=Math.max(h,mo.boss?hmin*2.5:hmin);
+  mo.maxHp=Math.min(Math.max(mo.maxHp,Math.round(E*h)),Math.round(E*(mo.boss?hb:hn)*1.6*(mo.ult?1.8:1)));
+  mo.dmg=Math.max(mo.dmg,Math.round(maxHp()/(mo.ult?db*.7:mo.boss?db:dn)*(1+.05*mo.rar)))}
 function spawn(){
   B.wave++;const wb=B.wave===B.waves,st=B.stage,uu=B.weakOnly?[]:ultUnlocked();
   const ult=uu.length&&Math.random()<ultRate(wb)?pick(uu).k:null,boss=wb||!!ult;
   const sp=ult||pickSpecies(boss?BOSSES:NORMALS,B.lv),S_=SP[sp],rar=S_.rar,m=[sp,S_.name];P.dex.seen[sp]=1;
   const mlv=Math.max(1,Math.max(st*2,P.lv)+(ult?10:boss?3:R(-1,1))),es=mlv/2;
-  B.mon={boss,ult:!!ult,sp,rar,lv:mlv,es,n:(ult?'🌟 ':boss?'👑 ':'')+m[1],maxHp:Math.round((14+es*9)*(boss?3.2:1)*(1+.25*rar)*(ult?2.5:1)),dmg:Math.round((4+es*2.2)*(boss?1.4:1)*(1+.15*rar)*(ult?1.6:1))};B.mon.hp=B.mon.maxHp;
+  B.mon={boss,ult:!!ult,sp,rar,lv:mlv,es,n:(ult?'🌟 ':boss?'👑 ':'')+m[1],maxHp:Math.round((14+es*9)*(boss?3.2:1)*(1+.25*rar)*(ult?2.5:1)),dmg:Math.round((4+es*2.2)*(boss?1.4:1)*(1+.15*rar)*(ult?1.6:1))};scaleMon(B.mon);B.mon.hp=B.mon.maxHp;
   B.gaugeDur=GAUGE[B.lv]*(boss?.85:1);
   const el=$('mon');$('monE').innerHTML=monsterSVG(m[0]);el.className='fighter mon'+(boss?' boss':'')+(ult?' ult':'')+' r'+rar;anim(el,'spawn',500);
   $('mName').innerHTML=`<small>${elIcon(sp)} Lv${mlv}</small> <span style="color:${RAR[rar].h}">${B.mon.n}</span> <small style="color:${RAR[rar].h}">${RAR[rar].n}</small>`;
