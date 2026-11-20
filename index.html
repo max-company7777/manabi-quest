@@ -267,8 +267,15 @@ input{font:inherit}
 .ttlpv{font-size:12px;color:var(--gold);text-align:center;line-height:1.3}
 .rkt{font-style:normal;font-size:10px;color:var(--gold);margin-left:4px}
 
-.partyb{max-width:34%;flex-wrap:wrap-reverse;align-items:flex-end}
-.partyb.many .pm{width:clamp(26px,7.5vw,42px)}
+.partyb.many{display:grid;grid-template-columns:repeat(2,auto);gap:1px 4px;align-items:end;left:38%}
+.partyb.many .pm{width:clamp(26px,7.5vw,40px)}
+
+.misrow{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.mis1{background:#0004;border-radius:5px;padding:5px;font-size:13px;display:flex;flex-direction:column;gap:3px}
+.mis1.ok{background:#2e6b2b66}.mis1 small{font-size:10px;color:var(--sub)}.mis1 .pbar{height:10px}
+.db{position:relative}.db.easy{opacity:.6}.mst{position:absolute;top:-6px;right:-4px;font-style:normal;font-size:12px}
+.easyw{font-size:12px;color:#ffb020;margin-top:4px;font-family:'M PLUS Rounded 1c',sans-serif}
+
 /* party / box */
 .flip svg,.flip img{transform:scaleX(-1)}
 .pix{image-rendering:pixelated;image-rendering:crisp-edges}
@@ -659,7 +666,14 @@ const healKill=()=>(P.eq.c&&P.eq.c.eff==='heal'?healOf(ip(P.eq.c)):0)+Math.round
 const xpBonus=()=>(P.eq.c&&P.eq.c.eff==='xp'?xpOf(ip(P.eq.c)):0)+fxSum('xp');
 const goldBonus=()=>(P.eq.c&&P.eq.c.eff==='gold'?goldOf(ip(P.eq.c)):0)+fxSum('gold');
 const xpNeed=()=>20+P.lv*15;
-const mission=()=>P.age<=5?5:10;
+const misPer=()=>P.age<=5?2:4;
+const ageDef=p=>{const a=p.age;return a<=4?0:a<=6?1:a===7?2:3};
+const mastered=(sb,lv,p=P)=>!!(p.mast&&p.mast[sb+lv]);
+function recLv(sb,p=P){let hm=-1;for(let i=0;i<5;i++)if(mastered(sb,i,p))hm=i;return Math.min(4,Math.max(ageDef(p),hm+1))}
+const counts=(sb,lv)=>lv>=recLv(sb);
+function trackMastery(sb,lv,ok){P.roll=P.roll||{};P.mast=P.mast||{};const k=sb+lv,a=(P.roll[k]=P.roll[k]||[]);a.push(ok?1:0);if(a.length>30)a.shift();
+  if(!P.mast[k]&&a.length>=30&&a.reduce((x,y)=>x+y,0)>=27){P.mast[k]=1;
+    setTimeout(()=>{fanfare();toast(`🎓 ${SUBJ[sb].n}★${lv+1} マスター！`);setTimeout(()=>toast(lv<4?`★${lv+2}に ちょうせんすると ごほうび アップ！`:'すごい！ さいこうの ★だよ！'),2000)},500)}}
 
 /* =============== hero sprite (blocky) =============== */
 function shade(hex,amt){let n=parseInt(hex.slice(1,7),16),r=n>>16,g=n>>8&255,b=n&255;const f=amt<0?0:255,t=Math.abs(amt);
@@ -1009,7 +1023,7 @@ function selectProfile(id){P=G.profiles.find(p=>p.id===id);if(!P)return;ensureP(
 function checkDaily(){
   const t=new Date(),today=dayStr(t),y=new Date(t);y.setDate(t.getDate()-1);
   if(P.lastDay===today)return;
-  P.streak=(P.lastDay===dayStr(y))?P.streak+1:1;P.lastDay=today;P.todayCorrect=0;P.claimed=false;
+  P.streak=(P.lastDay===dayStr(y))?P.streak+1:1;P.lastDay=today;P.todayCorrect=0;P.todaySubj={math:0,eng:0,kanji:0};P.claimed=false;
   const bonus=10*Math.min(P.streak,7);P.gold+=bonus;save();
   setTimeout(()=>showModal(`<div class="chest">🔥</div><div class="mt">${P.streak}にち れんぞく！</div>
     <p>ログインボーナス<br><b class="goldt">🪙 +${bonus}</b></p>${P.streak<7?'<small>まいにち くると ふえるよ（7にちで さいだい）</small>':''}
@@ -1034,16 +1048,17 @@ function renderHome(){
       :`<div class="mt">${SLOTN[k]}</div><p>${n?'ボックスに '+n+'こ あるよ':'まだ もっていないよ。<br>モンスターを たおして たからばこを さがそう！'}</p>${n?'<button class="btn green big" id="ch">📦 ボックスから えらぶ</button>':''}<button class="btn gray" id="cl">とじる</button>`,
       {cl:closeModal,enh:()=>doEnh(it,()=>{renderHome();$('hSlotsL').querySelector('[data-s="'+k+'"]')?.click()||$('hSlotsR').querySelector('[data-s="'+k+'"]')?.click()}),ch:()=>{closeModal();boxF=k;openBox('items')},un:()=>{if(P.box.length>=boxCap()){toast('ボックスが いっぱい！');return}P.box.push(it);P.eq[k]=null;save();closeModal();renderHome()}})});
   renderParty();$('adminBtn').style.display=P.master?'':'none';
-  const m=Math.min(mission(),P.todayCorrect);
-  $('mis').innerHTML=`<div>📜 きょうの ミッション：${mission()}もん せいかい</div><div class="pbar"><i style="width:${m/mission()*100}%"></i></div>
-    ${P.claimed?'<small>✅ クリア！ また あした！</small>':m>=mission()?'<button class="btn orange claim" id="claimBtn">🎁 ほうしゅうを うけとる</button>':`<small>${m} / ${mission()}　クリアで レア いじょうの そうびが もらえる！</small>`}`;
+  const TS=P.todaySubj||{},mp=misPer(),done=Object.keys(SUBJ).every(k=>(TS[k]||0)>=mp);
+  $('mis').innerHTML=`<div>📜 きょうの ミッション <small style="color:var(--sub)">（それぞれ ${mp}もん せいかい）</small></div>
+    <div class="misrow">${Object.keys(SUBJ).map(k=>{const n=Math.min(mp,TS[k]||0);return `<div class="mis1${n>=mp?' ok':''}"><span>${SUBJ[k].n}${n>=mp?' ✅':''}</span><div class="pbar"><i style="width:${n/mp*100}%"></i></div><small>${n}/${mp}・★${recLv(k)+1}いじょう</small></div>`}).join('')}</div>
+    ${P.claimed?'<small>✅ クリア！ また あした！</small>':done?'<button class="btn orange claim" id="claimBtn">🎁 ほうしゅうを うけとる</button>':'<small>ぜんぶ クリアで レア いじょうの そうびが もらえる！</small>'}`;
   if($('claimBtn'))$('claimBtn').onclick=()=>{P.claimed=true;save();showDrop(makeItem(Math.round(Math.max(1,P.lv/2,...Object.values(P.best))),P.diff[P.subj],false,1),renderHome,'ミッション クリア！')};
   $('subj').innerHTML=Object.keys(SUBJ).map(k=>`<button class="btn sbtn${P.subj===k?' sel':''}" data-k="${k}"><span class="e">${SUBJ[k].e}</span>${SUBJ[k].n}</button>`).join('');
   document.querySelectorAll('.sbtn').forEach(b=>b.onclick=()=>{snd(660,.05);P.subj=b.dataset.k;save();selStage=P.best[P.subj]+1;renderHome()});
   const d=P.diff[P.subj];
-  $('dblocks').innerHTML=[0,1,2,3,4].map(i=>`<button class="btn db${i===d?' sel':''}" data-d="${i}">★${i+1}</button>`).join('');
+  const rl=recLv(P.subj);$('dblocks').innerHTML=[0,1,2,3,4].map(i=>`<button class="btn db${i===d?' sel':''}${i<rl?' easy':''}" data-d="${i}">★${i+1}${mastered(P.subj,i)?'<i class="mst">🎓</i>':''}</button>`).join('');
   document.querySelectorAll('.db').forEach(b=>b.onclick=()=>{snd(660,.05);P.diff[P.subj]=+b.dataset.d;save();renderHome()});
-  $('dinfo').innerHTML=`${SUBJ[P.subj].lv[d]}<small>めやす：${AGEHINT[d]}　ほうしゅう ×${DMULT[d]}${GAUGE[d]?'　⏱ じかんせいげん あり':'　⏱ じかんせいげん なし'}</small>`;
+  $('dinfo').innerHTML=`${SUBJ[P.subj].lv[d]}${d<rl?`<div class="easyw">⚠️ ★${rl+1}より かんたんだよ：たまご・しんか・ミッションが すすまないよ${mastered(P.subj,d)?'／マスターずみなので ごほうび 1/3':''}</div>`:mastered(P.subj,d)?'<div class="easyw">🎓 マスターずみ：ごほうび 1/3。★を あげよう！</div>':''}<small>めやす：${AGEHINT[d]}　ほうしゅう ×${DMULT[d]}${GAUGE[d]?'　⏱ じかんせいげん あり':'　⏱ じかんせいげん なし'}</small>`;
   const mx=P.best[P.subj]+1;selStage=Math.min(Math.max(1,selStage),mx);
   $('sNum').textContent=selStage;$('sPrev').disabled=selStage<=1;$('sNext').disabled=selStage>=mx;
   $('weakN').textContent=P.weak.length;
@@ -1399,7 +1414,7 @@ function catOf(subj,key){
   const k=key.match(/^k([234])/);return k?{2:'かんじ1年（よみ）',3:'かんじ2年（よみ）',4:'かんじ3年（じゅくご）'}[k[1]]:'こくご';
 }
 function record(q,ok,t){
-  P.lastPlay=Date.now();
+  P.lastPlay=Date.now();if(B&&!B.weakOnly&&!q.review)trackMastery(B.subj,B.lv,ok);
   const S=P.stats||(P.stats={cats:{},days:{},items:{}});const subj=q.subj||'math';
   const ck=subj+'|'+catOf(subj,q.key),c=S.cats[ck]||(S.cats[ck]={n:0,ok:0,t:0});c.n++;if(ok)c.ok++;c.t+=Math.min(t,30);
   const d=dkey(new Date()),dd=S.days[d]||(S.days[d]={}),ds=dd[subj]||(dd[subj]={n:0,ok:0});ds.n++;if(ok)ds.ok++;
@@ -1662,6 +1677,7 @@ function startBattle(subj,lv,stage,weakOnly){
   show('battle');$('arena').style.background=arenaBg(stage);$('pName').textContent=P.name;
   $('q').innerHTML='';$('choices').innerHTML='';$('gauge').style.width='0';$('gaugeW').classList.toggle('off',!GAUGE[lv]);
   updHud();updHeroHp();updCombo();spawn();
+  if(!weakOnly&&!counts(subj,lv))setTimeout(()=>toast(`★${recLv(subj)+1}いじょうで たまご・しんかが すすむよ`),1600);else if(!weakOnly&&mastered(subj,lv))setTimeout(()=>toast('🎓 マスターずみ：★を あげると ごほうび アップ'),1600);
 }
 function spawn(){
   B.wave++;const wb=B.wave===B.waves,st=B.stage,uu=B.weakOnly?[]:ultUnlocked();
@@ -1705,9 +1721,11 @@ function answer(btn,v){
     setTimeout(()=>monAttack(nextQ),1300)}
 }
 function correct(t){
-  const q=B.q;B.combo++;P.total++;P.todayCorrect++;if(q.review)reduceWeak(q);progressEggs();bondUp();
+  const q=B.q;B.combo++;P.total++;P.todayCorrect++;if(q.review)reduceWeak(q);
+  if(!B.weakOnly&&counts(B.subj,B.lv)){progressEggs();bondUp();P.todaySubj=P.todaySubj||{};P.todaySubj[B.subj]=(P.todaySubj[B.subj]||0)+1;
+    const TS=P.todaySubj;if(!P.claimed&&TS[B.subj]===misPer()){setTimeout(()=>toast(`📜 ${SUBJ[B.subj].n}の ミッション クリア！`),600)}}
   const rg=Math.round(maxHp()*fxSum('regen')/100);if(rg&&B.hp<maxHp()){B.hp=Math.min(maxHp(),B.hp+rg);updHeroHp();setTimeout(()=>floatTxt('🌿+'+rg,'hero','xp'),200)}
-  if(P.todayCorrect===mission()&&!P.claimed)setTimeout(()=>toast('📜 ミッション たっせい！'),600);
+
   let dmg=atk()*(1+Math.min(B.combo-1,10)*(.1+ringB()/100));const fast=t<(B.lv===0?5:3);if(fast)dmg*=1.3+fastB()/100;
   const cr=Math.random()*100<crit();if(cr)dmg*=2+fxSum('critd')/100;
   if(Math.random()*100<Math.min(50,fxSum('double'))){dmg*=2;setTimeout(()=>floatTxt('✨ダブル！','mon','info'),380)}dmg=Math.round(dmg);
@@ -1748,7 +1766,7 @@ function monAttack(cb){
 function gainXp(n){if(P.lv>=MAXLV){P.xp=0;return}P.xp+=n;let up=false;while(P.lv<MAXLV&&P.xp>=xpNeed()){P.xp-=xpNeed();P.lv++;up=true}if(P.lv>=MAXLV)P.xp=0;
   if(up){fanfare();toast(`🎉 レベルアップ！ Lv${P.lv}　パワー ${power()}`);if(B){B.hp=maxHp();updHeroHp();updHud()}}}
 function defeat(){
-  const mo=B.mon,dm=DMULT[B.lv]*(1+.5*(mo.rar||0));$('mon').classList.add('die');snd(300,.4,'square',.06,-250);
+  const mo=B.mon,dm=DMULT[B.lv]*(1+.5*(mo.rar||0))*(mastered(B.subj,B.lv)&&!B.weakOnly?1/3:1);$('mon').classList.add('die');snd(300,.4,'square',.06,-250);
   const es=mo.es||B.stage,xp=Math.round((6+es*3)*(mo.boss?4:1)*dm*(1+xpBonus()/100)),gold=Math.round((3+es*2)*(mo.boss?5:1)*dm*(1+goldBonus()/100)*(.8+Math.random()*.4));
   P.gold+=gold;floatTxt(`+${xp} XP`,'mon','xp');setTimeout(()=>{floatTxt(`🪙+${gold}`,'mon','gold');coin()},250);
   const hk=healKill();if(hk){B.hp=Math.min(maxHp(),B.hp+hk);updHeroHp();setTimeout(()=>floatTxt('💚+'+hk,'hero','xp'),300)}
@@ -1780,7 +1798,7 @@ function stageClear(){
   if(!B.sawUlt&&!B.weakOnly&&ultUnlocked().length)P.ultMiss=(P.ultMiss||0)+1;
   const {stage:st,subj}=B,stars=B.wrong===0?3:B.wrong<=2?2:1;
   if(!B.weakOnly&&st>P.best[subj]){P.best[subj]=st;selStage=st+1}
-  const bonus=Math.round(st*10*stars*DMULT[B.lv]);P.gold+=bonus;save();B.lock=true;fanfare();
+  const bonus=Math.round(st*10*stars*DMULT[B.lv]*(mastered(subj,B.lv)&&!B.weakOnly?1/3:1));P.gold+=bonus;save();B.lock=true;fanfare();
   showModal(`<div class="mt">🏆 ${B.weakOnly?'にがて とっくん':'ステージ'+st} クリア！</div>
     <div class="stars">${'★'.repeat(stars)}<span class="off">${'★'.repeat(3-stars)}</span></div>
     <p>まちがい ${B.wrong}かい<br>ボーナス <b class="goldt">🪙+${bonus}</b></p>${stars<3?'<small>ノーミスで ★3つ！</small>':''}
