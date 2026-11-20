@@ -147,7 +147,7 @@ input{font:inherit}
 .statrow .pxi{width:15px;height:15px}
 .hs .eyes{transform-box:fill-box;transform-origin:center;animation:blink 4s infinite}
 @keyframes blink{0%,93%,100%{transform:scaleY(1)}96%{transform:scaleY(.15)}}
-.hs .wpn{transform-box:view-box;transform-origin:13px 18px}
+.hs .wpn{transform-box:view-box;transform-origin:13px 16px}
 .hero.atk .wpn{animation:swing .38s ease-out}
 @keyframes swing{0%{transform:rotate(-40deg)}45%{transform:rotate(85deg)}100%{transform:rotate(0)}}
 .hero.hurt .eyes{animation:none;transform:scaleY(.3)}
@@ -279,7 +279,7 @@ input{font:inherit}
 
 .evobanner{display:flex;align-items:center;gap:8px;background:linear-gradient(90deg,#7a4bd1,#d9771e);border:3px solid #ffd23f;border-radius:6px;padding:6px 10px;color:#fff;font-size:15px;box-shadow:0 0 14px #ffd23f88;animation:pulse 1.4s infinite;width:100%;text-align:left}
 .evi{display:flex;gap:2px}.evi span{width:30px;display:block}.evi img{width:100%;display:block}
-.evt b{white-space:nowrap}.enhall{margin-top:5px;background:linear-gradient(#e8892f,#b85f17);color:#fff;border:2px solid #ffd23f;border-radius:8px;padding:4px 10px;font:inherit;font-size:13px;box-shadow:0 2px 0 #6b3510}.enhall:disabled{filter:grayscale(1);opacity:.55}.enhlist{text-align:left;max-height:40vh;overflow:auto;margin:6px 0}.enhlist div{display:flex;justify-content:space-between;padding:3px 4px;border-bottom:1px solid #ffffff14}.enhlist b{color:#ffd23f}.evt{flex:1}.evt b{color:#ffd23f}.evgo{font-size:13px;white-space:nowrap}
+.evt b{white-space:nowrap}.enhall{white-space:nowrap;margin-top:5px;background:linear-gradient(#e8892f,#b85f17);color:#fff;border:2px solid #ffd23f;border-radius:8px;padding:4px 8px;font:inherit;font-size:12px;box-shadow:0 2px 0 #6b3510}.enhall:disabled{filter:grayscale(1);opacity:.55}.enhlist{text-align:left;max-height:40vh;overflow:auto;margin:6px 0}.enhlist div{display:flex;justify-content:space-between;padding:3px 4px;border-bottom:1px solid #ffffff14}.enhlist b{color:#ffd23f}.evt{flex:1}.evt b{color:#ffd23f}.evgo{font-size:13px;white-space:nowrap}
 .pslot.evok{border-color:#ffd23f;box-shadow:0 0 10px #ffd23f;position:relative}
 .evtag{position:absolute;top:-8px;left:50%;transform:translateX(-50%);font-style:normal;font-size:10px;background:#ffd23f;color:#3a2000;border-radius:3px;padding:0 4px;white-space:nowrap;animation:pulse 1s infinite}
 
@@ -821,6 +821,7 @@ function drawHat(P1,hat){const G='#ffd23f',pk='#ff6fa8',W='#f4f4f4';
   if(hat==='wizard'){const V='#6a3ab0';for(let x=3;x<=12;x++)P1(x,-1,V);for(let x=5;x<=10;x++)P1(x,-2,V);for(let x=6;x<=9;x++)P1(x,-3,V);P1(7,-4,V);P1(8,-4,V);P1(8,-5,V);P1(7,-3,G);P1(6,-2,G)}
   if(hat==='crown'){for(let x=4;x<=11;x++)P1(x,-1,G);[[4,-2],[6,-2],[7,-3],[8,-3],[9,-2],[11,-2],[7,-2],[8,-2]].forEach(([x,y])=>P1(x,y,G));P1(7,-1,'#e8413c',false);P1(10,-1,'#4aa0ff',false);P1(5,-1,'#58d14a',false)}
 }
+const HDROP=[12,13,22,23,24,25],HSC=1.7;
 function heroSVG(eq,look){
   if(typeof look==='string')look={color:look};
   const D={color:'#d94a4a',hair:'short',hc:'#3b2414',skin:'#f6d0a8'},L=Object.assign({},D,look||{});
@@ -868,7 +869,7 @@ function heroSVG(eq,look){
     F(4,20,4,12,'#1a1a24');F(8,20,4,12,'#14141c');F(4,27,8,5,'#0a0a10');P1(5,27,RD,false);P1(10,27,RD,false);
     F(-2,6,6,4,D2);F(12,6,6,4,D2);[[-2,5],[-3,4],[0,5],[0,4],[13,5],[15,5],[15,4],[16,4]].forEach(([x,y])=>P1(x,y,ST));F(-2,9,6,1,RD);F(12,9,6,1,RD);
     F(4,0,8,2,'#1a1a2a');P1(4,2,'#1a1a2a');P1(11,2,'#1a1a2a');
-    const HC='#3a2a4a',HT='#e8e0f0';const HL=[[3,-1],[4,-1],[5,-1],[2,-2],[3,-2],[4,-2],[1,-3],[2,-3],[3,-3],[1,-4],[2,-4],[0,-5],[1,-5],[0,-6],[1,-6],[1,-7]];HL.forEach(([x,y])=>{P1(x,y,HC);P1(15-x,y,HC)});[[0,-6],[1,-7],[0,-5]].forEach(([x,y])=>{P1(x,y,HT,false);P1(15-x,y,HT,false)});for(let x=4;x<=11;x++)P1(x,-1,'#2a1a2a');P1(7,-1,RD,false);P1(8,-1,RD,false);
+    const HC='#3a2a4a',HT='#e8e0f0';const HL=[[3,-1],[4,-1],[5,-1],[2,-2],[3,-2],[4,-2],[2,-3],[3,-3],[2,-4]];HL.forEach(([x,y])=>{P1(x,y,HC);P1(15-x,y,HC)});[[2,-4],[2,-3]].forEach(([x,y])=>{P1(x,y,HT,false);P1(15-x,y,HT,false)});for(let x=4;x<=11;x++)P1(x,-1,'#2a1a2a');P1(7,-1,RD,false);P1(8,-1,RD,false);
     P1(5,5,shade(skin,-.15));P1(10,5,shade(skin,-.15));P1(7,6,'#3a0a0a',false);P1(8,6,'#3a0a0a',false)}
   if(PR){const{D:PD,Lt,Dk,T,A}=PR;
     for(const k of [...m.keys()]){const[x,y]=k.split(',').map(Number);if((y===7&&(x<4||x>11))||(y===31&&x>=4&&x<=11))m.delete(k)}
@@ -888,16 +889,19 @@ function heroSVG(eq,look){
     if(h.rar>=3)[[3,-2],[3,-3],[6,-2],[7,-2],[7,-3],[8,-2],[8,-3],[9,-2],[12,-2],[12,-3]].forEach(([x,y])=>P1(x,y,'#ffd23f'))}
   const EW=MAOU?'#ff3a3a':'#ffffff',EI=MAOU?'#ffd23f':'#2f2a4a';
   const eyes=`<g class="eyes">${r1(5,4,EW)+r1(6,4,EI)+r1(9,4,EI)+r1(10,4,EW)}</g>`;
-  let shS='';if(sh){const sm=new Map();itemPixels(Object.assign({slot:'s'},sh),sm,0,0);shS=`<g transform="translate(-5,9) scale(.6)">${rects(sm)}</g>`}
+  let shS='';if(sh){const sm=new Map();itemPixels(Object.assign({slot:'s'},sh),sm,0,0);shS=`<g transform="translate(-5,8) scale(.6)">${rects(sm)}</g>`}
   const wm=new Map();itemPixels(w,wm,0,0);const isBow=WTYPE[w.icon]==='bow';
-  const wS=`<g class="wpn"><g transform="translate(${isBow?'7,11.5':'11.5,8.25'}) scale(.75)">${rects(wm)}</g></g>`;
+  const wS=`<g class="wpn"><g transform="translate(${isBow?'7,9.5':'11.5,6.25'}) scale(.75)">${rects(wm)}</g></g>`;
   const hm=new Map();fill(hm,12,17,4,3,hand);if(ring)px(hm,13,18,ring.rar?RAR[ring.rar].h:'#ffd23f',false);
-  let petS='';if(pet){const pm=new Map();petTo(pm,PETT[pet.icon]||'puppy',0,0);petS=`<g transform="translate(17,22.5) scale(.6)">${rects(pm)}</g>`}
+  let petS='';if(pet){const pm=new Map();petTo(pm,PETT[pet.icon]||'puppy',0,0);petS=`<g transform="translate(17,19.5) scale(.6)">${rects(pm)}</g>`}
   const maxR=Math.max(...SLOTS.map(k=>eq[k]?eq[k].rar:0));
   const fx=PR?`<rect x="-3" y="3" width="1" height="1" fill="#fff"><animate attributeName="opacity" values="0;1;0" dur="1.2s" repeatCount="indefinite"/></rect><rect x="19" y="10" width="1" height="1" fill="${PR.T}"><animate attributeName="opacity" values="0;1;0" dur="1.2s" begin=".4s" repeatCount="indefinite"/></rect><rect x="-2" y="20" width="1" height="1" fill="#fff"><animate attributeName="opacity" values="0;1;0" dur="1.2s" begin=".8s" repeatCount="indefinite"/></rect>`:maxR>=3?`<rect x="-3" y="2" width="1" height="1" fill="#fff"><animate attributeName="opacity" values="0;1;0" dur="1.4s" repeatCount="indefinite"/></rect><rect x="20" y="4" width="1" height="1" fill="#fff"><animate attributeName="opacity" values="0;1;0" dur="1.4s" begin=".7s" repeatCount="indefinite"/></rect>`:'';
   const AU=L.cos&&L.cos.aura&&AURAS[L.cos.aura],auc=AU&&AU[2];
   const glow=PR&&!AU?`filter:drop-shadow(0 0 2px ${PR.G}) drop-shadow(0 0 6px ${PR.G})`:MAOU&&!AU?'filter:drop-shadow(0 0 2px #ff1a4a) drop-shadow(0 0 7px #8a0a2a)':AU?(auc?`filter:drop-shadow(0 0 2px ${auc}) drop-shadow(0 0 6px ${auc})`:''):maxR>=2?`filter:drop-shadow(0 0 1px ${RAR[maxR].h}) drop-shadow(0 0 4px ${RAR[maxR].h})`:'';
-  return `<svg class="hs${AU&&!auc?' aura-rb':''}" viewBox="-6 -8 33 41" shape-rendering="crispEdges" style="${glow};overflow:visible">${rects(m)}${eyes}${shS}${wS}${rects(hm)}${petS}${fx}</svg>`;
+  // chunky (vinyl-figure) proportions: big head, short body
+  const hd=new Map(),bd=new Map(),fy=y=>y-HDROP.filter(d=>d<y).length,mv=(src,dst)=>{for(const[x,y,c]of src.values())if(!HDROP.includes(y))dst.set(x+','+fy(y),[x,fy(y),c])};
+  for(const[k,v]of m)(v[1]<8&&(v[1]<0||(v[0]>=3&&v[0]<=12))?hd.set(k,v):0);for(const k of hd.keys())m.delete(k);mv(m,bd);const hb=new Map();mv(hm,hb);
+  return `<svg class="hs${AU&&!auc?' aura-rb':''}" viewBox="-7.5 -18 37 46" shape-rendering="crispEdges" style="${glow};overflow:visible">${rects(bd)}${shS}<g transform="translate(8 8) scale(${HSC}) translate(-8 -8)">${rects(hd)}${eyes}</g>${wS}${rects(hb)}${petS}${fx}</svg>`;
 }
 function slotHTML(slot,it,mini){
   const ic=it?itemIcon(Object.assign({slot},it)):itemIcon(GHOST[slot],true);
