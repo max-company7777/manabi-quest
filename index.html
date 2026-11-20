@@ -223,6 +223,10 @@ input{font:inherit}
 .adweak{font-size:12px;color:#ffb0a0;background:#e8413c22;border-left:4px solid #e8413c;padding:5px 8px;border-radius:4px;font-family:'M PLUS Rounded 1c',sans-serif}
 .adparty{display:flex;align-items:center;gap:4px;flex-wrap:wrap}.adparty>div{width:34px}.adparty img{width:100%;display:block}.adparty small{font-size:11px;color:var(--sub);flex:1;min-width:120px}
 
+
+.adcard.remote{border-color:#7a4bd1}
+.rtag{font-size:12px;color:#c8b8ff}
+
 /* party / box */
 .flip svg,.flip img{transform:scaleX(-1)}
 .pix{image-rendering:pixelated;image-rendering:crisp-edges}
@@ -354,7 +358,7 @@ input{font:inherit}
     </div>
     <div class="stagepick"><button class="btn" id="sPrev">◀</button><span>ステージ <b id="sNum">1</b></span><button class="btn" id="sNext">▶</button></div>
     <button class="btn orange big" id="goBtn" style="font-size:26px">⚔️ しゅつげき！</button>
-    <div class="row">
+    <div class="row" style="display:grid;grid-template-columns:1fr 1fr">
       <button class="btn" id="weakBtn">📕 にがて <span id="weakN">0</span></button>
       <button class="btn" id="statBtn">📊 きろく</button>
       <button class="btn" id="boxBtn">📦 ボックス</button>
@@ -566,7 +570,7 @@ const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v)
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 const G=Object.assign({profiles:[],cur:null,snd:true},store.get('mq1',{}));
 let P=null;
-const save=()=>store.set('mq1',G);
+const save=()=>{store.set('mq1',G);try{queueSync()}catch(e){}};
 const COLORS=['#d94a4a','#3a7bd5','#3fa34d','#e08a1e','#c25bc4','#20a5a5'];
 const HAIRS=[['short','みじかい'],['long','ながい'],['pony','ポニー'],['spiky','ツンツン']];
 const HAIRC=['#3b2414','#7a4a22','#e2b04a','#c0392b','#2c2c3a','#e98bb5'];
@@ -851,7 +855,7 @@ function profileForm(p){
     <div class="lbl">ふくの いろ</div><div class="colors" id="fCol">${COLORS.map(c=>`<button class="col" data-c="${c}" style="background:${c}"></button>`).join('')}</div>
     ${p?`<div class="row"><button class="btn ${p.voice?'green':'gray'}" id="fVoice">🗣️ よみあげ ${p.voice?'ON':'OFF'}</button><button class="btn ${G.snd?'green':'gray'}" id="fSnd">🔊 こうかおん ${G.snd?'ON':'OFF'}</button></div>`:''}
     <button class="btn green big" id="fOk">${p?'OK':'つくる！'}</button>
-    ${p?'<button class="btn gray" id="fSwitch">👥 ぼうけんしゃを かえる</button><button class="btn gray" id="fData">💾 データの ひっこし</button>':'<button class="btn gray" id="fCancel">やめる</button>'}`,
+    ${p?'<button class="btn gray" id="fSwitch">👥 ぼうけんしゃを かえる</button><button class="btn gray" id="fData">💾 データの ひっこし</button><button class="btn gray" id="fCloud">☁️ かぞくで きょうゆう</button>':'<button class="btn gray" id="fCancel">やめる</button>'}`,
     {fOk:()=>{const name=$('fName').value.trim()||'ゆうしゃ';
         if(p){p.name=name;if(p.age!==age){const d=age<=4?0:age<=6?1:age===7?2:3;p.diff={math:d,eng:d,kanji:d}}p.age=age;
           if(p.eq.a.name==='ぬののふく')p.eq.a.color=color;Object.assign(p,{color,hair,hc,skin});save();closeModal();renderHome()}
@@ -859,6 +863,7 @@ function profileForm(p){
      fCancel:closeModal,
      fSwitch:()=>{closeModal();G.cur=null;save();show('players');renderPlayers()},
      fData:()=>dataMove(),
+     fCloud:()=>cloudSetup(),
      fVoice:()=>{p.voice=!p.voice;save();profileForm(p)},
      fSnd:()=>{G.snd=!G.snd;save();profileForm(p)}});
   const sync=()=>{document.querySelectorAll('#fAge .opt').forEach(b=>b.classList.toggle('sel',+b.dataset.a===age));
@@ -1289,6 +1294,77 @@ function renderStats(){
 }
 
 
+
+/* =============== family cloud sync (Firebase) =============== */
+const FB_CONFIG=null; /*FB_CONFIG*/
+const FB_V='10.12.2';
+let FB=null,FBP=null,remoteProfiles=[];
+const famFmt=c=>c?c.replace(/(.{4})(?=.)/g,'$1-'):'';
+const famNorm=c=>String(c||'').toUpperCase().replace(/[^A-Z0-9]/g,'');
+function newFam(){const A='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let c='';for(let i=0;i<12;i++)c+=A[Math.floor(Math.random()*A.length)];return c}
+function fbInit(){
+  if(FB)return Promise.resolve(FB);if(!FB_CONFIG)return Promise.resolve(null);if(FBP)return FBP;
+  const base=`https://www.gstatic.com/firebasejs/${FB_V}/`;
+  FBP=Promise.all([import(base+'firebase-app.js'),import(base+'firebase-auth.js'),import(base+'firebase-firestore.js')]).then(async([A,U,F])=>{
+    const app=A.initializeApp(FB_CONFIG),auth=U.getAuth(app);await U.signInAnonymously(auth);
+    let db;try{db=F.initializeFirestore(app,{localCache:F.persistentLocalCache()})}catch(e){db=F.getFirestore(app)}
+    FB={db,F};return FB}).catch(e=>{console.warn('fb',e);FBP=null;return null});
+  return FBP;
+}
+let syncT=null;
+function queueSync(){if(!FB_CONFIG||!G.fam)return;clearTimeout(syncT);syncT=setTimeout(syncUp,4000)}
+async function syncUp(){
+  const f=await fbInit();if(!f||!G.fam)return false;if(!G.devId){G.devId=uid();store.set('mq1',G)}
+  const profs=G.profiles.filter(p=>!p.master).map(p=>{const c=Object.assign({},p);c.boxN=(p.box||[]).length;delete c.box;return c});
+  try{await f.F.setDoc(f.F.doc(f.db,'families',G.fam,'devices',G.devId),{name:G.devName||'たんまつ',updated:Date.now(),profiles:JSON.stringify(profs)});
+    G.lastSync=Date.now();store.set('mq1',G);return true}catch(e){console.warn('sync',e);return false}
+}
+async function syncDown(){
+  const f=await fbInit();if(!f||!G.fam)return null;const out=[];
+  try{const qs=await f.F.getDocs(f.F.collection(f.db,'families',G.fam,'devices'));
+    qs.forEach(d=>{if(d.id===G.devId)return;const v=d.data();let ps=[];try{ps=JSON.parse(v.profiles||'[]')}catch(e){}
+      ps.forEach(p=>{p._remote=v.name||'たんまつ';p._upd=v.updated;p.box=[];out.push(ensureP(p))})})}catch(e){console.warn('down',e);return null}
+  return out;
+}
+function cloudSetup(){
+  if(!G.devId){G.devId=uid();store.set('mq1',G)}
+  const on=!!G.fam;
+  showModal(`<div class="mt">☁️ かぞくで きょうゆう</div>
+    ${FB_CONFIG?'':'<p style="color:#ffb020;font-size:13px">まだ じゅんびちゅうです（おうちの ひとが せっていします）</p>'}
+    <p style="font-size:13px">おなじ「かぞくコード」を いれた たんまつどうしで、マスターが みんなの ようすを みられるように なるよ。</p>
+    <div class="lbl">この たんまつの なまえ</div><input class="field" id="cdName" maxlength="12" value="${esc(G.devName||'')}" placeholder="れい：たろうの タブレット">
+    <div class="lbl">かぞくコード</div><input class="field" id="cdFam" maxlength="14" value="${famFmt(G.fam||'')}" placeholder="XXXX-XXXX-XXXX" style="letter-spacing:2px">
+    ${P&&P.master?'<button class="btn purple" id="cdNew">🔑 あたらしい コードを つくる</button>':''}
+    <button class="btn green big" id="cdOk">${on?'ほぞんして どうき':'きょうゆうを はじめる'}</button>
+    ${on?'<button class="btn gray" id="cdOff">きょうゆうを やめる</button>':''}
+    <small style="color:var(--sub)">${G.lastSync?'さいごの どうき：'+new Date(G.lastSync).toLocaleString('ja-JP'):'まだ どうき していないよ'}</small>
+    <button class="btn gray" id="cl">とじる</button>`,
+    {cdNew:()=>{$('cdFam').value=famFmt(newFam())},
+     cdOk:async()=>{const c=famNorm($('cdFam').value);if(c.length!==12){toast('コードは 12もじ だよ');return}
+       G.fam=c;G.devName=$('cdName').value.trim()||'たんまつ';store.set('mq1',G);
+       if(!FB_CONFIG){closeModal();toast('ほぞんしたよ（じゅんびが できたら どうき するよ）');return}
+       toast('どうき ちゅう…');const ok=await syncUp();closeModal();toast(ok?'☁️ どうき できたよ！':'どうき できなかった… ネットを たしかめてね');if($('admin').classList.contains('on'))showAdmin()},
+     cdOff:()=>{delete G.fam;store.set('mq1',G);closeModal();toast('きょうゆうを やめたよ')},
+     cl:closeModal});
+}
+function bindAdCards(){
+  document.querySelectorAll('#adBody [data-sid]').forEach(b=>b.onclick=()=>{const id=+b.dataset.sid,r=b.dataset.r==='1';
+    showStats(r?remoteProfiles.find(p=>p.id===id):G.profiles.find(p=>p.id===id))});
+}
+async function renderCloudBox(){
+  const box=$('cloudBox');if(!box)return;
+  if(!FB_CONFIG){box.innerHTML='<div class="sth">☁️ ほかの たんまつ</div><small style="color:var(--sub)">クラウドの じゅんびが まだです（Firebaseの せっていを まっています）。</small>';return}
+  if(!G.fam){box.innerHTML='<div class="sth">☁️ ほかの たんまつ</div><small style="color:var(--sub)">かぞくコードを つくって、こどもの たんまつにも いれると、ここに じどうで でてくるよ。</small><button class="btn purple" id="cbSet">🔑 かぞくコードを せってい</button>';$('cbSet').onclick=cloudSetup;return}
+  box.innerHTML=`<div class="sth">☁️ ほかの たんまつ <small>かぞくコード ${famFmt(G.fam)}</small></div><small style="color:var(--sub)">よみこみ ちゅう…</small>`;
+  const rs=await syncDown();if(!$('cloudBox'))return;
+  if(rs===null){box.innerHTML=`<div class="sth">☁️ ほかの たんまつ</div><small style="color:#ffb020">よみこめなかった… ネットに つながっているか たしかめてね</small><button class="btn" id="cbRe">🔄 もういちど</button>`;$('cbRe').onclick=renderCloudBox;return}
+  remoteProfiles=rs;
+  box.innerHTML=`<div class="sth">☁️ ほかの たんまつ <small>かぞくコード ${famFmt(G.fam)}</small></div><small style="color:var(--sub)">${rs.length?rs.length+'にん みつかったよ':'まだ だれも いないよ。こどもの たんまつの「せってい → ☁️ かぞくで きょうゆう」で おなじ コードを いれてね'}</small>
+    <div class="row"><button class="btn" id="cbRe">🔄 さいしんに する</button><button class="btn purple" id="cbSet">⚙️ コード</button></div>`;
+  $('cbRe').onclick=renderCloudBox;$('cbSet').onclick=cloudSetup;
+  $('remoteCards').innerHTML=rs.map(adCard).join('');bindAdCards();
+}
+
 /* ---- master: everyone's status ---- */
 function agoTxt(ts){if(!ts)return 'まだ';const d=Math.floor((new Date().setHours(0,0,0,0)-new Date(ts).setHours(0,0,0,0))/864e5);return d<=0?'きょう':d===1?'きのう':d+'にちまえ'}
 function profSummary(p){
@@ -1298,15 +1374,10 @@ function profSummary(p){
   const subj={};for(const [k,v] of Object.entries(S.cats)){const sb=k.split('|')[0];subj[sb]=subj[sb]||{n:0,ok:0};subj[sb].n+=v.n;subj[sb].ok+=v.ok}
   const weak=Object.entries(S.cats).map(([k,v])=>({sb:k.split('|')[0],name:k.split('|')[1],n:v.n,rate:v.ok/v.n})).filter(c=>c.n>=5&&c.rate<.8).sort((a,b)=>a.rate-b.rate).slice(0,2);
   return{n,ok,wn,wok,tn,subj,weak,owned:SPECIES.filter(s=>s[3]<5&&p.dex.owned[s[0]]).length,ult:ULTS.filter(u=>p.dex.owned[u.k]).length,
-    eq:SLOTS.filter(k=>p.eq[k]).length,box:p.box.length,eggs:p.eggs.length}
+    eq:SLOTS.filter(k=>p.eq[k]).length,box:p.boxN!=null?p.boxN:p.box.length,eggs:p.eggs.length}
 }
-function showAdmin(){
-  show('admin');const ps=G.profiles.filter(p=>!p.master);
-  const pct=(a,b)=>b?Math.round(a/b*100)+'%':'−',col=r=>r<.6?'#e8413c':r<.8?'#ffb020':'#58d14a',SN={math:'さんすう',eng:'えいご',kanji:'こくご'};
-  let h=`<div class="panel stbox"><small style="color:var(--sub)">この たんまつで あそんでいる ぼうけんしゃの ようすです。<br>べつの たんまつ（スマホ・タブレット）の ぼうけんしゃは、そちらで「💾 データの ひっこし → かきだす」をして、ここで「よみこむ → ➕ くわえる」を すると みられます。</small><button class="btn green" id="adImp">📥 べつの たんまつの データを くわえる</button></div>`;
-  if(!ps.length)h+='<div class="panel stbox"><p>まだ ぼうけんしゃが いないよ</p></div>';
-  ps.forEach(p=>{const s=profSummary(p),pm=partyMons(p),ago=agoTxt(p.lastPlay||(p.lastDay?new Date(p.lastDay.replace(/-/g,'/')).getTime():0));
-    h+=`<div class="panel adcard">
+function adCard(p){const pct=(a,b)=>b?Math.round(a/b*100)+'%':'−',col=r=>r<.6?'#e8413c':r<.8?'#ffb020':'#58d14a',SN={math:'さんすう',eng:'えいご',kanji:'こくご'};const s=profSummary(p),pm=partyMons(p),ago=agoTxt(p.lastPlay||(p.lastDay?new Date(p.lastDay.replace(/-/g,'/')).getTime():0));
+    return `<div class="panel adcard${p._remote?' remote':''}">${p._remote?`<div class="rtag">📱 ${esc(p._remote)}・${agoTxt(p._upd)} こうしん</div>`:''}
       <div class="adtop"><div class="av">${heroSVG(p.eq,p)}</div>
         <div class="adinfo"><div class="nm">${esc(p.name)} <small>${p.age}さい</small></div>
           <div class="adst"><span>Lv<b>${p.lv}</b></span><span>パワー<b style="color:var(--gold)">${power(p.eq,p.lv,p)}</b></span><span>🔥<b>${p.streak}</b>にち</span></div>
@@ -1320,11 +1391,18 @@ function showAdmin(){
       <div class="adsub">${['math','eng','kanji'].map(k=>{const v=s.subj[k];return `<span>${SN[k]} ★${(p.diff[k]||0)+1} <b style="color:${v?col(v.ok/v.n):'#888'}">${v?pct(v.ok,v.n):'−'}</b> <small>ST${p.best[k]}</small></span>`}).join('')}</div>
       ${s.weak.length?`<div class="adweak">⚠️ にがて：${s.weak.map(w=>`${SN[w.sb]}「${w.name}」${Math.round(w.rate*100)}%`).join('、')}</div>`:''}
       ${pm.length?`<div class="adparty">${pm.map(m=>`<div class="flip" title="${SP[m.sp].name}">${monsterSVG(m.sp)}</div>`).join('')}<small>なかま：${pm.map(m=>SP[m.sp].name+' Lv'+m.lv).join('・')}</small></div>`:''}
-      <button class="btn" data-sid="${p.id}">📊 くわしい きろくを みる</button>
-    </div>`});
+      <button class="btn" data-sid="${p.id}" data-r="${p._remote?1:0}">📊 くわしい きろくを みる</button>
+    </div>`}
+function showAdmin(){
+  show('admin');const ps=G.profiles.filter(p=>!p.master);
+  const pct=(a,b)=>b?Math.round(a/b*100)+'%':'−',col=r=>r<.6?'#e8413c':r<.8?'#ffb020':'#58d14a',SN={math:'さんすう',eng:'えいご',kanji:'こくご'};
+  let h=`<div class="panel stbox"><small style="color:var(--sub)">この たんまつで あそんでいる ぼうけんしゃの ようすです。<br>べつの たんまつ（スマホ・タブレット）の ぼうけんしゃは、そちらで「💾 データの ひっこし → かきだす」をして、ここで「よみこむ → ➕ くわえる」を すると みられます。</small><button class="btn green" id="adImp">📥 べつの たんまつの データを くわえる</button></div>`;
+  if(!ps.length)h+='<div class="panel stbox"><p>まだ ぼうけんしゃが いないよ</p></div>';
+  ps.forEach(p=>{h+=adCard(p)});
+  h+=`<div class="panel stbox" id="cloudBox"></div><div id="remoteCards" style="display:flex;flex-direction:column;gap:12px"></div>`;
   $('adBody').innerHTML=h;
   $('adImp').onclick=dataImport;
-  document.querySelectorAll('#adBody [data-sid]').forEach(b=>b.onclick=()=>showStats(G.profiles.find(p=>p.id===+b.dataset.sid)));
+  bindAdCards();renderCloudBox();
 }
 
 /* =============== battle =============== */
@@ -1487,6 +1565,7 @@ $('quit').onclick=()=>{if(!B||B.lock)return;B.lock=true;
   if(f>=1){B.lock=true;record(B.q,false,B.gaugeDur/1000);B.combo=0;updCombo();markCorrect();setTimeout(()=>monAttack(nextQ),800)}})();
 
 /* =============== boot =============== */
+setTimeout(()=>{try{if(FB_CONFIG&&G.fam)syncUp()}catch(e){}},3000);
 if(G.cur&&G.profiles.find(p=>p.id===G.cur))selectProfile(G.cur);else{show('players');renderPlayers()}
 </script>
 <script>
