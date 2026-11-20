@@ -370,6 +370,21 @@ input{font:inherit}
 .lbl{font-size:14px;color:var(--sub);text-align:left}
 #toast{position:fixed;left:50%;top:60px;transform:translate(-50%,-30px);background:var(--gold);color:#2a1a00;border:3px solid var(--edge);padding:8px 16px;border-radius:6px;opacity:0;transition:.3s;z-index:60;white-space:nowrap;pointer-events:none;font-size:17px}
 #toast.on{opacity:1;transform:translate(-50%,0)}
+
+/* ===== pixel UI unification ===== */
+.pi{width:1.15em;height:1.15em;image-rendering:pixelated;vertical-align:-.2em;margin-right:.3em;display:inline-block}
+.panel,.btn,.slot,.slot .ic,.who,.lv,.xpbar,.pill,.pbar,.powbig,.evobanner,.enhall,.pslot,.db,.field,.item,.modal,#modal>div,.mis1,.qsub,.tag,.chip,.ch,.egg,.toast,.ip,.col,.opt{border-radius:0!important}
+.panel{box-shadow:inset 3px 3px 0 #ffffff1a,inset -3px -3px 0 #0006,4px 4px 0 #0009}
+.btn{box-shadow:inset 3px 3px 0 #ffffff40,inset -3px -4px 0 #0007}
+.btn:active{box-shadow:inset 3px 3px 0 #0006}
+.pbar i{background:#ffb02a;box-shadow:inset 0 3px 0 #ffd23f,inset 0 -3px 0 #d9771e}
+.xpbar i{box-shadow:inset 0 3px 0 #b8ff9a,inset 0 -3px 0 #4aa83a}
+.evobanner{background:#7a4bd1;box-shadow:inset 3px 3px 0 #ffffff33,inset -3px -3px 0 #0006,0 0 0 3px #d9771e}
+.enhall{background:#d9771e;box-shadow:inset 3px 3px 0 #ffffff40,inset -3px -3px 0 #0007,0 3px 0 #6b3510}
+.pill{border:2px solid var(--edge);background:#000a}
+.who .pi{margin-right:.35em}
+.mlab .e{font-family:'DotGothic16',sans-serif}
+.slot .ic{image-rendering:pixelated}
 </style>
 </head>
 <body>
@@ -1117,8 +1132,41 @@ function checkDaily(){
 
 /* =============== home =============== */
 let selStage=1;
+
+/* ---- pixel UI icons (home) ---- */
+const PIX={
+ coin:[{y:'#ffd23f',Y:'#d99a1a',w:'#fff6a0'},['..yyyyy..','.yYYYYYy.','yYwwYYYYy','yYwYYyYYy','yYYYYyYYy','yYYYYyYYy','yYYYYYYYy','.yYYYYYy.','..yyyyy..']],
+ flame:[{r:'#e8413c',o:'#ff8a2a',y:'#ffd23f'},['....r....','...rr....','...rrr.r.','..rrorrr.','.rroorrr.','.rooyoorr','rooyyyoor','rooyyyoor','.rooyoor.','..rrrrr..']],
+ person:[{s:'#f6d0a8',h:'#6a4a2a',b:'#4a8ad9',B:'#2f6ab8'},['..hhhhh..','.hhhhhhh.','.hssssss.','.sskssks.','..sssss..','.bbbbbbb.','bbBbbbBbb','bbBbbbBbb','bbBbbbBbb']],
+ book:[{r:'#d9442f',R:'#a02a20',w:'#f4ead0'},['rrrrrrrr.','rRRRRRRrw','rRwwwwRrw','rRRRRRRrw','rRwwwRRrw','rRRRRRRrw','rRRRRRRrw','rrrrrrrrw','.wwwwwwww']],
+ chart:[{g:'#5be05b',b:'#4aa0e0',y:'#ffd23f',k:'#d8d0c0'},['k........','k......y.','k......y.','k...b..y.','k...b..y.','k.g.b..y.','k.g.b..y.','k.g.b..y.','kkkkkkkkk']],
+ box:[{W:'#c8884a',D:'#8a5a30',y:'#ffd23f'},['.WWWWWWW.','WDDDDDDDW','WWWWWWWWW','WWWWyWWWW','WDDDDDDDW','WDDDDDDDW','WDDDDDDDW','WDDDDDDDW','WWWWWWWWW']],
+ trophy:[{y:'#ffd23f',Y:'#d99a1a',W:'#8a5a30',w:'#fff6a0'},['yyyyyyyyy','yYywyyyYy','yYywyyyYy','.yyyyyyy.','..yyyyy..','...yyy...','....Y....','..YYYYY..','.WWWWWWW.']],
+ bag:[{p:'#ff6fa8',P:'#d94a8f',W:'#8a5a30',y:'#ffd23f'},['...WWW...','..W...W..','..W...W..','ppppppppp','pPPPPPPPp','pPPPyPPPp','pPPPPPPPp','pPPPPPPPp','ppppppppp']],
+ gear:[{g:'#c8d0e0',G:'#7a8090'},['...g.g...','..ggggg..','.gGGgGGg.','ggGg.gGgg','.gG...Gg.','ggGg.gGgg','.gGGgGGg.','..ggggg..','...g.g...']],
+ dice:[{w:'#ffffff',W:'#b8b8c8',k:'#1b1410'},['wwwwwwwW','wkwwwwkW','wwwwwwwW','wwwkwwwW','wwwwwwwW','wkwwwwkW','wwwwwwwW','WWWWWWWW']],
+ scroll:[{w:'#f4ead0',W:'#c8a070',k:'#8a5a30'},['.WWWWWWW.','WwwwwwwwW','.wkkkkkw.','.wwwwwww.','.wkkkkww.','.wwwwwww.','.wkkkkkw.','WwwwwwwwW','.WWWWWWW.']],
+ check:[{g:'#5be05b',G:'#2e8a2b'},['.......g','......gG','g....gG.','Gg..gG..','.GggG...','..GG....']],
+ swords:[{m:'#e0e8f0',y:'#ffd23f',W:'#8a5a30'},['m.......m','.m.....m.','..m...m..','...m.m...','....m....','...m.m...','.yy...yy.','.W.....W.','W.......W']],
+ hammer:[{m:'#c8d0e0',M:'#8a90a0',W:'#8a5a30'},['.mmmmm...','mmmmmmM..','mmmmmmM..','.MMMMWM..','....WW...','....WW...','....WW...','....WW...','....WW...']],
+ crown:[{y:'#ffd23f',Y:'#d99a1a',r:'#e8413c'},['y...y...y','yy.yyy.yy','yyyyyyyyy','yYrYyYrYy','yyyyyyyyy']],
+ gift:[{r:'#e8413c',y:'#ffd23f',R:'#a02a20'},['..y...y..','...y.y...','rrrryrrrr','rRRRyRRRr','rrrryrrrr','.rRRyRRr.','.rRRyRRr.','.rRRyRRr.','.rrryrrr.']],
+ egg:[{w:'#f4ead0',W:'#c8b090',y:'#ffd23f'},['...www...','..wwwww..','.wwywwww.','.wwwwwyw.','wwywwwwww','wwwwwywww','wwwwwwwWw','.wWwwwWw.','..WWWWW..']],
+ star:[{y:'#ffd23f',Y:'#d99a1a'},['....y....','...yyy...','yyyyyyyyy','.yyyYyyy.','..yyyyy..','.yyy.yyy.','.yY...Yy.']]};
+function piURL(n){const [pal,rows]=PIX[n],cells=[],set=new Set(),m=new Map();rows.forEach((r,y)=>[...r].forEach((c,x)=>{if(pal[c]){cells.push([x,y,pal[c]]);set.add(x+','+y)}}));
+  const w=Math.max(...rows.map(r=>r.length)),h=rows.length;
+  for(const[x,y]of cells)for(const[a,b]of[[1,0],[-1,0],[0,1],[0,-1]]){const k=(x+a)+','+(y+b);if(!set.has(k))m.set(k,[x+a,y+b,OL])}
+  for(const[x,y,c]of cells)m.set(x+','+y,[x,y,c]);return mapImg(m,1,1,w+2,h+2)}
+const pi=(n,c='')=>{const k='pi|'+n;if(!IMGC[k])IMGC[k]=piURL(n);return `<img class="pi ${c}" src="${IMGC[k]}" alt="">`};
+function pixHome(){
+  const set=(id,ic,txt)=>{const e=$(id);if(e)e.innerHTML=pi(ic)+txt};
+  set('weakBtn','book',`にがて <span id="weakN">${P?P.weak.length:0}</span>`);set('statBtn','chart','きろく');set('boxBtn','box','ボックス');
+  set('rankBtn','trophy','ランキング');set('shopBtn','bag','ショップ');set('setBtn','gear','せってい');set('adminBtn','crown','みんな');
+  set('goBtn','swords','しゅつげき！');set('hEnhAll','hammer','まとめて きょうか');
+  const g=$('hGold').parentNode,st=$('hStreak').parentNode;if(!g.querySelector('.pi')){g.innerHTML=pi('coin')+'<b id="hGold">0</b>';st.innerHTML=pi('flame')+'<b id="hStreak">1</b>'}}
 function renderHome(){
-  $('who').textContent='👤 '+P.name+' ▾';
+  pixHome();
+  $('who').innerHTML=pi('person')+esc(P.name)+' ▾';
   $('hLv').textContent=P.lv>=MAXLV?'MAX':P.lv;$('hXp').style.width=(P.lv>=MAXLV?100:Math.min(100,P.xp/xpNeed()*100))+'%';
   $('hGold').textContent=P.gold;$('hStreak').textContent=P.streak;
   $('hHero').innerHTML=heroSVG(P.eq,P);$('hPow').textContent=power();$('hTitle').textContent=titleOf(P)?'「'+titleOf(P)+'」':'';
@@ -1134,19 +1182,19 @@ function renderHome(){
       {cl:closeModal,enhmax:()=>{closeModal();enhAllFlow([it],SLOTN[k]+'を できるだけ きょうか',renderHome)},enh:()=>doEnh(it,()=>{renderHome();$('hSlotsL').querySelector('[data-s="'+k+'"]')?.click()||$('hSlotsR').querySelector('[data-s="'+k+'"]')?.click()}),ch:()=>{closeModal();boxF=k;openBox('items')},un:()=>{if(P.box.length>=boxCap()){toast('ボックスが いっぱい！');return}P.box.push(it);P.eq[k]=null;save();closeModal();renderHome()}})});
   {const eqs=SLOTS.map(k=>P.eq[k]).filter(Boolean),b=$('hEnhAll');b.disabled=!eqs.length||P.gold<Math.min(...eqs.map(enhCost));b.onclick=()=>enhAllFlow(eqs,'まとめて きょうか',renderHome)}
   renderParty();{const ev=P.mons.filter(evoReady),eb=$('hEvo');
-    if(ev.length){eb.style.display='';eb.innerHTML=`<span class="evi">${ev.slice(0,3).map(m=>`<span class="flip">${monsterSVG(m.sp)}</span>`).join('')}</span><span class="evt">✨ しんか できる なかまが <b>${ev.length}たい</b> いるよ！</span><span class="evgo">みる ▶</span>`;
+    if(ev.length){eb.style.display='';eb.innerHTML=`<span class="evi">${ev.slice(0,3).map(m=>`<span class="flip">${monsterSVG(m.sp)}</span>`).join('')}</span><span class="evt">${pi('star')}しんか できる なかまが <b>${ev.length}たい</b> いるよ！</span><span class="evgo">みる ▶</span>`;
       eb.onclick=()=>{openBox('mons');if(ev.length===1)monModal(ev[0].id)}}else eb.style.display='none'}
   $('adminBtn').style.display=P.master?'':'none';
   const TS=P.todaySubj||{},mp=misPer(),done=Object.keys(SUBJ).every(k=>(TS[k]||0)>=mp);
-  $('mis').innerHTML=`<div>📜 きょうの ミッション <small style="color:var(--sub)">（それぞれ ${mp}もん せいかい）</small></div>
-    <div class="misrow">${Object.keys(SUBJ).map(k=>{const n=Math.min(mp,TS[k]||0);return `<div class="mis1${n>=mp?' ok':''}"><span>${SUBJ[k].n}${n>=mp?' ✅':''}</span><div class="pbar"><i style="width:${n/mp*100}%"></i></div><small>${n}/${mp}・★${recLv(k)+1}いじょう</small></div>`}).join('')}</div>
-    ${P.claimed?'<small>✅ クリア！ また あした！</small>':done?'<button class="btn orange claim" id="claimBtn">🎁 ほうしゅうを うけとる</button>':'<small>ぜんぶ クリアで レア いじょうの そうびが もらえる！</small>'}`;
+  $('mis').innerHTML=`<div>${pi('scroll')}きょうの ミッション <small style="color:var(--sub)">（それぞれ ${mp}もん せいかい）</small></div>
+    <div class="misrow">${Object.keys(SUBJ).map(k=>{const n=Math.min(mp,TS[k]||0);return `<div class="mis1${n>=mp?' ok':''}"><span>${SUBJ[k].n}${n>=mp?' '+pi('check'):''}</span><div class="pbar"><i style="width:${n/mp*100}%"></i></div><small>${n}/${mp}・★${recLv(k)+1}いじょう</small></div>`}).join('')}</div>
+    ${P.claimed?`<small>${pi('check')}クリア！ また あした！</small>`:done?`<button class="btn orange claim" id="claimBtn">${pi('gift')}ほうしゅうを うけとる</button>`:'<small>ぜんぶ クリアで レア いじょうの そうびが もらえる！</small>'}`;
   if($('claimBtn'))$('claimBtn').onclick=()=>{P.claimed=true;save();showDrop(makeItem(Math.round(Math.max(1,P.lv/2,...Object.values(P.best))),mixLv(),false,1),renderHome,'ミッション クリア！')};
   P.subj='mix';
-  $('subj').innerHTML=`<div class="mixh">🎲 ミックス <small>さんすう・えいご・こくごが じゅんばんバラバラに でるよ</small></div>`;
+  $('subj').innerHTML=`<div class="mixh">${pi('dice')}ミックス <small>さんすう・えいご・こくごが じゅんばんバラバラに でるよ</small></div>`;
   $('dblocks').innerHTML=SUBK.map(k=>{const d=P.diff[k],rl=recLv(k);return `<div class="mrow"><div class="mlab"><span class="e">${SUBJ[k].e}</span>${SUBJ[k].n}</div><div class="mstars">${[0,1,2,3,4].map(i=>`<button class="btn db${i===d?' sel':''}${i<rl?' easy':''}" data-k="${k}" data-d="${i}">★${i+1}${mastered(k,i)?'<i class="mst">🎓</i>':''}</button>`).join('')}</div><small class="mdesc">${SUBJ[k].lv[d]}${d<rl?` <b class="ew">⚠️★${rl+1}より かんたん：たまご・しんかが すすまない</b>`:mastered(k,d)?' <b class="ew">🎓マスターずみ：★を あげよう</b>':''}</small></div>`}).join('');
   document.querySelectorAll('.db[data-k]').forEach(b=>b.onclick=()=>{snd(660,.05);P.diff[b.dataset.k]=+b.dataset.d;save();renderHome()});
-  {const d=mixLv();$('dinfo').innerHTML=`<small>ほうしゅう ×${DMULT[d]}（3つの ★の へいきん）　⏱ じかんせいげんは ★2から</small>`}
+  {const d=mixLv();$('dinfo').innerHTML=`<small>ほうしゅう ×${DMULT[d]}（3つの ★の へいきん）・じかんせいげんは ★2から</small>`}
   const mx=P.best[P.subj]+1;selStage=Math.min(Math.max(1,selStage),mx);
   $('sNum').textContent=selStage;$('sPrev').disabled=selStage<=1;$('sNext').disabled=selStage>=mx;
   $('weakN').textContent=P.weak.length;
