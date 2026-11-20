@@ -892,19 +892,54 @@ function heroSVG(eq,look){
     if(h.rar>=3)[[3,-2],[3,-3],[6,-2],[7,-2],[7,-3],[8,-2],[8,-3],[9,-2],[12,-2],[12,-3]].forEach(([x,y])=>P1(x,y,'#ffd23f'))}
   const EW=MAOU?'#ff3a3a':'#ffffff',EI=MAOU?'#ffd23f':'#2f2a4a';
   const eyes=`<g class="eyes">${r1(5,4,EW)+r1(6,4,EI)+r1(9,4,EI)+r1(10,4,EW)}</g>`;
-  let shS='';if(sh){const sm=new Map();itemPixels(Object.assign({slot:'s'},sh),sm,0,0);shS=`<g transform="translate(-5,8) scale(.6)">${rects(sm)}</g>`}
+  let shS='';if(sh){const sm=new Map();itemPixels(Object.assign({slot:'s'},sh),sm,0,0);shS=`<g transform="translate(-6.5,7.5) scale(.8)">${rects(sm)}</g>`}
   const wm=new Map();itemPixels(w,wm,0,0);const isBow=WTYPE[w.icon]==='bow';
-  const wS=`<g class="wpn"><g transform="translate(${isBow?'7,9.5':'11.5,6.25'}) scale(.75)">${rects(wm)}</g></g>`;
+  const wS=`<g class="wpn"><g transform="translate(${isBow?'5.5,7':'11,2.5'}) scale(1)">${rects(wm)}</g></g>`;
   const hm=new Map();fill(hm,12,17,4,3,hand);if(ring)px(hm,13,18,ring.rar?RAR[ring.rar].h:'#ffd23f',false);
   let petS='';if(pet){const pm=new Map();petTo(pm,PETT[pet.icon]||'puppy',0,0);petS=`<g transform="translate(17,19.5) scale(.6)">${rects(pm)}</g>`}
   const maxR=Math.max(...SLOTS.map(k=>eq[k]?eq[k].rar:0));
   const fx=PR?`<rect x="-3" y="3" width="1" height="1" fill="#fff"><animate attributeName="opacity" values="0;1;0" dur="1.2s" repeatCount="indefinite"/></rect><rect x="19" y="10" width="1" height="1" fill="${PR.T}"><animate attributeName="opacity" values="0;1;0" dur="1.2s" begin=".4s" repeatCount="indefinite"/></rect><rect x="-2" y="20" width="1" height="1" fill="#fff"><animate attributeName="opacity" values="0;1;0" dur="1.2s" begin=".8s" repeatCount="indefinite"/></rect>`:maxR>=3?`<rect x="-3" y="2" width="1" height="1" fill="#fff"><animate attributeName="opacity" values="0;1;0" dur="1.4s" repeatCount="indefinite"/></rect><rect x="20" y="4" width="1" height="1" fill="#fff"><animate attributeName="opacity" values="0;1;0" dur="1.4s" begin=".7s" repeatCount="indefinite"/></rect>`:'';
   const AU=L.cos&&L.cos.aura&&AURAS[L.cos.aura],auc=AU&&AU[2];
   const glow=PR&&!AU?`filter:drop-shadow(0 0 2px ${PR.G}) drop-shadow(0 0 6px ${PR.G})`:MAOU&&!AU?'filter:drop-shadow(0 0 2px #ff1a4a) drop-shadow(0 0 7px #8a0a2a)':AU?(auc?`filter:drop-shadow(0 0 2px ${auc}) drop-shadow(0 0 6px ${auc})`:''):maxR>=2?`filter:drop-shadow(0 0 1px ${RAR[maxR].h}) drop-shadow(0 0 4px ${RAR[maxR].h})`:'';
+
+  // ---- big-dot body, painted natively on the coarse grid (cols 0-7, rows 4-12) ----
+  const bm=new Map(),Q=(x,y,col,n=true)=>px(bm,x,y,col,n),QF=(x,y,w2,h2,col,n=true)=>fill(bm,x,y,w2,h2,col,n),hbm=new Map();
+  if(MAOU){const D1='#2a1a3a',D2='#141018',RD='#ff2a3a',ST='#d8d0e8';
+    QF(1,4,6,9,'#1a0a14');QF(1,9,1,4,'#a01a2a');QF(6,9,1,4,'#a01a2a');
+    QF(2,9,2,4,'#1a1a24');QF(4,9,2,4,'#14141c');QF(2,11,4,2,'#0a0a10');Q(2,11,RD,false);Q(5,11,RD,false);
+    QF(2,4,4,4,D1);Q(2,4,shade(D1,.15));QF(5,4,1,4,shade(D1,-.2));QF(3,5,2,2,'#3a2a4a');Q(3,5,RD,false);Q(4,5,RD,false);QF(2,8,4,1,'#0a0a10');Q(3,8,'#ffd23f',false);Q(4,8,'#ffd23f',false);
+    for(const ax of [0,6]){QF(ax,4,2,4,D1);QF(ax,7,2,2,D2)}Q(0,8,RD,false);Q(7,8,RD,false);
+    QF(-1,4,3,1,D2);QF(6,4,3,1,D2);Q(-1,3,ST);Q(8,3,ST);Q(-1,5,RD,false);Q(8,5,RD,false);
+    Q(6,8,D2);Q(7,8,D2);hbm.set('6,8',[6,8,D2]);hbm.set('7,8',[7,8,RD])}
+  else if(PR){const{D:PD,Lt,Dk,T,A}=PR;
+    const sk=[[8,2,5],[9,1,6],[10,1,6],[11,0,7],[12,-1,8]];
+    for(const[y,x0,x1]of sk)for(let x=x0;x<=x1;x++)Q(x,y,x>=x1-(y>10?1:0)?Dk:((x-x0)%2?shade(PD,.12):PD));
+    for(let x=-1;x<=8;x++)Q(x,12,(x+12)%2?T:Lt,false);
+    (PR.star?[[2,9,T],[5,10,T],[1,11,T],[6,11,T]]:[[2,10,Lt],[5,9,Lt],[4,11,Lt]]).forEach(([x,y,c2])=>Q(x,y,c2,false));
+    QF(2,4,4,4,PD);QF(2,4,1,4,shade(PD,.15));QF(5,4,1,4,Dk);Q(3,4,'#ffffff',false);Q(4,4,'#ffffff',false);QF(3,5,2,2,Lt);
+    QF(2,7,4,1,Dk);Q(3,7,T,false);Q(4,7,T,false);
+    for(const ax of [0,6]){Q(ax,5,skin);Q(ax+1,5,skin);QF(ax,6,2,2,'#fafafa');QF(ax,8,2,1,hand)}
+    QF(-1,4,3,1,Lt);QF(6,4,3,1,Lt);Q(0,4,shade(Lt,-.08));Q(7,4,shade(Lt,-.08));
+    hbm.set('6,8',[6,8,hand]);hbm.set('7,8',[7,8,shade(hand,-.08)])}
+  else{
+    if(cape){QF(1,4,6,8,shade(cape.color,-.15));if(cape.rar>=2){Q(1,11,RAR[cape.rar].h,false);Q(6,11,RAR[cape.rar].h,false)}}
+    QF(2,9,2,4,PANTS);QF(4,9,2,4,shade(PANTS,-.12));
+    if(bt){QF(2,11,2,2,bt.color);QF(4,11,2,2,shade(bt.color,-.1));Q(2,11,shade(bt.color,.25));Q(4,11,shade(bt.color,.15));if(bt.rar>=3){Q(1,11,'#ffffff',false);Q(6,11,'#ffffff',false)}}
+    else{QF(2,12,4,1,'#3a2a1e')}
+    QF(2,4,4,4,ac);Q(2,4,shade(ac,.15));Q(2,5,shade(ac,.15));Q(2,6,shade(ac,.1));Q(2,7,shade(ac,.1));QF(5,4,1,4,shade(ac,-.18));
+    if(cloth){Q(3,4,shade(ac,-.3));Q(4,4,shade(ac,-.3))}
+    else if(a.rar>=1){QF(3,6,2,1,RAR[a.rar].h,false)}
+    QF(2,8,4,1,'#3a2414');Q(3,8,'#e8c13a',false);Q(4,8,'#e8c13a',false);if(!cloth&&a.rar>=3){Q(2,8,RAR[a.rar].h,false);Q(5,8,RAR[a.rar].h,false)}
+    if(c){Q(3,4,'#e8c13a',false);Q(4,4,'#e8c13a',false);Q(3,5,RAR[c.rar].h,false);Q(4,5,RAR[c.rar].h,false)}
+    for(const ax of [0,6]){QF(ax,4,2,2,ac);QF(ax,6,2,2,skin);QF(ax,8,2,1,hand);if(gl)QF(ax,7,2,2,gl.color);Q(ax+(ax?1:0),4,shade(ac,ax?-.15:.1))}
+    if(!cloth&&a.rar>=2){QF(-1,4,3,1,shade(ac,.12));QF(6,4,3,1,shade(ac,.12));Q(-1,4,RAR[a.rar].h,false);Q(8,4,RAR[a.rar].h,false)}
+    if(cape){Q(2,4,'#e8c13a',false);Q(5,4,'#e8c13a',false)}
+    if(L.hair==='long'){Q(2,4,hc);Q(5,4,hc)}
+    const hcol=gl?gl.color:hand;hbm.set('6,8',[6,8,shade(hcol,.04)]);hbm.set('7,8',[7,8,shade(hcol,-.08)]);if(ring)hbm.set('6,8',[6,8,ring.rar?RAR[ring.rar].h:'#ffd23f'])}
   // chunky (vinyl-figure) proportions: big head, short body
   const hd=new Map(),bd=new Map(),fy=y=>y-HDROP.filter(d=>d<y).length,mv=(src,dst)=>{for(const[x,y,c]of src.values())if(!HDROP.includes(y))dst.set(x+','+fy(y),[x,fy(y),c])};
   for(const[k,v]of m)(v[1]<8&&(v[1]<0||(v[0]>=3&&v[0]<=12))?hd.set(k,v):0);for(const k of hd.keys())m.delete(k);mv(m,bd);const hb=new Map();mv(hm,hb);
-  return `<svg class="hs${AU&&!auc?' aura-rb':''}" viewBox="-8 -18 37 46" shape-rendering="crispEdges" style="${glow};overflow:visible"><g transform="scale(2)">${rects(ds2(bd))}</g>${shS}<g transform="translate(8 8) scale(${HSC}) translate(-8 -8)">${rects(hd)}${eyes}</g>${wS}<g transform="scale(2)">${rects(ds2(hb))}</g>${petS}${fx}</svg>`;
+  return `<svg class="hs${AU&&!auc?' aura-rb':''}" viewBox="-8 -18 37 46" shape-rendering="crispEdges" style="${glow};overflow:visible"><g transform="scale(2)">${rects(bm)}</g>${shS}<g transform="translate(8 8) scale(${HSC}) translate(-8 -8)">${rects(hd)}${eyes}</g>${wS}<g transform="scale(2)">${rects(hbm)}</g>${petS}${fx}</svg>`;
 }
 function slotHTML(slot,it,mini){
   const ic=it?itemIcon(Object.assign({slot},it)):itemIcon(GHOST[slot],true);
