@@ -389,6 +389,8 @@ input{font:inherit}
 .frac{display:inline-flex;flex-direction:column;vertical-align:middle;font-size:.62em;line-height:1.05;text-align:center;margin:0 4px}.frac i{font-style:normal;padding:0 5px}.frac i:first-child{border-bottom:3px solid currentColor}
 .mstars{grid-template-columns:repeat(4,1fr)!important}.mstars .db{padding:4px 0!important;line-height:1.15}.db .dg{display:block;font-size:10px;opacity:.85}
 .qwrap.hasq{padding-top:28px}
+.bestall{background:#3a7ad9!important;box-shadow:inset 3px 3px 0 #ffffff40,inset -3px -3px 0 #0007,0 3px 0 #1a3a6a!important;display:block;margin-left:auto;margin-right:auto}
+#hEnhAll{display:block;margin-left:auto;margin-right:auto}
 </style>
 </head>
 <body>
@@ -421,6 +423,7 @@ input{font:inherit}
         <div class="powbig"><small>パワー</small><b id="hPow">0</b></div>
         <div class="statrow" id="hStats"></div>
         <div id="hCount" style="font-size:13px;color:var(--gold);margin-top:4px"></div>
+        <button class="enhall bestall" id="hBest">⚡ さいきょう そうび</button>
         <button class="enhall" id="hEnhAll">⚒️ まとめて きょうか</button>
       </div>
       <div class="slots" id="hSlotsR"></div>
@@ -1244,7 +1247,7 @@ function pixHome(){
   const set=(id,ic,txt)=>{const e=$(id);if(e)e.innerHTML=pi(ic)+txt};
   set('weakBtn','book',`にがて <span id="weakN">${P?P.weak.length:0}</span>`);set('statBtn','chart','きろく');set('boxBtn','box','ボックス');
   set('rankBtn','trophy','ランキング');set('shopBtn','bag','ショップ');set('setBtn','gear','せってい');set('adminBtn','crown','みんな');
-  set('goBtn','swords','しゅつげき！');set('hEnhAll','hammer','まとめて きょうか');
+  set('goBtn','swords','しゅつげき！');set('hBest','star','さいきょう そうび');set('hEnhAll','hammer','まとめて きょうか');
   const g=$('hGold').parentNode,st=$('hStreak').parentNode;if(!g.querySelector('.pi')){g.innerHTML=pi('coin')+'<b id="hGold">0</b>';st.innerHTML=pi('flame')+'<b id="hStreak">1</b>'}}
 function renderHome(){
   pixHome();
@@ -1262,6 +1265,7 @@ function renderHome(){
     showModal(it?`<div class="mt">${SLOTN[k]}</div>${itemCard(it)}${enhBtn(it)}<div class="row"><button class="btn green" id="ch">📦 ボックスから えらぶ（${n}）</button><button class="btn gray" id="un">はずす</button></div><button class="btn gray" id="cl">とじる</button>`
       :`<div class="mt">${SLOTN[k]}</div><p>${n?'ボックスに '+n+'こ あるよ':'まだ もっていないよ。<br>モンスターを たおして たからばこを さがそう！'}</p>${n?'<button class="btn green big" id="ch">📦 ボックスから えらぶ</button>':''}<button class="btn gray" id="cl">とじる</button>`,
       {cl:closeModal,enhmax:()=>{closeModal();enhAllFlow([it],SLOTN[k]+'を できるだけ きょうか',renderHome)},enh:()=>doEnh(it,()=>{renderHome();$('hSlotsL').querySelector('[data-s="'+k+'"]')?.click()||$('hSlotsR').querySelector('[data-s="'+k+'"]')?.click()}),ch:()=>{closeModal();boxF=k;openBox('items')},un:()=>{if(P.box.length>=boxCap()){toast('ボックスが いっぱい！');return}P.box.push(it);P.eq[k]=null;save();closeModal();renderHome()}})});
+  $('hBest').onclick=bestFlow;
   {const eqs=SLOTS.map(k=>P.eq[k]).filter(Boolean),b=$('hEnhAll');b.disabled=!eqs.length||P.gold<Math.min(...eqs.map(enhCost));b.onclick=()=>enhAllFlow(eqs,'まとめて きょうか',renderHome)}
   renderParty();{const ev=P.mons.filter(evoReady),eb=$('hEvo');
     if(ev.length){eb.style.display='';eb.innerHTML=`<span class="evi">${ev.slice(0,3).map(m=>`<span class="flip">${monsterSVG(m.sp)}</span>`).join('')}</span><span class="evt">${pi('star')}しんか できる なかまが <b>${ev.length}たい</b> いるよ！</span><span class="evgo">みる ▶</span>`;
@@ -1551,6 +1555,21 @@ function enhAllFlow(items,title,cb){const pl=enhPlan(items,P.gold);
 const spentOn=it=>{let t=0;const base=(10+(it.lv||Math.round(it.p/RAR[it.rar].m))*3)*(it.rar+1);for(let i=0;i<(it.plus||0);i++)t+=Math.round(base*Math.pow(1.25,i));return t};
 const xferCost=it=>Math.max(10,Math.round(spentOn(it)*.25));
 const withPlus=(it,cur)=>cur&&cur.plus>0?Object.assign({},it,{plus:(it.plus||0)+cur.plus}):it;
+function bestPlan(){const eq=Object.assign({},P.eq),box=P.box.slice(),ch=[];
+  for(const k of SLOTS){const cur=eq[k];let best=null,bp=power(eq);
+    for(const c of box){if(c.slot!==k)continue;const v=power(Object.assign({},eq,{[k]:withPlus(c,cur)}));if(v>bp){bp=v;best=c}}
+    if(best){ch.push({k,cur,it:best});eq[k]=withPlus(best,cur);box.splice(box.indexOf(best),1)}}
+  return{ch,after:power(eq)}}
+function bestFlow(){const now=power(),pl=bestPlan();
+  if(!pl.ch.length){toast('もう いちばん つよい そうびだよ！');return}
+  showModal(`<div class="mt">⚡ さいきょう そうび</div><p>ボックスの なかから いちばん つよく なる そうびに かえるよ</p>
+    <div class="enhlist">${pl.ch.map(c=>`<div><span>${SLOTN[c.k]}</span><span>${c.cur?esc(c.cur.name):'なし'} → <b>${esc(c.it.name)}${(c.it.plus||0)+(c.cur&&c.cur.plus||0)?' +'+((c.it.plus||0)+(c.cur&&c.cur.plus||0)):''}</b></span></div>`).join('')}</div>
+    <div class="powchg">パワー ${now} → <b class="up">${pl.after}（▲${pl.after-now}）</b></div>
+    <small style="color:var(--sub)">⚒️ きょうかの + は あたらしい そうびに ひきつぐよ・はずした そうびは ボックスへ</small>
+    <button class="btn orange big" id="go">⚡ かえる！</button><button class="btn gray" id="cl">やめる</button>`,
+    {cl:closeModal,go:()=>{for(const c of pl.ch){const cur=P.eq[c.k],i=P.box.indexOf(c.it);if(i<0)continue;
+        if(cur&&cur.plus>0){c.it.plus=(c.it.plus||0)+cur.plus;cur.plus=0}P.box.splice(i,1);if(cur)P.box.push(cur);P.eq[c.k]=c.it;P.dex.items[ikey(c.it)]=1}
+      save();snd(660,.08,'square',.05);snd(990,.12,'square',.05,0,.08);snd(1320,.2,'square',.05,0,.16);closeModal();renderHome();toast(`⚡ パワー ${now} → ${power()}！`)}})}
 function equipFlow(it,cur,apply){
   if(cur&&cur.plus>0){const n=cur.plus;it.plus=(it.plus||0)+n;cur.plus=0;snd(880,.08,'square',.05);snd(1320,.15,'square',.05,0,.08);apply();setTimeout(()=>toast(`⚒️ +${n} を ひきついだよ！`),300);return}
   apply();
