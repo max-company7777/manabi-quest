@@ -385,6 +385,10 @@ input{font:inherit}
 .who .pi{margin-right:.35em}
 .mlab .e{font-family:'DotGothic16',sans-serif}
 .slot .ic{image-rendering:pixelated}
+
+.frac{display:inline-flex;flex-direction:column;vertical-align:middle;font-size:.62em;line-height:1.05;text-align:center;margin:0 4px}.frac i{font-style:normal;padding:0 5px}.frac i:first-child{border-bottom:3px solid currentColor}
+.mstars{grid-template-columns:repeat(4,1fr)!important}.mstars .db{padding:4px 0!important;line-height:1.15}.db .dg{display:block;font-size:10px;opacity:.85}
+.qwrap.hasq{padding-top:28px}
 </style>
 </head>
 <body>
@@ -530,16 +534,75 @@ const K3=uniqK(parse(`世界:せかい,宿題:しゅくだい,勉強:べんき�
 const EN=parse(`🍎:apple:りんご,🐶:dog:いぬ,🐱:cat:ねこ,🐟:fish:さかな,🐦:bird:とり,🐘:elephant:ぞう,🦁:lion:ライオン,🐻:bear:くま,🐰:rabbit:うさぎ,🐵:monkey:さる,🍌:banana:バナナ,🍓:strawberry:いちご,🥚:egg:たまご,🍞:bread:パン,🥛:milk:ぎゅうにゅう,🚗:car:くるま,🚌:bus:バス,🚂:train:でんしゃ,✈️:airplane:ひこうき,🚲:bike:じてんしゃ,⚽:ball:ボール,📕:book:ほん,✏️:pencil:えんぴつ,🎩:hat:ぼうし,👟:shoes:くつ,☀️:sun:たいよう,🌙:moon:つき,⭐:star:ほし,🌧️:rain:あめ,❄️:snow:ゆき,🌳:tree:き,🌸:flower:はな,🏠:house:いえ,🐸:frog:かえる,🐢:turtle:かめ,🐧:penguin:ペンギン,🍉:watermelon:すいか,🍊:orange:オレンジ,🍕:pizza:ピザ,🐮:cow:うし,🐷:pig:ぶた,🦆:duck:あひる,🔴:red:あか,🔵:blue:あお,🟡:yellow:きいろ,🟢:green:みどり,⚫:black:くろ,⚪:white:しろ,1️⃣:one:いち,2️⃣:two:に,3️⃣:three:さん,4️⃣:four:よん,5️⃣:five:ご,👀:eye:め,👂:ear:みみ,👃:nose:はな,✋:hand:て,😀:happy:うれしい,😢:sad:かなしい,🏃:run:はしる,🍽️:eat:たべる,😴:sleep:ねる,🏊:swim:およぐ,🎤:sing:うたう,💪:strong:つよい,🐜:small:ちいさい,🐳:big:おおきい`);
 const BASIC_EN=EN.slice(0,42);
 const PHRASES=parse(`☀️:Good morning:おはよう,🌙:Good night:おやすみ,🙏:Thank you:ありがとう,👋:See you:またね,😊:How are you?:げんき？,🙇:I'm sorry:ごめんなさい,👋:Hello:こんにちは,🍽️:Let's eat:いただきます`);
+/* ===== grades 4-6 content ===== */
+const K4=uniqK(parse(`愛用:あいよう,案内:あんない,以上:いじょう,衣服:いふく,位置:いち,印刷:いんさつ,英語:えいご,塩水:しおみず,一億:いちおく,参加:さんか,結果:けっか,発芽:はつが,改良:かいりょう,機械:きかい,害虫:がいちゅう,街灯:がいとう,各地:かくち,完成:かんせい,外交官:がいこうかん,管理:かんり,観察:かんさつ,願い:ねがい,希望:きぼう,季節:きせつ,国旗:こっき,器用:きよう,会議:かいぎ,要求:ようきゅう,給食:きゅうしょく,選挙:せんきょ,漁船:ぎょせん,共通:きょうつう,協力:きょうりょく,鏡:かがみ,競争:きょうそう,南極:なんきょく,軍手:ぐんて,群れ:むれ,直径:ちょっけい,景色:けしき,園芸:えんげい,欠席:けっせき,建物:たてもの,健康:けんこう,実験:じっけん,固体:こたい,成功:せいこう,好物:こうぶつ,香り:かおり,天候:てんこう,交差点:こうさてん,野菜:やさい,最高:さいこう,材料:ざいりょう,名札:なふだ,参考:さんこう,生産:せいさん,散歩:さんぽ,残念:ざんねん,氏名:しめい,司会:しかい,試合:しあい,児童:じどう,治る:なおる,辞書:じしょ,失敗:しっぱい,種類:しゅるい,周り:まわり,祝日:しゅくじつ,順番:じゅんばん,最初:さいしょ,笑顔:えがお,合唱:がっしょう,夕焼け:ゆうやけ,照明:しょうめい,城:しろ,大臣:だいじん,信号:しんごう,井戸:いど,反省:はんせい,清書:せいしょ,静か:しずか,面積:めんせき,折り紙:おりがみ,節分:せつぶん,説明:せつめい,浅い:あさい,選手:せんしゅ,自然:しぜん,倉庫:そうこ,巣箱:すばこ,約束:やくそく,両側:りょうがわ,続く:つづく,卒業:そつぎょう,子孫:しそん,包帯:ほうたい,配達:はいたつ,単語:たんご,物置:ものおき,仲間:なかま,最低:さいてい,海底:かいてい,目的:もくてき,辞典:じてん,伝言:でんごん,生徒:せいと,努力:どりょく,働く:はたらく,特別:とくべつ,道徳:どうとく,熱心:ねっしん,記念:きねん,梅:うめ,博物館:はくぶつかん,飛行機:ひこうき,必要:ひつよう,投票:とうひょう,目標:もくひょう,不安:ふあん,付近:ふきん,富士山:ふじさん,周辺:しゅうへん,変化:へんか,便利:べんり,方法:ほうほう,望遠鏡:ぼうえんきょう,牧場:ぼくじょう,週末:しゅうまつ,満月:まんげつ,未来:みらい,国民:こくみん,無理:むり,勇気:ゆうき,栄養:えいよう,海水浴:かいすいよく,大陸:たいりく,料理:りょうり,大量:たいりょう,車輪:しゃりん,人類:じんるい,命令:めいれい,冷たい:つめたい,連休:れんきゅう,老人:ろうじん,苦労:くろう,記録:きろく`));
+const K5=uniqK(parse(`圧力:あつりょく,周囲:しゅうい,移動:いどう,原因:げんいん,永遠:えいえん,営業:えいぎょう,衛星:えいせい,貿易:ぼうえき,利益:りえき,液体:えきたい,演技:えんぎ,応用:おうよう,往復:おうふく,桜:さくら,可能:かのう,仮面:かめん,価格:かかく,河川:かせん,過去:かこ,快晴:かいせい,解決:かいけつ,合格:ごうかく,正確:せいかく,金額:きんがく,朝刊:ちょうかん,新幹線:しんかんせん,習慣:しゅうかん,眼科:がんか,世紀:せいき,基本:きほん,寄付:きふ,規則:きそく,喜ぶ:よろこぶ,技術:ぎじゅつ,正義:せいぎ,逆転:ぎゃくてん,永久:えいきゅう,救助:きゅうじょ,住居:じゅうきょ,許可:きょか,国境:こっきょう,平均:へいきん,禁止:きんし,文句:もんく,大型:おおがた,経験:けいけん,清潔:せいけつ,事件:じけん,検査:けんさ,制限:せいげん,現在:げんざい,減少:げんしょう,事故:じこ,個人:こじん,保護:ほご,効果:こうか,厚い:あつい,耕す:たがやす,航海:こうかい,鉱物:こうぶつ,構造:こうぞう,興味:きょうみ,講堂:こうどう,報告:ほうこく,混雑:こんざつ,調査:ちょうさ,再生:さいせい,災害:さいがい,採集:さいしゅう,実際:じっさい,財産:ざいさん,複雑:ふくざつ,酸素:さんそ,賛成:さんせい,武士:ぶし,支える:ささえる,歴史:れきし,枝:えだ,教師:きょうし,資料:しりょう,飼育:しいく,指示:しじ,似顔絵:にがおえ,知識:ちしき,質問:しつもん,校舎:こうしゃ,感謝:かんしゃ,授業:じゅぎょう,修理:しゅうり,美術:びじゅつ,準備:じゅんび,順序:じゅんじょ,招待:しょうたい,証明:しょうめい,印象:いんしょう,賞品:しょうひん,条件:じょうけん,状態:じょうたい,非常口:ひじょうぐち,感情:かんじょう,組織:そしき,職員室:しょくいんしつ,制服:せいふく,性格:せいかく,勢い:いきおい,精神:せいしん,製品:せいひん,税金:ぜいきん,責任:せきにん,成績:せいせき,直接:ちょくせつ,設計:せっけい,絶対:ぜったい,祖父:そふ,素直:すなお,総合:そうごう,想像:そうぞう,増加:ぞうか,測定:そくてい,金属:きんぞく,貸す:かす,態度:たいど,団体:だんたい,判断:はんだん,建築:けんちく,貯金:ちょきん,主張:しゅちょう,停電:ていでん,提出:ていしゅつ,程度:ていど,快適:かいてき,伝統:でんとう,食堂:しょくどう,銅像:どうぞう,指導:しどう,得意:とくい,独立:どくりつ,燃料:ねんりょう,能力:のうりょく,破る:やぶる,犯人:はんにん,評判:ひょうばん,出版:しゅっぱん,比べる:くらべる,肥料:ひりょう,費用:ひよう,設備:せつび,貧しい:まずしい,毛布:もうふ,武器:ぶき,復習:ふくしゅう,複数:ふくすう,粉:こな,編む:あむ,弁当:べんとう,保健室:ほけんしつ,報道:ほうどう,豊か:ゆたか,防止:ぼうし,暴風:ぼうふう,山脈:さんみゃく,義務:ぎむ,夢中:むちゅう,迷子:まいご,木綿:もめん,輸入:ゆにゅう,余白:よはく,内容:ないよう,省略:しょうりゃく,留守:るす,大統領:だいとうりょう`));
+const K6=uniqK(parse(`異常:いじょう,遺産:いさん,地域:ちいき,宇宙:うちゅう,映画:えいが,延長:えんちょう,沿岸:えんがん,恩人:おんじん,我々:われわれ,灰色:はいいろ,拡大:かくだい,改革:かいかく,内閣:ないかく,割合:わりあい,株:かぶ,干す:ほす,巻く:まく,看板:かんばん,簡単:かんたん,危険:きけん,机:つくえ,発揮:はっき,貴重:きちょう,疑問:ぎもん,呼吸:こきゅう,胸:むね,故郷:こきょう,勤める:つとめる,筋肉:きんにく,敬語:けいご,警察:けいさつ,劇場:げきじょう,感激:かんげき,穴:あな,入場券:にゅうじょうけん,絹:きぬ,権利:けんり,憲法:けんぽう,資源:しげん,厳しい:きびしい,自己:じこ,呼ぶ:よぶ,誤解:ごかい,皇后:こうごう,親孝行:おやこうこう,紅茶:こうちゃ,降水:こうすい,鉄鋼:てっこう,時刻:じこく,穀物:こくもつ,骨:ほね,困る:こまる,砂:すな,座席:ざせき,経済:けいざい,裁判:さいばん,対策:たいさく,一冊:いっさつ,蚕:かいこ,至急:しきゅう,私:わたし,姿:すがた,視力:しりょく,歌詞:かし,雑誌:ざっし,磁石:じしゃく,発射:はっしゃ,捨てる:すてる,若い:わかい,樹木:じゅもく,収入:しゅうにゅう,宗教:しゅうきょう,就職:しゅうしょく,観衆:かんしゅう,従う:したがう,縦:たて,縮む:ちぢむ,成熟:せいじゅく,単純:たんじゅん,処理:しょり,署名:しょめい,除く:のぞく,承知:しょうち,将来:しょうらい,傷:きず,障害:しょうがい,蒸気:じょうき,方針:ほうしん,垂直:すいちょく,推理:すいり,寸法:すんぽう,聖火:せいか,誠実:せいじつ,舌:した,宣言:せんげん,専門:せんもん,温泉:おんせん,洗う:あらう,染める:そめる,銭湯:せんとう,親善:しんぜん,演奏:えんそう,窓:まど,創作:そうさく,服装:ふくそう,地層:ちそう,操作:そうさ,冷蔵庫:れいぞうこ,心臓:しんぞう,存在:そんざい,尊敬:そんけい,退場:たいじょう,帰宅:きたく,担任:たんにん,探す:さがす,誕生日:たんじょうび,階段:かいだん,暖かい:あたたかい,価値:かち,忠実:ちゅうじつ,著者:ちょしゃ,県庁:けんちょう,頂上:ちょうじょう,満潮:まんちょう,運賃:うんちん,痛い:いたい,敵:てき,展覧会:てんらんかい,討論:とうろん,砂糖:さとう,届く:とどく,難しい:むずかしい,牛乳:ぎゅうにゅう,確認:かくにん,納得:なっとく,頭脳:ずのう,派手:はで,拝む:おがむ,背中:せなか,俳句:はいく,班長:はんちょう,今晩:こんばん,否定:ひてい,批判:ひはん,秘密:ひみつ,腹:はら,興奮:こうふん,並ぶ:ならぶ,陛下:へいか,閉じる:とじる,補う:おぎなう,暮らす:くらす,宝物:たからもの,訪問:ほうもん,忘れる:わすれる,鉄棒:てつぼう,一枚:いちまい,開幕:かいまく,同盟:どうめい,模型:もけい,通訳:つうやく,郵便:ゆうびん,優勝:ゆうしょう,預ける:あずける,幼児:ようじ,欲しい:ほしい,翌日:よくじつ,乱暴:らんぼう,卵:たまご,裏:うら,法律:ほうりつ,臨時:りんじ,朗読:ろうどく,論文:ろんぶん`));
+const EN4=parse(`📅:Monday:げつようび:d,📅:Tuesday:かようび:d,📅:Wednesday:すいようび:d,📅:Thursday:もくようび:d,📅:Friday:きんようび:d,📅:Saturday:どようび:d,📅:Sunday:にちようび:d,
+🎍:January:1がつ:m,⛄:February:2がつ:m,🌸:March:3がつ:m,🌷:April:4がつ:m,🎏:May:5がつ:m,☔:June:6がつ:m,🎋:July:7がつ:m,🍉:August:8がつ:m,🎑:September:9がつ:m,🎃:October:10がつ:m,🍁:November:11がつ:m,🎄:December:12がつ:m,
+☀️:sunny:はれ:w,🌧️:rainy:あめ:w,☁️:cloudy:くもり:w,❄️:snowy:ゆき:w,😊:happy:うれしい:f,😢:sad:かなしい:f,😋:hungry:おなかが すいた:f,😪:sleepy:ねむい:f,😫:tired:つかれた:f,😠:angry:おこっている:f,
+🔢:eleven:11:n,🔢:twelve:12:n,🔢:fifteen:15:n,🔢:twenty:20:n,🔢:thirty:30:n,🔢:fifty:50:n,🔢:one hundred:100:n,📘:math:さんすう:s,🔬:science:りか:s,🎵:music:おんがく:s,🎨:arts and crafts:ずこう:s,🌏:social studies:しゃかい:s,🏃:P.E.:たいいく:s`);
+const EN5=[['I ___ soccer every day.','play','まいにち サッカーを する'],['I ___ apples.','like','りんごが すき'],['I ___ a dog.','have','いぬを かっている'],['I want to ___ to Okinawa.','go','おきなわに いきたい'],['I can ___ fast.','run','はやく はしれる'],['I can ___ well.','swim','じょうずに およげる'],['I ___ TV at night.','watch','よるに テレビを みる'],['I ___ books in the library.','read','としょかんで ほんを よむ'],['I ___ English at school.','study','がっこうで えいごを べんきょうする'],['I ___ breakfast at seven.','eat','7じに あさごはんを たべる'],['She can ___ songs well.','sing','かのじょは じょうずに うたえる'],['I ___ dinner with my mother.','cook','おかあさんと ばんごはんを つくる'],['What ___ do you like?','sport','どんな スポーツが すき？'],['___ are you from?','Where','どこの しゅっしん？'],['___ is your birthday?','When','たんじょうびは いつ？'],['___ much is it?','How','いくら？'],['What ___ is it?','time','なんじ？'],['I get ___ at six.','up','6じに おきる'],['This is ___ friend, Ken.','my','わたしの ともだちの ケンです'],['___ you play the piano?','Can','ピアノを ひける？'],['I am good ___ cooking.','at','りょうりが とくい'],['Turn ___ at the corner.','right','かどを みぎに まがって'],['Go ___.','straight','まっすぐ いって'],['I ___ to bed at nine.','go','9じに ねる'],['He is my ___.','brother','かれは わたしの おにいさん（おとうと）です']];
+const EN6P=[['go','went'],['eat','ate'],['see','saw'],['have','had'],['make','made'],['get','got'],['come','came'],['buy','bought'],['swim','swam'],['run','ran'],['sing','sang'],['write','wrote'],['take','took'],['drink','drank'],['sleep','slept'],['speak','spoke'],['is','was'],['play','played'],['enjoy','enjoyed'],['visit','visited'],['watch','watched'],['study','studied'],['like','liked'],['jump','jumped']];
+const EN6S=[['I ___ to Kyoto last summer.','went','きょねんの なつ きょうとに いった'],['I ___ curry and rice.','ate','カレーライスを たべた'],['I ___ a big fish.','saw','おおきな さかなを みた'],['It ___ fun.','was','たのしかった'],['I ___ a good time.','had','たのしい じかんを すごした'],['I ___ the festival.','enjoyed','おまつりを たのしんだ'],['I ___ my grandmother.','visited','おばあちゃんを たずねた'],['We ___ soccer yesterday.','played','きのう サッカーを した'],['I ___ a cake with my sister.','made','いもうとと ケーキを つくった'],['I ___ in the sea.','swam','うみで およいだ'],['My best ___ is the sports day.','memory','いちばんの おもいでは うんどうかい'],['I want to ___ a teacher.','be','せんせいに なりたい'],['I want to join the ___ club.','tennis','テニスぶに はいりたい'],['I ___ a new bag.','bought','あたらしい かばんを かった']];
+const gcd=(a,b)=>b?gcd(b,a%b):a;
+const fr=(n,d)=>{const g=gcd(Math.abs(n),Math.abs(d))||1;n/=g;d/=g;return d===1?String(n):n+'/'+d};
+const frH=(n,d)=>`<span class="frac"><i>${n}</i><i>${d}</i></span>`;
+const dec=(v,p=2)=>String(+(+v).toFixed(p));
+function strChoices(a,cands,n){a=String(a);const set=new Set([a]);for(const c of shuffle(cands.map(String)))if(set.size<n&&c!==a&&c!=='NaN'&&c!=='')set.add(c);let g=0;while(set.size<n&&g++<60){const v=+a.split(/[ /]/)[0];set.add(String((isNaN(v)?0:v)+R(1,9)))}return shuffle([...set])}
+function decChoices(v,p,n){const st=p===1?.1:.01;return strChoices(dec(v,p),[v+st,v-st,v+st*10,v-st*10,v*10,v/10,v+1,v+st*2].filter(x=>x>0).map(x=>dec(x,p)),n)}
+const QS=t=>`<span class="sm" style="font-size:.45em;color:#fff;line-height:1.5">${t}</span>`;
+function mq(key,html,say,a,choices,cs){a=String(a);return{key:'g'+key,html,speak:say?[say,'ja-JP']:null,a,choices,cs:cs||(a.length>4||choices.some(c=>c.length>4)?'small':undefined)}}
+function genMathHi(lv,n){const r=Math.random();
+ if(lv===5){
+  if(r<.18){const x=R(11,49),y=R(11,29);return mq(`4m${x}x${y}`,`${x} × ${y} = <span class="bl">?</span>`,`${x} かける ${y} は？`,x*y,numChoices(x*y,n,[10,-10,x,-x,y]))}
+  if(r<.34){const y=R(2,9),a=R(12,Math.floor(999/y)),x=a*y;return mq(`4d${x}/${y}`,`${x} ÷ ${y} = <span class="bl">?</span>`,`${x} わる ${y} は？`,a,numChoices(a,n,[10,-10]))}
+  if(r<.5){let y,x,q,m;do{y=R(3,9);x=R(10,89);q=Math.floor(x/y);m=x%y}while(!m);const A=`${q} あまり ${m}`;
+    return mq(`4r${x}/${y}`,`${x} ÷ ${y} = <span class="bl">?</span>`,`${x} わる ${y} は？`,A,strChoices(A,[`${q+1} あまり ${m}`,`${Math.max(1,q-1)} あまり ${m}`,`${q} あまり ${m+1}`,`${q} あまり ${Math.max(1,m-1)}`],n),'small')}
+  if(r<.68){const x=R(11,89)/10,y=R(11,89)/10,add=Math.random()<.6||x<y,v=add?x+y:x-y,op=add?'+':'−';
+    return mq(`4f${x}${op}${y}`,`${x} ${op} ${y} = <span class="bl">?</span>`,null,dec(v,1),decChoices(v,1,n))}
+  if(r<.84){const d=R(5,12),a=R(1,d-2),b=R(1,d-1-a),A=`${a+b}/${d}`;return mq(`4q${a}/${d}+${b}/${d}`,`${frH(a,d)} + ${frH(b,d)} = <span class="bl">?</span>`,null,A,strChoices(A,[`${a+b}/${d*2}`,`${a+b+1}/${d}`,`${Math.max(1,a+b-1)}/${d}`,`${a*b}/${d}`],n))}
+  const a=R(3,12),b=R(3,15);return mq(`4a${a}x${b}`,QS(`たて ${a}cm・よこ ${b}cm の<br>ながしかくの めんせきは？（cm²）`),`たて ${a}センチ よこ ${b}センチの ながしかくの めんせきは？`,a*b,strChoices(a*b,[a+b,(a+b)*2,a*b+a,a*b-b,a*b+10],n))}
+ if(lv===6){
+  if(r<.16){const x=R(11,99)/10,y=R(2,9),v=x*y;return mq(`5m${x}x${y}`,`${x} × ${y} = <span class="bl">?</span>`,null,dec(v,1),decChoices(v,1,n))}
+  if(r<.3){const x=+(R(2,9)/10+R(0,3)).toFixed(1),y=R(2,9)/10,v=x*y;return mq(`5n${x}x${y}`,`${x} × ${y} = <span class="bl">?</span>`,null,dec(v,2),decChoices(v,2,n))}
+  if(r<.48){const [d1,d2]=pick([[2,3],[2,4],[3,4],[2,5],[3,6],[2,6],[4,6],[3,5]]);const a=R(1,d1-1),b=R(1,d2-1),N=a*d2+b*d1,D=d1*d2,A=fr(N,D);
+    return mq(`5q${a}/${d1}+${b}/${d2}`,`${frH(a,d1)} + ${frH(b,d2)} = <span class="bl">?</span>`,null,A,strChoices(A,[`${a+b}/${d1+d2}`,fr(N+1,D),fr(N+D,D),`${a+b}/${D}`,fr(N,D*2)],n))}
+  if(r<.62){const m=R(5,20),e=R(1,4),f=R(1,3),v=[m-e,m+e-f,m+f];return mq(`5v${v}`,QS(`${v.join('、')} の<br>へいきんは？`),`${v.join('、')} の へいきんは？`,m,numChoices(m,n))}
+  if(r<.76){const b=R(2,12)*2,h=R(3,12);return mq(`5t${b}x${h}`,QS(`ていへん ${b}cm・たかさ ${h}cm の<br>さんかくけいの めんせきは？（cm²）`),`ていへん ${b}センチ たかさ ${h}センチの さんかくけいの めんせきは？`,b*h/2,strChoices(b*h/2,[b*h,b*h/2+h,b+h,b*h/2-b,b*h/2+2],n))}
+  if(r<.88){const base=pick([20,40,50,60,80,100,200,300]),p=pick([10,20,25,50,75]),v=base*p/100;if(v%1)return genMathHi(lv,n);
+    return mq(`5p${base}x${p}`,QS(`${base}この ${p}％は<br>なんこ？`),`${base}この ${p}パーセントは なんこ？`,v,strChoices(v,[p,base-v,v*2,v+10,base/10].filter(x=>x>0),n))}
+  const [x,y,l]=pick([[4,6,12],[6,8,24],[3,4,12],[4,10,20],[6,9,18],[8,12,24],[2,7,14],[5,6,30],[9,12,36],[10,15,30]]);
+  return mq(`5l${x},${y}`,QS(`${x} と ${y} の<br>さいしょう こうばいすうは？`),`${x} と ${y} の さいしょう こうばいすうは？`,l,strChoices(l,[x*y===l?l*2:x*y,l*2,l/2,x+y,gcd(x,y)].filter(z=>z%1===0),n))}
+ if(r<.18){const b=R(2,7),a=R(1,b-1),d=R(2,7),c=R(1,d-1),A=fr(a*c,b*d);return mq(`6m${a}/${b}x${c}/${d}`,`${frH(a,b)} × ${frH(c,d)} = <span class="bl">?</span>`,null,A,strChoices(A,[fr(a*d,b*c),`${a+c}/${b+d}`,fr(a*c,b+d),fr(a*c+1,b*d)],n))}
+ if(r<.36){const b=R(2,7),a=R(1,b-1),d=R(2,7),c=R(1,d-1),A=fr(a*d,b*c);return mq(`6d${a}/${b}/${c}/${d}`,`${frH(a,b)} ÷ ${frH(c,d)} = <span class="bl">?</span>`,null,A,strChoices(A,[fr(a*c,b*d),fr(b*c,a*d),`${a+d}/${b+c}`,fr(a*d+1,b*c)],n))}
+ if(r<.52){const a=R(1,9),b=R(2,9),k=R(2,6);if(a===b)return genMathHi(lv,n);const L=Math.random()<.5,A=L?b*k:a*k;
+   return mq(`6r${a}:${b}x${k}${L?'L':'R'}`,L?`${a}：${b} ＝ ${a*k}：<span class="bl">?</span>`:`${a}：${b} ＝ <span class="bl">?</span>：${b*k}`,null,A,numChoices(A,n,[k,b,a,-k]))}
+ if(r<.66){const rr=R(1,10),v=rr*rr*3.14;return mq(`6c${rr}`,QS(`はんけい ${rr}cm の えんの めんせきは？<br>（えんしゅうりつ 3.14・cm²）`),`はんけい ${rr}センチの えんの めんせきは？`,dec(v,2),strChoices(dec(v,2),[dec(rr*2*3.14,2),dec(rr*rr*3,2),dec(rr*3.14,2),dec(v+3.14,2)],n),'small')}
+ if(r<.84){const t=R(2,5),s=pick([4,5,40,50,60,80]),d=s*t,k=R(0,2);
+   if(k===0)return mq(`6s${d}/${t}`,QS(`${d}km を ${t}じかんで すすむ<br>じそくは なんkm？`),`${d}キロを ${t}じかんで すすむ じそくは？`,s,numChoices(s,n,[t,-t,10]));
+   if(k===1)return mq(`6t${s}x${t}`,QS(`じそく ${s}km で ${t}じかん すすむと<br>なんkm？`),`じそく ${s}キロで ${t}じかん すすむと なんキロ？`,d,numChoices(d,n,[s,-s,t]));
+   return mq(`6u${d}/${s}`,QS(`${d}km を じそく ${s}km で すすむと<br>なんじかん？`),`${d}キロを じそく ${s}キロで すすむと なんじかん？`,t,numChoices(t,n))}
+ const x=R(2,12),k=R(2,9),mul=Math.random()<.5;return mq(`6x${x}${mul?'m':'a'}${k}`,(mul?`x × ${k} = ${x*k}`:`x + ${k} = ${x+k}`)+'<span class="sm">x は いくつ？</span>',null,x,numChoices(x,n,[k,-k]))
+}
+function genEngHi(lv,n){
+ if(lv===5){const w=pick(EN4),pool=EN4.filter(x=>x[3]===w[3]);
+   return{key:'e4'+w[1],html:`<span class="em" style="font-size:.8em">${w[0]}</span> ${w[2]}<span class="sm">えいごで なんていう？</span>`,speak:[w[2]+' は えいごで なんていう？','ja-JP'],a:w[1],choices:textChoices(w[1],(pool.length>=n?pool:EN4).map(x=>x[1]),n),cs:'small',sayChoice:'en-US'}}
+ if(lv===6){const w=pick(EN5);return{key:'e5'+w[1]+w[0].length,html:`<span style="font-family:'M PLUS Rounded 1c';font-size:.62em">${w[0].replace('___','<span class="bl">　　</span>')}</span><span class="sm">${w[2]}</span>`,speak:null,a:w[1],choices:textChoices(w[1],EN5.map(x=>x[1]),n),cs:'small',sayChoice:'en-US'}}
+ if(Math.random()<.5){const w=pick(EN6P);return{key:'e6p'+w[0],html:`<span style="font-family:'M PLUS Rounded 1c'">${w[0]}</span><span class="sm">かこけい（〜した）は？</span>`,speak:[w[0],'en-US'],a:w[1],choices:textChoices(w[1],EN6P.map(x=>x[1]).concat([w[0]+'ed',w[0]+'s']),n),cs:'small',sayChoice:'en-US'}}
+ const w=pick(EN6S);return{key:'e6s'+w[1]+w[0].length,html:`<span style="font-family:'M PLUS Rounded 1c';font-size:.62em">${w[0].replace('___','<span class="bl">　　</span>')}</span><span class="sm">${w[2]}</span>`,speak:null,a:w[1],choices:textChoices(w[1],EN6S.map(x=>x[1]),n),cs:'small',sayChoice:'en-US'}
+}
+
 const FRUITS=['🍎','🍓','🍌','🍇','🍊','🐟','⭐','🍩','🐥','⚽'];
 
 const SUBJ={
-  math:{n:'さんすう',e:'123',lv:['かぞえよう','10までの たしざん','20までの けいさん','2けた・九九','わりざん・3けた']},
-  eng:{n:'えいご',e:'ABC',lv:['きいて えらぼう','えを みて えいご','にほんご→えいご','つづりを あてよう','えいご→にほんご']},
-  kanji:{n:'こくご',e:'あ漢',lv:['ひらがな','えから かんじ（1年）','かんじの よみ（1年）','かんじの よみ（2年）','じゅくご（3年）']}
+  math:{n:'さんすう',e:'123',lv:['かぞえよう','10までの たしざん','20までの けいさん','2けた・九九','わりざん・3けた','2けた×2けた・しょうすう・ぶんすう・めんせき','しょうすうの かけざん・つうぶん・へいきん・わりあい','ぶんすうの かけわり・ひ・えん・はやさ・x']},
+  eng:{n:'えいご',e:'ABC',lv:['きいて えらぼう','えを みて えいご','にほんご→えいご','つづりを あてよう','えいご→にほんご','ようび・つき・てんき・きもち','ぶんを かんせいさせよう','かこの ことば（went など）']},
+  kanji:{n:'こくご',e:'あ漢',lv:['ひらがな','えから かんじ（1年）','かんじの よみ（1年）','かんじの よみ（2年）','じゅくご（3年）','かんじの よみ（4年）','かんじの よみ（5年）','かんじの よみ（6年）']}
 };
-const AGEHINT=['4さい〜','5さい〜','1ねんせい','2ねんせい','3ねんせい〜'];
-const DMULT=[1,1.3,1.6,2,2.5];
-const GAUGE=[0,25000,18000,14000,10000];
+const AGEHINT=['4さい','5さい','1ねん','2ねん','3ねん','4ねん','5ねん','6ねん'],LVN=8;
+const DMULT=[1,1.3,1.6,2,2.5,3,3.5,4];
+const GAUGE=[0,25000,18000,14000,10000,14000,18000,20000];
 
 /* =============== question generators =============== */
 function numChoices(a,n,mul){
@@ -556,6 +619,7 @@ function textChoices(ans,pool,n){
 function genQ(subj,lv,st){
   const n=lv===0?3:4;
   if(subj==='math'){
+    if(lv>=5)return genMathHi(lv,n);
     if(lv===0){const k=R(1,st>=3?7:5),f=pick(FRUITS);
       return{key:'c'+k+f,html:`<span class="pics">${f.repeat(k)}</span><span class="sm">いくつ あるかな？</span>`,speak:['いくつ あるかな？','ja-JP'],a:String(k),choices:textChoices(String(k),[k-2,k-1,k+1,k+2].filter(v=>v>=1).map(String),3)}}
     if(lv===1){const x=R(1,5),y=R(1,Math.min(5,10-x)),f=pick(FRUITS);
@@ -578,6 +642,7 @@ function genQ(subj,lv,st){
     if(lv===3){const ws=EN.filter(w=>/^[a-z]{3,7}$/.test(w[1]));const w=pick(ws);const i=R(0,w[1].length-1),L=w[1][i];
       const masked=w[1].slice(0,i)+'<span class="bl">_</span>'+w[1].slice(i+1);
       return{key:'es'+w[1]+i,html:`<span class="em" style="font-size:1em">${w[0]}</span> <span style="font-family:'M PLUS Rounded 1c';letter-spacing:4px">${masked}</span>`,speak:[w[1],'en-US'],a:L,choices:textChoices(L,'abcdefghijklmnoprstuwy'.split(''),n)}}
+    if(lv>=5)return genEngHi(lv,n);
     const pool=EN.concat(PHRASES);const w=pick(pool);
     return{key:'ee'+w[1],html:`<span style="font-family:'M PLUS Rounded 1c'">${w[1]}</span><span class="sm">にほんごで いうと？</span>`,speak:[w[1],'en-US'],a:w[2],choices:textChoices(w[2],pool.map(x=>x[2]),n),cs:'small'}}
   // kanji / kokugo
@@ -585,7 +650,7 @@ function genQ(subj,lv,st){
     return{key:'h'+w[1],html:`<span class="em">${w[0]}</span><span class="bl">？</span>${w[1].slice(1)}`,speak:[w[1],'ja-JP'],a:f,choices:textChoices(f,KANA,3),auto:true}}
   if(lv===1){const w=pick(K1.filter(x=>x[2]));
     return{key:'k1p'+w[0],html:`<span class="em">${w[2]}</span><span class="sm" style="font-size:.6em;color:#fff">「${w[1]}」</span>`,speak:[w[1],'ja-JP'],a:w[0],choices:textChoices(w[0],K1.filter(x=>x[2]).map(x=>x[0]),n)}}
-  const list=lv===2?K1:lv===3?K2:K3;const w=pick(list);
+  const list=[0,0,K1,K2,K3,K4,K5,K6][lv]||K3;const w=pick(list);
   return{key:'k'+lv+w[0],html:`<span style="font-size:1.4em">${w[0]}</span><span class="sm">なんて よむ？</span>`,speak:null,a:w[1],choices:textChoices(w[1],list.map(x=>x[1]),n),cs:'small',sayChoice:'ja-JP'};
 }
 
@@ -644,7 +709,7 @@ const elIcon=k=>ELS[elOf(k)].i;
 const fxSum=(k,eq=P.eq)=>SLOTS.reduce((s,sl)=>s+((eq[sl]&&eq[sl].fx)||[]).reduce((a,f)=>a+(f.k===k?f.v:0),0),0)+(P&&eq===P.eq&&typeof SP!=='undefined'?pskill(k):0);
 const enhCost=it=>Math.round((10+(it.lv||Math.round(it.p/RAR[it.rar].m))*3)*(it.rar+1)*Math.pow(1.25,it.plus||0));
 const iname=it=>it.name+(it.plus?` +${it.plus}`:'');
-function rollRar(d,boss,min=0){const t=boss?[28,40,22,8,2]:[60-8*d,28+3*d,10+3*d,2+1.5*d,.3+.5*d];
+function rollRar(d,boss,min=0){d=Math.min(d||0,5);const t=boss?[28,40,22,8,2]:[60-8*d,28+3*d,10+3*d,2+1.5*d,.3+.5*d];
   const tot=t.reduce((a,b)=>a+b);let r=Math.random()*tot,i=0;for(;i<4;i++){if(r<t[i])break;r-=t[i]}return Math.max(i,min)}
 function rollSlot(){let r=Math.random()*100;for(const s of SLOTS){if(r<SLOTW[s])return s;r-=SLOTW[s]}return 'w'}
 function makeItem(st,d,boss,min=0){
@@ -691,9 +756,9 @@ const xpBonus=()=>(P.eq.c&&P.eq.c.eff==='xp'?xpOf(ip(P.eq.c)):0)+fxSum('xp');
 const goldBonus=()=>(P.eq.c&&P.eq.c.eff==='gold'?goldOf(ip(P.eq.c)):0)+fxSum('gold');
 const xpNeed=()=>20+P.lv*15;
 const misPer=()=>P.age<=5?2:4;
-const ageDef=p=>{const a=p.age;return a<=4?0:a<=6?1:a===7?2:3};
+const ageOf=a=>a<=4?0:a<=6?1:a===7?2:Math.min(7,a-5),ageDef=p=>ageOf(p.age);
 const mastered=(sb,lv,p=P)=>!!(p.mast&&p.mast[sb+lv]);
-function recLv(sb,p=P){let hm=-1;for(let i=0;i<5;i++)if(mastered(sb,i,p))hm=i;return Math.min(4,Math.max(ageDef(p),hm+1))}
+function recLv(sb,p=P){let hm=-1;for(let i=0;i<LVN;i++)if(mastered(sb,i,p))hm=i;return Math.min(LVN-1,Math.max(ageDef(p),hm+1))}
 const counts=(sb,lv)=>lv>=recLv(sb);
 const SUBK=['math','eng','kanji'],mixLv=(p=P)=>Math.round(SUBK.reduce((a,k)=>a+(p.diff[k]||0),0)/3);
 function trackMastery(sb,lv,ok){P.roll=P.roll||{};P.mast=P.mast||{};const k=sb+lv,a=(P.roll[k]=P.roll[k]||[]);a.push(ok?1:0);if(a.length>30)a.shift();
@@ -1053,20 +1118,20 @@ function giftCode(){
   setTimeout(()=>{const i=$('gcIn');if(i)i.focus()},100)}
 function profileForm(p){
   let age=p?p.age:4,color=p?p.color:COLORS[0],hair=(p&&p.hair)||'short',hc=(p&&p.hc)||HAIRC[0],skin=(p&&p.skin)||SKINS[0];
-  const ages=[4,5,6,7,8,9];
+  const ages=[4,5,6,7,8,9,10,11,12];
   showModal(`<div class="mt">${p?'せってい':'あたらしい ぼうけんしゃ'}</div>
     <div class="look" id="fLook"></div>
     <div class="lbl">なまえ</div><input class="field" id="fName" maxlength="8" value="${p?esc(p.name):''}" placeholder="なまえ">
     <div class="lbl">かみがた</div><div class="opts" id="fHair">${HAIRS.map(h=>`<button class="btn opt" data-h="${h[0]}">${h[1]}</button>`).join('')}</div>
     <div class="lbl">かみの いろ</div><div class="colors" id="fHc">${HAIRC.map(c=>`<button class="col" data-c="${c}" style="background:${c}"></button>`).join('')}</div>
     <div class="lbl">はだの いろ</div><div class="colors" id="fSkin">${SKINS.map(c=>`<button class="col" data-c="${c}" style="background:${c}"></button>`).join('')}</div>
-    <div class="lbl">なんさい？</div><div class="opts" id="fAge" style="grid-template-columns:repeat(6,1fr)">${ages.map(a=>`<button class="btn opt" data-a="${a}">${a}${a===9?'+':''}</button>`).join('')}</div>
+    <div class="lbl">なんさい？</div><div class="opts" id="fAge" style="grid-template-columns:repeat(5,1fr)">${ages.map(a=>`<button class="btn opt" data-a="${a}">${a}${a===12?'+':''}</button>`).join('')}</div>
     <div class="lbl">ふくの いろ</div><div class="colors" id="fCol">${COLORS.map(c=>`<button class="col" data-c="${c}" style="background:${c}"></button>`).join('')}</div>
     ${p?`<div class="row"><button class="btn ${p.voice?'green':'gray'}" id="fVoice">🗣️ よみあげ ${p.voice?'ON':'OFF'}</button><button class="btn ${G.snd?'green':'gray'}" id="fSnd">🔊 こうかおん ${G.snd?'ON':'OFF'}</button></div>`:''}
     <button class="btn green big" id="fOk">${p?'OK':'つくる！'}</button>
     ${p?'<button class="btn gray" id="fSwitch">👥 ぼうけんしゃを かえる</button><button class="btn gray" id="fData">💾 データの ひっこし</button><button class="btn gray" id="fCloud">☁️ かぞくで きょうゆう</button><button class="btn orange" id="fCode">🎁 プレゼント コード</button>':'<button class="btn gray" id="fCancel">やめる</button>'}`,
     {fOk:()=>{const name=$('fName').value.trim()||'ゆうしゃ';
-        if(p){p.name=name;if(p.age!==age){const d=age<=4?0:age<=6?1:age===7?2:3;p.diff={math:d,eng:d,kanji:d}}p.age=age;
+        if(p){p.name=name;if(p.age!==age){const d=ageOf(age);p.diff={math:d,eng:d,kanji:d}}p.age=age;
           if(p.eq.a.name==='ぬののふく')p.eq.a.color=color;Object.assign(p,{color,hair,hc,skin});save();closeModal();renderHome()}
         else{const np=newProfile(name,age,color);Object.assign(np,{hair,hc,skin});G.profiles.push(np);save();closeModal();selectProfile(np.id)}},
      fCancel:closeModal,
@@ -1192,7 +1257,7 @@ function renderHome(){
   if($('claimBtn'))$('claimBtn').onclick=()=>{P.claimed=true;save();showDrop(makeItem(Math.round(Math.max(1,P.lv/2,...Object.values(P.best))),mixLv(),false,1),renderHome,'ミッション クリア！')};
   P.subj='mix';
   $('subj').innerHTML=`<div class="mixh">${pi('dice')}ミックス <small>さんすう・えいご・こくごが じゅんばんバラバラに でるよ</small></div>`;
-  $('dblocks').innerHTML=SUBK.map(k=>{const d=P.diff[k],rl=recLv(k);return `<div class="mrow"><div class="mlab"><span class="e">${SUBJ[k].e}</span>${SUBJ[k].n}</div><div class="mstars">${[0,1,2,3,4].map(i=>`<button class="btn db${i===d?' sel':''}${i<rl?' easy':''}" data-k="${k}" data-d="${i}">★${i+1}${mastered(k,i)?'<i class="mst">🎓</i>':''}</button>`).join('')}</div><small class="mdesc">${SUBJ[k].lv[d]}${d<rl?` <b class="ew">⚠️★${rl+1}より かんたん：たまご・しんかが すすまない</b>`:mastered(k,d)?' <b class="ew">🎓マスターずみ：★を あげよう</b>':''}</small></div>`}).join('');
+  $('dblocks').innerHTML=SUBK.map(k=>{const d=P.diff[k],rl=recLv(k);return `<div class="mrow"><div class="mlab"><span class="e">${SUBJ[k].e}</span>${SUBJ[k].n}</div><div class="mstars">${[...Array(LVN).keys()].map(i=>`<button class="btn db${i===d?' sel':''}${i<rl?' easy':''}" data-k="${k}" data-d="${i}">★${i+1}<small class="dg">${AGEHINT[i]}</small>${mastered(k,i)?'<i class="mst">🎓</i>':''}</button>`).join('')}</div><small class="mdesc">${SUBJ[k].lv[d]}${d<rl?` <b class="ew">⚠️★${rl+1}より かんたん：たまご・しんかが すすまない</b>`:mastered(k,d)?' <b class="ew">🎓マスターずみ：★を あげよう</b>':''}</small></div>`}).join('');
   document.querySelectorAll('.db[data-k]').forEach(b=>b.onclick=()=>{snd(660,.05);P.diff[b.dataset.k]=+b.dataset.d;save();renderHome()});
   {const d=mixLv();$('dinfo').innerHTML=`<small>ほうしゅう ×${DMULT[d]}（3つの ★の へいきん）・じかんせいげんは ★2から</small>`}
   const mx=P.best[P.subj]+1;selStage=Math.min(Math.max(1,selStage),mx);
@@ -1557,15 +1622,16 @@ function eggModal(id){
 /* =============== learning stats =============== */
 const pad=n=>String(n).padStart(2,'0');
 const dkey=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const MCAT={'4m':'かけざん（2けた×2けた）','4d':'わりざん（3けた÷1けた）','4r':'あまりの ある わりざん','4f':'しょうすうの たしひき','4q':'ぶんすうの たしざん','4a':'ながしかくの めんせき','5m':'しょうすう×せいすう','5n':'しょうすう×しょうすう','5q':'つうぶんの たしざん','5v':'へいきん','5t':'さんかくけいの めんせき','5p':'わりあい（％）','5l':'さいしょう こうばいすう','6m':'ぶんすうの かけざん','6d':'ぶんすうの わりざん','6r':'ひ','6c':'えんの めんせき','6s':'はやさ','6t':'みちのり','6u':'じかん','6x':'もじと しき'};
 function catOf(subj,key){
-  if(subj==='math'){if(key[0]==='c')return 'かずを かぞえる';const m=key.match(/^(\d+)([+−×÷])(\d+)$/);if(!m)return 'けいさん';const x=+m[1],y=+m[3],op=m[2];
+  if(subj==='math'){if(key[0]==='c')return 'かずを かぞえる';if(key[0]==='g')return MCAT[key.slice(1,3)]||'けいさん';const m=key.match(/^(\d+)([+−×÷])(\d+)$/);if(!m)return 'けいさん';const x=+m[1],y=+m[3],op=m[2];
     if(op==='+')return x%10+y%10>=10?'たしざん（くりあがり あり）':'たしざん（くりあがり なし）';
     if(op==='−')return x%10<y%10?'ひきざん（くりさがり あり）':'ひきざん（くりさがり なし）';
     if(op==='×')return x<10&&y<10?`かけざん ${x}のだん`:'かけざん（2けた×1けた）';
     return 'わりざん'}
-  if(subj==='eng')return {el:'きいて えらぶ',ep:'え→えいたんご',ej:'にほんご→えいご',es:'つづり',ee:'えいご→にほんご'}[key.slice(0,2)]||'えいご';
+  if(subj==='eng')return {el:'きいて えらぶ',ep:'え→えいたんご',ej:'にほんご→えいご',es:'つづり',ee:'えいご→にほんご',e4:'ようび・つき・てんき',e5:'ぶんを かんせい',e6:'かこの ことば'}[key.slice(0,2)]||'えいご';
   if(key.startsWith('h'))return 'ひらがな';if(key.startsWith('k1p'))return 'かんじ1年（え→かんじ）';
-  const k=key.match(/^k([234])/);return k?{2:'かんじ1年（よみ）',3:'かんじ2年（よみ）',4:'かんじ3年（じゅくご）'}[k[1]]:'こくご';
+  const k=key.match(/^k([2-7])/);return k?{2:'かんじ1年（よみ）',3:'かんじ2年（よみ）',4:'かんじ3年（じゅくご）',5:'かんじ4年（よみ）',6:'かんじ5年（よみ）',7:'かんじ6年（よみ）'}[k[1]]:'こくご';
 }
 function record(q,ok,t){
   P.lastPlay=Date.now();if(B&&!B.weakOnly&&!q.review)trackMastery(B.subj,B.lv,ok);
@@ -1865,7 +1931,7 @@ function nextQ(){
   if(pool.length&&(B.weakOnly||Math.random()<.3)){q=Object.assign({},pick(pool));q.review=true;q.choices=shuffle(q.choices)}
   else{q=genQ(B.subj,B.lv,B.stage);q.subj=B.subj}
   B.q=q;
-  $('q').innerHTML=(B.mix?`<span class="qsub qs-${B.subj}">${SUBJ[B.subj].n} ★${B.lv+1}</span>`:'')+(q.review?'<span class="tag">にがて</span>':'')+q.html;
+  $('q').parentNode.classList.toggle('hasq',!!B.mix);$('q').innerHTML=(B.mix?`<span class="qsub qs-${B.subj}">${SUBJ[B.subj].n} ★${B.lv+1}</span>`:'')+(q.review?'<span class="tag">にがて</span>':'')+q.html;
   $('spk').style.display=q.speak?'':'none';
   const box=$('choices');box.innerHTML='';box.className='choices'+(q.choices.length===3?' c3':'');
   q.choices.forEach(v=>{const b=document.createElement('button');b.className='ch'+(q.cs?' '+q.cs:'');b.textContent=v;
@@ -1890,7 +1956,7 @@ function correct(t){
     const TS=P.todaySubj;if(!P.claimed&&TS[B.subj]===misPer()){setTimeout(()=>toast(`📜 ${SUBJ[B.subj].n}の ミッション クリア！`),600)}}
   const rg=Math.round(maxHp()*fxSum('regen')/100);if(rg&&B.hp<maxHp()){B.hp=Math.min(maxHp(),B.hp+rg);updHeroHp();setTimeout(()=>floatTxt('🌿+'+rg,'hero','xp'),200)}
 
-  let dmg=atk()*(1+Math.min(B.combo-1,10)*(.1+ringB()/100));const fast=t<(B.lv===0?5:3);if(fast)dmg*=1.3+fastB()/100;
+  let dmg=atk()*(1+Math.min(B.combo-1,10)*(.1+ringB()/100));const fast=t<(B.lv===0?5:B.lv>=5?6:3);if(fast)dmg*=1.3+fastB()/100;
   const cr=Math.random()*100<crit();if(cr)dmg*=2+fxSum('critd')/100;
   if(Math.random()*100<Math.min(50,fxSum('double'))){dmg*=2;setTimeout(()=>floatTxt('✨ダブル！','mon','info'),380)}dmg=Math.round(dmg);
   updCombo();save();heroAttack(dmg,cr,fast);
