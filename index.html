@@ -391,6 +391,28 @@ input{font:inherit}
 .qwrap.hasq{padding-top:28px}
 .bestall{background:#3a7ad9!important;box-shadow:inset 3px 3px 0 #ffffff40,inset -3px -3px 0 #0007,0 3px 0 #1a3a6a!important;display:block;margin-left:auto;margin-right:auto}
 #hEnhAll{display:block;margin-left:auto;margin-right:auto}
+
+.slot .sn{flex:1;min-width:0;overflow:hidden}.slot .sn .snl{display:block;white-space:nowrap;overflow:hidden}.slot .sn b{white-space:nowrap;overflow:hidden}
+.top{min-width:0}.top .pill,.top .lv{min-width:0;overflow:hidden;flex-shrink:1;display:flex;align-items:center}.top .pill b,.top .lv b{white-space:nowrap}
+#hStreakPill{cursor:pointer}#hStreakPill small{font-size:10px;margin-left:1px;color:var(--sub)}
+.top .pill{flex-shrink:1}.top .xpbar{min-width:24px}
+.herobox .ttl{position:relative;z-index:3;text-shadow:2px 2px 0 #000,-1px -1px 0 #000;white-space:nowrap;overflow:hidden}
+#hStats span{min-width:0}#hStats b{white-space:nowrap;overflow:hidden;display:block;max-width:64px}
+.helpbox{text-align:left;max-height:62vh;overflow:auto;margin:6px 0}
+.helpbox details{background:#0005;border:2px solid var(--edge);margin:6px 0;padding:6px 10px}
+.helpbox summary{font-size:16px;color:var(--gold);cursor:pointer;list-style:none}.helpbox summary::-webkit-details-marker{display:none}
+.helpbox summary::after{content:' ▼';font-size:11px;color:var(--sub)}.helpbox details[open] summary::after{content:' ▲'}
+.helpbox details div{font-size:13px;line-height:1.75;margin-top:6px}.helpbox small{color:var(--sub)}
+
+.show{grid-template-columns:minmax(88px,108px) 1fr minmax(88px,108px)!important;gap:4px!important;padding:8px 6px!important}
+.slot{padding:3px!important;gap:3px!important}
+.slot .ic{width:30px!important;height:30px!important;position:relative}
+.slot .ic .plb{position:absolute;right:-4px;bottom:-5px;font-style:normal;font-size:10px;line-height:1;background:#1e5a1a;color:#9cff7a;border:1px solid #000;padding:1px 2px}
+.slot .sn .snl{font-size:11px}
+.slot .sn b{font-size:16px}
+.powbig small{white-space:nowrap}
+.top{gap:5px!important;padding:10px 8px 4px!important}.who{flex-shrink:0;max-width:30%!important;padding:5px 8px!important}
+#hStats{grid-template-columns:repeat(3,minmax(0,auto))!important;gap:2px 8px!important}#hStats b{max-width:none!important}
 </style>
 </head>
 <body>
@@ -442,7 +464,7 @@ input{font:inherit}
       <button class="btn" id="weakBtn">📕 にがて <span id="weakN">0</span></button>
       <button class="btn" id="statBtn">📊 きろく</button>
       <button class="btn" id="boxBtn">📦 ボックス</button>
-      <button class="btn orange" id="adminBtn" style="display:none">👑 みんな</button>
+      <button class="btn" id="helpBtn" style="background:#3a7ad9">❓ ヘルプ</button>
       <button class="btn" id="rankBtn">🏆 ランキング</button>
       <button class="btn" id="shopBtn">🛍️ ショップ</button>
       <button class="btn" id="setBtn">⚙️ せってい</button>
@@ -1047,8 +1069,8 @@ function heroSVG(eq,look){
 function slotHTML(slot,it,mini){
   const ic=it?itemIcon(Object.assign({slot},it)):itemIcon(GHOST[slot],true);
   if(mini)return it?`<div class="ms" style="--rc:${RAR[it.rar].c}">${ic}</div>`:`<div class="ms empty">${ic}</div>`;
-  if(!it)return `<button class="slot empty" data-s="${slot}"><span class="ic">${ic}</span><span class="sn">${SLOTN[slot]}<b>−</b></span></button>`;
-  return `<button class="slot" data-s="${slot}" style="--rc:${RAR[it.rar].c}"><span class="ic">${ic}</span><span class="sn">${SLOTN[slot]}${it.plus?`<i class="pl">+${it.plus}</i>`:''}<b>${iscore(it)}</b></span></button>`;
+  if(!it)return `<button class="slot empty" data-s="${slot}"><span class="ic">${ic}</span><span class="sn"><span class="snl">${SLOTN[slot]}</span><b>−</b></span></button>`;
+  return `<button class="slot" data-s="${slot}" style="--rc:${RAR[it.rar].c}"><span class="ic">${ic}${it.plus?`<i class="plb">+${it.plus}</i>`:''}</span><span class="sn"><span class="snl">${SLOTN[slot]}</span><b>${iscore(it)}</b></span></button>`;
 }
 function itemCard(it0,rev,cur){
   const it=cur?withPlus(it0,cur):it0,tr=it!==it0,r=RAR[it.rar],st=statText(it);
@@ -1237,6 +1259,7 @@ const PIX={
  crown:[{y:'#ffd23f',Y:'#d99a1a',r:'#e8413c'},['y...y...y','yy.yyy.yy','yyyyyyyyy','yYrYyYrYy','yyyyyyyyy']],
  gift:[{r:'#e8413c',y:'#ffd23f',R:'#a02a20'},['..y...y..','...y.y...','rrrryrrrr','rRRRyRRRr','rrrryrrrr','.rRRyRRr.','.rRRyRRr.','.rRRyRRr.','.rrryrrr.']],
  egg:[{w:'#f4ead0',W:'#c8b090',y:'#ffd23f'},['...www...','..wwwww..','.wwywwww.','.wwwwwyw.','wwywwwwww','wwwwwywww','wwwwwwwWw','.wWwwwWw.','..WWWWW..']],
+ help:[{b:'#3a7ad9',w:'#ffffff'},['.bbbbbbb.','bbbwwwbbb','bbwbbbwbb','bbbbbbwbb','bbbbbwbbb','bbbbwbbbb','bbbbbbbbb','bbbbwbbbb','.bbbbbbb.']],
  star:[{y:'#ffd23f',Y:'#d99a1a'},['....y....','...yyy...','yyyyyyyyy','.yyyYyyy.','..yyyyy..','.yyy.yyy.','.yY...Yy.']]};
 function piURL(n){const [pal,rows]=PIX[n],cells=[],set=new Set(),m=new Map();rows.forEach((r,y)=>[...r].forEach((c,x)=>{if(pal[c]){cells.push([x,y,pal[c]]);set.add(x+','+y)}}));
   const w=Math.max(...rows.map(r=>r.length)),h=rows.length;
@@ -1246,14 +1269,36 @@ const pi=(n,c='')=>{const k='pi|'+n;if(!IMGC[k])IMGC[k]=piURL(n);return `<img cl
 function pixHome(){
   const set=(id,ic,txt)=>{const e=$(id);if(e)e.innerHTML=pi(ic)+txt};
   set('weakBtn','book',`にがて <span id="weakN">${P?P.weak.length:0}</span>`);set('statBtn','chart','きろく');set('boxBtn','box','ボックス');
-  set('rankBtn','trophy','ランキング');set('shopBtn','bag','ショップ');set('setBtn','gear','せってい');set('adminBtn','crown','みんな');
+  set('rankBtn','trophy','ランキング');set('shopBtn','bag','ショップ');set('setBtn','gear','せってい');set('helpBtn','help','ヘルプ');
   set('goBtn','swords','しゅつげき！');set('hBest','star','さいきょう そうび');set('hEnhAll','hammer','まとめて きょうか');
-  const g=$('hGold').parentNode,st=$('hStreak').parentNode;if(!g.querySelector('.pi')){g.innerHTML=pi('coin')+'<b id="hGold">0</b>';st.innerHTML=pi('flame')+'<b id="hStreak">1</b>'}}
+  const g=$('hGold').parentNode,st=$('hStreak').parentNode;if(!g.querySelector('.pi')){g.innerHTML=pi('coin')+'<b id="hGold">0</b>';st.innerHTML=pi('flame')+'<b id="hStreak">1</b><small>にち</small>';st.id='hStreakPill';st.onclick=()=>helpOpen('streak');g.onclick=()=>toast('🪙 '+P.gold.toLocaleString()+' ゴールド')}}
+
+/* ===================== help ===================== */
+const HELP=[
+ ['play','🎮 あそびかた',`<b>しゅつげき</b>を おすと バトル！ もんだいに せいかいすると てきに こうげき。<br>1ステージは 5たい（さいごは ボス）。ぜんぶ たおすと クリアで ゴールドや そうびが もらえるよ。<br>まちがえたり じかんぎれに なると ダメージ。HPが 0に なると まけ。<br><small>はやく こたえると ダメージ アップ・れんぞく せいかいで コンボ！</small>`],
+ ['diff','⭐ むずかしさ（★）',`きょうかごとに ★1〜★8（4さい〜6ねんせい）を えらべるよ。★が たかいほど ごほうびが ふえる。<br>⚠️ としに あった ★より ひくいと、たまご・しんか・ミッションが すすまないよ。<br>🎓 おなじ ★で さいきん 30もん中 27もん せいかいすると <b>マスター</b>！ つぎの ★に ちょうせんしよう（マスターした ★は ごほうび 1/3。★8は そのまま）。`],
+ ['mix','🎲 ミックス',`さんすう・えいご・こくごが じゅんばん バラバラに でるよ。もんだいの ひだりうえに きょうかと ★が でる。<br>さいきん でた もんだいは なるべく でないように なっているよ。`],
+ ['streak','🔥 れんぞく にっすう',`ホームの みぎうえの 🔥は <b>まいにち つづけて あそんだ ひにち</b>。<br>1にち 1かい あそぶと ふえて、ログインボーナスの ゴールドが もらえる（7にちめで さいだい）。<br>1にちでも あそばないと 1に もどっちゃうよ。`],
+ ['stat','📈 つよさ（ステータス）',`<b>パワー</b>：つよさの めやす。そうび・レベル・なかまで あがる。<br>⚔️ <b>こうげき</b>：1もん せいかいで あたえる ダメージ<br>❤️ <b>HP</b>：たいりょく。0で まけ<br>🛡️ <b>ぼうぎょ</b>：うける ダメージを へらす<br>👟 <b>かいひ</b>：てきの こうげきを よける かくりつ<br>⚡ <b>かいしん</b>：ダメージが 2ばいに なる かくりつ<br>🐶 <b>ペット</b>：せいかいの たびに ペットも こうげき`],
+ ['gear','⚔️ そうび',`10かしょに つけられるよ。てきを たおすと おとす ことが ある。<br>レアど：ふつう → レア → エピック → でんせつ → しんわ。たかいほど つよくて とくべつな こうかが つく。<br>⚡<b>さいきょう そうび</b>：ボックスから いちばん つよく なる くみあわせに いっきに かえる。<br>⚒️<b>きょうか</b>：ゴールドで +1 ごとに パワー +10%。つけかえても + は あたらしい そうびに ひきつぐよ（むりょう）。<b>まとめて きょうか</b> で いっきに あげられる。<br>📦 ボックスに 100こまで。いらない そうびは うって ゴールドに。`],
+ ['mons','🐾 なかま',`ボスが <b>たまご</b>を おとすことが あるよ。ふかきに いれて せいかいすると かえって なかまに！<br>パーティに いれた なかまは いっしょに たたかって、スキル（とくべつな ちから）で たすけて くれる。ぞくせいの あいしょうも あるよ。<br>いっしょに せいかいすると <b>きずな</b>が ふえる。レベルと きずなが たまると <b>しんか</b>！（ホームに おしらせが でるよ）<br>🔒おきにいり・👋おわかれ（ゴールドに なる）も できる。`],
+ ['ult','🌟 きゅうきょくの モンスター',`なかまの しゅるいが 50・100・151に なると、それぞれ とても つよい きゅうきょくモンスターに であえるように なるよ。<br>であえる かくりつは ひくいけど、であえない ステージが つづくと だんだん あがる。たおすと カケラが もらえて、10こで たまごに！`],
+ ['shop','🛍️ ショップ',`ゴールドで きせかえ（ぼうし・オーラ・すがた）や、ふかきの わく・なかまを つれていける かずを ふやせるよ。`],
+ ['mission','📜 きょうの ミッション',`まいにち きょうかごとに きめられた かず せいかいすると クリア。ぜんぶ クリアすると ほうしゅうが もらえるよ。`],
+ ['weak','📕 にがてノート',`まちがえた もんだいが はいるよ。バトルの なかで ときどき ふくしゅうに でて、2かい せいかいすると そつぎょう！<br>ホームの「にがて」から にがてだけの バトルも できる。`],
+ ['etc','📊 そのほか',`<b>きろく</b>：きょうかや しゅるいごとの せいかいりつ<br><b>ランキング</b>：かぞくの なかの ランキング<br><b>☁️ かぞくで きょうゆう</b>：かぞくコードで ほかの たんまつと つながる（せってい から）<br><b>🎁 プレゼントコード</b>：とくべつな なかまが もらえる（せってい から）<br><b>👨‍👩‍👧 おうちの ひと</b>：ぼうけんしゃを えらぶ がめんから、みんなの ようすが みられる`]];
+function helpOpen(open){
+  showModal(`<div class="mt">${pi('help')}ヘルプ</div><div class="helpbox">${HELP.map(([k,t,b])=>`<details${k===open?' open':''} id="hp-${k}"><summary>${t}</summary><div>${b}</div></details>`).join('')}</div><button class="btn gray" id="cl">とじる</button>`,{cl:closeModal});
+  if(open)setTimeout(()=>{const e=$('hp-'+open);if(e)e.scrollIntoView({block:'start'})},50)}
+/* shrink text to fit its box */
+function fitText(el,min=9){if(!el)return;el.style.fontSize='';let fs=parseFloat(getComputedStyle(el).fontSize),g=0;while(el.scrollWidth>el.clientWidth+1&&fs>min&&g++<40){fs-=.5;el.style.fontSize=fs+'px'}}
+function fitHome(){document.querySelectorAll('#home .slot .sn b,#home .slot .sn .snl,#hPow,#hStats b,#home .top .pill b,#home .top .lv,#hTitle').forEach(e=>fitText(e))}
+const fmtBig=n=>n>=1e8?(n/1e8).toFixed(n>=1e9?0:1)+'おく':n>=1e5?Math.floor(n/1e4)+'まん':String(n);
 function renderHome(){
   pixHome();
   $('who').innerHTML=pi('person')+esc(P.name)+' ▾';
   $('hLv').textContent=P.lv>=MAXLV?'MAX':P.lv;$('hXp').style.width=(P.lv>=MAXLV?100:Math.min(100,P.xp/xpNeed()*100))+'%';
-  $('hGold').textContent=P.gold;$('hStreak').textContent=P.streak;
+  $('hGold').textContent=fmtBig(P.gold);$('hStreak').textContent=P.streak;
   $('hHero').innerHTML=heroSVG(P.eq,P);$('hPow').textContent=power();$('hTitle').textContent=titleOf(P)?'「'+titleOf(P)+'」':'';
   $('hSlotsL').innerHTML=SLOT_L.map(k=>slotHTML(k,P.eq[k])).join('');
   $('hSlotsR').innerHTML=SLOT_R.map(k=>slotHTML(k,P.eq[k])).join('');
@@ -1267,10 +1312,10 @@ function renderHome(){
       {cl:closeModal,enhmax:()=>{closeModal();enhAllFlow([it],SLOTN[k]+'を できるだけ きょうか',renderHome)},enh:()=>doEnh(it,()=>{renderHome();$('hSlotsL').querySelector('[data-s="'+k+'"]')?.click()||$('hSlotsR').querySelector('[data-s="'+k+'"]')?.click()}),ch:()=>{closeModal();boxF=k;openBox('items')},un:()=>{if(P.box.length>=boxCap()){toast('ボックスが いっぱい！');return}P.box.push(it);P.eq[k]=null;save();closeModal();renderHome()}})});
   $('hBest').onclick=bestFlow;
   {const eqs=SLOTS.map(k=>P.eq[k]).filter(Boolean),b=$('hEnhAll');b.disabled=!eqs.length||P.gold<Math.min(...eqs.map(enhCost));b.onclick=()=>enhAllFlow(eqs,'まとめて きょうか',renderHome)}
+  requestAnimationFrame(fitHome);
   renderParty();{const ev=P.mons.filter(evoReady),eb=$('hEvo');
     if(ev.length){eb.style.display='';eb.innerHTML=`<span class="evi">${ev.slice(0,3).map(m=>`<span class="flip">${monsterSVG(m.sp)}</span>`).join('')}</span><span class="evt">${pi('star')}しんか できる なかまが <b>${ev.length}たい</b> いるよ！</span><span class="evgo">みる ▶</span>`;
       eb.onclick=()=>{openBox('mons');if(ev.length===1)monModal(ev[0].id)}}else eb.style.display='none'}
-  $('adminBtn').style.display=P.master?'':'none';
   const TS=P.todaySubj||{},mp=misPer(),done=Object.keys(SUBJ).every(k=>(TS[k]||0)>=mp);
   $('mis').innerHTML=`<div>${pi('scroll')}きょうの ミッション <small style="color:var(--sub)">（それぞれ ${mp}もん せいかい）</small></div>
     <div class="misrow">${Object.keys(SUBJ).map(k=>{const n=Math.min(mp,TS[k]||0);return `<div class="mis1${n>=mp?' ok':''}"><span>${SUBJ[k].n}${n>=mp?' '+pi('check'):''}</span><div class="pbar"><i style="width:${n/mp*100}%"></i></div><small>${n}/${mp}・★${recLv(k)+1}いじょう</small></div>`}).join('')}</div>
@@ -1288,11 +1333,12 @@ function renderHome(){
 $('who').onclick=()=>profileForm(P);
 $('setBtn').onclick=()=>profileForm(P);
 $('statBtn').onclick=()=>showStats();
+$('helpBtn').onclick=()=>{snd(660,.05);helpOpen()};
 $('shopBtn').onclick=()=>openShop();
 $('shBack').onclick=()=>{show('home');renderHome()};
 $('rankBtn').onclick=()=>showRank();
 $('rkBack').onclick=()=>{show('home');renderHome()};
-$('adminBtn').onclick=()=>showAdmin();
+
 $('adBack').onclick=()=>{if(P){show('home');renderHome()}else{show('players');renderPlayers()}};
 $('boxBtn').onclick=()=>{boxF='all';openBox('items')};
 $('bxBack').onclick=()=>{show('home');renderHome()};
