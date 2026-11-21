@@ -763,13 +763,13 @@ const goldBonus=()=>(P.eq.c&&P.eq.c.eff==='gold'?goldOf(ip(P.eq.c)):0)+fxSum('go
 const xpNeed=()=>20+P.lv*15;
 const misPer=()=>P.age<=5?2:4;
 const ageOf=a=>a<=4?0:a<=6?1:a===7?2:Math.min(7,a-5),ageDef=p=>ageOf(p.age);
-const mastered=(sb,lv,p=P)=>!!(p.mast&&p.mast[sb+lv]);
+const mastered=(sb,lv,p=P)=>!!(p.mast&&p.mast[sb+lv]),mPen=(sb,lv)=>mastered(sb,lv)&&lv<LVN-1;
 function recLv(sb,p=P){let hm=-1;for(let i=0;i<LVN;i++)if(mastered(sb,i,p))hm=i;return Math.min(LVN-1,Math.max(ageDef(p),hm+1))}
 const counts=(sb,lv)=>lv>=recLv(sb);
 const SUBK=['math','eng','kanji'],mixLv=(p=P)=>Math.round(SUBK.reduce((a,k)=>a+(p.diff[k]||0),0)/3);
 function trackMastery(sb,lv,ok){P.roll=P.roll||{};P.mast=P.mast||{};const k=sb+lv,a=(P.roll[k]=P.roll[k]||[]);a.push(ok?1:0);if(a.length>30)a.shift();
   if(!P.mast[k]&&a.length>=30&&a.reduce((x,y)=>x+y,0)>=27){P.mast[k]=1;
-    setTimeout(()=>{fanfare();toast(`🎓 ${SUBJ[sb].n}★${lv+1} マスター！`);setTimeout(()=>toast(lv<4?`★${lv+2}に ちょうせんすると ごほうび アップ！`:'すごい！ さいこうの ★だよ！'),2000)},500)}}
+    setTimeout(()=>{fanfare();toast(`🎓 ${SUBJ[sb].n}★${lv+1} マスター！`);setTimeout(()=>toast(lv<LVN-1?`★${lv+2}に ちょうせんすると ごほうび アップ！`:'すごい！ さいこうの ★だよ！'),2000)},500)}}
 
 /* =============== hero sprite (blocky) =============== */
 function shade(hex,amt){let n=parseInt(hex.slice(1,7),16),r=n>>16,g=n>>8&255,b=n&255;const f=amt<0?0:255,t=Math.abs(amt);
@@ -1263,7 +1263,7 @@ function renderHome(){
   if($('claimBtn'))$('claimBtn').onclick=()=>{P.claimed=true;save();showDrop(makeItem(Math.round(Math.max(1,P.lv/2,...Object.values(P.best))),mixLv(),false,1),renderHome,'ミッション クリア！')};
   P.subj='mix';
   $('subj').innerHTML=`<div class="mixh">${pi('dice')}ミックス <small>さんすう・えいご・こくごが じゅんばんバラバラに でるよ</small></div>`;
-  $('dblocks').innerHTML=SUBK.map(k=>{const d=P.diff[k],rl=recLv(k);return `<div class="mrow"><div class="mlab"><span class="e">${SUBJ[k].e}</span>${SUBJ[k].n}</div><div class="mstars">${[...Array(LVN).keys()].map(i=>`<button class="btn db${i===d?' sel':''}${i<rl?' easy':''}" data-k="${k}" data-d="${i}">★${i+1}<small class="dg">${AGEHINT[i]}</small>${mastered(k,i)?'<i class="mst">🎓</i>':''}</button>`).join('')}</div><small class="mdesc">${SUBJ[k].lv[d]}${d<rl?` <b class="ew">⚠️★${rl+1}より かんたん：たまご・しんかが すすまない</b>`:mastered(k,d)?' <b class="ew">🎓マスターずみ：★を あげよう</b>':''}</small></div>`}).join('');
+  $('dblocks').innerHTML=SUBK.map(k=>{const d=P.diff[k],rl=recLv(k);return `<div class="mrow"><div class="mlab"><span class="e">${SUBJ[k].e}</span>${SUBJ[k].n}</div><div class="mstars">${[...Array(LVN).keys()].map(i=>`<button class="btn db${i===d?' sel':''}${i<rl?' easy':''}" data-k="${k}" data-d="${i}">★${i+1}<small class="dg">${AGEHINT[i]}</small>${mastered(k,i)?'<i class="mst">🎓</i>':''}</button>`).join('')}</div><small class="mdesc">${SUBJ[k].lv[d]}${d<rl?` <b class="ew">⚠️★${rl+1}より かんたん：たまご・しんかが すすまない</b>`:mastered(k,d)?(d<LVN-1?' <b class="ew">🎓マスターずみ：★を あげよう</b>':' <b class="ew" style="color:#7af0ff">👑 さいこうの ★を マスター！</b>'):''}</small></div>`}).join('');
   document.querySelectorAll('.db[data-k]').forEach(b=>b.onclick=()=>{snd(660,.05);P.diff[b.dataset.k]=+b.dataset.d;save();renderHome()});
   {const d=mixLv();$('dinfo').innerHTML=`<small>ほうしゅう ×${DMULT[d]}（3つの ★の へいきん）・じかんせいげんは ★2から</small>`}
   const mx=P.best[P.subj]+1;selStage=Math.min(Math.max(1,selStage),mx);
@@ -1904,7 +1904,7 @@ function startBattle(subj,lv,stage,weakOnly){
   show('battle');$('arena').style.background=arenaBg(stage);$('pName').textContent=P.name;
   $('q').innerHTML='';$('choices').innerHTML='';$('gauge').style.width='0';$('gaugeW').classList.toggle('off',!GAUGE[lv]);
   updHud();updHeroHp();updCombo();spawn();
-  if(mix){}else if(!weakOnly&&!counts(subj,lv))setTimeout(()=>toast(`★${recLv(subj)+1}いじょうで たまご・しんかが すすむよ`),1600);else if(!weakOnly&&mastered(subj,lv))setTimeout(()=>toast('🎓 マスターずみ：★を あげると ごほうび アップ'),1600);
+  if(mix){}else if(!weakOnly&&!counts(subj,lv))setTimeout(()=>toast(`★${recLv(subj)+1}いじょうで たまご・しんかが すすむよ`),1600);else if(!weakOnly&&mPen(subj,lv))setTimeout(()=>toast('🎓 マスターずみ：★を あげると ごほうび アップ'),1600);
 }
 /* monsters scale to the player's real strength: gear still helps (fewer hits), but no endless one-shots */
 const HITS=[[1.5,3.5,1.2],[2,4.5,1.5],[2.5,6,1.6],[2.5,6,1.6],[2.5,6,1.6]],DIEW=[[14,9],[12,8],[10,6],[10,6],[10,6]];
@@ -2006,7 +2006,7 @@ function monAttack(cb){
 function gainXp(n){if(P.lv>=MAXLV){P.xp=0;return}P.xp+=n;let up=false;while(P.lv<MAXLV&&P.xp>=xpNeed()){P.xp-=xpNeed();P.lv++;up=true}if(P.lv>=MAXLV)P.xp=0;
   if(up){fanfare();toast(`🎉 レベルアップ！ Lv${P.lv}　パワー ${power()}`);if(B){B.hp=maxHp();updHeroHp();updHud()}}}
 function defeat(){
-  const mo=B.mon,dm=DMULT[B.blv]*(1+.5*(mo.rar||0))*(mastered(B.subj,B.lv)&&!B.weakOnly?1/3:1);$('mon').classList.add('die');snd(300,.4,'square',.06,-250);
+  const mo=B.mon,dm=DMULT[B.blv]*(1+.5*(mo.rar||0))*(mPen(B.subj,B.lv)&&!B.weakOnly?1/3:1);$('mon').classList.add('die');snd(300,.4,'square',.06,-250);
   const es=mo.es||B.stage,xp=Math.round((6+es*3)*(mo.boss?4:1)*dm*(1+xpBonus()/100)),gold=Math.round((3+es*2)*(mo.boss?5:1)*dm*(1+goldBonus()/100)*(.8+Math.random()*.4));
   P.gold+=gold;floatTxt(`+${xp} XP`,'mon','xp');setTimeout(()=>{floatTxt(`🪙+${gold}`,'mon','gold');coin()},250);
   const hk=healKill();if(hk){B.hp=Math.min(maxHp(),B.hp+hk);updHeroHp();setTimeout(()=>floatTxt('💚+'+hk,'hero','xp'),300)}
@@ -2038,7 +2038,7 @@ function stageClear(){
   if(!B.sawUlt&&!B.weakOnly&&ultUnlocked().length)P.ultMiss=(P.ultMiss||0)+1;
   const {stage:st,bsubj:subj}=B,stars=B.wrong===0?3:B.wrong<=2?2:1;
   if(!B.weakOnly&&st>P.best[subj]){P.best[subj]=st;selStage=st+1}
-  const bonus=Math.round(st*10*stars*DMULT[B.blv]*(mastered(subj,B.blv)&&!B.weakOnly?1/3:1));P.gold+=bonus;save();B.lock=true;fanfare();
+  const bonus=Math.round(st*10*stars*DMULT[B.blv]*(mPen(subj,B.blv)&&!B.weakOnly?1/3:1));P.gold+=bonus;save();B.lock=true;fanfare();
   showModal(`<div class="mt">🏆 ${B.weakOnly?'にがて とっくん':'ステージ'+st} クリア！</div>
     <div class="stars">${'★'.repeat(stars)}<span class="off">${'★'.repeat(3-stars)}</span></div>
     <p>まちがい ${B.wrong}かい<br>ボーナス <b class="goldt">🪙+${bonus}</b></p>${stars<3?'<small>ノーミスで ★3つ！</small>':''}
