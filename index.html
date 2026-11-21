@@ -400,7 +400,7 @@ input{font:inherit}
     <div class="title">⚔️ まなびクエスト<small>だれが ぼうけんする？</small></div>
     <div id="plist" style="display:flex;flex-direction:column;gap:10px"></div>
     <button class="btn green big" id="addP">＋ あたらしい ぼうけんしゃ</button>
-    <button class="btn gray" id="addM">👑 マスターアカウントを つくる</button>
+    <button class="btn gray" id="addM">👨‍👩‍👧 おうちの ひと（みんなの ようす）</button>
   </div>
 </section>
 
@@ -465,7 +465,7 @@ input{font:inherit}
 
 <!-- admin -->
 <section id="admin" class="screen">
-  <header class="hud"><button class="btn x" id="adBack">◀</button><div style="font-size:18px">👑 みんなの ようす</div></header>
+  <header class="hud"><button class="btn x" id="adBack">◀</button><div style="font-size:18px">👨‍👩‍👧 みんなの ようす</div></header>
   <div class="homebody" id="adBody"></div>
 </section>
 
@@ -1115,7 +1115,6 @@ function renderPlayers(){
     ||'<p style="text-align:center;color:var(--sub)">まずは ぼうけんしゃを つくろう！</p>';
   document.querySelectorAll('.pcard').forEach(b=>b.onclick=()=>{snd(660,.05);selectProfile(+b.dataset.id)});
   $('addP').style.display=G.profiles.filter(p=>!p.master).length>=4?'none':'';
-  $('addM').style.display=G.profiles.some(p=>p.master)?'none':'';
 }
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function giftCode(){
@@ -1175,7 +1174,7 @@ function profileForm(p){
   sync();
 }
 $('addP').onclick=()=>profileForm(null);
-$('addM').onclick=()=>showModal(`<div class="mt">👑 マスターアカウント</div><p>このデバイスに、すべての そうび・モンスターを もっている<br>マスターアカウントを つくります。</p><button class="btn orange big" id="mk">つくる</button><button class="btn gray" id="cl">やめる</button>`,{mk:()=>{closeModal();makeMaster()},cl:closeModal});
+$('addM').onclick=()=>{snd(660,.05);showAdmin()};
 function dataMove(){
   showModal(`<div class="mt">💾 データの ひっこし</div><p style="font-size:14px">べつの ばしょ（PWAや べつの たんまつ）に<br>ぜんぶの ぼうけんしゃの データを うつせます。</p>
     <button class="btn green big" id="dx">📤 データを かきだす</button><button class="btn orange big" id="di">📥 データを よみこむ</button><button class="btn gray" id="cl">とじる</button>`,
@@ -1290,7 +1289,7 @@ $('shBack').onclick=()=>{show('home');renderHome()};
 $('rankBtn').onclick=()=>showRank();
 $('rkBack').onclick=()=>{show('home');renderHome()};
 $('adminBtn').onclick=()=>showAdmin();
-$('adBack').onclick=()=>{show('home');renderHome()};
+$('adBack').onclick=()=>{if(P){show('home');renderHome()}else{show('players');renderPlayers()}};
 $('boxBtn').onclick=()=>{boxF='all';openBox('items')};
 $('bxBack').onclick=()=>{show('home');renderHome()};
 $('stBack').onclick=()=>{if(statP){statP=null;showAdmin()}else{show('home');renderHome()}};
@@ -1746,15 +1745,15 @@ function cloudSetup(){
   const on=!!G.fam;
   showModal(`<div class="mt">☁️ かぞくで きょうゆう</div>
     ${FB_CONFIG?'':'<p style="color:#ffb020;font-size:13px">まだ じゅんびちゅうです（おうちの ひとが せっていします）</p>'}
-    <p style="font-size:13px">おなじ「かぞくコード」を いれた たんまつどうしで、マスターが みんなの ようすを みられるように なるよ。</p>
+    <p style="font-size:13px">おなじ「かぞくコード」を いれた たんまつどうしで、おうちの ひとが みんなの ようすを みられるように なるよ。</p>
     <div class="lbl">この たんまつの なまえ</div><input class="field" id="cdName" maxlength="12" value="${esc(G.devName||'')}" placeholder="れい：たろうの タブレット">
     <div class="lbl">かぞくコード</div><input class="field" id="cdFam" maxlength="14" value="${famFmt(G.fam||'')}" placeholder="XXXX-XXXX-XXXX" style="letter-spacing:2px">
-    ${P&&P.master?'<button class="btn purple" id="cdNew">🔑 あたらしい コードを つくる</button>':''}
+    <button class="btn purple" id="cdNew">🔑 あたらしい コードを つくる（さいしょの 1だいだけ）</button>
     <button class="btn green big" id="cdOk">${on?'ほぞんして どうき':'きょうゆうを はじめる'}</button>
     ${on?'<button class="btn gray" id="cdOff">きょうゆうを やめる</button>':''}
     <small style="color:var(--sub)">${G.lastSync?'さいごの どうき：'+new Date(G.lastSync).toLocaleString('ja-JP'):'まだ どうき していないよ'}</small>
     <button class="btn gray" id="cl">とじる</button>`,
-    {cdNew:()=>{$('cdFam').value=famFmt(newFam())},
+    {cdNew:()=>{if(G.fam&&!confirm('いまの かぞくコードから はなれて、あたらしい コードに しますか？'))return;$('cdFam').value=famFmt(newFam())},
      cdOk:async()=>{const c=famNorm($('cdFam').value);if(c.length!==12){toast('コードは 12もじ だよ');return}
        G.fam=c;G.devName=$('cdName').value.trim()||'たんまつ';store.set('mq1',G);
        if(!FB_CONFIG){closeModal();toast('ほぞんしたよ（じゅんびが できたら どうき するよ）');return}
@@ -2077,6 +2076,7 @@ $('quit').onclick=()=>{if(!B||B.lock)return;B.lock=true;
 
 /* =============== boot =============== */
 setTimeout(()=>{try{if(FB_CONFIG&&G.fam)syncUp()}catch(e){}},3000);
+if(G.profiles.some(p=>p.master)){G.profiles=G.profiles.filter(p=>!p.master);if(!G.profiles.some(p=>p.id===G.cur))G.cur=null;save()}
 if(G.cur&&G.profiles.find(p=>p.id===G.cur))selectProfile(G.cur);else{show('players');renderPlayers()}
 </script>
 <script>
