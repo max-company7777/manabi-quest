@@ -870,7 +870,8 @@ const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v)
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 const G=Object.assign({profiles:[],cur:null,snd:true},store.get('mq1',{}));
 let P=null;
-const save=()=>{if(P&&!Number.isFinite(P.gold))P.gold=0;if(P&&P.party&&P.party[0]&&P.mons){const m0=P.mons.find(m=>m.id===P.party[0]);if(m0)m0.fav=true}store.set('mq1',G);try{queueSync()}catch(e){}};
+const autoFav=p=>{if(p&&p.party&&p.party[0]&&p.mons){const m0=p.mons.find(m=>m.id===p.party[0]);if(m0)m0.fav=true}};
+const save=()=>{if(P&&!Number.isFinite(P.gold))P.gold=0;autoFav(P);store.set('mq1',G);try{queueSync()}catch(e){}};
 const COLORS=['#d94a4a','#3a7bd5','#3fa34d','#e08a1e','#c25bc4','#20a5a5'];
 const HAIRS=[['short','みじかい'],['long','ながい'],['pony','ポニー'],['spiky','ツンツン']];
 const HAIRC=['#3b2414','#7a4a22','#e2b04a','#c0392b','#2c2c3a','#e98bb5'];
@@ -2042,7 +2043,7 @@ const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
 const EGGNEED=[15,30,50,80,120,200],EGGCH=[.15,.2,.28,.4,.5,.15],MBASE=[4,7,12,20,32,60],MGROW=[1,2,3,4,6,10],MAXLV=Infinity,MONMAX=Infinity;
 const monPow=m=>{const s=SP[m.sp];return s?Math.round((MBASE[s.rar]+(m.lv-1)*MGROW[s.rar])*(s.boss?1.2:1)*(s.pmul||1)):0};
 const monXpNeed=m=>5+m.lv*2;
-function ensureP(p){if(p.weak&&!p.weakV2){p.weak.forEach(w=>w.n=Math.min((w.n||1)+2,WEAKMAX));p.weakV2=1}if(!Number.isFinite(p.gold))p.gold=0;if(!p.mixOn){p.mixOn=1;p.subj='mix';p.best=p.best||{};p.best.mix=Math.max(p.best.mix||0,p.best.math||0,p.best.eng||0,p.best.kanji||0)}p.frag=p.frag||{};p.ultMiss=p.ultMiss||0;p.box=p.box||[];p.mons=p.mons||[];p.party=p.party||[];p.eggs=p.eggs||[];p.dex=p.dex||{};p.dex.seen=p.dex.seen||{};p.dex.owned=p.dex.owned||{};p.dex.items=p.dex.items||{};return p}
+function ensureP(p){setTimeout(()=>autoFav(p),0);if(p.weak&&!p.weakV2){p.weak.forEach(w=>w.n=Math.min((w.n||1)+2,WEAKMAX));p.weakV2=1}if(!Number.isFinite(p.gold))p.gold=0;if(!p.mixOn){p.mixOn=1;p.subj='mix';p.best=p.best||{};p.best.mix=Math.max(p.best.mix||0,p.best.math||0,p.best.eng||0,p.best.kanji||0)}p.frag=p.frag||{};p.ultMiss=p.ultMiss||0;p.box=p.box||[];p.mons=p.mons||[];p.party=p.party||[];p.eggs=p.eggs||[];p.dex=p.dex||{};p.dex.seen=p.dex.seen||{};p.dex.owned=p.dex.owned||{};p.dex.items=p.dex.items||{};return p}
 const partyMons=(p=P)=>(p.party||[]).map(id=>(p.mons||[]).find(m=>m.id===id)).filter(Boolean);
 const partyPow=(p=P,eq=p.eq)=>Math.round(partyMons(p).reduce((s,m)=>s+monPow(m),0)*(1+fxSum('party',eq||{})/100));
 const ownedStd=(p=P)=>SPECIES.filter(s=>s[3]<5&&p.dex.owned[s[0]]).length;
@@ -2278,7 +2279,7 @@ function doEvolve(id){const m=P.mons.find(x=>x.id===id);if(!m||!evoReady(m))retu
     {ok:()=>{closeModal();const nu=ULTS.filter(u=>before<u.need&&ownedStd()>=u.need);if(nu.length)showUltUnlock(nu,()=>{renderBox()});else renderBox()}},'r'+SP[to].rar);
 }
 function bondUp(){const bn=EV().bond;partyMons().forEach(m=>{const was=evoReady(m);m.bond=(m.bond||0)+bn;if(!was&&evoReady(m))setTimeout(()=>toast(`✨ ${SP[m.sp].name}が しんか できるよ！`),900)})}
-function monModal(id){
+function monModal(id){autoFav(P);
   const m=P.mons.find(x=>x.id===id);if(!m)return;const s=SP[m.sp],inP=P.party.includes(id);
   showModal(`<div class="hatch flip">${monsterSVG(m.sp)}</div><div style="color:${RAR[s.rar].h};font-size:14px">${RAR[s.rar].n}${s.boss?'・ボス':''}</div><div class="mt">${s.name}</div>
     <div>${elTag(m.sp)}</div><div class="skl">${skillHTML(m)}<br><small>パーティに いると はつどう</small></div>
