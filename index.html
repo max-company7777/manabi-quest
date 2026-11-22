@@ -453,6 +453,15 @@ input{font:inherit}
 #ghost{display:none;flex-direction:column}#ghost.on{display:flex}
 .ghlist{display:flex;flex-direction:column;gap:6px;max-height:55vh;overflow:auto;margin:6px 0}.ghpick{display:flex;align-items:center;gap:10px;text-align:left;padding:6px 10px!important}
 .ghi{width:46px;flex:none}.ghi .hs{width:100%}.ghn{font-size:16px}.ghn small{display:block;font-size:11px;color:var(--sub)}
+
+.roombox{position:relative;width:100%;aspect-ratio:4/3;border:3px solid var(--edge);overflow:hidden;image-rendering:pixelated;flex:none}
+.rmwall{position:absolute;left:0;right:0;top:0;height:58%}.rmfloor{position:absolute;left:0;right:0;bottom:0;height:42%;border-top:4px solid #0004}
+.rmf{position:absolute;image-rendering:pixelated;z-index:5}.rm-rug{z-index:2}.rm-tank{z-index:10}.rm-bed,.rm-desk,.rm-sofa{z-index:8}.rm-lamp,.rm-plant{z-index:9}
+.rmtc{position:absolute;z-index:6;font-size:11px;background:#000a;padding:0 3px;transform:translateX(-10%)}
+.rmhero{position:absolute;width:16%;z-index:12}.rmhero .hs{width:100%}
+.rmm{position:absolute;width:13%;z-index:20;transition:left 2.4s linear,bottom 2.4s linear;cursor:pointer}.rmm svg,.rmm img{width:100%;height:auto;display:block}.rmm.flipx .flip{transform:scaleX(-1)}
+.rmrow{display:flex;align-items:center;gap:8px;background:#0005;border:2px solid var(--edge);padding:6px}.rmrow .btn{min-width:84px;padding:8px 6px}
+.rmimg{width:48px;height:36px;object-fit:contain;image-rendering:pixelated}.rmsw{width:40px;height:30px;border:2px solid #000}.rmn{flex:1;font-size:15px}.rmn small{display:block;font-size:11px;color:var(--sub)}.rmon{color:#5be05b;font-size:13px}
 </style>
 </head>
 <body>
@@ -563,6 +572,14 @@ input{font:inherit}
 </section>
 
 <!-- battle -->
+<section id="room" class="screen">
+  <header class="hud"><button class="btn x" id="rmBack">◀</button><div style="font-size:17px" id="rmTitle">🏠 へや</div><div class="pill" id="rmGold"></div></header>
+  <div class="homebody">
+    <div class="roombox" id="rmBox"><div class="rmwall" id="rmWall"></div><div class="rmfloor" id="rmFloor"></div><div id="rmItems"></div><div id="rmMons"></div></div>
+    <div class="rktabs" id="rmTabs" style="grid-template-columns:repeat(4,1fr)"></div>
+    <div id="rmList" style="display:flex;flex-direction:column;gap:6px"></div>
+  </div>
+</section>
 <section id="ghost" class="screen">
   <header class="hud"><button class="btn x" id="ghBack">✕</button><div style="font-size:17px">👻 ゴーストバトル</div><div class="pill" id="ghRound"></div></header>
   <div class="gharena">
@@ -1474,6 +1491,70 @@ function ghostEnd(){const w=GH.me>GH.opS,d=GH.me===GH.opS,st=Math.max(1,P.best.m
   P.gold+=g;P.tk=(P.tk||0)+tk;if(w)P.ghostWin=(P.ghostWin||0)+1;save();w?fanfare():coin();const op=GH.op,me=GH.me,os=GH.opS;
   showModal(`<div class="chest">${w?'🏆':d?'🤝':'👻'}</div><div class="mt">${w?'かち！':d?'ひきわけ！':'まけ…'}</div><p style="font-size:26px">${me} − ${os}</p><p>${esc(op.name)}の ゴースト${w?'に かった！':d?'と ひきわけ':'に まけちゃった'}<br><b class="goldt">🪙+${g}</b>${tk?`　${pi('ticket')}+${tk}`:''}</p>
     <button class="btn orange big" id="rt">もういちど</button><button class="btn gray big" id="hm">ホームへ</button>`,{rt:()=>{closeModal();ghostStart(op)},hm:()=>{closeModal();GH=null;goHome()}})}
+
+/* ===================== 🏠 my room ===================== */
+const FSHAPE={
+ bed:['bb................','bbww..............','bbwwaaaaaaaaaaaaaa','bbaaaaaaaaaaaaaaaa','bbAAAAAAAAAAAAAAAA','bbbbbbbbbbbbbbbbbb','bb..............bb'],
+ desk:['aaaaaaaaaaaaaa','AAAAAAAAAAAAAA','.A.bbbb.....A.','.A.bcbb.....A.','.A.bbbb.....A.','.A..........A.','.A..........A.'],
+ shelf:['bbbbbbbbbb','b.r.y.g.ab','brryyggaab','bbbbbbbbbb','b.c.cc.r.b','bccrcccrrb','bbbbbbbbbb','b........b'],
+ window:['bbbbbbbbbbbb','bssssbssssssb'.slice(0,12),'bswwsbsssssb','bssssbsswwsb','bbbbbbbbbbbb','bssssbssssss'.slice(0,11)+'b','bsssssbsssss'.slice(0,5)+'bsssssb','bbbbbbbbbbbb','aaaaaaaaaaaa'],
+ poster:['bbbbbbbb','baaaaaab','baacaaab','bacccaab','baacaaab','baaaaaab','bbbbbbbb'],
+ plant:['..gg.g..','.gGgggg.','gggGggGg','.gGggg..','..gGg...','.bbbbbb.','.bBBBBb.','..bbbb..'],
+ rug:['.aaaaaaaaaaaaaaaaaaaa.','aAcAcAcAcAcAcAcAcAcAAa','aaaaaaaaaaaaaaaaaaaaaa'],
+ lamp:['.aaaa.','aaaaaa','.aAAa.','..bb..','..bb..','..bb..','.bbbb.'],
+ tv:['bbbbbbbbbbbb','bssssssssssb','bswsssssssb'+'b','bsssssssssb'+'b','bssssssssssb','bbbbbbbbbbbb','....bbbb....','..bbbbbbbb..'],
+ sofa:['.aaaaaaaaaa.','aAAAAAAAAAAa','aAAAAAAAAAAa','aaaaaaaaaaaa','aaaaaaaaaaaa','b..........b'],
+ tank:['bbbbbbbbbbbb','bwwwwwwwwwwb','bwwfwwwwwwwb','bwfffwwwgwwb','bwwfwwwwgwwb','bwwwwwwgggwb','byyyyyyyyyyb','bbbbbbbbbbbb'],
+ trophy:['yyyyyy','yYyyYy','.yyyy.','..yy..','..yy..','.bbbb.']};
+const FBASE={k:'#1b1410',w:'#ffffff',r:'#e8413c',y:'#ffd23f',Y:'#d99a1a',g:'#5cc05c',G:'#2e8a2b',s:'#8ad8ff',f:'#ff8a2a'};
+const FURN={
+ bed:{n:'ベッド',pos:[3,null,30,6],v:[['red','あかい ベッド',400,{a:'#e8413c',A:'#a02a20',b:'#8a5a30'}],['blue','あおい ベッド',400,{a:'#4a7ad9',A:'#2a4a9a',b:'#8a5a30'}],['star','ほしの ベッド',2500,{a:'#ffd23f',A:'#7a4bd1',b:'#3a2a6a'}]]},
+ desk:{n:'つくえ',pos:[66,null,28,8],v:[['wood','きの つくえ',500,{a:'#c8884a',A:'#8a5a30',b:'#a06a3a',c:'#ffd23f'}],['white','しろい つくえ',900,{a:'#f4f4f4',A:'#b8b8c8',b:'#d8d8e0',c:'#4aa0e0'}]]},
+ shelf:{n:'ほんだな',pos:[5,12,17,null],v:[['wood','ほんだな',600,{a:'#4aa0e0',b:'#8a5a30',c:'#a060e0'}],['dark','くろい ほんだな',1200,{a:'#ff8fb8',b:'#3a2a2a',c:'#5be05b'}]]},
+ window:{n:'まど',pos:[39,7,22,null],v:[['day','あおぞらの まど',300,{b:'#f4ead0',s:'#8ad8ff',a:'#c8884a'}],['night','よぞらの まど',800,{b:'#f4ead0',s:'#1a1a4a',w:'#ffd23f',a:'#7a4bd1'}]]},
+ poster:{n:'ポスター',pos:[75,10,13,null],v:[['star','ほしの ポスター',300,{b:'#c8884a',a:'#4a2a8a',c:'#ffd23f'}],['heart','ハートの ポスター',300,{b:'#f4f4f4',a:'#ffd0e0',c:'#e8413c'}],['dragon','ドラゴンの ポスター',1500,{b:'#ffd23f',a:'#2a1a1a',c:'#ff6a2a'}]]},
+ plant:{n:'うえき',pos:[88,null,10,22],v:[['green','うえき',250,{b:'#c8884a',B:'#8a5a30'}],['blue','あおい うえき',350,{b:'#4a7ad9',B:'#2a4a9a'}]]},
+ rug:{n:'じゅうたん',pos:[28,null,44,3],v:[['red','あかい じゅうたん',350,{a:'#c0392b',A:'#8a1a1a',c:'#ffd23f'}],['green','みどりの じゅうたん',350,{a:'#3a8a4a',A:'#2a5a2a',c:'#f4ead0'}],['rainbow','にじの じゅうたん',3000,{a:'#7a4bd1',A:'#ff6fa8',c:'#7af0ff'}]]},
+ lamp:{n:'ランプ',pos:[34,null,7,24],v:[['yellow','ランプ',300,{a:'#ffe680',A:'#d9b020',b:'#5a4a3a'}],['pink','ピンクの ランプ',300,{a:'#ffb0d0',A:'#d96a9a',b:'#5a4a3a'}]]},
+ tv:{n:'テレビ',pos:[45,null,15,28],v:[['black','テレビ',1500,{b:'#2a2a2a'}],['retro','レトロ テレビ',2000,{b:'#c8884a',s:'#7ae0a0'}]]},
+ sofa:{n:'ソファ',pos:[40,null,22,14],v:[['brown','ソファ',1200,{a:'#a06a3a',A:'#8a5a30',b:'#3a2a1a'}],['pink','ピンクの ソファ',1500,{a:'#ff8fb8',A:'#d96a9a',b:'#3a2a1a'}]]},
+ tank:{n:'すいそう',pos:[71,null,14,29],v:[['fish','すいそう',2000,{b:'#5a6a7a',w:'#8ad8ff'}]]},
+ trophy:{n:'トロフィー',pos:[25,16,8,null],v:[['gold','じっせき トロフィー',1000,{b:'#8a5a30'}]]}};
+const WALLS=[['cream','クリーム',0,'#f4e2c0','#e8d0a8'],['blue','そらいろ',300,'#bfe4f8','#a8d0e8'],['pink','ピンク',300,'#ffd8e8','#f0c0d8'],['green','わかば',300,'#d8f0c0','#c0e0a8'],['night','よぞら',800,'#2a2a5a','#1e1e48'],['brick','レンガ',600,'#b86a4a','#9a5038']];
+const FLOORS=[['wood','フローリング',0,'#c8884a','#b07440'],['tatami','たたみ',400,'#c8c070','#b0a858'],['tile','タイル',400,'#e8e8f0','#c8c8d8'],['carpet','カーペット',600,'#7a4bd1','#6a3bc1'],['grass','しばふ',800,'#5cb05c','#4a9a4a']];
+function sprURL(rows,pal){const cells=[],set=new Set(),m=new Map();rows.forEach((r,y)=>[...r].forEach((c,x)=>{const col=pal[c]||FBASE[c];if(c!=='.'&&col){cells.push([x,y,col]);set.add(x+','+y)}}));
+  const w=Math.max(...rows.map(r=>r.length)),h=rows.length;for(const[x,y]of cells)for(const[a,b]of[[1,0],[-1,0],[0,1],[0,-1]]){const k=(x+a)+','+(y+b);if(!set.has(k))m.set(k,[x+a,y+b,OL])}
+  for(const[x,y,c]of cells)m.set(x+','+y,[x,y,c]);return mapImg(m,1,1,w+2,h+2)}
+const furnImg=(t,vk)=>{const k='fu|'+t+vk;if(!IMGC[k]){const v=FURN[t].v.find(x=>x[0]===vk);IMGC[k]=sprURL(FSHAPE[t],v[3])}return IMGC[k]};
+const roomOf=()=>{P.room=P.room||{own:{},place:{},wall:'cream',floor:'wood'};return P.room};
+let rmTab='furn',rmTimer=0;
+function roomOpen(){show('room');roomRender();clearInterval(rmTimer);rmTimer=setInterval(roomWander,2600);setTimeout(roomWander,100)}
+function roomRender(){const r=roomOf(),W=WALLS.find(w=>w[0]===r.wall)||WALLS[0],F=FLOORS.find(f=>f[0]===r.floor)||FLOORS[0];
+  $('rmTitle').textContent=`🏠 ${P.name}の へや`;$('rmGold').innerHTML=pi('coin')+fmtBig(P.gold);
+  $('rmWall').style.background=`repeating-linear-gradient(90deg,${W[3]} 0 18px,${W[4]} 18px 20px)`;$('rmFloor').style.background=`repeating-linear-gradient(90deg,${F[3]} 0 30px,${F[4]} 30px 32px)`;
+  const order=['rug','window','poster','shelf','trophy','tank','tv','bed','desk','sofa','lamp','plant'];
+  $('rmItems').innerHTML=order.filter(t=>r.place[t]).map(t=>{const [x,top,w,bot]=FURN[t].pos;return `<img class="rmf rm-${t}" src="${furnImg(t,r.place[t])}" style="left:${x}%;width:${w}%;${top!=null?'top:'+top+'%':'bottom:'+bot+'%'}">${t==='trophy'?`<span class="rmtc" style="left:${x}%;top:${top+12}%">🏅${Object.keys(P.ach||{}).length}</span>`:''}`}).join('')
+    +`<div class="rmhero" style="left:8%;bottom:20%">${heroSVG(P.eq,P)}</div>`;
+  const ms=partyMons().concat(P.mons.filter(m=>m.fav&&!P.party.includes(m.id))).slice(0,6);
+  $('rmMons').innerHTML=ms.map((m,i)=>`<div class="rmm" data-i="${i}" style="left:${15+i*12}%;bottom:${6+(i%3)*7}%"><span class="flip">${monsterSVG(m.sp)}</span></div>`).join('');
+  document.querySelectorAll('.rmm').forEach(e=>e.onclick=()=>{anim(e,'hop',350);snd(880+R(0,400),.08,'square',.04)});
+  const tabs=[['furn','🛋️ かぐ'],['wall','🧱 かべ'],['floor','🟫 ゆか'],['mine','✅ もってる']];
+  $('rmTabs').innerHTML=tabs.map(([k,n])=>`<button class="btn db${rmTab===k?' sel':''}" data-k="${k}">${n}</button>`).join('');
+  document.querySelectorAll('#rmTabs .db').forEach(b=>b.onclick=()=>{rmTab=b.dataset.k;roomRender()});
+  let h='';
+  if(rmTab==='wall'||rmTab==='floor'){const L=rmTab==='wall'?WALLS:FLOORS;h=L.map(([k,n,pr,c1])=>{const own=!pr||r.own[rmTab+':'+k],on=r[rmTab]===k;
+      return `<div class="rmrow"><span class="rmsw" style="background:${c1}"></span><span class="rmn">${n}</span>${on?'<b class="rmon">つかってる</b>':own?`<button class="btn green" data-use="${rmTab}:${k}">つかう</button>`:`<button class="btn orange" data-buy="${rmTab}:${k}:${pr}">🪙${pr}</button>`}</div>`}).join('')}
+  else{for(const [t,f] of Object.entries(FURN))for(const [vk,n,pr] of f.v){const own=r.own[t+':'+vk],on=r.place[t]===vk;if(rmTab==='mine'&&!own)continue;
+      h+=`<div class="rmrow"><img class="rmimg" src="${furnImg(t,vk)}"><span class="rmn">${n}<small>${f.n}</small></span>${on?`<button class="btn gray" data-off="${t}">しまう</button>`:own?`<button class="btn green" data-put="${t}:${vk}">おく</button>`:`<button class="btn orange" data-buy="${t}:${vk}:${pr}">🪙${pr}</button>`}</div>`}
+    if(!h)h='<p style="color:var(--sub);text-align:center">まだ かぐを もっていないよ</p>'}
+  $('rmList').innerHTML=h;
+  document.querySelectorAll('#rmList [data-buy]').forEach(b=>b.onclick=()=>{const [t,vk,pr]=b.dataset.buy.split(':');if(P.gold<+pr){toast('ゴールドが たりないよ');return}
+    P.gold-=+pr;r.own[t+':'+vk]=1;if(t==='wall'||t==='floor')r[t]=vk;else r.place[t]=vk;save();fanfare();toast('🏠 おいたよ！');roomRender()});
+  document.querySelectorAll('#rmList [data-put]').forEach(b=>b.onclick=()=>{const [t,vk]=b.dataset.put.split(':');r.place[t]=vk;save();snd(660,.08);roomRender()});
+  document.querySelectorAll('#rmList [data-off]').forEach(b=>b.onclick=()=>{delete r.place[b.dataset.off];save();roomRender()});
+  document.querySelectorAll('#rmList [data-use]').forEach(b=>b.onclick=()=>{const [t,k]=b.dataset.use.split(':');r[t]=k;save();roomRender()})}
+function roomWander(){if(!$('room').classList.contains('on')){clearInterval(rmTimer);return}
+  document.querySelectorAll('.rmm').forEach(e=>{if(Math.random()<.35)return;const x=R(10,82),y=R(3,24),cur=parseFloat(e.style.left);e.style.left=x+'%';e.style.bottom=y+'%';e.classList.toggle('flipx',x<cur);e.style.zIndex=30-y})}
 /* ===================== help ===================== */
 const HELP=[
  ['play','🎮 あそびかた',`<b>しゅつげき</b>を おすと バトル！ もんだいに せいかいすると てきに こうげき。<br>1ステージは 5たい（さいごは ボス）。ぜんぶ たおすと クリアで ゴールドや そうびが もらえるよ。<br>まちがえたり じかんぎれに なると ダメージ。HPが 0に なると まけ。<br><small>はやく こたえると ダメージ アップ・れんぞく せいかいで コンボ！</small>`],
@@ -1487,6 +1568,12 @@ const HELP=[
  ['shop','🛍️ ショップ',`ゴールドで きせかえ（ぼうし・オーラ・すがた）や、ふかきの わく・なかまを つれていける かずを ふやせるよ。`],
  ['event','📅 きょうの イベント',`まいにち ちがう ボーナスが あるよ！<br>${EVENTS.map(e=>`${e.i} <b>${e.d}</b>：${e.t}`).join('<br>')}`],
  ['map','🗺️ ワールドマップ',`10ステージごとに あたらしい ばしょに すすむよ。ばしょごとに けしきと でてくる モンスターの ぞくせいが かわる。<br>ホームの マップから、いったことの ある ばしょを えらべるよ。`],
+ ['tower','🗼 むげんの とう',`1かいに 1たいずつ たおして、どこまで のぼれるか ちょうせん！ 10かいごとに ボスが いて、たおすと ゴールドと ふくびきけん。<br>HPは すこししか かいふく しないので、そうびを つよくして いこう。さいこう きろくは ランキングにも のるよ。`],
+ ['ghost','👻 ゴーストバトル',`かぞくの ぼうけんしゃの「ゴースト」と 10もんの はやおし しょうぶ！ ゴーストは その ひとの せいかいりつと こたえる はやさを まねするよ。<br>かつと ゴールドと ふくびきけん 2まい。☁️ かぞくで きょうゆう していると、ほかの たんまつの かぞくとも たたかえる。`],
+ ['gacha','🎰 ふくびき',`もんだいに 10かい せいかいするごとに ふくびきけんが 1まい（きんようびは 2まい）。とう・ゴースト・じっせき・ミニゲームでも もらえるよ。<br>そうび・たまご・きせかえ・ゴールド、たまに きゅうきょくの カケラも でる！ 10かい まとめて ひくことも できる。`],
+ ['ach','🏅 じっせき',`「せいかい 1000もん」「なかま 50しゅ」などの もくひょう。たっせいしたら「うけとる」で ゴールドと ふくびきけんが もらえるよ。ホームの ボタンの あかい かずは うけとれる じっせきの かず。`],
+ ['room','🏠 マイルーム',`ゴールドで かぐ・かべ・ゆかを かって、じぶんの へやを かざれるよ。パーティと おきにいりの なかまが へやの なかを あるきまわる（タップすると はねるよ）。トロフィーには じっせきの かずが でる。`],
+ ['mini','🎣 ミニゲーム',`ステージを クリアすると ときどき ボーナスゲーム！<br>🎣 <b>つり</b>：ウキが みどりの ところで「つる！」。まんなかの きいろだと でっかい さかな！<br>🗝️ <b>たからさがし</b>：9まいの すなから 3かい ほって たからを さがそう。`],
  ['mission','📜 きょうの ミッション',`まいにち きょうかごとに きめられた かず せいかいすると クリア。ぜんぶ クリアすると ほうしゅうが もらえるよ。`],
  ['weak','📕 にがてノート',`まちがえた もんだいが はいるよ。バトルの なかで ときどき ふくしゅうに でて、2かい せいかいすると そつぎょう！<br>ホームの「にがて」から にがてだけの バトルも できる。`],
  ['etc','📊 そのほか',`<b>きろく</b>：きょうかや しゅるいごとの せいかいりつ<br><b>ランキング</b>：かぞくの なかの ランキング<br><b>☁️ かぞくで きょうゆう</b>：かぞくコードで ほかの たんまつと つながる（せってい から）<br><b>🎁 プレゼントコード</b>：とくべつな なかまが もらえる（せってい から）<br><b>👨‍👩‍👧 おうちの ひと</b>：ぼうけんしゃを えらぶ がめんから、みんなの ようすが みられる`]];
@@ -1549,7 +1636,8 @@ $('achBtn').onclick=()=>{snd(660,.05);achOpen()};
 $('ghostBtn').onclick=()=>{snd(660,.05);ghostOpen()};
 $('ghBack').onclick=()=>{if(GH){GH.done=true;GH=null}goHome()};
 $('ghQ').onclick=()=>{if(GH&&GH.q&&GH.q.speak)say(...GH.q.speak)};
-if(typeof roomOpen==='undefined')$('roomBtn').onclick=()=>toast('🏠 もうすぐ できるよ！');
+$('roomBtn').onclick=()=>{snd(660,.05);roomOpen()};
+$('rmBack').onclick=()=>{clearInterval(rmTimer);goHome()};
 $('shopBtn').onclick=()=>openShop();
 $('shBack').onclick=()=>{show('home');renderHome()};
 $('rankBtn').onclick=()=>showRank();
