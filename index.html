@@ -702,6 +702,14 @@ input{font:inherit}
 .wrbtns{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;width:min(92vw,340px)}.wrbtns .btn{font-size:14px;padding:8px 2px}#wrOk{width:min(92vw,340px)}.wrmsg{min-height:44px;text-align:center;font-size:16px}
 .wrsets{display:flex;flex-direction:column;gap:8px;margin:8px 0}.wrsets .btn{font-size:18px}.wrsets small{display:block;font-size:12px;opacity:.85}
 .sets{display:flex;flex-direction:column;gap:3px;margin-top:4px;text-align:left}.sets.none{font-size:11px;color:var(--sub);text-align:center}.setb{font-size:12px;background:rgba(255,210,63,.12);border:1px solid rgba(255,210,63,.4);border-radius:6px;padding:3px 6px;color:#fff}.setb b{color:#ffd23f}.setn{color:#7af07a;font-weight:700}.setb small{display:block;font-size:10px;color:var(--sub)}.fx.setl{color:#ffd23f}
+img.shy{filter:hue-rotate(150deg) saturate(1.35) brightness(1.08) drop-shadow(0 0 3px #fff6a0)!important}
+.fuseb{width:100%;margin-bottom:6px}.frow{display:flex;align-items:center;justify-content:center;gap:4px;margin:6px 0}.fplus{font-size:20px;color:#ffd23f}
+.fslot{width:84px;height:100px;background:#0005;border:3px dashed var(--rc);border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;font-family:inherit;padding:4px}.fslot.on{border-style:solid}.fslot img{width:52px;height:52px;image-rendering:pixelated}.fslot small{font-size:9px;line-height:1.2}.fslot b{font-size:28px;color:#888}.fslot.res{border-color:#ffd23f;border-style:solid}.fslot.res b{color:#ffd23f}
+.fodds{font-size:13px;background:rgba(0,0,0,.3);border-radius:8px;padding:6px;margin:4px 0}.fodds b{color:#ffd23f}.fodds small{color:var(--sub)}
+.fgrid{max-height:32vh;overflow-y:auto}.bcell.fsel{outline:3px solid #ffd23f;outline-offset:-3px;background:rgba(255,210,63,.2)}
+.fanim{position:relative;height:160px}.fa{position:absolute;top:30px;width:90px}.fa img{width:100%;image-rendering:pixelated}.fa.l{left:10%;animation:fal 1.6s ease-in forwards}.fa.r{right:10%;animation:far 1.6s ease-in forwards}@keyframes fal{to{left:calc(50% - 45px);transform:rotate(720deg) scale(.3);opacity:0}}@keyframes far{to{right:calc(50% - 45px);transform:rotate(-720deg) scale(.3);opacity:0}}
+.fflash{position:absolute;left:50%;top:50%;width:20px;height:20px;margin:-10px;border-radius:50%;background:#fff;box-shadow:0 0 40px 20px #c15cff;animation:ffl 1.7s ease-in forwards;opacity:0}@keyframes ffl{70%{opacity:0;transform:scale(.5)}90%{opacity:1;transform:scale(6)}100%{opacity:1;transform:scale(14)}}
+.newb{background:#e8413c;color:#fff;font-size:11px;padding:1px 5px;border-radius:4px}
 </style>
 </head>
 <body>
@@ -1171,7 +1179,7 @@ function makeItem(st,d,boss,min=0){
 /* =============== save data =============== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-const APPV='v120';
+const APPV='v121';
 try{const c=document.createElement('canvas');c.width=9;c.height=9;const g=c.getContext('2d'),F=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};F(1,0,7,1,'#120d09');F(1,8,7,1,'#120d09');F(0,1,1,7,'#120d09');F(8,1,1,7,'#120d09');F(1,1,7,1,'#120d09');F(1,7,7,1,'#120d09');F(1,1,1,7,'#120d09');F(7,1,1,7,'#120d09');F(2,2,5,1,'#7a6a52');F(2,2,1,5,'#7a6a52');F(2,6,5,1,'#2a2018');F(6,2,1,5,'#2a2018');document.documentElement.style.setProperty('--pxf',`url(${c.toDataURL()})`)}catch(e){}
 const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));if(G.bgmOn===undefined)G.bgmOn=true;
 let P=null;
@@ -1541,6 +1549,7 @@ function monsterURL(type){
   for(const [x,y,ch] of cells)px(m,x,y+dy,pal[ch],!'ekwr'.includes(ch));
   return mapImg(m,1,1,SZ+2,SZ+2);
 }
+function monImg(m){const h=monsterSVG(m.sp);return m&&m.shiny?h.replace('class="mxs pix"','class="mxs pix shy"'):h}
 function monsterSVG(type){const k='m|'+type;if(!IMGC[k])IMGC[k]=monsterURL(type);return `<img class="mxs pix" src="${IMGC[k]}" alt="">`}
 
 /* =============== sound / speech =============== */
@@ -2114,12 +2123,12 @@ let baseTimer=null;
 function renderLaneCard(){const el=$('hLane');if(!el||!P)return;P.lane=P.lane||{best:0};const lt=ltDaily(),st=Math.min(P.lane.best+1,P.lane.sel||P.lane.best+1),a=AREA(Math.max(1,st*3));
   const ms=laneDeck().slice(0,3);el.style.setProperty('--lsc',`url(${sceneURL(a,160,60,{night:isNight()})})`);
   el.innerHTML=`<span class="lcbg"></span><img class="lcc e" src="${castleURL('e',0)}"><img class="lcc p" src="${castleURL('p',0)}">
-    <span class="lcm">${[`<i class="lcu" style="animation-delay:0s">${heroSVG(P.eq,P)}</i>`,...ms.map((m,i)=>`<i class="lcu" style="animation-delay:${-(i+1)*1.6}s">${monsterSVG(m.sp)}</i>`)].join('')}<i class="lcu en" style="animation-delay:-1s">${monsterSVG('slime')}</i><i class="lcu en" style="animation-delay:-4s">${monsterSVG('bat')}</i></span>
+    <span class="lcm">${[`<i class="lcu" style="animation-delay:0s">${heroSVG(P.eq,P)}</i>`,...ms.map((m,i)=>`<i class="lcu" style="animation-delay:${-(i+1)*1.6}s">${monImg(m)}</i>`)].join('')}<i class="lcu en" style="animation-delay:-1s">${monsterSVG('slime')}</i><i class="lcu en" style="animation-delay:-4s">${monsterSVG('bat')}</i></span>
     <span class="lct"><b>🏯 ぐんだん バトル</b><small>ステージ ${st}・さいこう ${P.lane.best}</small></span><span class="lctk${lt?'':' none'}">🎫 ${lt}<small>まい</small></span>`;
   el.onclick=()=>{snd(660,.05);laneOpen()}}
 function renderBase(){const el=$('hBase');if(!el||!P)return;const a=AREA(selStage||1),nt=isNight(),W=200,H=Math.max(60,Math.round(W*el.clientHeight/Math.max(1,el.clientWidth||360)));
   el.style.background=`url(${sceneURL(a,W,H,{night:nt})}) center/100% 100%`;el.classList.toggle('night',nt);
-  const ms=partyMons();el.querySelector('.bwalk').innerHTML=`<span class="bw hero" style="left:42%">${heroSVG(P.eq,P)}</span>`+ms.map((m,i)=>`<span class="bw mon" data-sp="${m.sp}" style="left:${15+i*22}%">${monsterSVG(m.sp)}</span>`).join('')+(nt?'<span class="bcamp">🔥</span>':'');
+  const ms=partyMons();el.querySelector('.bwalk').innerHTML=`<span class="bw hero" style="left:42%">${heroSVG(P.eq,P)}</span>`+ms.map((m,i)=>`<span class="bw mon" data-sp="${m.sp}" style="left:${15+i*22}%">${monImg(m)}</span>`).join('')+(nt?'<span class="bcamp">🔥</span>':'');
   el.querySelector('.binfo').innerHTML=`${a.i} ${a.n}<small>${nt?'🌙 よる':'☀️ ひる'}・${TIERN[a.t]}</small>`;{let bl=el.querySelector('.bblds');if(!bl){bl=document.createElement('div');bl.className='bblds';el.insertBefore(bl,el.firstChild)}const ks=Object.keys(BLD).filter(k=>bldLv(k));bl.innerHTML=ks.map((k,i)=>`<span class="bbd" style="left:${2+i*(96/Math.max(ks.length,6))}%"><img src="${bldURL(k,bldLv(k))}">${k==='smith'?'<i class="bsmk"></i>':''}<b>${bldLv(k)}</b></span>`).join('');let bb=el.querySelector('.bbtn');if(!bb){bb=document.createElement('button');bb.className='btn bbtn';el.appendChild(bb)}bb.innerHTML=`🏘️ きょてん${ks.length?'':'を つくる'}`;bb.onclick=ev=>{ev.stopPropagation();snd(660,.05);bldOpen()}}
   weather(el,a.el);el.querySelectorAll('.bw').forEach(w=>w.onclick=ev=>{ev.stopPropagation();anim(w,'bhop',450);snd(w.classList.contains('hero')?660:880,.08,'square',.04);fxAt(w,{n:6,colors:['#fff','#ffd23f'],shape:'star',spd:2.5,size:4,grav:.05})});
   clearInterval(baseTimer);baseTimer=setInterval(baseWander,2200);setTimeout(baseWander,300)}
@@ -2318,7 +2327,7 @@ function ltNone(){showModal(`<div class="chest nofx">🏯</div><div class="mt">�
   {st:()=>{closeModal();LN=null;goHome();setTimeout(()=>$('goBtn').click(),300)},cl:()=>{closeModal();if(LN&&!LN.run){LN=null;goHome()}}})}
 function laneOpen(){P.lane=P.lane||{best:0};ltDaily();const st=Math.min(P.lane.best+1,P.lane.sel||P.lane.best+1),deck=laneDeck();
   showModal(`<div class="mt">🏯 ぐんだん バトル</div><p style="font-size:14px">パズルで <b style="color:#7af0ff">⚡エナジー</b>を ためて、<br>なかまを くりだそう！ てきの しろを こわせば かち！</p>
-    <div class="lndeck">${deck.length?`<div class="ldeckl">${[{hero:1},...deck].map(m=>`<div class="ldk"><span class="ldki">${m.hero?heroSVG(P.eq,P):monsterSVG(m.sp)}</span><div>${lTraitTag(m.sp,m.hero)}</div></div>`).join('')}</div>`:'<small>なかまが いないと ゆうしゃ だけで たたかうよ</small>'}</div>
+    <div class="lndeck">${deck.length?`<div class="ldeckl">${[{hero:1},...deck].map(m=>`<div class="ldk"><span class="ldki">${m.hero?heroSVG(P.eq,P):monImg(m)}</span><div>${lTraitTag(m.sp,m.hero)}</div></div>`).join('')}</div>`:'<small>なかまが いないと ゆうしゃ だけで たたかうよ</small>'}</div>
     <div class="stagepick" style="margin:6px 0"><button class="btn" id="lp">◀</button><span>ステージ <b id="lsn">${st}</b></span><button class="btn" id="lnx">▶</button></div>
     <small style="color:var(--sub)">さいこう：ステージ ${P.lane.best}</small>${(g=>g?`<div class="lgim">${LGIM[g][0]}<small>${LGIM[g][1]}</small></div>`:'')(laneGim(st))}<small style="color:var(--sub)">💡 おなじ ぞくせいの なかまを 3たい いじょう だすと「れんけい」で こうげき アップ！</small>
     <button class="btn" id="cn" style="background:#2a6a9a">🏰 しろほう：${CANNON[canOf().t].i} ${CANNON[canOf().t].n} Lv${canPl(canOf().t)}　カスタム ▶</button>
@@ -2744,7 +2753,7 @@ function roomBonus(p=P){const r=p&&p.room;const o={gold:0,xp:0,party:0,egg:0,lan
 const roomB=k=>{try{return roomBonus()[k]||0}catch(e){return 0}};
 function roomBonusHTML(){const b=roomBonus();return `<div class="rbon"><b>✨ へやボーナス</b>${Object.entries(REFN).map(([k,[i,n]])=>`<span class="${b[k]?'on':''}">${i}${n} +${b[k]}%</span>`).join('')}<small>${b.n>=10?'🌟 かぐ 10こ いじょうで「すてきな へや」ボーナス ぜんぶ +3%！':`かぐを 10こ おくと「すてきな へや」ボーナス（いま ${b.n}こ）`}</small></div>`}
 function renderRoomCard(){const el=$('hRoom');if(!el||!P)return;const r=roomOf(),n=Object.keys(r.place).filter(t=>r.place[t]).length,ms=partyMons().slice(0,3);
-  el.innerHTML=`<span class="hrsc" style="background-image:url(${roomSceneURL(r,isNight(),()=>{if($('home').classList.contains('on'))renderRoomCard()})})"></span>${ms.map((m,i)=>`<i class="hrm" style="left:${30+i*14}%;animation-delay:${-i*1.3}s">${monsterSVG(m.sp)}</i>`).join('')}<i class="hrhero">${heroSVG(P.eq,P)}</i>
+  el.innerHTML=`<span class="hrsc" style="background-image:url(${roomSceneURL(r,isNight(),()=>{if($('home').classList.contains('on'))renderRoomCard()})})"></span>${ms.map((m,i)=>`<i class="hrm" style="left:${30+i*14}%;animation-delay:${-i*1.3}s">${monImg(m)}</i>`).join('')}<i class="hrhero">${heroSVG(P.eq,P)}</i>
     <span class="hrplate">🏠 ${esc(P.name)}の へや<small>${n?(b=>Object.entries(REFN).filter(([k])=>b[k]).map(([k,[i]])=>i+'+'+b[k]+'%').join(' ')||'🛋️ かぐ '+n+'こ')(roomBonus()):'かぐを おくと ボーナス！'}</small></span><span class="hrgo">へやへ ▶</span>`;
   el.onclick=()=>{snd(660,.05);roomOpen()}}
 function roomRender(){const r=roomOf(),W=WALLS.find(w=>w[0]===r.wall)||WALLS[0],F=FLOORS.find(f=>f[0]===r.floor)||FLOORS[0];
@@ -2754,7 +2763,7 @@ function roomRender(){const r=roomOf(),W=WALLS.find(w=>w[0]===r.wall)||WALLS[0],
   $('rmItems').innerHTML=(r.place.trophy?`<span class="rmtc" style="left:29%;top:42%">🏅${Object.keys(P.ach||{}).length}</span>`:'')+`<div class="rmhero" style="left:30%;bottom:14%">${heroSVG(P.eq,P)}</div>`;
     +`<div class="rmhero" style="left:8%;bottom:20%">${heroSVG(P.eq,P)}</div>`;
   const ms=partyMons().concat(P.mons.filter(m=>m.fav&&!P.party.includes(m.id))).slice(0,6);
-  $('rmMons').innerHTML=ms.map((m,i)=>`<div class="rmm" data-i="${i}" style="left:${20+i*12}%;bottom:${8+(i%3)*6}%"><span class="flip">${monsterSVG(m.sp)}</span></div>`).join('');
+  $('rmMons').innerHTML=ms.map((m,i)=>`<div class="rmm" data-i="${i}" style="left:${20+i*12}%;bottom:${8+(i%3)*6}%"><span class="flip">${monImg(m)}</span></div>`).join('');
   document.querySelectorAll('.rmm').forEach(e=>e.onclick=()=>{anim(e,'hop',350);snd(880+R(0,400),.08,'square',.04)});
   if($('rmBon'))$('rmBon').innerHTML=roomBonusHTML();
   const tabs=[['furn','🛋️ かぐ'],['wall','🧱 かべ'],['floor','🟫 ゆか'],['mine','✅ もってる']];
@@ -2926,7 +2935,7 @@ function renderHome(){
    const a=AREA(selStage),ai=areaOf(selStage);$('hMap').style.background=a.sky;$('hMap').innerHTML=`<span class="mi">${a.i}</span><span class="mn"><small>ワールドマップ ${ai+1}/${AREAS.length}・${TIERN[a.t]}</small>${a.n}</span><span class="mgo">${(n=>n?`<b class="mbadge">🎁${n}</b>`:'')(mapClaims().length)}🗺️ ▶</span>`;$('hMap').onclick=()=>{snd(660,.05);mapOpen()}}
   requestAnimationFrame(fitHome);
   renderParty();{const ev=P.mons.filter(evoReady),eb=$('hEvo');
-    if(ev.length){eb.style.display='';eb.innerHTML=`<span class="evi">${ev.slice(0,3).map(m=>`<span class="flip">${monsterSVG(m.sp)}</span>`).join('')}</span><span class="evt">${pi('star')}しんか できる なかまが <b>${ev.length}たい</b> いるよ！</span><span class="evgo">みる ▶</span>`;
+    if(ev.length){eb.style.display='';eb.innerHTML=`<span class="evi">${ev.slice(0,3).map(m=>`<span class="flip">${monImg(m)}</span>`).join('')}</span><span class="evt">${pi('star')}しんか できる なかまが <b>${ev.length}たい</b> いるよ！</span><span class="evgo">みる ▶</span>`;
       eb.onclick=()=>{openBox('mons');if(ev.length===1)monModal(ev[0].id)}}else eb.style.display='none'}
   const TS=P.todaySubj||{},mp=misPer(),done=Object.keys(SUBJ).every(k=>(TS[k]||0)>=mp);
   $('mis').innerHTML=`<div>${pi('scroll')}きょうの ミッション <small style="color:var(--sub)">（それぞれ ${mp}もん せいかい）</small></div>
@@ -3209,7 +3218,7 @@ function spStat(k){if(SPST[k])return SPST[k];const s=SP[k];if(!s)return{a:1,h:1,
   let hs=0;for(const ch of k)hs=(hs*31+ch.charCodeAt(0))>>>0;const j=.93+(hs%15)/100;
   const raw=Math.pow(a,.65)*Math.pow(h,.35)*j/1.12,m=k==='darulu'?1:fm||Math.max(.75,Math.min(1.4,1+(raw-1)*.6));
   return SPST[k]={a,h,m}}
-const monPow=m=>{const s=SP[m.sp];return s?Math.round((MBASE[s.rar]+(m.lv-1)*MGROW[s.rar])*(s.boss?1.2:1)*(s.pmul||1)*spStat(m.sp).m):0};
+const monPow=m=>{const s=SP[m.sp];return s?Math.round((MBASE[s.rar]+(m.lv-1)*MGROW[s.rar])*(s.boss?1.2:1)*(s.pmul||1)*spStat(m.sp).m*(m.shiny?1.25:1)):0};
 function spBlock(k){const t=spStat(k),g=spGrade(k),bar=(v,mx)=>{const n=Math.max(1,Math.min(5,Math.round(v/mx*5)));return '<i class="sbf">'+'■'.repeat(n)+'</i><i class="sbe">'+'■'.repeat(5-n)+'</i>'};
   return `<div class="spblk"><div class="spg g${g}">${g}</div><div class="spb"><div>⚔️ こうげき ${bar(t.a,2)}</div><div>❤️ たいりょく ${bar(t.h,2.4)}</div><small>${k==='darulu'?'まおうの ちからは べつかく！':'おなじ レアでも しゅぞくで つよさが ちがうよ'}</small></div></div>`}
 const spGrade=k=>{if(k==='darulu')return 'SS';const v=spStat(k).m;return v>=1.25?'S':v>=1.1?'A':v>=.95?'B':v>=.85?'C':'D'};
@@ -3248,7 +3257,7 @@ function processHatch(cb){
   let where='ボックス';if(P.party.length<partyMax()){P.party.push(m.id);where='パーティ'}
   const w=P.eggs.find(x=>!x.inc);if(w&&P.eggs.filter(x=>x.inc).length<incMax())w.inc=true;
   save();fanfare();const s=SP[m.sp];
-  showModal(`<div class="mt">🐣 たまごが かえった！</div><div class="hatch flip">${monsterSVG(m.sp)}</div>
+  showModal(`<div class="mt">🐣 たまごが かえった！</div><div class="hatch flip">${monImg(m)}</div>
     <div style="color:${RAR[s.rar].h};font-size:14px">${RAR[s.rar].n}${s.boss?'・ボス':''}</div><div class="mt" style="font-size:22px">${s.name}</div>
     <div>${elTag(m.sp)}</div><div class="skl">${skillHTML(m)}</div>
     <p>なかまパワー <b style="color:var(--gold)">${monPow(m)}</b><br>${where}に はいったよ！</p><button class="btn green big" id="ok">やったー！</button>`,
@@ -3290,7 +3299,7 @@ function makeMaster(){
 function renderParty(){
   const pm=partyMons(),inc=P.eggs.filter(e=>e.inc);
   let h=`<div><div class="pph">なかま <small>パワー ${partyPow()}</small></div><div class="prow">`;
-  for(let i=0;i<partyMax();i++){const m=pm[i];h+=m?`<button class="pslot${evoReady(m)?' evok':''}" data-t="mons" data-id="${m.id}" style="--rc:${RAR[SP[m.sp].rar].c}"><div class="pms flip">${monsterSVG(m.sp)}</div><small>${evoReady(m)?'✨':elIcon(m.sp)}Lv${m.lv}</small>${evoReady(m)?'<i class="evtag">しんか!</i>':''}</button>`
+  for(let i=0;i<partyMax();i++){const m=pm[i];h+=m?`<button class="pslot${evoReady(m)?' evok':''}" data-t="mons" data-id="${m.id}" style="--rc:${RAR[SP[m.sp].rar].c}"><div class="pms flip">${monImg(m)}</div><small>${evoReady(m)?'✨':elIcon(m.sp)}Lv${m.lv}</small>${evoReady(m)?'<i class="evtag">しんか!</i>':''}</button>`
     :`<button class="pslot empty" data-t="mons"><div class="pms">＋</div><small>あき</small></button>`}
   h+=`</div></div><div><div class="pph">ふかき <small>せいかいで かえる</small></div><div class="prow">`;
   for(let i=0;i<Math.max(3,incMax());i++){const e=inc[i];h+=e?`<button class="pslot" data-t="eggs" style="--rc:${RAR[e.rar].c}"><div class="pms">${eggIcon(e)}</div><div class="ebar"><i style="width:${Math.min(100,e.prog/e.need*100)}%"></i></div></button>`
@@ -3316,13 +3325,14 @@ function renderBox(){
   }else if(boxTab==='mons'){
     $('bxCount').textContent=`なかま ${P.mons.length}たい`;
     const pm=partyMons();
+    h+=`<button class="btn purple fuseb" id="fuseBtn">🧬 なかまを がったい</button>`;
     {const ev=P.mons.filter(evoReady);if(ev.length)h+=`<button class="btn green evoall" id="evoAll">✨ まとめて しんか（${ev.length}たい）</button>`}
     {const dl=dupList(),any=dl.length||dupList({r:[1,1,1,1,1,1],fav:true}).length;h+=`<button class="btn ${dl.length?'orange':'gray'}" id="dupBye"${any?'':' disabled style="opacity:.55"'}>👋 ダブりを まとめて おわかれ${dl.length?`（${dl.length}たい）`:'（いまは なし）'}</button>`}
     h+=`<div class="panel stbox"><div class="sth">⚔️ パーティ <small>（${partyMax()}たいまで いっしょに たたかう）</small></div><div class="prow big">`;
-    for(let i=0;i<partyMax();i++){const m=pm[i];h+=m?`<button class="pslot mc${evoReady(m)?' evok':''}" data-id="${m.id}" style="--rc:${RAR[SP[m.sp].rar].c}"><div class="pms flip">${monsterSVG(m.sp)}</div><small>${elIcon(m.sp)}${SP[m.sp].name}<br>Lv${m.lv}</small>${evoReady(m)?'<i class="evtag">しんか!</i>':''}</button>`:`<div class="pslot empty"><div class="pms">＋</div><small>あき</small></div>`}
+    for(let i=0;i<partyMax();i++){const m=pm[i];h+=m?`<button class="pslot mc${evoReady(m)?' evok':''}" data-id="${m.id}" style="--rc:${RAR[SP[m.sp].rar].c}"><div class="pms flip">${monImg(m)}</div><small>${elIcon(m.sp)}${SP[m.sp].name}<br>Lv${m.lv}</small>${evoReady(m)?'<i class="evtag">しんか!</i>':''}</button>`:`<div class="pslot empty"><div class="pms">＋</div><small>あき</small></div>`}
     h+=`</div><div class="elchart">${Object.keys(STRONG).filter(e=>STRONG[e].length).map(e=>`<span>${ELS[e].i}→${STRONG[e].map(x=>ELS[x].i).join('')}</span>`).join('')}<span>🌈→ぜんぶ（きゅうきょくだけ）</span></div><small style="color:var(--sub)">→ の あいてに なかまの こうげきが 1.5ばい！</small></div><div class="sth" style="padding:0 4px">📦 ボックス</div>`;
     const rest=P.mons.filter(m=>!P.party.includes(m.id)).sort((a,b)=>SP[b.sp].rar-SP[a.sp].rar||b.lv-a.lv);
-    h+=`<div class="bgrid">${rest.map(m=>`<button class="bcell mc r${SP[m.sp].rar}" data-id="${m.id}" style="--rc:${RAR[SP[m.sp].rar].c};--rh:${RAR[SP[m.sp].rar].h}"><div class="flip">${monsterSVG(m.sp)}</div><b>Lv${m.lv}</b><i class="eb">${elIcon(m.sp)}</i>${m.fav?'<i class="fv">🔒</i>':''}${evoReady(m)?'<i class="evb">✨</i>':''}</button>`).join('')||'<small style="color:var(--sub)">ボスを たおすと たまごを おとすことが あるよ</small>'}</div>`;
+    h+=`<div class="bgrid">${rest.map(m=>`<button class="bcell mc r${SP[m.sp].rar}" data-id="${m.id}" style="--rc:${RAR[SP[m.sp].rar].c};--rh:${RAR[SP[m.sp].rar].h}"><div class="flip">${monImg(m)}</div><b>Lv${m.lv}</b><i class="eb">${elIcon(m.sp)}</i>${m.fav?'<i class="fv">🔒</i>':''}${evoReady(m)?'<i class="evb">✨</i>':''}</button>`).join('')||'<small style="color:var(--sub)">ボスを たおすと たまごを おとすことが あるよ</small>'}</div>`;
   }else if(boxTab==='eggs'){
     const inc=P.eggs.filter(e=>e.inc),rest=P.eggs.filter(e=>!e.inc);
     $('bxCount').textContent=`たまご ${P.eggs.length}こ`;
@@ -3345,7 +3355,7 @@ function renderBox(){
   if($('bxSellWeak'))$('bxSellWeak').onclick=sellWeakFlow;
   document.querySelectorAll('.mc').forEach(b=>b.onclick=()=>monModal(b.dataset.id));
   document.querySelectorAll('.ec').forEach(b=>b.onclick=()=>eggModal(b.dataset.id));
-  if($('dupBye'))$('dupBye').onclick=dupModal;if($('evoAll'))$('evoAll').onclick=evoAllFlow;
+  if($('dupBye'))$('dupBye').onclick=dupModal;if($('evoAll'))$('evoAll').onclick=evoAllFlow;if($('fuseBtn'))$('fuseBtn').onclick=()=>{FU={a:null,b:null};fuseOpen()};
   if($('hatchNow'))$('hatchNow').onclick=()=>processHatch(renderBox);
 }
 function enhBtn(it){const c=enhCost(it);return `<button class="btn orange" id="enh"${P.gold<c?' disabled style="opacity:.5"':''}>⚒️ きょうか +${(it.plus||0)+1}（パワー +10%）🪙${c}</button>${P.gold>=c+enhCost({...it,plus:(it.plus||0)+1})?`<button class="btn orange" id="enhmax">⚒️ できるだけ きょうか</button>`:''}<small style="color:var(--sub)">もっている ゴールド 🪙${P.gold}</small>`}
@@ -3415,7 +3425,7 @@ function dupList(o=dupOpt){const g={};P.mons.forEach(m=>{const r=SP[m.sp].rar;if
     arr.forEach(m=>{if(ok(m)&&m!==keep)out.push(m)})});return out}
 function doBye(list){const g=list.reduce((a,m)=>a+byeGold(m),0),ids=new Set(list.map(m=>m.id));P.mons=P.mons.filter(m=>!ids.has(m.id));P.gold+=g;save();coin();return g}
 function byeModal(id){const m=P.mons.find(x=>x.id===id);if(!m)return;const s=SP[m.sp],big=s.rar>=2,g=byeGold(m);
-  showModal(`<div class="mt">👋 おわかれする？</div><div class="hatch flip" style="width:110px">${monsterSVG(m.sp)}</div><p><b style="color:${RAR[s.rar].h}">${s.name}</b> Lv${m.lv}</p>
+  showModal(`<div class="mt">👋 おわかれする？</div><div class="hatch flip" style="width:110px">${monImg(m)}</div><p><b style="color:${RAR[s.rar].h}">${s.name}</b> Lv${m.lv}</p>
     ${big?`<p class="byewarn">⚠️ ${RAR[s.rar].n}の なかまだよ！<br>おわかれすると もう もどってこないよ。</p>`:'<p style="font-size:13px">おわかれすると もう もどってこないよ。</p>'}
     <p style="font-size:13px">おれいに <b class="goldt" style="font-size:20px">🪙${g}</b> もらえるよ<br><small style="color:var(--sub)">ずかんの きろくは のこるよ</small></p>
     <button class="btn gray big" id="no">やめる</button><button class="btn ${big?'orange':'purple'}" id="yes">👋 おわかれする</button>`,
@@ -3425,7 +3435,7 @@ function dupModal(){const list=dupList(),o=dupOpt;
   showModal(`<div class="mt">👋 ダブりを まとめて おわかれ</div><p style="font-size:13px">おなじ しゅるいの なかで いちばん レベルの たかい 1たいを のこして おわかれするよ。<br><small style="color:var(--sub)">パーティの なかまは のこるよ</small></p>
     <div class="dlbl">レアリティ</div><div class="dchips">${RAR.map((r,i)=>`<button class="dchip${o.r[i]?' on':''}" data-dr="${i}" style="--rh:${r.h}">${r.n}</button>`).join('')}</div>
     <button class="dfav${o.fav?' on':''}" id="dfav">${o.fav?'☑':'☐'} 🔒 おきにいりの ダブりも ふくめる</button>
-    ${list.length?`<div class="bgrid" style="max-height:30vh;overflow-y:auto">${list.map(m=>`<div class="bcell r${SP[m.sp].rar}" style="--rc:${RAR[SP[m.sp].rar].c};--rh:${RAR[SP[m.sp].rar].h}"><div class="flip">${monsterSVG(m.sp)}</div><b>Lv${m.lv}</b>${m.fav?'<i class="fv">🔒</i>':''}</div>`).join('')}</div>
+    ${list.length?`<div class="bgrid" style="max-height:30vh;overflow-y:auto">${list.map(m=>`<div class="bcell r${SP[m.sp].rar}" style="--rc:${RAR[SP[m.sp].rar].c};--rh:${RAR[SP[m.sp].rar].h}"><div class="flip">${monImg(m)}</div><b>Lv${m.lv}</b>${m.fav?'<i class="fv">🔒</i>':''}</div>`).join('')}</div>
     ${hi||nf?`<p class="byewarn">⚠️ ${[hi?'でんせつ いじょう':'',nf?'おきにいり '+nf+'たい':''].filter(Boolean).join('・')}も ふくまれているよ！<br>おわかれすると もう もどってこないよ。</p>`:''}
     <p>${list.length}たい → おれい <b class="goldt" style="font-size:20px">🪙${g.toLocaleString()}</b></p>`:'<p style="color:var(--sub);font-size:13px;margin:14px 0">この じょうけんの ダブりは いないよ</p>'}
     <button class="btn gray big" id="no">やめる</button>${list.length?`<button class="btn ${hi||nf?'orange':'purple'}" id="yes">👋 ${list.length}たいと おわかれする</button>`:''}`,
@@ -3465,10 +3475,36 @@ function evoAllFlow(){const L=P.mons.filter(evoReady);if(!L.length){toast('い�
       const top=Math.max(...res.map(r=>SP[r[1]].rar));
       showModal(`<div class="mt">🎉 ${res.length}たいが しんかした！</div><div class="evagrid">${res.map(([a,b])=>`<div><div class="flip">${monsterSVG(b)}</div><small style="color:${RAR[SP[b].rar].h}">${SP[b].name}</small></div>`).join('')}</div>
         <button class="btn green big" id="ok">やったー！</button>`,{ok:()=>{closeModal();const nu=ULTS.filter(u=>before<u.need&&ownedStd()>=u.need);if(nu.length)showUltUnlock(nu,renderBox);else renderBox()}},'r'+top)}})}
+/* ---- 🧬 がったい ---- */
+let FU={a:null,b:null};
+const fusable=m=>!P.party.includes(m.id)&&SP[m.sp]&&SP[m.sp].rar<=4&&!SP[m.sp].special;
+function fuseOdds(a,b){const ra=SP[a.sp].rar,rb=SP[b.sp].rar,r=Math.max(ra,rb),same=ra===rb;return{r,up:r>=4?0:same?.35:.15,shy:a.sp===b.sp?.4:.12,cost:Math.round(150*Math.pow(r+1,2.2))}}
+function fuseOpen(){const L=P.mons.filter(fusable).sort((x,y)=>SP[y.sp].rar-SP[x.sp].rar||y.lv-x.lv),A=P.mons.find(m=>m.id===FU.a),Bm=P.mons.find(m=>m.id===FU.b),o=A&&Bm?fuseOdds(A,Bm):null;
+  const slot=(m,k)=>`<button class="fslot${m?' on':''}" data-fs="${k}" style="--rc:${m?RAR[SP[m.sp].rar].c:'#555'}">${m?`<div class="flip">${monImg(m)}</div><small>${SP[m.sp].name}<br>Lv${m.lv}</small>`:'<b>＋</b><small>えらんでね</small>'}</button>`;
+  showModal(`<div class="mt">🧬 なかまを がったい</div><p style="font-size:13px">2たいを がったいさせて あたらしい なかまを うみだすよ！<br><small style="color:var(--sub)">パーティの なかまと とくべつな なかまは つかえないよ</small></p>
+    <div class="frow">${slot(A,'a')}<div class="fplus">＋</div>${slot(Bm,'b')}<div class="fplus">＝</div><div class="fslot res"><b>？</b><small>${o?RAR[o.r].n+(o.up?'〜'+RAR[o.r+1].n:''):''}</small></div></div>
+    ${o?`<div class="fodds">⬆️ レアアップ <b>${Math.round(o.up*100)}%</b>　✨ いろちがい <b>${Math.round(o.shy*100)}%</b><br><small>レベルは たかいほうを ひきつぐよ・いろちがいは パワー1.25ばい</small></div>`:'<div class="fodds"><small>おなじ レアどうしだと レアアップ しやすい！おなじ しゅるいだと いろちがいが でやすい！</small></div>'}
+    <div class="bgrid fgrid">${L.map(m=>`<button class="bcell mc r${SP[m.sp].rar}${m.id===FU.a||m.id===FU.b?' fsel':''}" data-fm="${m.id}" style="--rc:${RAR[SP[m.sp].rar].c};--rh:${RAR[SP[m.sp].rar].h}"><div class="flip">${monImg(m)}</div><b>Lv${m.lv}</b>${m.fav?'<i class="fv">🔒</i>':''}${m.shiny?'<i class="evb">✨</i>':''}</button>`).join('')||'<small style="color:var(--sub)">がったい できる なかまが いないよ</small>'}</div>
+    ${o?`<button class="btn purple big" id="fgo"${P.gold<o.cost?' disabled style="opacity:.5"':''}>🧬 がったい！ <small>🪙${fmtS(o.cost)}</small></button>`:''}<button class="btn gray" id="cl">もどる</button>`,
+    {cl:()=>{closeModal();renderBox()},fgo:()=>{if(A.fav||Bm.fav){showModal(`<div class="mt">🔒 おきにいりが いるよ</div><div class="frow"><div class="fslot on" style="--rc:${RAR[SP[A.sp].rar].c}"><div class="flip">${monImg(A)}</div></div><div class="fplus">＋</div><div class="fslot on" style="--rc:${RAR[SP[Bm.sp].rar].c}"><div class="flip">${monImg(Bm)}</div></div></div><p>がったい すると もとの 2たいは いなくなるよ。<br>ほんとうに いい？</p><button class="btn purple big" id="yes">🧬 がったい する</button><button class="btn gray" id="no">やめる</button>`,{yes:()=>fuseDo(A,Bm,o),no:fuseOpen});return}fuseDo(A,Bm,o)}});
+  document.querySelectorAll('[data-fm]').forEach(b=>b.onclick=()=>{const id=b.dataset.fm;snd(880,.05,'square',.03);if(FU.a===id)FU.a=null;else if(FU.b===id)FU.b=null;else if(!FU.a)FU.a=id;else FU.b=id;fuseOpen()});
+  document.querySelectorAll('[data-fs]').forEach(b=>b.onclick=()=>{FU[b.dataset.fs]=null;fuseOpen()})}
+function fuseDo(A,Bm,o){P.gold-=o.cost;let r=o.r;const up=Math.random()<o.up;if(up)r++;const shy=Math.random()<o.shy;
+  const els=[elOf(A.sp),elOf(Bm.sp)];let pool=Object.keys(SP).filter(k=>{const s=SP[k];return s.rar===r&&!s.special&&!s.boss&&!/^x/.test(k)});
+  const pe=pool.filter(k=>els.includes(elOf(k)));if(pe.length&&Math.random()<.6)pool=pe;if(!pool.length)pool=[A.sp];
+  const sp=pick(pool),m={id:uid(),sp,lv:Math.max(A.lv,Bm.lv),xp:0,bond:0};if(shy)m.shiny=1;
+  P.mons=P.mons.filter(x=>x.id!==A.id&&x.id!==Bm.id);P.mons.push(m);const isNew=!P.dex.owned[sp];P.dex.owned[sp]=1;P.dex.seen[sp]=1;if(isNew)m.fav=true;FU={a:null,b:null};save();
+  showModal(`<div class="mt">🧬 がったい ちゅう…</div><div class="fanim"><div class="fa l flip">${monImg(A)}</div><div class="fa r flip">${monImg(Bm)}</div><div class="fflash"></div></div>`,{});
+  [330,440,550,660,880].forEach((f,i)=>snd(f,.15,'square',.04,0,i*.15));
+  setTimeout(()=>{fanfare();if(up||shy)fxConfetti(80);vib(200);
+    showModal(`<div class="mt">${shy?'✨ いろちがい！ ':''}${up?'⬆️ レアアップ！ ':''}${shy||up?'':'🎉 '}うまれた！</div><div class="hatch flip">${monImg(m)}</div>
+      <p><b style="font-size:22px;color:${RAR[r].h}">${SP[sp].name}</b><br><small style="color:${RAR[r].h}">${RAR[r].n}</small>${isNew?' <span class="newb">NEW!</span>':''}</p>${spBlock(sp)}
+      <p style="font-size:13px">Lv${m.lv}・なかまパワー <b style="color:var(--gold)">${monPow(m)}</b></p>
+      <button class="btn purple big" id="ag">🧬 もっと がったい</button><button class="btn green" id="ok">OK</button>`,{ag:()=>fuseOpen(),ok:()=>{closeModal();renderBox()}},'r'+r)},1700)}
 function bondUp(){const bn=EV().bond;partyMons().forEach(m=>{const was=evoReady(m);m.bond=(m.bond||0)+bn;if(!was&&evoReady(m))setTimeout(()=>toast(`✨ ${SP[m.sp].name}が しんか できるよ！`),900)})}
 function monModal(id){autoFav(P);
   const m=P.mons.find(x=>x.id===id);if(!m)return;const s=SP[m.sp],inP=P.party.includes(id);
-  showModal(`<div class="hatch flip">${monsterSVG(m.sp)}</div><div style="color:${RAR[s.rar].h};font-size:14px">${RAR[s.rar].n}${s.boss?'・ボス':''}</div><div class="mt">${s.name}</div>
+  showModal(`<div class="hatch flip">${monImg(m)}</div><div style="color:${RAR[s.rar].h};font-size:14px">${RAR[s.rar].n}${s.boss?'・ボス':''}</div><div class="mt">${m.shiny?'✨ いろちがい ':''}${s.name}</div>
     <div>${elTag(m.sp)}</div><div class="skl">${skillHTML(m)}<br><small>パーティに いると はつどう</small></div>
     <small style="color:var(--sub)">${elIcon(m.sp)} は ${(STRONG[elOf(m.sp)]||[]).map(e=>ELS[e].i+e).join('・')||'ぜんぶ'}に つよい（ダメージ 1.5ばい）</small>
     <p>Lv ${m.lv>=MONMAX?'MAX':m.lv}　なかまパワー <b style="color:var(--gold)">${monPow(m)}</b></p>${spBlock(m.sp)}
@@ -3826,7 +3862,7 @@ function adCard(p){const pct=(a,b)=>b?Math.round(a/b*100)+'%':'−',col=r=>r<.6?
       </div>
       <div class="adsub">${['math','eng','kanji'].map(k=>{const v=s.subj[k];return `<span>${SN[k]} ★${(p.diff[k]||0)+1} <b style="color:${v?col(v.ok/v.n):'#888'}">${v?pct(v.ok,v.n):'−'}</b> <small>ST${p.best[k]}</small></span>`}).join('')}</div>
       ${s.weak.length?`<div class="adweak">⚠️ にがて：${s.weak.map(w=>`${SN[w.sb]}「${w.name}」${Math.round(w.rate*100)}%`).join('、')}</div>`:''}
-      ${pm.length?`<div class="adparty">${pm.map(m=>`<div class="flip" title="${SP[m.sp].name}">${monsterSVG(m.sp)}</div>`).join('')}<small>なかま：${pm.map(m=>SP[m.sp].name+' Lv'+m.lv).join('・')}</small></div>`:''}
+      ${pm.length?`<div class="adparty">${pm.map(m=>`<div class="flip" title="${SP[m.sp].name}">${monImg(m)}</div>`).join('')}<small>なかま：${pm.map(m=>SP[m.sp].name+' Lv'+m.lv).join('・')}</small></div>`:''}
       ${(()=>{try{return parentAdvice(p)}catch(e){return ''}})()}
       <button class="btn" data-sid="${p.id}" data-r="${p._remote?1:0}">📊 くわしい きろくを みる</button>
     </div>`}
@@ -3862,7 +3898,7 @@ function updPHp(){partyMons().forEach((m,i)=>{const el=document.querySelector('#
 function updCd(){const e=$('mCd');if(!e||!B||!B.mon)return;const c=B.mon.cd;e.style.display=c>50?'none':'';e.innerHTML=`<i>⚔️</i>あと<b>${c}</b>`;e.classList.toggle('hot',c<=1)}
 const VH={};function monVis(sp){if(VH[sp])return VH[sp];let v=1;try{const S=SP[sp],A=MONART[S.art];if(A){const ys=[];A.m.forEach((r,y)=>{if(/[^.]/.test(r))ys.push(y)});const h=ys.length?ys[ys.length-1]-ys[0]+1:16;v=Math.max(.82,Math.min(1.2,.8/(h/(A.size||16))))}}catch(e){}return VH[sp]=v}
 (function(){const h=$('battle').querySelector('.hud'),sl=$('bSlots');if(h&&sl)h.insertBefore(sl,$('bStage'))})();
-function updHud(){const pm0=partyMons(),isF=m=>{try{return lStats(m.sp).fly}catch(e){return 0}},pm=pm0;$('partyB').classList.remove('many');$('partyB').innerHTML=pm.map((m,j)=>{const i=pm0.indexOf(m),[x,b,sc0]=FORM[j]||FORM[5],sc=sc0*monVis(m.sp);return `<div class="pm" data-i="${i}" style="left:${x}%;bottom:${b}%;--sc:${sc};z-index:${j<3?20:10};animation-delay:${-i*.37}s"><i class="psh"></i><span class="in flip" style="animation-delay:${-i*.29}s">${monsterSVG(m.sp)}</span><i class="php"><b></b></i></div>`}).join('');if(B)setTimeout(updPHp,0);$('bPow').textContent=power();if(B&&!B.weakOnly&&!B.tower&&!B.xmas&&B.rec){const r=$('bRec');r.textContent='すいしょう '+B.rec.toLocaleString();r.classList.toggle('lo',power()<B.rec)}else $('bRec').textContent='';$('bSlots').innerHTML=SLOTS.map(k=>slotHTML(k,P.eq[k],1)).join('');$('heroSpr').innerHTML=heroSVG(P.eq,Object.assign({},P,{back:1}))}
+function updHud(){const pm0=partyMons(),isF=m=>{try{return lStats(m.sp).fly}catch(e){return 0}},pm=pm0;$('partyB').classList.remove('many');$('partyB').innerHTML=pm.map((m,j)=>{const i=pm0.indexOf(m),[x,b,sc0]=FORM[j]||FORM[5],sc=sc0*monVis(m.sp);return `<div class="pm" data-i="${i}" style="left:${x}%;bottom:${b}%;--sc:${sc};z-index:${j<3?20:10};animation-delay:${-i*.37}s"><i class="psh"></i><span class="in flip" style="animation-delay:${-i*.29}s">${monImg(m)}</span><i class="php"><b></b></i></div>`}).join('');if(B)setTimeout(updPHp,0);$('bPow').textContent=power();if(B&&!B.weakOnly&&!B.tower&&!B.xmas&&B.rec){const r=$('bRec');r.textContent='すいしょう '+B.rec.toLocaleString();r.classList.toggle('lo',power()<B.rec)}else $('bRec').textContent='';$('bSlots').innerHTML=SLOTS.map(k=>slotHTML(k,P.eq[k],1)).join('');$('heroSpr').innerHTML=heroSVG(P.eq,Object.assign({},P,{back:1}))}
 function updCombo(){const c=$('combo');c.textContent=B.combo>=2?`${B.combo} コンボ！`:'';
   c.style.color=B.combo>=10?'#ff5df0':B.combo>=5?'#ff8a3d':'var(--gold)';if(B.combo>=2)anim(c,'pop',300)}
 
