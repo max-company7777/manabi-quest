@@ -605,6 +605,7 @@ input{font:inherit}
 .panel{border-radius:3px}
 .mbox.mhatch{animation:hatchflip .7s cubic-bezier(.3,1.3,.5,1)!important}@keyframes hatchflip{0%{transform:perspective(600px) rotateY(90deg) scale(.6);opacity:0}100%{transform:none;opacity:1}}
 .invcode{font-family:'DotGothic16',monospace;font-size:28px;letter-spacing:3px;color:#ffd23f;background:#000a;padding:8px;border:3px solid #000;text-align:center;user-select:text;-webkit-user-select:text}.invurl{font-size:12px!important;user-select:text;-webkit-user-select:text}
+.instb{padding:8px 10px;text-align:left;opacity:.75}.instb.on{opacity:1;border-color:#ffd23f!important;box-shadow:0 0 0 2px #ffd23f}.instb ol{margin:6px 0 0;padding-left:22px;font-size:14px;line-height:1.6}.instb small{color:var(--sub)}.kbd{display:inline-block;background:#fff;color:#222;border-radius:4px;padding:0 5px;font-size:13px}
 .maptier{font-size:14px;color:var(--gold);margin:8px 0 2px;text-align:left;display:flex;align-items:center;justify-content:space-between;gap:6px}.maptier small{color:var(--sub);font-size:12px}.maptier .mwok{color:#ffd23f}.mwbtn{width:auto!important;margin:0!important;padding:4px 8px!important;font-size:13px!important;background:#d9771e;animation:pulse 1s infinite}.mwrew{font-size:11px;color:var(--sub);text-align:left;margin:0 0 4px}.mgift{font-size:22px;animation:pulse 1s infinite;padding:0 4px;white-space:nowrap}.mbadge{background:#e8413c;color:#fff;font-size:12px;padding:2px 5px;margin-right:4px;border-radius:4px}.mrew{display:flex;flex-direction:column;gap:6px;align-items:center;margin:6px 0}.mrit{display:flex;flex-wrap:wrap;gap:4px;justify-content:center}.mri{border:2px solid;padding:2px;display:inline-flex}.mri img{width:28px;height:28px}.mrsp{color:#ffd23f;font-size:14px}.limb.mapl{background:#1f5a3a}.mapa .mclr{color:#5be05b;font-size:18px}
 </style>
 </head>
@@ -618,6 +619,7 @@ input{font:inherit}
     <div id="plist" style="display:flex;flex-direction:column;gap:10px"></div>
     <button class="btn green big" id="addP">＋ あたらしい ぼうけんしゃ</button>
     <button class="btn gray" id="addM">👨‍👩‍👧 おうちの ひと（みんなの ようす）</button>
+    <div class="row"><button class="btn" id="tJoin" style="background:#2a6a9a;font-size:15px">📨 しょうたいコードで つながる</button><button class="btn" id="tInst" style="font-size:15px">📲 ホームに ついか</button></div>
   </div>
 </section>
 
@@ -2243,6 +2245,7 @@ const HELP=[
  ['event','📅 きょうの イベント',`まいにち ちがう ボーナスが あるよ！<br>${EVENTS.map(e=>`${e.i} <b>${e.d}</b>：${e.t}`).join('<br>')}`],
  ['map','🗺️ ワールドマップ',`10ステージごとに あたらしい ばしょに すすむよ。ばしょごとに けしきと でてくる モンスターの ぞくせいが かわる。<br>ホームの マップから、いったことの ある ばしょを えらべるよ。<br>🎁 ばしょの さいごの ステージを クリアすると ゴールド・ふくびきけん・つよい そうびが もらえる。せかいの ばしょを ぜんぶ クリアすると「せいは ほうしゅう」で げんていの しょうごう・オーラ・かぐ（まかい・かみがみは たまごも）！ ♾️ はてしない せかいでは 50ステージごとに もらえるよ。`],
  ['tower','🗼 むげんの とう',`1かいに 1たいずつ たおして、どこまで のぼれるか ちょうせん！ 10かいごとに ボスが いて、たおすと ゴールドと ふくびきけん。<br>HPは すこししか かいふく しないので、そうびを つよくして いこう。さいこう きろくは ランキングにも のるよ。`],
+ ['install','📲 ホームに ついか・かぞく しょうたい',`<b>iPhone・iPad</b>：Safariで ひらく → きょうゆう ボタン □↑ →「ホーム画面に追加」→「追加」。<br><b>Android</b>：Chromeで ひらく → みぎうえの ︙ →「ホーム画面に追加」。<br>かぞくを しょうたい するには「⚙️せってい → ☁️かぞくで きょうゆう → 📨 しょうたい コード・URLを はっこう」。もらった ひとは URLを ひらくか、タイトルの「📨 しょうたいコードで つながる」に コードを いれてね。`],
  ['lane','🏯 ぐんだん バトル',`なかまを くりだして てきの しろを こわす たいせん モード。<br>したの パズルで おなじ いろを 3つ いじょう そろえると ⚡エナジーが たまる（れんさや 4つ そろえで もっと）。エナジーで なかまを だせるよ。<br>なかまの ぞくせいで とくちょうが かわる：🪨かべ（かたい）・⚡✨とおくから こうげき・🔥こうげき つよい・❄️てきを おそくする・🌙はやい・🌿まわりを かいふく。<br>じかんと パズルで 🏰しろほうの ゲージが たまる！ しろほうは 5しゅるい（はどう・こおり・かべ・かみなり・いやし）から えらべて、ゴールドで パワーと チャージを きょうかできるよ。 ⬆️で エナジーの たまる はやさを アップ。はじめて クリアした ステージは そうびが もらえる。`],
  ['ghost','👻 ゴーストバトル',`ぼうけんの とちゅうで、とつぜん かぞくの ぼうけんしゃの「ゴースト」が あらわれる ことが あるよ！ 5もんの はやおし しょうぶ！ ゴーストは その ひとの せいかいりつと こたえる はやさを まねするよ。<br>かつと ゴールドと ふくびきけん 2まい。☁️ かぞくで きょうゆう していると、ほかの たんまつの かぞくの ゴーストも でてくるよ。`],
  ['gacha','🎰 ふくびき',`もんだいに 10かい せいかいするごとに ふくびきけんが 1まい（きんようびは 2まい）。とう・ゴースト・じっせき・ミニゲームでも もらえるよ。<br>そうび・たまご・きせかえ・ゴールド、たまに きゅうきょくの カケラも でる！ 10かい まとめて ひくことも できる。<br>★<b>ふくびき げんてい</b>：ここでしか もらえない きせかえ（せいきしの よろい・ぼうし・オーラ）、なかま（ラッキーキャット・ほしうさぎ・オーロラドラゴン）、かぐ が あるよ。`],
@@ -2302,6 +2305,7 @@ function renderHome(){
 }
 $('who').onclick=()=>profileForm(P);
 $('setBtn').onclick=()=>profileForm(P);
+$('tJoin').onclick=()=>{snd(660,.05);joinByCode()};$('tInst').onclick=()=>{snd(660,.05);installGuide()};
 $('statBtn').onclick=()=>showStats();
 $('helpBtn').onclick=()=>{snd(660,.05);helpOpen()};
 $('mapBtn').onclick=()=>{snd(660,.05);mapOpen()};
@@ -2904,18 +2908,35 @@ async function syncDown(){
       ps.forEach(p=>{p._remote=v.name||'たんまつ';p._upd=v.updated;p.box=[];out.push(ensureP(p))})})}catch(e){console.warn('down',e);return null}
   return out;
 }
+/* ---- 📲 ホームがめんに ついか ---- */
+const isStandalone=()=>matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+const isIOS=()=>/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+let deferredInstall=null;addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstall=e});
+const INSTALL_TXT='【ホーム画面に追加する方法】\n・iPhone/iPad：Safariで開く →（iPhoneは下・iPadは右上の）共有ボタン □↑ →「ホーム画面に追加」→「追加」\n・Android：Chromeで開く → 右上の︙ →「ホーム画面に追加」または「アプリをインストール」\n追加したアイコンから開いて、「⚙️せってい → ☁️かぞくで きょうゆう」にコードを入れてね。';
+function installGuide(after){const ios=isIOS(),st=isStandalone();
+  showModal(`<div class="mt">📲 ホームに ついか</div>${st?'<p style="color:#7bea5a">✅ いまは ホームの アイコンから ひらいているよ</p>':''}
+    ${deferredInstall?'<button class="btn green big" id="inA">📲 いますぐ インストール</button>':''}
+    <div class="panel instb${ios?' on':''}"><b>🍎 iPhone・iPad</b><ol><li><b>Safari</b> で この ページを ひらく</li><li>きょうゆう ボタン <span class="kbd">□↑</span> を おす<br><small>iPhone：したの まんなか／iPad：みぎうえ</small></li><li>「<b>ホーム画面に追加</b>」を えらぶ<br><small>みつからない ときは したに スクロール</small></li><li>みぎうえの「<b>追加</b>」を おす</li></ol></div>
+    <div class="panel instb${!ios?' on':''}"><b>🤖 Android</b><ol><li><b>Chrome</b> で この ページを ひらく</li><li>みぎうえの <span class="kbd">︙</span> を おす</li><li>「<b>ホーム画面に追加</b>」か「<b>アプリを インストール</b>」を えらぶ</li><li>「<b>追加</b>」を おす</li></ol></div>
+    <small style="color:#ffd23f">💡 ホームの アイコンから ひらいたら、「⚙️せってい → ☁️かぞくで きょうゆう」か タイトルの「📨 しょうたいコードで つながる」に コードを いれてね<br>（iPhoneは ブラウザと アプリの データが べつべつ だよ）</small>
+    <button class="btn gray" id="cl">${after?'もどる':'とじる'}</button>`,
+    {inA:async()=>{const e=deferredInstall;deferredInstall=null;e.prompt();try{const r=await e.userChoice;if(r.outcome==='accepted')toast('📲 インストール したよ！')}catch(x){}closeModal()},cl:()=>after?after():closeModal()})}
+function joinByCode(){showModal(`<div class="mt">📨 しょうたいコードで つながる</div><p style="font-size:13px">おうちの ひとから もらった 12もじの コードを いれてね</p>
+  <input class="field" id="jcIn" maxlength="14" placeholder="XXXX-XXXX-XXXX" style="letter-spacing:2px;text-align:center;font-size:20px">
+  <button class="btn green big" id="jcOk">つぎへ</button><button class="btn gray" id="cl">やめる</button>`,
+  {jcOk:()=>{const c=famNorm($('jcIn').value);if(c.length!==12){toast('コードは 12もじ だよ');return}joinInvite(c)},cl:closeModal})}
 /* ---- 📨 しょうたい コード／URL ---- */
 const inviteURL=c=>location.origin+location.pathname.replace(/index\.html$/,'')+'?join='+c;
 function inviteShow(){if(!G.devId){G.devId=uid();store.set('mq1',G)}
   if(!G.fam){G.fam=newFam();G.devName=G.devName||'おうちの たんまつ';store.set('mq1',G);try{syncUp()}catch(e){}}
-  const c=G.fam,url=inviteURL(c),txt=`まなびクエストの かぞく しょうたいです。\nこのURLを ひらくか、アプリの「かぞくで きょうゆう」に コードを いれてね。\nコード：${famFmt(c)}\n${url}`;
+  const c=G.fam,url=inviteURL(c),txt=`まなびクエストの かぞく しょうたいです🎮\n① このURLを ひらく\n${url}\n② ホーム画面に追加する\n③ アイコンから ひらいて コードを いれる\nしょうたいコード：${famFmt(c)}\n\n${INSTALL_TXT}`;
   showModal(`<div class="mt">📨 しょうたい コード</div><p style="font-size:13px">かぞくの たんまつで ひらくと、おなじ かぞくとして つながるよ</p>
     <div class="invcode">${famFmt(c)}</div><button class="btn" id="ivC">📋 コードを コピー</button>
-    <input class="field invurl" id="ivU" readonly value="${esc(url)}"><button class="btn" id="ivL">🔗 URLを コピー</button>
+    <input class="field invurl" id="ivU" readonly value="${esc(url)}"><button class="btn" id="ivL">🔗 URLを コピー</button><button class="btn" id="ivT">📝 せつめいぶんごと コピー（ホームに ついかする ほうほう つき）</button><button class="btn" id="ivH" style="background:#2a6a9a">📲 ホームに ついかする ほうほうを みる</button>
     ${navigator.share?'<button class="btn green big" id="ivS">📤 LINEなどで おくる</button>':''}
     <small style="color:#ffb020">⚠ このコードを しっている ひとは かぞくの きろくが みられます。かぞく いがいには おしえないでね</small>
     <button class="btn gray" id="cl">とじる</button>`,
-    {ivC:()=>copyTxt(famFmt(c),'コードを コピーしたよ'),ivL:()=>copyTxt(url,'URLを コピーしたよ'),ivS:()=>navigator.share({title:'まなびクエスト かぞく しょうたい',text:txt,url}).catch(()=>{}),cl:closeModal})}
+    {ivC:()=>copyTxt(famFmt(c),'コードを コピーしたよ'),ivL:()=>copyTxt(url,'URLを コピーしたよ'),ivT:()=>copyTxt(txt,'せつめいぶんを コピーしたよ'),ivH:()=>installGuide(inviteShow),ivS:()=>navigator.share({title:'まなびクエスト かぞく しょうたい',text:txt,url}).catch(()=>{}),cl:closeModal})}
 function copyTxt(t,msg){const ok=()=>toast('📋 '+msg);try{navigator.clipboard.writeText(t).then(ok,()=>{fallback()})}catch(e){fallback()}
   function fallback(){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy');ok()}catch(e){toast('コピー できなかったよ')}a.remove()}}
 function joinInvite(c){if(G.fam===c){toast('もう この かぞくに つながっているよ');return}
@@ -2924,7 +2945,7 @@ function joinInvite(c){if(G.fam===c){toast('もう この かぞくに つなが
     <div class="lbl">この たんまつの なまえ</div><input class="field" id="jnName" maxlength="12" value="${esc(G.devName||'')}" placeholder="れい：はなこの タブレット">
     <button class="btn green big" id="jnOk">つながる！</button><button class="btn gray" id="cl">やめる</button>`,
     {jnOk:async()=>{if(!G.devId)G.devId=uid();G.fam=c;G.devName=$('jnName').value.trim()||'たんまつ';store.set('mq1',G);closeModal();
-      if(!FB_CONFIG){toast('ほぞんしたよ');return}toast('どうき ちゅう…');const ok=await syncUp();toast(ok?'☁️ かぞくに つながったよ！':'ほぞんしたよ（ネットに つながったら どうき するよ）');fxConfetti(50)},cl:closeModal})}
+      if(!FB_CONFIG){toast('ほぞんしたよ');return}toast('どうき ちゅう…');const ok=await syncUp();toast(ok?'☁️ かぞくに つながったよ！':'ほぞんしたよ（ネットに つながったら どうき するよ）');fxConfetti(50);if(!isStandalone())setTimeout(()=>installGuide(),1200)},cl:closeModal})}
 function cloudSetup(){
   if(!G.devId){G.devId=uid();store.set('mq1',G)}
   const on=!!G.fam;
@@ -3273,7 +3294,7 @@ $('quit').onclick=()=>{if(!B||B.lock)return;B.lock=true;
 setTimeout(()=>{try{if(FB_CONFIG&&G.fam)syncUp()}catch(e){}},3000);
 if(G.profiles.some(p=>p.master)){G.profiles=G.profiles.filter(p=>!p.master);if(!G.profiles.some(p=>p.id===G.cur))G.cur=null;save()}
 if(G.cur&&G.profiles.find(p=>p.id===G.cur))selectProfile(G.cur);else{show('players');renderPlayers()}
-{try{const jc=new URLSearchParams(location.search).get('join');if(jc){history.replaceState(null,'',location.pathname);const c=famNorm(jc);if(c.length===12)setTimeout(()=>joinInvite(c),900);else toast('しょうたい コードが ただしくないよ')}}catch(e){}}
+{try{const jc=new URLSearchParams(location.search).get('join');if(jc){if(isStandalone())history.replaceState(null,'',location.pathname);const c=famNorm(jc);if(c.length===12)setTimeout(()=>joinInvite(c),900);else toast('しょうたい コードが ただしくないよ')}}catch(e){}}
 /* ===== タブレット たいおう：がめんの おおきさに あわせて ぜんたいを かくだい ===== */
 function fitScale(){const w=innerWidth,h=innerHeight,z=Math.max(1,Math.min(w/440,h/800,2.2));document.body.style.zoom=z>1.02?z:'';
   $('app').style.height=z>1.02?(h/z)+'px':'';document.documentElement.style.setProperty('--z',z);document.documentElement.style.setProperty('--zf',z>1.02?z:1)}
