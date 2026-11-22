@@ -1045,7 +1045,7 @@ function makeItem(st,d,boss,min=0){
 /* =============== save data =============== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-const APPV='v78';
+const APPV='v79';
 try{const c=document.createElement('canvas');c.width=9;c.height=9;const g=c.getContext('2d'),F=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};F(1,0,7,1,'#120d09');F(1,8,7,1,'#120d09');F(0,1,1,7,'#120d09');F(8,1,1,7,'#120d09');F(1,1,7,1,'#120d09');F(1,7,7,1,'#120d09');F(1,1,1,7,'#120d09');F(7,1,1,7,'#120d09');F(2,2,5,1,'#7a6a52');F(2,2,1,5,'#7a6a52');F(2,6,5,1,'#2a2018');F(6,2,1,5,'#2a2018');document.documentElement.style.setProperty('--pxf',`url(${c.toDataURL()})`)}catch(e){}
 const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));if(G.bgmOn===undefined)G.bgmOn=true;
 let P=null;
@@ -1433,7 +1433,10 @@ function say(t,lang){try{if(!t)return;speechSynthesis.cancel();const u=new Speec
 function anim(el,cls,ms){el.classList.remove(cls);void el.offsetWidth;el.classList.add(cls);setTimeout(()=>el.classList.remove(cls),ms)}
 function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('on',s.id===id));try{if(typeof bgmFor==='function'&&BG.cur!==null||G.bgmOn)bgmFor(id)}catch(e){}}
 let toastT;function toast(t){const el=$('toast');el.textContent=t;el.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove('on'),1800)}
-function showModal(html,h={},cls=''){$('mbox').className='mbox panel '+cls;$('mbox').innerHTML=html;$('modal').classList.add('on');
+function showModal(html,h={},cls=''){const mb=$('mbox'),wasOn=$('modal').classList.contains('on'),oldT=wasOn&&mb.querySelector('.mt')?mb.querySelector('.mt').textContent:null,keep={};
+  if(wasOn){keep._=mb.scrollTop;mb.querySelectorAll('*').forEach(e=>{if(e.scrollTop>0&&e.className)keep[e.className]=e.scrollTop})}
+  mb.className='mbox panel '+cls;mb.innerHTML=html;$('modal').classList.add('on');
+  {const nt=mb.querySelector('.mt');if(wasOn&&oldT!=null&&nt&&nt.textContent===oldT){mb.style.animation='none';mb.scrollTop=keep._||0;for(const c in keep){if(c==='_')continue;const e=mb.getElementsByClassName(c.split(' ')[0])[0];if(e)e.scrollTop=keep[c]}}else mb.style.animation=''}
   {const ch=$('mbox').querySelector('.chest:not(.nofx)');if(ch)setTimeout(()=>{fxAt(ch,{n:26,colors:['#fff','#ffd23f','#ffe680','#7af0ff'],shape:'star',spd:6,size:8,grav:.08,life:45});const r=ch.getBoundingClientRect();fxRing(r.left+r.width/2,r.top+r.height/2,'#ffd23f',110);if(/🏆|👑|🎉|クリア|しょうり|ゲット|てにいれた/.test(html))fxConfetti(70)},120)}
   Object.keys(h).forEach(k=>{const b=$(k);if(b)b.onclick=()=>{snd(660,.05);h[k]()}})}
 function closeModal(){$('modal').classList.remove('on')}
