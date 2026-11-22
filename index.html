@@ -677,6 +677,7 @@ input{font:inherit}
 .arena .hero{left:-7%!important}.arena .mon{bottom:35%!important}
 .hud .mslots{grid-template-columns:repeat(5,minmax(0,1fr))!important}.hud .mslots .ms{width:auto!important;min-width:0!important;max-width:100%;box-sizing:border-box}.hud .mslots .ms img{max-width:100%;max-height:100%;object-fit:contain}
 .arena .hero{left:1%!important}
+.arena{overflow:hidden}.arena .hero .hs{width:min(34cqw,26cqh)!important}.arena .hero{left:0!important;bottom:calc(min(34cqw,26cqh) * -.3)!important}
 </style>
 </head>
 <body>
@@ -1085,7 +1086,7 @@ function makeItem(st,d,boss,min=0){
 /* =============== save data =============== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-const APPV='v109';
+const APPV='v110';
 try{const c=document.createElement('canvas');c.width=9;c.height=9;const g=c.getContext('2d'),F=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};F(1,0,7,1,'#120d09');F(1,8,7,1,'#120d09');F(0,1,1,7,'#120d09');F(8,1,1,7,'#120d09');F(1,1,7,1,'#120d09');F(1,7,7,1,'#120d09');F(1,1,1,7,'#120d09');F(7,1,1,7,'#120d09');F(2,2,5,1,'#7a6a52');F(2,2,1,5,'#7a6a52');F(2,6,5,1,'#2a2018');F(6,2,1,5,'#2a2018');document.documentElement.style.setProperty('--pxf',`url(${c.toDataURL()})`)}catch(e){}
 const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));if(G.bgmOn===undefined)G.bgmOn=true;
 let P=null;
