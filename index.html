@@ -696,6 +696,11 @@ input{font:inherit}
 .q .coins{display:flex;flex-wrap:wrap;justify-content:center;gap:3px;max-width:320px;margin:0 auto}.q .coin{width:clamp(30px,9vw,42px);height:auto}.q .coin.bill{width:clamp(60px,18vw,84px)}.wpq .coin{width:30px;vertical-align:middle}.wpq .coin.bill{width:64px}
 .q .wpq{display:block;font-size:clamp(17px,4.8vw,24px);line-height:1.6;text-align:left;padding:0 6px;font-family:'M PLUS Rounded 1c',sans-serif}.q .wpq b{color:#ffd23f}
 .nq .clk{width:110px}.nq .coin{width:28px}.nq .coin.bill{width:56px}.nq .wpq{font-size:15px}.nq .sm{display:block;font-size:13px}
+.wrbody{align-items:center;gap:8px}.wrprompt{font-size:22px;text-align:center;min-height:34px}.wrprompt b{font-size:30px;color:#ffd23f;font-family:'Klee One',serif}.wrem{font-size:28px}
+.wrpad{position:relative;width:min(92vw,340px);aspect-ratio:1;margin:0 auto}.wrpad canvas{display:block;border-radius:12px;border:4px solid #c0302a;box-shadow:0 4px 0 rgba(0,0,0,.35);touch-action:none}
+.wrstep{position:absolute;top:6px;left:8px;font-size:12px;padding:2px 8px;border-radius:8px;color:#fff}.wrstep.s0{background:#3a7ad9}.wrstep.s1{background:#e8413c}
+.wrbtns{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;width:min(92vw,340px)}.wrbtns .btn{font-size:14px;padding:8px 2px}#wrOk{width:min(92vw,340px)}.wrmsg{min-height:44px;text-align:center;font-size:16px}
+.wrsets{display:flex;flex-direction:column;gap:8px;margin:8px 0}.wrsets .btn{font-size:18px}.wrsets small{display:block;font-size:12px;opacity:.85}
 </style>
 </head>
 <body>
@@ -766,6 +771,7 @@ input{font:inherit}
     <div class="row hgrid">
       <button class="btn" id="weakBtn">📕 にがて <span id="weakN">0</span></button>
       <button class="btn" id="noteBtn">📒 ノート</button>
+      <button class="btn" id="wrBtn">✍️ かきとり</button>
       <button class="btn" id="statBtn">📊 きろく</button>
       <button class="btn" id="rankBtn">🏆 ランキング</button>
       <button class="btn" id="famBtn" style="background:#2a6a9a">👀 みんなの ようす</button>
@@ -848,6 +854,16 @@ input{font:inherit}
   <div class="lnultg"><i id="lnUltG"></i></div>
   <div class="lncards" id="lnCards"></div>
   <div class="lnpzw" id="lnPzW"><div class="lnpz" id="lnPz"></div></div>
+</section>
+<section id="write" class="screen">
+  <header class="hud"><button class="btn x" id="wrBack">✕</button><div style="font-size:17px">✍️ かきとり</div><div class="pill" id="wrLeft"></div></header>
+  <div class="homebody wrbody">
+    <div class="wrprompt" id="wrP"></div>
+    <div class="wrpad"><canvas id="wrC"></canvas><div class="wrstep" id="wrS"></div></div>
+    <div class="wrbtns"><button class="btn gray" id="wrUndo">↩️ もどす</button><button class="btn gray" id="wrClr">🧽 けす</button><button class="btn" id="wrHint" style="background:#3a7ad9">👀 ヒント</button></div>
+    <button class="btn orange big" id="wrOk">✅ できた！</button>
+    <div class="wrmsg" id="wrM"></div>
+  </div>
 </section>
 <section id="study" class="screen">
   <header class="hud"><button class="btn x" id="sdBack">✕</button><div style="font-size:17px">📕 にがて とっくん</div><div class="pill" id="sdLeft"></div></header>
@@ -1144,7 +1160,7 @@ function makeItem(st,d,boss,min=0){
 /* =============== save data =============== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-const APPV='v118';
+const APPV='v119';
 try{const c=document.createElement('canvas');c.width=9;c.height=9;const g=c.getContext('2d'),F=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};F(1,0,7,1,'#120d09');F(1,8,7,1,'#120d09');F(0,1,1,7,'#120d09');F(8,1,1,7,'#120d09');F(1,1,7,1,'#120d09');F(1,7,7,1,'#120d09');F(1,1,1,7,'#120d09');F(7,1,1,7,'#120d09');F(2,2,5,1,'#7a6a52');F(2,2,1,5,'#7a6a52');F(2,6,5,1,'#2a2018');F(6,2,1,5,'#2a2018');document.documentElement.style.setProperty('--pxf',`url(${c.toDataURL()})`)}catch(e){}
 const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));if(G.bgmOn===undefined)G.bgmOn=true;
 let P=null;
@@ -1651,6 +1667,62 @@ $('addP').onclick=()=>profileForm(null);
 $('addM').onclick=()=>{snd(660,.05);showAdmin()};
 $('famBtn').onclick=()=>{snd(660,.05);showAdmin()};
 $('noteBtn').onclick=()=>{snd(660,.05);noteOpen()};
+/* ---- ✍️ かきとり（なぞって → みないで かく） ---- */
+const WSETS=[{k:'kana',n:'ひらがな',lv:0,list:()=>KANA.map(c=>[c,c,''])},{k:'k1',n:'1ねんの かんじ',lv:2,list:()=>K1.map(x=>[x[0],x[1],x[2]||''])},{k:'k2',n:'2ねんの かんじ',lv:3,list:()=>K2.map(x=>[x[0],x[1],x[2]||''])}];
+let WR=null;
+function writeMenu(){const al=ageLv(),W=P.write||(P.write={});
+  showModal(`<div class="mt">✍️ かきとり</div><p style="font-size:13px">ゆびで もじを かく れんしゅう！<br>① うすい もじを <b>なぞる</b> → ② <b>みないで かく</b></p>
+    <div class="wrsets">${WSETS.map(w=>{const L=w.list(),done=L.filter(x=>(W[x[0]]||0)>=1).length;return `<button class="btn ${w.lv<=al?'orange':'gray'}" data-ws="${w.k}">${w.n}<small>おぼえた ${done}/${L.length}</small></button>`}).join('')}</div>
+    <button class="btn gray" id="cl">とじる</button>`,{cl:closeModal});
+  document.querySelectorAll('[data-ws]').forEach(b=>b.onclick=()=>{closeModal();writeStart(b.dataset.ws)})}
+function writeStart(k){const set=WSETS.find(w=>w.k===k),W=P.write||(P.write={}),L=set.list();
+  const pool=shuffle(L.filter(x=>(W[x[0]]||0)<1)).concat(shuffle(L.filter(x=>(W[x[0]]||0)>=1))).slice(0,8);
+  WR={set:k,q:pool,i:0,step:0,ok:0,strokes:[],cur:null};show('write');writeSetup();writeNext(true)}
+function writeSetup(){const c=$('wrC');if(c._ok)return;c._ok=1;const pos=e=>{const r=c.getBoundingClientRect(),t=e.touches?e.touches[0]:e;return[(t.clientX-r.left)*c.width/r.width,(t.clientY-r.top)*c.height/r.height]};
+  const st=e=>{if(!WR)return;e.preventDefault();WR.cur=[pos(e)];WR.strokes.push(WR.cur);writeDraw()},mv=e=>{if(!WR||!WR.cur)return;e.preventDefault();WR.cur.push(pos(e));writeDraw()},en=()=>{if(WR)WR.cur=null};
+  c.addEventListener('pointerdown',st);c.addEventListener('pointermove',mv);window.addEventListener('pointerup',en);c.style.touchAction='none';
+  $('wrBack').onclick=()=>{WR=null;goHome()};$('wrClr').onclick=()=>{WR.strokes=[];writeDraw()};$('wrUndo').onclick=()=>{WR.strokes.pop();writeDraw()};
+  $('wrHint').onclick=()=>{WR.hint=Date.now();writeDraw();setTimeout(writeDraw,1300)};$('wrOk').onclick=writeJudge}
+const wFont=n=>`600 ${n}px 'Klee One','Hiragino Mincho ProN',serif`;
+function writeNext(first){const c=$('wrC'),sz=Math.round(Math.min(c.parentNode.clientWidth,340));c.width=c.height=sz*2;c.style.width=c.style.height=sz+'px';
+  if(WR.i>=WR.q.length){writeEnd();return}const [ch,rd,em]=WR.q[WR.i];WR.strokes=[];WR.hint=0;
+  $('wrLeft').textContent=`${WR.i+1} / ${WR.q.length}`;
+  $('wrP').innerHTML=WR.step===0?`<b>${ch}</b> を なぞろう`:`<span class="wrem">${em}</span>「<b>${rd}</b>」を かこう`;
+  $('wrS').textContent=WR.step===0?'① なぞる':'② みないで かく';$('wrS').className='wrstep s'+WR.step;$('wrM').innerHTML='';
+  if(WR.step===0)try{say(rd,'ja-JP')}catch(e){}
+  (document.fonts&&document.fonts.load?document.fonts.load(wFont(100),ch):Promise.resolve()).catch(()=>{}).then(()=>{WR.mask=writeMask(ch,c.width);WR.gimg=writeGuide(WR.mask,c.width);writeDraw()})}
+function writeGuide(m,S){const o=document.createElement('canvas');o.width=o.height=S;const x=o.getContext('2d'),im=x.createImageData(S,S);for(let i=0;i<S*S;i++)if(m[i]){im.data[i*4]=120;im.data[i*4+1]=160;im.data[i*4+2]=220;im.data[i*4+3]=255}x.putImageData(im,0,0);return o}
+function writeMask(ch,S){const o=document.createElement('canvas');o.width=o.height=S;const x=o.getContext('2d');x.fillStyle='#000';x.textAlign='center';x.textBaseline='middle';x.font=wFont(S*.78);x.fillText(ch,S/2,S*.53);
+  let d=x.getImageData(0,0,S,S).data,a=S,b=S,c=0,e=0;for(let i=0;i<S*S;i++)if(d[i*4+3]>100){const X=i%S,Y=(i/S)|0;if(X<a)a=X;if(Y<b)b=Y;if(X>c)c=X;if(Y>e)e=Y}
+  if(c>a){const dx=Math.round(S/2-(a+c)/2),dy=Math.round(S/2-(b+e)/2);x.clearRect(0,0,S,S);x.fillText(ch,S/2+dx,S*.53+dy);d=x.getImageData(0,0,S,S).data}
+  const m=new Uint8Array(S*S);for(let i=0;i<S*S;i++)m[i]=d[i*4+3]>100?1:0;return m}
+function writeDraw(){const c=$('wrC'),x=c.getContext('2d'),S=c.width;x.clearRect(0,0,S,S);x.fillStyle='#fffaf0';x.fillRect(0,0,S,S);
+  x.strokeStyle='#e8c8b0';x.lineWidth=2;x.setLineDash([10,10]);x.beginPath();x.moveTo(S/2,0);x.lineTo(S/2,S);x.moveTo(0,S/2);x.lineTo(S,S/2);x.stroke();x.setLineDash([]);
+  const [ch]=WR.q[WR.i]||[''];if(WR.gimg&&(WR.step===0||(WR.hint&&Date.now()-WR.hint<1200))){x.globalAlpha=WR.step===0?.35:.25;x.drawImage(WR.gimg,0,0);x.globalAlpha=1}
+  x.strokeStyle='#2a1a10';x.lineCap=x.lineJoin='round';x.lineWidth=S*.055;WR.strokes.forEach(st=>{x.beginPath();st.forEach(([a,b],i)=>i?x.lineTo(a,b):x.moveTo(a,b));if(st.length===1)x.lineTo(st[0][0]+.1,st[0][1]);x.stroke()})}
+/* compare ink with the glyph: how much ink lands on the letter, and how much of the letter got covered */
+function writeScore(){const S=$('wrC').width,G=WR.mask;if(!G)return{p:0,r:0};
+  const o=document.createElement('canvas');o.width=o.height=S;const x=o.getContext('2d');x.lineCap=x.lineJoin='round';x.strokeStyle='#000';x.lineWidth=S*.055;
+  let pts=WR.strokes.flat();if(!pts.length)return{p:0,r:0};
+  let tf=p=>p;if(WR.step===1){/* free writing: fit the ink box to the letter box */const bb=(f)=>{let a=1e9,b=1e9,c=-1e9,d=-1e9;f((X,Y)=>{if(X<a)a=X;if(Y<b)b=Y;if(X>c)c=X;if(Y>d)d=Y});return[a,b,c,d]};
+    const ib=bb(cb=>pts.forEach(([X,Y])=>cb(X,Y))),gb=bb(cb=>{for(let i=0;i<S*S;i+=3)if(G[i])cb(i%S,(i/S)|0)});const iw=Math.max(20,ib[2]-ib[0]),ih=Math.max(20,ib[3]-ib[1]),gw=gb[2]-gb[0],gh=gb[3]-gb[1],k=Math.min(gw/iw,gh/ih)*1.0,kx=gw/iw,ky=gh/ih,ks=Math.sqrt(kx*ky);
+    tf=([X,Y])=>[gb[0]+gw/2+(X-(ib[0]+iw/2))*Math.min(kx,ks*1.6),gb[1]+gh/2+(Y-(ib[1]+ih/2))*Math.min(ky,ks*1.6)]}
+  WR.strokes.forEach(st=>{x.beginPath();st.map(tf).forEach(([a,b],i)=>i?x.lineTo(a,b):x.moveTo(a,b));if(st.length===1){const[a,b]=tf(st[0]);x.lineTo(a+.1,b)}x.stroke()});
+  const d=x.getImageData(0,0,S,S).data,R2=Math.round(S*(WR.tol||.035));let ink=0,inG=0,gN=0,gC=0;
+  const near=(arr,i,rad,test)=>{const X=i%S,Y=(i/S)|0;for(let dy=-rad;dy<=rad;dy+=Math.max(1,rad>>1))for(let dx=-rad;dx<=rad;dx+=Math.max(1,rad>>1)){const xx=X+dx,yy=Y+dy;if(xx>=0&&yy>=0&&xx<S&&yy<S&&test(yy*S+xx))return true}return false};
+  for(let i=0;i<S*S;i+=7){const on=d[i*4+3]>60;if(on){ink++;if(near(G,i,R2,j=>G[j]))inG++}if(G[i]){gN++;if(near(d,i,R2,j=>d[j*4+3]>60))gC++}}
+  return{p:ink?inG/ink:0,r:gN?gC/gN:0}}
+function writeJudge(){if(!WR||!WR.strokes.length){toast('ゆびで かいてね');return}const sc=writeScore(),[ch,rd]=WR.q[WR.i],need=WR.step===0?[.85,.85]:[.78,.8],ok=sc.p>=need[0]&&sc.r>=need[1];
+  const pct=Math.round(Math.min(sc.p/need[0],sc.r/need[1],1.2)*80);
+  try{record({key:'w'+ch,a:ch,html:`✍️ ${ch}`,subj:'kanji'},ok,5)}catch(e){}
+  if(ok){sfxDo('correct');fxAt($('wrC'),{n:20,colors:['#ffd23f','#fff','#5be36a'],spd:5});
+    if(WR.step===0){$('wrM').innerHTML=`⭕ じょうず！ つぎは みないで かいてみよう`;WR.step=1;setTimeout(()=>writeNext(),900)}
+    else{WR.ok++;const W=P.write||(P.write={});W[ch]=(W[ch]||0)+1;P.total++;P.todayCorrect=(P.todayCorrect||0)+1;save();$('wrM').innerHTML=`🎉 「${ch}」 かけたね！`;WR.step=0;WR.i++;setTimeout(()=>writeNext(),1000)}}
+  else{snd(200,.2,'square',.05);$('wrM').innerHTML=`${sc.r<need[1]?'もう すこし ぜんぶ かこう':'はみだしちゃった かも'}… <small>（${pct}てん）</small><br><small>「👀 ヒント」で おてほんが みられるよ</small>`;
+    if(WR.step===1){WR.miss=(WR.miss||0)+1;if(WR.miss>=3){WR.miss=0;WR.step=0;$('wrM').innerHTML+='<br><small>もういちど なぞって れんしゅう しよう</small>';setTimeout(()=>writeNext(),1400)}}}}
+function writeEnd(){const n=WR.ok,g=Math.round(n*15*Math.max(1,DMULT[mixLv()]));P.gold+=g;try{gainXp(n*10)}catch(e){}save();fanfare();const k=WR.set;WR=null;
+  showModal(`<div class="chest">✍️</div><div class="mt">かきとり おわり！</div><p>${n}もじ かけたよ！<br>ごほうび <b class="goldt">🪙+${g}</b></p><button class="btn orange big" id="ag">もういちど</button><button class="btn gray" id="hm">ホームへ</button>`,{ag:()=>{closeModal();writeStart(k)},hm:()=>{closeModal();goHome()}})}
+$('wrBtn').onclick=()=>{snd(660,.05);writeMenu()};
 /* ---- 📒 まちがいノート ---- */
 function noteRec(q,ok,chosen){if(!P||!q||!q.key)return;const N=P.note||(P.note=[]);let e=N.find(x=>x.k===q.key);
   if(!ok&&chosen!=null&&e&&Date.now()-e.t<3000){e.c=chosen;return}
@@ -1755,7 +1827,7 @@ function piURL(n){const [pal,rows]=PIX[n],cells=[],set=new Set(),m=new Map();row
 const pi=(n,c='')=>{const k='pi|'+n;if(!IMGC[k])IMGC[k]=piURL(n);return `<img class="pi ${c}" src="${IMGC[k]}" alt="">`};
 function pixHome(){
   const set=(id,ic,txt)=>{const e=$(id);if(e)e.innerHTML=pi(ic)+txt};
-  set('weakBtn','book',`にがて <span id="weakN">${P?P.weak.length:0}</span>`);set('statBtn','chart','きろく');set('noteBtn','book','ノート');set('famBtn','person','みんな');
+  set('weakBtn','book',`にがて <span id="weakN">${P?P.weak.length:0}</span>`);set('statBtn','chart','きろく');set('noteBtn','book','ノート');{const e=$('wrBtn');if(e)e.innerHTML='✍️ かきとり'}set('famBtn','person','みんな');
   set('rankBtn','trophy','ランキング');
   const dk=(id,ic,t,badge)=>{const e=$(id);if(e)e.innerHTML=pi(ic)+`<i>${t}</i>`+(badge?`<b class="dkb">${badge}</b>`:'')};
   dk('towerBtn','tower','とう',P&&P.tower&&P.tower.best?P.tower.best+'F':'');dk('gachaBtn','gacha','ふくびき',P&&P.tk?P.tk:'');dk('roomBtn','house','へや');dk('achBtn','medal','じっせき',P&&achClaimable()?achClaimable():'');dk('boxBtn','box','ボックス',P&&P.mons.some(evoReady)?'✨':'');dk('shopBtn','bag','ショップ');dk('laneBtn','swords','ぐんだん',P?('🎫'+ltDaily()):'');dk('giftBtn','gift','コード');{const t=$('hdTop');if(t)t.innerHTML=pi('door')+'<i>トップ</i>'}set('setBtn','gear','せってい');set('helpBtn','help','ヘルプ');
@@ -3421,7 +3493,7 @@ function catOf(subj,key){
     if(op==='×')return x<10&&y<10?`かけざん ${x}のだん`:'かけざん（2けた×1けた）';
     return 'わりざん'}
   if(subj==='eng')return {el:'きいて えらぶ',ep:'え→えいたんご',ej:'にほんご→えいご',es:'つづり',ee:'えいご→にほんご',e4:'ようび・つき・てんき',e5:'ぶんを かんせい',e6:'かこの ことば'}[key.slice(0,2)]||'えいご';
-  if(key.startsWith('h'))return 'ひらがな';if(key.startsWith('k1p'))return 'かんじ1年（え→かんじ）';
+  if(/^w/.test(key))return 'かきとり';if(key.startsWith('h'))return 'ひらがな';if(key.startsWith('k1p'))return 'かんじ1年（え→かんじ）';
   const k=key.match(/^k([2-7])/);return k?{2:'かんじ1年（よみ）',3:'かんじ2年（よみ）',4:'かんじ3年（じゅくご）',5:'かんじ4年（よみ）',6:'かんじ5年（よみ）',7:'かんじ6年（よみ）'}[k[1]]:'こくご';
 }
 function record(q,ok,t){try{noteRec(q,ok)}catch(e){}
