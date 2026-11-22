@@ -870,7 +870,8 @@ const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v)
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 const G=Object.assign({profiles:[],cur:null,snd:true},store.get('mq1',{}));
 let P=null;
-const autoFav=p=>{if(p&&p.party&&p.party[0]&&p.mons){const m0=p.mons.find(m=>m.id===p.party[0]);if(m0)m0.fav=true}};
+/* しゅるいごとに さいしょに ゲットした 1たいは じどうで おきにいり */
+const autoFav=p=>{if(!p||!p.mons)return;const seen=new Set();p.mons.forEach(m=>{if(!seen.has(m.sp)){seen.add(m.sp);m.fav=true}})};
 const save=()=>{if(P&&!Number.isFinite(P.gold))P.gold=0;autoFav(P);store.set('mq1',G);try{queueSync()}catch(e){}};
 const COLORS=['#d94a4a','#3a7bd5','#3fa34d','#e08a1e','#c25bc4','#20a5a5'];
 const HAIRS=[['short','みじかい'],['long','ながい'],['pony','ポニー'],['spiky','ツンツン']];
