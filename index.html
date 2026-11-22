@@ -636,6 +636,10 @@ input{font:inherit}
 .fighter.flourish>.in{animation:flourish .9s}@keyframes flourish{20%{transform:rotate(-8deg) translateY(-4px)}45%{transform:rotate(10deg) scale(1.05)}70%{transform:rotate(-4deg)}}.fighter.lookaround>.in{animation:lookaround .9s}@keyframes lookaround{25%,40%{transform:scaleX(-1)}60%,100%{transform:none}}.fighter.hopsm>.in{animation:hopsm .6s}@keyframes hopsm{30%{transform:translateY(-14px)}60%{transform:translateY(0) scale(1.05,.95)}}
 .fighter.victory>.in{animation:victory 1.2s}@keyframes victory{15%{transform:translateY(-30px) rotate(-10deg)}35%{transform:translateY(-40px) rotate(360deg)}55%{transform:translateY(0) scale(1.1,.9)}70%{transform:translateY(-12px)}85%{transform:none}}
 .lnfield.lnnight::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 85% 60%,transparent 18%,rgba(5,5,30,.72) 55%);pointer-events:none;z-index:24}.lgim{background:#2a1a3a;border:2px solid #000;padding:4px 8px;color:#ffd23f}.lgim small{display:block;color:var(--sub);font-size:11px}
+.hroom{display:flex;gap:10px;align-items:stretch;padding:6px!important;background:#5a3a2a;border:3px solid #000;box-shadow:0 4px 0 #0008,inset 0 0 0 2px #ffffff22;cursor:pointer;flex-shrink:0;text-align:left;color:#fff;clip-path:polygon(3px 0,calc(100% - 3px) 0,100% 3px,100% calc(100% - 3px),calc(100% - 3px) 100%,3px 100%,0 calc(100% - 3px),0 3px)}.hroom:active{transform:translateY(3px)}
+.hrbox{position:relative;width:46%;aspect-ratio:4/3;flex:none;border:3px solid #000;overflow:hidden;image-rendering:pixelated}.hrbox.night::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 40% 70%,rgba(255,200,120,.2),transparent 50%),rgba(10,15,60,.45)}.hrf{position:absolute;image-rendering:pixelated;filter:drop-shadow(0 2px 0 rgba(0,0,0,.3))}.hrf.rm-rug{z-index:1}.hrf{z-index:2}
+.hrm{position:absolute;bottom:6%;width:18%;z-index:4;font-style:normal;animation:hrwalk 5s ease-in-out infinite}.hrm img{width:100%;display:block}@keyframes hrwalk{0%,100%{transform:translateX(0)}50%{transform:translateX(30%) scaleX(-1)}}
+.hrtx{flex:1;display:flex;flex-direction:column;gap:3px;justify-content:center;min-width:0}.hrtx b{font-size:15px}.hrtx small{font-size:11px;color:#ffd23f}.hrgo{margin-top:auto;align-self:flex-end;background:#3a7a4a;border:2px solid #000;padding:3px 8px;font-size:13px}
 .maptier{font-size:14px;color:var(--gold);margin:8px 0 2px;text-align:left;display:flex;align-items:center;justify-content:space-between;gap:6px}.maptier small{color:var(--sub);font-size:12px}.maptier .mwok{color:#ffd23f}.mwbtn{width:auto!important;margin:0!important;padding:4px 8px!important;font-size:13px!important;background:#d9771e;animation:pulse 1s infinite}.mwrew{font-size:11px;color:var(--sub);text-align:left;margin:0 0 4px}.mgift{font-size:22px;animation:pulse 1s infinite;padding:0 4px;white-space:nowrap}.mbadge{background:#e8413c;color:#fff;font-size:12px;padding:2px 5px;margin-right:4px;border-radius:4px}.mrew{display:flex;flex-direction:column;gap:6px;align-items:center;margin:6px 0}.mrit{display:flex;flex-wrap:wrap;gap:4px;justify-content:center}.mri{border:2px solid;padding:2px;display:inline-flex}.mri img{width:28px;height:28px}.mrsp{color:#ffd23f;font-size:14px}.limb.mapl{background:#1f5a3a}.mapa .mclr{color:#5be05b;font-size:18px}
 </style>
 </head>
@@ -676,6 +680,7 @@ input{font:inherit}
     <button class="lanecard" id="hLane"></button>
     <button class="btn hraid" id="hRaid"></button>
     <div class="row hqrow"><button class="btn hqbtn" id="hQuest"></button><button class="btn hxbtn" id="hXmas"></button></div>
+    <button class="hroom" id="hRoom"></button>
     <div class="panel show">
       <div class="slots" id="hSlotsL"></div>
       <div class="herobox"><div class="ttl" id="hTitle"></div>
@@ -1040,7 +1045,7 @@ function makeItem(st,d,boss,min=0){
 /* =============== save data =============== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-const APPV='v77';
+const APPV='v78';
 try{const c=document.createElement('canvas');c.width=9;c.height=9;const g=c.getContext('2d'),F=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};F(1,0,7,1,'#120d09');F(1,8,7,1,'#120d09');F(0,1,1,7,'#120d09');F(8,1,1,7,'#120d09');F(1,1,7,1,'#120d09');F(1,7,7,1,'#120d09');F(1,1,1,7,'#120d09');F(7,1,1,7,'#120d09');F(2,2,5,1,'#7a6a52');F(2,2,1,5,'#7a6a52');F(2,6,5,1,'#2a2018');F(6,2,1,5,'#2a2018');document.documentElement.style.setProperty('--pxf',`url(${c.toDataURL()})`)}catch(e){}
 const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));if(G.bgmOn===undefined)G.bgmOn=true;
 let P=null;
@@ -2384,6 +2389,11 @@ function roomBgURL(W,F){const key='rbg|'+W[0]+'|'+F[0];if(IMGC[key])return IMGC[
   let y=WY,rh=4,row=0;while(y<h){const off=(row*13)%24;for(let x=-off;x<w;x+=24){const v=((x*7+row*11)%5)/30;R_(x,y,24,rh,mixc(fa,[255,255,255],v));R_(x,y,1,rh,fb);R_(x,y,24,1,mixc(fa,[255,255,255],.18))}R_(0,y+rh-1,w,1,fb);y+=rh;rh=Math.min(9,rh+1);row++}
   for(let i=0;i<8;i++)R_(0,WY+i,w,1,`rgba(0,0,0,${.35-i*.04})`);
   return IMGC[key]=cv.toDataURL()}
+function renderRoomCard(){const el=$('hRoom');if(!el||!P)return;const r=roomOf(),W=WALLS.find(w=>w[0]===r.wall)||WALLS[0],F=FLOORS.find(f=>f[0]===r.floor)||FLOORS[0];
+  const order=['rug','window','poster','shelf','trophy','tank','tv','gmach','tree','bed','desk','sofa','lamp','plant','gchest'],n=Object.keys(r.place).filter(t=>r.place[t]).length,own=Object.keys(r.own||{}).length,ms=partyMons().slice(0,3);
+  el.innerHTML=`<span class="hrbox${isNight()?' night':''}" style="background:url(${roomBgURL(W,F)}) center/100% 100%">${order.filter(t=>r.place[t]&&FURN[t]).map(t=>{const [x,top,w,bot]=FURN[t].pos;return `<img class="hrf rm-${t}" src="${furnImg(t,r.place[t])}" style="left:${x}%;width:${w}%;${top!=null?'top:'+top+'%':'bottom:'+bot+'%'}">`}).join('')}${ms.map((m,i)=>`<i class="hrm" style="left:${18+i*26}%;animation-delay:${-i*.7}s">${monsterSVG(m.sp)}</i>`).join('')}</span>
+    <span class="hrtx"><b>🏠 ${esc(P.name)}の へや</b><small>🛋️ かぐ ${n}こ（もちもの ${own}こ）</small><small>${n?'なかまが くつろいでいるよ':'かぐを おいて へやを つくろう！'}</small><span class="hrgo">へやへ ▶</span></span>`;
+  el.onclick=()=>{snd(660,.05);roomOpen()}}
 function roomRender(){const r=roomOf(),W=WALLS.find(w=>w[0]===r.wall)||WALLS[0],F=FLOORS.find(f=>f[0]===r.floor)||FLOORS[0];
   $('rmTitle').textContent=`🏠 ${P.name}の へや`;$('rmGold').innerHTML=pi('coin')+fmtBig(P.gold);
   $('rmBox').style.background=`url(${roomBgURL(W,F)}) center/100% 100%`;$('rmWall').style.background='none';$('rmFloor').style.background='none';$('rmBox').classList.toggle('lit',!!r.place.window&&!isNight());
@@ -2534,7 +2544,7 @@ function renderHome(){
   $('who').innerHTML=pi('person')+esc(P.name)+(P.cheat?' 🛠️':'')+' ▾';
   $('hLv').textContent=P.lv>=MAXLV?'MAX':P.lv;$('hXp').style.width=(P.lv>=MAXLV?100:Math.min(100,P.xp/xpNeed()*100))+'%';
   countUp($('hGold'),P.gold);$('hStreak').textContent=P.streak;
-  $('hHero').innerHTML=heroSVG(P.eq,P);try{renderBase()}catch(e){}try{renderLaneCard()}catch(e){}try{renderQuestBar()}catch(e){}try{renderRaidBanner()}catch(e){}try{renderXmasBanner()}catch(e){}{const hb=document.querySelector('.herobox');if(hb){const sa=AREA(selStage||1);hb.style.setProperty('--scn',`url(${sceneURL(sa,96,120,{night:isNight()})})`)}}$('hPow').textContent=fmtBig(power());$('hTitle').textContent=titleOf(P)?'「'+titleOf(P)+'」':'';
+  $('hHero').innerHTML=heroSVG(P.eq,P);try{renderBase()}catch(e){}try{renderLaneCard()}catch(e){}try{renderQuestBar()}catch(e){}try{renderRaidBanner()}catch(e){}try{renderRoomCard()}catch(e){}try{renderXmasBanner()}catch(e){}{const hb=document.querySelector('.herobox');if(hb){const sa=AREA(selStage||1);hb.style.setProperty('--scn',`url(${sceneURL(sa,96,120,{night:isNight()})})`)}}$('hPow').textContent=fmtBig(power());$('hTitle').textContent=titleOf(P)?'「'+titleOf(P)+'」':'';
   $('hSlotsL').innerHTML=SLOT_L.map(k=>slotHTML(k,P.eq[k])).join('');
   $('hSlotsR').innerHTML=SLOT_R.map(k=>slotHTML(k,P.eq[k])).join('');
   $('hCount').textContent=`そうび ${SLOTS.filter(k=>P.eq[k]).length} / ${SLOTS.length}`;
