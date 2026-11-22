@@ -645,6 +645,9 @@ input{font:inherit}
 .rbon{background:#0006;border:2px solid #000;padding:6px 8px;display:flex;flex-wrap:wrap;gap:4px;align-items:center}.rbon b{width:100%;color:#ffd23f;font-size:14px}.rbon span{font-size:12px;background:#222;padding:1px 6px;border-radius:3px;color:#888}.rbon span.on{background:#3a7a4a;color:#fff}.rbon small{width:100%;font-size:11px;color:var(--sub)}
 .topgo{flex:none;margin:0 8px 4px;display:flex;align-items:center;gap:6px;background:linear-gradient(#f0902e,#c8601a);border:3px solid #000;padding:3px 10px;box-shadow:inset 0 2px 0 #ffffff44,inset 0 -3px 0 #0004,0 3px 0 #0006;color:#fff;animation:topgo 2s ease-in-out infinite;clip-path:polygon(3px 0,calc(100% - 3px) 0,100% 3px,100% calc(100% - 3px),calc(100% - 3px) 100%,3px 100%,0 calc(100% - 3px),0 3px)}.topgo:active{transform:translateY(2px)}.topgo.wk{background:linear-gradient(#9a6ad8,#6a3ab0)}.topgo .pi{width:24px;height:24px;flex:none}.topgo b{font-size:17px;white-space:nowrap;text-shadow:2px 2px 0 #0006}.topgo small{flex:1;min-width:0;font-size:11px;color:#ffe9a0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:right}.topgo i{font-style:normal;font-size:13px}@keyframes topgo{50%{filter:brightness(1.12)}}
 
+.famwhy{display:flex;justify-content:center;gap:6px;font-size:26px}.famch{display:flex;flex-direction:column;gap:8px}.famopt{text-align:left;padding:10px 12px;background:#2a6a9a;border:3px solid #000;color:#fff;box-shadow:inset 0 3px 0 #ffffff33,0 3px 0 #0008}.famopt:first-child{background:#3a8a3a}.famopt b{display:block;font-size:17px}.famopt small{display:block;font-size:12px;color:#ffe9a0;margin-top:3px}
+.famok{background:#1f5a3a;border:3px solid #000;padding:8px;font-size:16px}.famok small{display:block;font-size:11px;color:#bfe;margin-top:2px}.famadv{text-align:left;font-size:13px}.famadv summary{color:var(--sub);cursor:pointer;padding:4px 0}
+.famsteps{display:flex;flex-direction:column;gap:4px;text-align:left;font-size:13px}.famsteps div{display:flex;gap:8px;align-items:center;background:#0005;padding:5px 8px}.famsteps b{flex:none;width:22px;height:22px;border-radius:50%;background:#ffd23f;color:#2b2016;display:flex;align-items:center;justify-content:center}
 .maptier{font-size:14px;color:var(--gold);margin:8px 0 2px;text-align:left;display:flex;align-items:center;justify-content:space-between;gap:6px}.maptier small{color:var(--sub);font-size:12px}.maptier .mwok{color:#ffd23f}.mwbtn{width:auto!important;margin:0!important;padding:4px 8px!important;font-size:13px!important;background:#d9771e;animation:pulse 1s infinite}.mwrew{font-size:11px;color:var(--sub);text-align:left;margin:0 0 4px}.mgift{font-size:22px;animation:pulse 1s infinite;padding:0 4px;white-space:nowrap}.mbadge{background:#e8413c;color:#fff;font-size:12px;padding:2px 5px;margin-right:4px;border-radius:4px}.mrew{display:flex;flex-direction:column;gap:6px;align-items:center;margin:6px 0}.mrit{display:flex;flex-wrap:wrap;gap:4px;justify-content:center}.mri{border:2px solid;padding:2px;display:inline-flex}.mri img{width:28px;height:28px}.mrsp{color:#ffd23f;font-size:14px}.limb.mapl{background:#1f5a3a}.mapa .mclr{color:#5be05b;font-size:18px}
 </style>
 </head>
@@ -1052,7 +1055,7 @@ function makeItem(st,d,boss,min=0){
 /* =============== save data =============== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-const APPV='v88';
+const APPV='v89';
 try{const c=document.createElement('canvas');c.width=9;c.height=9;const g=c.getContext('2d'),F=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};F(1,0,7,1,'#120d09');F(1,8,7,1,'#120d09');F(0,1,1,7,'#120d09');F(8,1,1,7,'#120d09');F(1,1,7,1,'#120d09');F(1,7,7,1,'#120d09');F(1,1,1,7,'#120d09');F(7,1,1,7,'#120d09');F(2,2,5,1,'#7a6a52');F(2,2,1,5,'#7a6a52');F(2,6,5,1,'#2a2018');F(6,2,1,5,'#2a2018');document.documentElement.style.setProperty('--pxf',`url(${c.toDataURL()})`)}catch(e){}
 const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));if(G.bgmOn===undefined)G.bgmOn=true;
 let P=null;
@@ -1518,7 +1521,7 @@ function profileForm(p){
     <div class="lbl">ふくの いろ</div><div class="colors" id="fCol">${COLORS.map(c=>`<button class="col" data-c="${c}" style="background:${c}"></button>`).join('')}</div>
     ${p?`<div class="row"><button class="btn ${p.voice?'green':'gray'}" id="fVoice">🗣️ よみあげ ${p.voice?'ON':'OFF'}</button><button class="btn ${G.snd?'green':'gray'}" id="fSnd">🔊 こうかおん ${G.snd?'ON':'OFF'}</button></div><button class="btn ${G.bgmOn?'green':'gray'}" id="fBgm">🎵 BGM ${G.bgmOn?'ON':'OFF'}</button><button class="btn" id="fUpd">🔄 さいしんばんに する <small>（いま ${APPV}）</small></button>`:''}
     <button class="btn green big" id="fOk">${p?'OK':'つくる！'}</button>
-    ${p?'<button class="btn gray" id="fSwitch">👥 ぼうけんしゃを かえる</button><button class="btn gray" id="fData">💾 データの ひっこし</button><button class="btn gray" id="fCloud">☁️ かぞくで きょうゆう</button><button class="btn orange" id="fCode">🎁 プレゼント コード</button>':'<button class="btn gray" id="fCancel">やめる</button>'}`,
+    ${p?'<button class="btn gray" id="fSwitch">👥 ぼうけんしゃを かえる</button><button class="btn gray" id="fData">💾 データの ひっこし</button><button class="btn gray" id="fCloud">👨‍👩‍👧 かぞくで つながる</button><button class="btn orange" id="fCode">🎁 プレゼント コード</button>':'<button class="btn gray" id="fCancel">やめる</button>'}`,
     {fOk:()=>{const name=$('fName').value.trim()||'ゆうしゃ';
         if(p){p.name=name;if(p.age!==age){const d=ageOf(age);p.diff={math:d,eng:d,kanji:d}}p.age=age;
           if(p.eq.a.name==='ぬののふく')p.eq.a.color=color;Object.assign(p,{color,hair,hc,skin});save();closeModal();renderHome()}
@@ -2377,7 +2380,7 @@ function ghostStats(p){if(p&&p.cheat)return{acc:.99,sp:.75,n:999,boss:true};cons
 async function ghostOpen(){const loc=G.profiles.filter(p=>p.id!==P.id&&!p.master);let rem=[];
   const draw=()=>{const all=loc.map(p=>({p,dev:null})).concat(rem.filter(r=>!loc.some(l=>l.id===r.p.id)&&r.p.id!==P.id));
     showModal(`<div class="mt">${pi('ghost')}ゴーストバトル</div><p style="font-size:13px">かぞくの キャラの「ゴースト」と はやおし しょうぶ！<br>あいての せいかいりつ と はやさを まねして こたえてくるよ（10もん）</p>
-      <div class="ghlist">${all.length?all.map((o,i)=>{const g=ghostStats(o.p);return `<button class="btn ghpick" data-i="${i}"><span class="ghi">${heroSVG(o.p.eq,o.p)}</span><span class="ghn">${esc(o.p.name)}<small>Lv${o.p.lv}・せいかいりつ ${Math.round(g.acc*100)}%・1もん ${g.sp.toFixed(1)}びょう${o.dev?'・📱'+esc(o.dev):''}</small></span></button>`}).join(''):'<p style="color:var(--sub)">まだ あいてが いないよ。<br>べつの ぼうけんしゃを つくるか、☁️ かぞくで きょうゆう すると たたかえるよ</p>'}</div>
+      <div class="ghlist">${all.length?all.map((o,i)=>{const g=ghostStats(o.p);return `<button class="btn ghpick" data-i="${i}"><span class="ghi">${heroSVG(o.p.eq,o.p)}</span><span class="ghn">${esc(o.p.name)}<small>Lv${o.p.lv}・せいかいりつ ${Math.round(g.acc*100)}%・1もん ${g.sp.toFixed(1)}びょう${o.dev?'・📱'+esc(o.dev):''}</small></span></button>`}).join(''):'<p style="color:var(--sub)">まだ あいてが いないよ。<br>べつの ぼうけんしゃを つくるか、👨‍👩‍👧 かぞくで つながる すると たたかえるよ</p>'}</div>
       ${G.fam&&FB_CONFIG&&!rem.length?'<small style="color:var(--sub)">☁️ ほかの たんまつの かぞくを よみこみちゅう…</small>':''}<button class="btn gray" id="cl">とじる</button>`,{cl:closeModal});
     document.querySelectorAll('.ghpick').forEach(b=>b.onclick=()=>{closeModal();ghostStart(all[+b.dataset.i].p)})};
   draw();if(FB_CONFIG&&G.fam){try{const r=await syncDown();rem=(r||[]).filter(p=>!p.master).map(p=>({p:ensureP(p),dev:p._remote}));if($('modal').classList.contains('on'))draw()}catch(e){}}}
@@ -2648,14 +2651,14 @@ const HELP=[
  ['tower','🗼 むげんの とう',`1かいに 1たいずつ たおして、どこまで のぼれるか ちょうせん！ 10かいごとに ボスが いて、たおすと ゴールドと ふくびきけん。<br>HPは すこししか かいふく しないので、そうびを つよくして いこう。さいこう きろくは ランキングにも のるよ。`],
  ['install','📲 ホームに ついか・かぞく しょうたい',`<b>iPhone・iPad</b>：Safariで ひらく → きょうゆう ボタン □↑ →「ホーム画面に追加」→「追加」。<br><b>Android</b>：Chromeで ひらく → みぎうえの ︙ →「ホーム画面に追加」。<br>かぞくを しょうたい するには「⚙️せってい → ☁️かぞくで きょうゆう → 📨 しょうたい コード・URLを はっこう」。もらった ひとは URLを ひらくか、タイトルの「📨 しょうたいコードで つながる」に コードを いれてね。`],
  ['lane','🏯 ぐんだん バトル',`なかまを くりだして てきの しろを こわす たいせん モード。<br>したの パズルで おなじ いろを 3つ いじょう そろえると ⚡エナジーが たまる（れんさや 4つ そろえで もっと）。エナジーで なかまを だせるよ。<br>なかまの ぞくせいで とくちょうが かわる：🪨かべ（かたい）・⚡✨とおくから こうげき・🔥こうげき つよい・❄️てきを おそくする・🌙はやい・🌿まわりを かいふく。<br>じかんと パズルで 🏰しろほうの ゲージが たまる！ しろほうは 5しゅるい（はどう・こおり・かべ・かみなり・いやし）から えらべて、ゴールドで パワーと チャージを きょうかできるよ。 ⬆️で エナジーの たまる はやさを アップ。はじめて クリアした ステージは そうびが もらえる。<br>🎫 あそぶには「ぐんだんけん」が 1まい いるよ。もんだいに 10もん せいかいで 1まい1じかんに 1まいずつ かいふく（さいだい 5まい）。ごほうびで もらった ぶんは 5まいを こえて ためられるよ。`],
- ['ghost','👻 ゴーストバトル',`ぼうけんの とちゅうで、とつぜん かぞくの ぼうけんしゃの「ゴースト」が あらわれる ことが あるよ！ 5もんの はやおし しょうぶ！ ゴーストは その ひとの せいかいりつと こたえる はやさを まねするよ。<br>かつと ゴールドと ふくびきけん 2まい。☁️ かぞくで きょうゆう していると、ほかの たんまつの かぞくの ゴーストも でてくるよ。`],
+ ['ghost','👻 ゴーストバトル',`ぼうけんの とちゅうで、とつぜん かぞくの ぼうけんしゃの「ゴースト」が あらわれる ことが あるよ！ 5もんの はやおし しょうぶ！ ゴーストは その ひとの せいかいりつと こたえる はやさを まねするよ。<br>かつと ゴールドと ふくびきけん 2まい。👨‍👩‍👧 かぞくで つながる していると、ほかの たんまつの かぞくの ゴーストも でてくるよ。`],
  ['gacha','🎰 ふくびき',`もんだいに 10かい せいかいするごとに ふくびきけんが 1まい（きんようびは 2まい）。とう・ゴースト・じっせき・ミニゲームでも もらえるよ。<br>そうび・たまご・きせかえ・ゴールド、たまに きゅうきょくの カケラも でる！ 10かい まとめて ひくことも できる。<br>★<b>ふくびき げんてい</b>：ここでしか もらえない きせかえ（せいきしの よろい・ぼうし・オーラ）、なかま（ラッキーキャット・ほしうさぎ・オーロラドラゴン）、かぐ が あるよ。`],
  ['ach','🏅 じっせき',`「せいかい 1000もん」「なかま 50しゅ」などの もくひょう。たっせいしたら「うけとる」で ゴールドと ふくびきけんが もらえるよ。ホームの ボタンの あかい かずは うけとれる じっせきの かず。`],
  ['room','🏠 マイルーム',`ゴールドで かぐ・かべ・ゆかを かって、じぶんの へやを かざれるよ。パーティと おきにいりの なかまが へやの なかを あるきまわる（タップすると はねるよ）。トロフィーには じっせきの かずが でる。`],
  ['mini','🎣 ミニゲーム',`ステージを クリアすると ときどき ボーナスゲーム！<br>🎣 <b>つり</b>：ウキが みどりの ところで「つる！」。まんなかの きいろだと でっかい さかな！<br>🗝️ <b>たからさがし</b>：9まいの すなから 3かい ほって たからを さがそう。`],
  ['mission','📜 きょうの ミッション',`まいにち きょうかごとに きめられた かず せいかいすると クリア。ぜんぶ クリアすると ほうしゅうが もらえるよ。`],
  ['weak','📕 にがてノート',`まちがえた もんだいが はいるよ。バトルの なかで ときどき ふくしゅうに でて、2かい せいかいすると そつぎょう！<br><b>にがてが のこっていると あたらしい ステージには すすめないよ。</b>「にがて とっくん」で かいせつを よみながら 1もんずつ ゆっくり といて、ゼロに しよう！（クリアずみの ステージは あそべるよ）`],
- ['etc','📊 そのほか',`<b>きろく</b>：きょうかや しゅるいごとの せいかいりつ<br><b>ランキング</b>：かぞくの なかの ランキング<br><b>☁️ かぞくで きょうゆう</b>：かぞくコードで ほかの たんまつと つながる（せってい から）<br><b>🎁 プレゼントコード</b>：とくべつな なかまが もらえる（せってい から）<br><b>👨‍👩‍👧 おうちの ひと</b>：ぼうけんしゃを えらぶ がめんから、みんなの ようすが みられる`]];
+ ['etc','📊 そのほか',`<b>きろく</b>：きょうかや しゅるいごとの せいかいりつ<br><b>ランキング</b>：かぞくの なかの ランキング<br><b>👨‍👩‍👧 かぞくで つながる</b>：かぞくコードで ほかの たんまつと つながる（せってい から）<br><b>🎁 プレゼントコード</b>：とくべつな なかまが もらえる（せってい から）<br><b>👨‍👩‍👧 おうちの ひと</b>：ぼうけんしゃを えらぶ がめんから、みんなの ようすが みられる`]];
 function helpOpen(open){
   showModal(`<div class="mt">${pi('help')}ヘルプ</div><div class="helpbox">${HELP.map(([k,t,b])=>`<details${k===open?' open':''} id="hp-${k}"><summary>${t}</summary><div>${b}</div></details>`).join('')}</div><button class="btn gray" id="cl">とじる</button>`,{cl:closeModal});
   if(open)setTimeout(()=>{const e=$('hp-'+open);if(e)e.scrollIntoView({block:'start'})},50)}
@@ -3346,10 +3349,10 @@ const inviteURL=c=>location.origin+location.pathname.replace(/index\.html$/,'')+
 function inviteShow(){if(!G.devId){G.devId=uid();store.set('mq1',G)}
   if(!G.fam){G.fam=newFam();G.devName=G.devName||'おうちの たんまつ';store.set('mq1',G);try{syncUp()}catch(e){}}
   const c=G.fam,url=inviteURL(c),txt=`まなびクエストの かぞく しょうたいです🎮\n① このURLを ひらく\n${url}\n② ホーム画面に追加する\n③ アイコンから ひらいて コードを いれる\nしょうたいコード：${famFmt(c)}\n\n${INSTALL_TXT}`;
-  showModal(`<div class="mt">📨 しょうたい コード</div><p style="font-size:13px">かぞくの たんまつで ひらくと、おなじ かぞくとして つながるよ</p>
-    <div class="invcode">${famFmt(c)}</div><button class="btn" id="ivC">📋 コードを コピー</button>
-    <input class="field invurl" id="ivU" readonly value="${esc(url)}"><button class="btn" id="ivL">🔗 URLを コピー</button><button class="btn" id="ivT">📝 せつめいぶんごと コピー（ホームに ついかする ほうほう つき）</button><button class="btn" id="ivH" style="background:#2a6a9a">📲 ホームに ついかする ほうほうを みる</button>
-    ${navigator.share?'<button class="btn green big" id="ivS">📤 LINEなどで おくる</button>':''}
+  showModal(`<div class="mt">📨 かぞくを しょうたい</div><div class="famsteps"><div><b>1</b>したの みどりの ボタンで LINEなどに おくる</div><div><b>2</b>かぞくの たんまつで URLを ひらく</div><div><b>3</b>「つながる！」を おせば かんりょう</div></div>
+    ${navigator.share?'<button class="btn green big" id="ivS">📤 LINEなどで おくる</button>':'<button class="btn green big" id="ivT">📝 しょうたいぶんを コピー</button><small style="color:var(--sub)">コピーして LINEや メールに はりつけてね</small>'}
+    <div class="lbl">しょうたい コード（てで いれる とき）</div><div class="invcode">${famFmt(c)}</div>
+    <details class="famadv"><summary>ほかの おくりかた</summary><button class="btn" id="ivC">📋 コードだけ コピー</button><input class="field invurl" id="ivU" readonly value="${esc(url)}"><button class="btn" id="ivL">🔗 URLだけ コピー</button>${navigator.share?'<button class="btn" id="ivT">📝 せつめいぶんごと コピー</button>':''}<button class="btn" id="ivH" style="background:#2a6a9a">📲 ホームに ついかする ほうほう</button></details>
     <small style="color:#ffb020">⚠ このコードを しっている ひとは かぞくの きろくが みられます。かぞく いがいには おしえないでね</small>
     <button class="btn gray" id="cl">とじる</button>`,
     {ivC:()=>copyTxt(famFmt(c),'コードを コピーしたよ'),ivL:()=>copyTxt(url,'URLを コピーしたよ'),ivT:()=>copyTxt(txt,'せつめいぶんを コピーしたよ'),ivH:()=>installGuide(inviteShow),ivS:()=>navigator.share({title:'まなびクエスト かぞく しょうたい',text:txt,url}).catch(()=>{}),cl:closeModal})}
@@ -3365,26 +3368,30 @@ function joinInvite(c){if(G.fam===c){toast('もう この かぞくに つなが
 function cloudSetup(){
   if(!G.devId){G.devId=uid();store.set('mq1',G)}
   const on=!!G.fam;
-  showModal(`<div class="mt">☁️ かぞくで きょうゆう</div>
-    ${FB_CONFIG?'':'<p style="color:#ffb020;font-size:13px">まだ じゅんびちゅうです（おうちの ひとが せっていします）</p>'}
-    <p style="font-size:13px">おなじ「かぞくコード」を いれた たんまつどうしで、おうちの ひとが みんなの ようすを みられるように なるよ。</p>
-    <div class="lbl">この たんまつの なまえ</div><input class="field" id="cdName" maxlength="12" value="${esc(G.devName||'')}" placeholder="れい：たろうの タブレット">
-    <div class="lbl">かぞくコード</div><input class="field" id="cdFam" maxlength="14" value="${famFmt(G.fam||'')}" placeholder="XXXX-XXXX-XXXX" style="letter-spacing:2px">
-    <button class="btn purple" id="cdNew">🔑 あたらしい コードを つくる（さいしょの 1だいだけ）</button>
-    <button class="btn green big" id="cdOk">${on?'ほぞんして どうき':'きょうゆうを はじめる'}</button>
-    <button class="btn" id="cdInv" style="background:#2a6a9a">📨 しょうたい コード・URLを はっこう</button>
-    ${on?'<button class="btn gray" id="cdOff">きょうゆうを やめる</button>':''}
-    <small style="color:var(--sub)">${G.lastSync?'さいごの どうき：'+new Date(G.lastSync).toLocaleString('ja-JP'):'まだ どうき していないよ'}</small>
+  if(!on){showModal(`<div class="mt">👨‍👩‍👧 かぞくで つながる</div>
+    <div class="famwhy"><span>📱</span><span>➡️</span><span>☁️</span><span>⬅️</span><span>📱</span></div>
+    <p style="font-size:13px;margin:0">かぞくの スマホや タブレットを つなぐと…<br>🏆 ランキングで きそえる・👻 ゴーストバトル・👹 かぞくレイド・👀 おうちの ひとが ようすを みられる</p>
+    <div class="famch"><button class="famopt" id="fmNew"><b>🔑 はじめて つなぐ</b><small>この たんまつで かぞくを つくって、ほかの たんまつを しょうたい する（おうちの ひと むけ）</small></button>
+    <button class="famopt" id="fmJoin"><b>📨 しょうたいを もらった</b><small>おうちの ひとから もらった 12もじの コードを いれる</small></button></div>
+    ${FB_CONFIG?'':'<p style="color:#ffb020;font-size:12px">いまは インターネット きょうゆうの じゅんびちゅうです</p>'}
+    <button class="btn gray" id="cl">とじる</button>`,{fmNew:famCreate,fmJoin:()=>joinByCode(),cl:closeModal});return}
+  showModal(`<div class="mt">👨‍👩‍👧 かぞくで つながる</div>
+    <div class="famok">✅ かぞくに つながっているよ<small>${G.lastSync?'さいごの どうき：'+agoTxt(G.lastSync):'まだ どうき していないよ'}</small></div>
+    <div class="lbl">この たんまつの なまえ（ランキングに でるよ）</div><div class="row" style="gap:6px"><input class="field" id="cdName" maxlength="12" value="${esc(G.devName||'')}" placeholder="れい：たろうの タブレット"><button class="btn green" id="cdSave" style="flex:none;width:auto">ほぞん</button></div>
+    <button class="btn orange big" id="cdInv">📨 ほかの たんまつを しょうたい する</button>
+    <button class="btn" id="cdSync">🔄 いますぐ どうき</button>
+    <details class="famadv"><summary>くわしい せってい</summary><div class="lbl">かぞくコード</div><div class="invcode" style="font-size:20px">${famFmt(G.fam)}</div>
+      <button class="btn gray" id="cdOff">この たんまつの きょうゆうを やめる</button></details>
     <button class="btn gray" id="cl">とじる</button>`,
-    {cdNew:()=>{if(G.fam&&!confirm('いまの かぞくコードから はなれて、あたらしい コードに しますか？'))return;$('cdFam').value=famFmt(newFam())},
-     cdOk:async()=>{const c=famNorm($('cdFam').value);if(c.length!==12){toast('コードは 12もじ だよ');return}
-       G.fam=c;G.devName=$('cdName').value.trim()||'たんまつ';store.set('mq1',G);
-       if(!FB_CONFIG){closeModal();toast('ほぞんしたよ（じゅんびが できたら どうき するよ）');return}
-       toast('どうき ちゅう…');const ok=await syncUp();closeModal();toast(ok?'☁️ どうき できたよ！':'どうき できなかった… ネットを たしかめてね');if($('admin').classList.contains('on'))showAdmin()},
+    {cdSave:()=>{G.devName=$('cdName').value.trim()||'たんまつ';store.set('mq1',G);toast('ほぞんしたよ');try{syncUp()}catch(e){}},
      cdInv:()=>inviteShow(),
-     cdOff:()=>{delete G.fam;store.set('mq1',G);closeModal();toast('きょうゆうを やめたよ')},
+     cdSync:async()=>{if(!FB_CONFIG){toast('じゅんびちゅうだよ');return}toast('どうき ちゅう…');const ok=await syncUp();toast(ok?'☁️ どうき できたよ！':'どうき できなかった… ネットを たしかめてね');cloudSetup()},
+     cdOff:()=>{if(!confirm('この たんまつの かぞく きょうゆうを やめますか？（データは きえません）'))return;delete G.fam;store.set('mq1',G);closeModal();toast('きょうゆうを やめたよ')},
      cl:closeModal});
 }
+function famCreate(){showModal(`<div class="mt">🔑 かぞくを つくる</div><p style="font-size:13px">この たんまつの なまえを きめてね</p>
+  <input class="field" id="fcName" maxlength="12" value="${esc(G.devName||'')}" placeholder="れい：おうちの iPad"><button class="btn green big" id="fcOk">つくる！</button><button class="btn gray" id="bk">もどる</button>`,
+  {fcOk:async()=>{G.fam=newFam();G.devName=$('fcName').value.trim()||'おうちの たんまつ';store.set('mq1',G);if(FB_CONFIG)try{await syncUp()}catch(e){}fxConfetti(40);toast('🎉 かぞくを つくったよ！ つぎは しょうたい しよう');inviteShow()},bk:cloudSetup})}
 function bindAdCards(){
   document.querySelectorAll('#adBody [data-sid]').forEach(b=>b.onclick=()=>{const id=+b.dataset.sid,r=b.dataset.r==='1';
     showStats(r?remoteProfiles.find(p=>p.id===id):G.profiles.find(p=>p.id===id))});
@@ -3397,7 +3404,7 @@ async function renderCloudBox(){
   const rs=await syncDown();if(!$('cloudBox'))return;
   if(rs===null){box.innerHTML=`<div class="sth">☁️ ほかの たんまつ</div><small style="color:#ffb020">よみこめなかった… ネットに つながっているか たしかめてね</small><button class="btn" id="cbRe">🔄 もういちど</button>`;$('cbRe').onclick=renderCloudBox;return}
   remoteProfiles=rs;
-  box.innerHTML=`<div class="sth">☁️ ほかの たんまつ <small>かぞくコード ${famFmt(G.fam)}</small></div><small style="color:var(--sub)">${rs.length?rs.length+'にん みつかったよ':'まだ だれも いないよ。こどもの たんまつの「せってい → ☁️ かぞくで きょうゆう」で おなじ コードを いれてね'}</small>
+  box.innerHTML=`<div class="sth">☁️ ほかの たんまつ <small>かぞくコード ${famFmt(G.fam)}</small></div><small style="color:var(--sub)">${rs.length?rs.length+'にん みつかったよ':'まだ だれも いないよ。こどもの たんまつの「せってい → 👨‍👩‍👧 かぞくで つながる」で おなじ コードを いれてね'}</small>
     <div class="row"><button class="btn" id="cbRe">🔄 さいしんに する</button><button class="btn purple" id="cbSet">⚙️ コード</button></div>`;
   $('cbRe').onclick=renderCloudBox;$('cbSet').onclick=cloudSetup;
   $('remoteCards').innerHTML=rs.map(adCard).join('');bindAdCards();
@@ -3470,7 +3477,7 @@ function renderRank(){
   const def=RKS.find(r=>r[0]===rkTab),rows=[...map.values()].map(o=>Object.assign(o,{v:rkVal(o.p,rkTab)})).sort((a,b)=>b.v-a.v||b.p.lv-a.p.lv);
   const me=P&&!P.master?P.id:null;
   $('rkInfo').innerHTML=!FB_CONFIG?'<small style="color:var(--sub)">この たんまつの ぼうけんしゃだけの ランキングだよ</small>'
-    :!G.fam?'<small style="color:var(--sub)">いまは この たんまつの ぼうけんしゃだけ。「⚙️ せってい → ☁️ かぞくで きょうゆう」で かぞくコードを いれると、ほかの たんまつの かぞくも でてくるよ！</small>'
+    :!G.fam?'<small style="color:var(--sub)">いまは この たんまつの ぼうけんしゃだけ。「⚙️ せってい → 👨‍👩‍👧 かぞくで つながる」で かぞくコードを いれると、ほかの たんまつの かぞくも でてくるよ！</small>'
     :rkLoading?'<small style="color:var(--sub)">☁️ かぞくの データを よみこみちゅう…</small>'
     :rkRemote===null?'<small style="color:#ffb020">かぞくの データを よみこめなかった（オフライン？）。この たんまつの ぶんだけ だしているよ</small><button class="btn" id="rkRe">🔄 もういちど</button>'
     :`<small style="color:var(--sub)">☁️ かぞく ${rows.length}にんの ランキング</small><button class="btn" id="rkRe">🔄 さいしんに する</button>`;
