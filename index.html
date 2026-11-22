@@ -1204,7 +1204,7 @@ function makeItem(st,d,boss,min=0){
 /* =============== save data =============== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-const APPV='v128';
+const APPV='v129';
 try{const c=document.createElement('canvas');c.width=9;c.height=9;const g=c.getContext('2d'),F=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};F(1,0,7,1,'#120d09');F(1,8,7,1,'#120d09');F(0,1,1,7,'#120d09');F(8,1,1,7,'#120d09');F(1,1,7,1,'#120d09');F(1,7,7,1,'#120d09');F(1,1,1,7,'#120d09');F(7,1,1,7,'#120d09');F(2,2,5,1,'#7a6a52');F(2,2,1,5,'#7a6a52');F(2,6,5,1,'#2a2018');F(6,2,1,5,'#2a2018');document.documentElement.style.setProperty('--pxf',`url(${c.toDataURL()})`)}catch(e){}
 const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));if(G.bgmOn===undefined)G.bgmOn=true;
 let P=null;
@@ -1679,7 +1679,7 @@ function profileForm(p){
     <div class="lbl">はだの いろ</div><div class="colors" id="fSkin">${SKINS.map(c=>`<button class="col" data-c="${c}" style="background:${c}"></button>`).join('')}</div>
     <div class="lbl">なんさい？</div><div class="opts" id="fAge" style="grid-template-columns:repeat(5,1fr)">${ages.map(a=>`<button class="btn opt" data-a="${a}">${a}${a===12?'+':''}</button>`).join('')}</div>
     <div class="lbl">ふくの いろ</div><div class="colors" id="fCol">${COLORS.map(c=>`<button class="col" data-c="${c}" style="background:${c}"></button>`).join('')}</div>
-    ${p?`<div class="row"><button class="btn ${p.voice?'green':'gray'}" id="fVoice">🗣️ よみあげ ${p.voice?'ON':'OFF'}</button><button class="btn ${G.snd?'green':'gray'}" id="fSnd">🔊 こうかおん ${G.snd?'ON':'OFF'}</button></div><button class="btn ${G.bgmOn?'green':'gray'}" id="fBgm">🎵 BGM ${G.bgmOn?'ON':'OFF'}</button><button class="btn" id="fUpd">🔄 さいしんばんに する <small>（いま ${APPV}）</small></button>`:''}
+    ${p?`<button class="btn ${p.parent?'purple':'gray'}" id="fPar">👨‍👩 おやの アカウント ${p.parent?'ON':'OFF'}<small style="display:block;font-size:11px">ONに すると「みんなの ようす」に でない（ランキングには でる）</small></button><div class="row"><button class="btn ${p.voice?'green':'gray'}" id="fVoice">🗣️ よみあげ ${p.voice?'ON':'OFF'}</button><button class="btn ${G.snd?'green':'gray'}" id="fSnd">🔊 こうかおん ${G.snd?'ON':'OFF'}</button></div><button class="btn ${G.bgmOn?'green':'gray'}" id="fBgm">🎵 BGM ${G.bgmOn?'ON':'OFF'}</button><button class="btn" id="fUpd">🔄 さいしんばんに する <small>（いま ${APPV}）</small></button>`:''}
     <button class="btn green big" id="fOk">${p?'OK':'つくる！'}</button>
     ${p?'<button class="btn gray" id="fSwitch">👥 ぼうけんしゃを かえる</button><button class="btn gray" id="fData">💾 データの ひっこし</button><button class="btn gray" id="fCloud">👨‍👩‍👧 かぞくで つながる</button><button class="btn orange" id="fCode">🎁 プレゼント コード</button>':'<button class="btn gray" id="fCancel">やめる</button>'}`,
     {fOk:()=>{const name=$('fName').value.trim()||'ゆうしゃ';
@@ -1691,7 +1691,7 @@ function profileForm(p){
      fData:()=>dataMove(),
      fCloud:()=>cloudSetup(),
      fCode:()=>giftCode(),
-     fVoice:()=>{p.voice=!p.voice;save();profileForm(p)},
+     fVoice:()=>{p.voice=!p.voice;save();profileForm(p)},fPar:()=>{p.parent=!p.parent;save();toast(p.parent?'👨‍👩 おやの アカウントに したよ':'こどもの アカウントに したよ');profileForm(p)},
      fSnd:()=>{G.snd=!G.snd;save();profileForm(p)},fUpd:()=>{toast('🔄 さいしんばんを よみこむよ');setTimeout(()=>location.reload(),400)},fBgm:()=>{G.bgmOn=!G.bgmOn;save();if(G.bgmOn)bgm('home');else bgmStop();profileForm(p)}});
   const sync=()=>{document.querySelectorAll('#fAge .opt').forEach(b=>b.classList.toggle('sel',+b.dataset.a===age));
     document.querySelectorAll('#fCol .col').forEach(b=>b.classList.toggle('sel',b.dataset.c===color));
@@ -3848,7 +3848,7 @@ async function renderCloudBox(){
   box.innerHTML=`<div class="sth">☁️ ほかの たんまつ <small>かぞくコード ${famFmt(G.fam)}</small></div><small style="color:var(--sub)">${rs.length?rs.length+'にん みつかったよ':'まだ だれも いないよ。こどもの たんまつの「せってい → 👨‍👩‍👧 かぞくで つながる」で おなじ コードを いれてね'}</small>
     <div class="row"><button class="btn" id="cbRe">🔄 さいしんに する</button><button class="btn purple" id="cbSet">⚙️ コード</button></div>`;
   $('cbRe').onclick=renderCloudBox;$('cbSet').onclick=cloudSetup;
-  $('remoteCards').innerHTML=rs.map(adCard).join('');bindAdCards();
+  $('remoteCards').innerHTML=rs.filter(p=>!p.parent).map(adCard).join('');bindAdCards();
 }
 
 
@@ -3997,11 +3997,11 @@ function adCard(p){const pct=(a,b)=>b?Math.round(a/b*100)+'%':'−',col=r=>r<.6?
     </div>`}
 function showAdmin(){
   if(P&&P.cheat)try{cheatSyncCats();save()}catch(e){}
-  show('admin');const ps=G.profiles.filter(p=>!p.master);
+  show('admin');const ps=G.profiles.filter(p=>!p.master&&!p.parent),np=G.profiles.filter(p=>p.parent).length;
   const pct=(a,b)=>b?Math.round(a/b*100)+'%':'−',col=r=>r<.6?'#e8413c':r<.8?'#ffb020':'#58d14a',SN={math:'さんすう',eng:'えいご',kanji:'こくご',life:'せいかつ'};
   let h=`<div class="panel stbox"><small style="color:var(--sub)">この たんまつで あそんでいる ぼうけんしゃの ようすです。<br>べつの たんまつ（スマホ・タブレット）の ぼうけんしゃは、そちらで「💾 データの ひっこし → かきだす」をして、ここで「よみこむ → ➕ くわえる」を すると みられます。</small><button class="btn green" id="adImp">📥 べつの たんまつの データを くわえる</button></div>`;
   if(!ps.length)h+='<div class="panel stbox"><p>まだ ぼうけんしゃが いないよ</p></div>';
-  ps.forEach(p=>{h+=adCard(p)});
+  ps.forEach(p=>{h+=adCard(p)});if(np)h+=`<small style="color:var(--sub);text-align:center">👨‍👩 おやの アカウント（${np}にん）は ここには でないよ</small>`;
   h+=`<div class="panel stbox" id="cloudBox"></div><div id="remoteCards" style="display:flex;flex-direction:column;gap:12px"></div>`;
   $('adBody').innerHTML=h;
   $('adImp').onclick=dataImport;
