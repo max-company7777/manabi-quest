@@ -692,6 +692,10 @@ input{font:inherit}
 .nq{font-size:18px;line-height:1.4;word-break:break-word}.nq img,.nq svg{max-width:100%;height:auto}.nq .tag,.nq .qsub{display:none}
 .nans{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0;font-size:14px}.nng{color:#c0302a;text-decoration:line-through}.nok{color:#1a7a2a;font-weight:700}.nct{color:#8a6a3a;font-size:12px}.ndn{color:#1a7a2a;font-size:12px}
 .nexb{background:#2a6a9a;color:#fff;border:0;border-radius:6px;padding:5px 10px;font-size:12px;font-family:inherit}.nex .exr{background:#fff;border-radius:6px;padding:4px 8px;margin-top:4px;font-size:14px}
+.q .clk{width:min(38vw,140px);height:auto;display:block;margin:0 auto;filter:drop-shadow(0 3px 0 rgba(0,0,0,.3))}
+.q .coins{display:flex;flex-wrap:wrap;justify-content:center;gap:3px;max-width:320px;margin:0 auto}.q .coin{width:clamp(30px,9vw,42px);height:auto}.q .coin.bill{width:clamp(60px,18vw,84px)}.wpq .coin{width:30px;vertical-align:middle}.wpq .coin.bill{width:64px}
+.q .wpq{display:block;font-size:clamp(17px,4.8vw,24px);line-height:1.6;text-align:left;padding:0 6px;font-family:'M PLUS Rounded 1c',sans-serif}.q .wpq b{color:#ffd23f}
+.nq .clk{width:110px}.nq .coin{width:28px}.nq .coin.bill{width:56px}.nq .wpq{font-size:15px}.nq .sm{display:block;font-size:13px}
 </style>
 </head>
 <body>
@@ -983,10 +987,49 @@ function textChoices(ans,pool,n){
   while(set.size<n&&g++<200)set.add(pick(pool));
   return shuffle([...set]);
 }
+/* ===== 🕐 とけい・💴 おかね・📝 ぶんしょうだい ===== */
+function clockSVG(h,m){const ha=((h%12)+m/60)*30,ma=m*6,P2=(a,r)=>[50+r*Math.sin(a*Math.PI/180),50-r*Math.cos(a*Math.PI/180)];let t='';
+  for(let i=0;i<60;i++){const[a1,b1]=P2(i*6,44),[a2,b2]=P2(i*6,i%5?41:38);t+=`<line x1="${a1}" y1="${b1}" x2="${a2}" y2="${b2}" stroke="#3a2a1a" stroke-width="${i%5?1:2}"/>`}
+  for(let i=1;i<=12;i++){const[x,y]=P2(i*30,31);t+=`<text x="${x}" y="${y+4}" font-size="11" text-anchor="middle" fill="#2a1a10" font-family="sans-serif" font-weight="700">${i}</text>`}
+  const[hx,hy]=P2(ha,22),[mx,my]=P2(ma,36);
+  return `<svg class="clk" viewBox="0 0 100 100"><circle cx="50" cy="50" r="48" fill="#fffaf0" stroke="#c0302a" stroke-width="4"/>${t}<line x1="50" y1="50" x2="${hx}" y2="${hy}" stroke="#2a3a8a" stroke-width="5" stroke-linecap="round"/><line x1="50" y1="50" x2="${mx}" y2="${my}" stroke="#e8413c" stroke-width="3" stroke-linecap="round"/><circle cx="50" cy="50" r="3.5" fill="#2a1a10"/></svg>`}
+const tStr=(h,m,han)=>{h=((h-1)%12+12)%12+1;return m===0?`${h}じ`:han&&m===30?`${h}じはん`:`${h}じ${m}ふん`};
+function genClock(lv){const h=R(1,12);let m,stepQ=0;
+  if(lv<=2)m=lv<=1?0:pick([0,30]);else if(lv===3)m=R(0,11)*5;else{m=R(0,59);if(Math.random()<.4)stepQ=pick([10,15,20,30,45])}
+  const han=lv<=2;let ah=h,am=m;if(stepQ){am=m+stepQ;if(am>=60){am-=60;ah++}}
+  const a=tStr(ah,am,han),c=new Set([a]);
+  const alt=[[ah+1,am],[ah-1,am],[ah,(am+30)%60],[Math.round(am/5)||12,Math.min(55,(ah%12)*5)],[ah,(am+5)%60],[ah,(am+55)%60],[ah+1,(am+30)%60]];
+  for(const[x,y]of shuffle(alt)){if(c.size>=4)break;if(han&&y!==0&&y!==30)continue;c.add(tStr(x,y,han))}
+  while(c.size<4)c.add(tStr(R(1,12),han?pick([0,30]):R(0,11)*5,han));
+  return{key:`tk${lv}_${h}:${m}${stepQ?'+'+stepQ:''}`,html:`${clockSVG(h,m)}<span class="sm">${stepQ?`この ${stepQ}ぷん あとは なんじ なんぷん？`:'なんじ'+(m?' なんぷん':'')+'？'}</span>`,speak:[stepQ?`この ${stepQ}ふん あとは なんじ なんぷん？`:'なんじ？','ja-JP'],a,choices:shuffle([...c]),cs:'small',tk:[h,m,stepQ]}}
+const COIN={1:['#e8e8ec','#9a9aa8'],5:['#e8c050','#a07a20'],10:['#c8784a','#7a4020'],50:['#e8e8ec','#9a9aa8'],100:['#d8d8e0','#8a8a98'],500:['#e8d070','#a08a30']};
+function coinSVG(v){if(v>=1000)return `<svg class="coin bill" viewBox="0 0 64 34"><rect x="1" y="1" width="62" height="32" rx="3" fill="#cfe8c8" stroke="#5a8a5a" stroke-width="2"/><text x="32" y="22" text-anchor="middle" font-size="13" font-weight="700" fill="#2a5a2a" font-family="sans-serif">${v}</text></svg>`;
+  const[f,e]=COIN[v],hole=v===5||v===50;return `<svg class="coin" viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" fill="${f}" stroke="${e}" stroke-width="2.5"/>${hole?`<circle cx="20" cy="20" r="5" fill="none" stroke="${e}" stroke-width="2"/>`:''}<text x="20" y="${hole?15:24.5}" text-anchor="middle" font-size="${v>=100?11:12}" font-weight="700" fill="#3a2a1a" font-family="sans-serif">${v}</text></svg>`}
+function genMoney(lv){
+  if(lv>=4&&Math.random()<.5){const pay=pick([100,500,1000]),it=pick(['🍙','🍦','📓','✏️','🧃','🍪','🎈']),pr=R(Math.round(pay*.2),pay-1)-(pay>=500?R(0,9):0);const a=pay-pr;
+    return{key:`mo${lv}c${pay}-${pr}`,html:`<span class="wpq">${it} が <b>${pr}えん</b>。<br>${coinSVG(pay)} で はらうと おつりは なんえん？</span>`,speak:[`${pr}えんの ものを ${pay}えんで かうと、おつりは なんえん？`,'ja-JP'],a:String(a),choices:numChoices(a,4,[10,-10,100,-100]),mo:[pay,pr]}}
+  const kinds=lv<=2?[10,1]:lv===3?[100,50,10,5,1]:[500,100,50,10,5,1],cnt={};let tot=0;const n=lv<=2?R(3,7):R(4,8);
+  for(let i=0;i<n;i++){const v=pick(kinds);if(lv<=2&&tot+v>99)continue;cnt[v]=(cnt[v]||0)+1;tot+=v}
+  if(!tot){cnt[10]=1;tot=10}
+  const coins=Object.keys(cnt).map(Number).sort((a,b)=>b-a).map(v=>coinSVG(v).repeat(cnt[v])).join('');
+  return{key:`mo${lv}_${Object.keys(cnt).map(v=>v+'x'+cnt[v]).join('.')}`,html:`<span class="coins">${coins}</span><span class="sm">ぜんぶで なんえん？</span>`,speak:['ぜんぶで なんえん？','ja-JP'],a:String(tot),choices:numChoices(tot,4,[10,-10,5,-5,50]),mo:cnt}}
+const WPT={add:[['🍎','りんご','こ',(a,b)=>`りんごが ${a}こ あります。${b}こ もらうと ぜんぶで なんこ？`],['🐟','さかな','ひき',(a,b)=>`さかなを ${a}ひき つりました。あとから ${b}ひき つりました。ぜんぶで なんびき？`],['🚌','バス','にん',(a,b)=>`バスに ${a}にん のっています。${b}にん のってきました。みんなで なんにん？`]],
+  sub:[['🐦','ことり','わ',(a,b)=>`ことりが ${a}わ います。${b}わ とんで いきました。のこりは なんわ？`],['🍬','あめ','こ',(a,b)=>`あめが ${a}こ あります。${b}こ たべました。のこりは なんこ？`],['🌷','はな','ほん',(a,b)=>`あかい はなが ${a}ほん、きいろい はなが ${b}ほん。ちがいは なんぼん？`]],
+  mul:[['🍩','ドーナツ','こ',(a,b)=>`1はこに ドーナツが ${a}こずつ。${b}はこで なんこ？`],['🪑','いす','きゃく',(a,b)=>`1れつに いすが ${a}きゃく。${b}れつで なんきゃく？`]],
+  div:[['🍪','クッキー','まい',(a,b)=>`クッキー ${a}まいを ${b}にんで おなじ かずずつ わけます。ひとり なんまい？`],['🌸','はな','たば',(a,b)=>`はな ${a}ほんで ${b}ほんずつの たばを つくります。なんたば できる？`]]};
+function genWord(lv){let t,a,x,y,op;const r=Math.random();
+  if(lv<=2){if(r<.5){t=pick(WPT.add);x=R(2,9);y=R(1,9);a=x+y;op='+'}else{t=pick(WPT.sub);x=R(5,15);y=R(1,x-1);a=x-y;op='−'}}
+  else if(lv===3){if(r<.4){t=pick(WPT.mul);x=R(2,9);y=R(2,9);a=x*y;op='×'}else if(r<.7){t=pick(WPT.add);x=R(12,58);y=R(10,39);a=x+y;op='+'}else{t=pick(WPT.sub);x=R(30,95);y=R(10,x-5);a=x-y;op='−'}}
+  else{if(r<.4){t=pick(WPT.div);y=R(2,9);a=R(2,9);x=a*y;op='÷'}else if(r<.7){t=pick(WPT.mul);x=R(11,30);y=R(3,9);a=x*y;op='×'}else{const pr=R(3,15)*10,k=R(2,5),pay=pr*k<500?500:1000;a=pay-pr*k;
+      return{key:`wp${lv}s${pr}x${k}-${pay}`,html:`<span class="wpq">✏️ 1ぽん ${pr}えんの えんぴつを ${k}ほん かって、${pay}えん だしました。おつりは なんえん？</span>`,speak:[`1ぽん ${pr}えんの えんぴつを ${k}ほん かって、${pay}えん だしました。おつりは？`,'ja-JP'],a:String(a),choices:numChoices(a,4,[10,-10,pr,-pr]),wp:`${pay} − ${pr} × ${k} = ${pay} − ${pr*k} = ${a}`}}}
+  const txt=t[3](x,y);
+  return{key:`wp${lv}${op}${x}_${y}_${t[1]}`,html:`<span class="wpq">${t[0]} ${txt}</span>`,speak:[txt,'ja-JP'],a:String(a),choices:numChoices(a,4,op==='×'?[x,-x]:op==='÷'?[1,-1]:null),wp:`${x} ${op} ${y} = ${a}`}}
+function genLife(lv){const r=Math.random();if(lv<=1)return genClock(1);return r<.36?genClock(lv):r<.68?genMoney(lv):genWord(lv)}
 function genQ(subj,lv,st){
   const n=lv===0?3:4;
   if(subj==='math'){
-    if(lv>=5)return genMathHi(lv,n);
+    if(lv>=5)return Math.random()<.1?genWord(4):genMathHi(lv,n);
+    if((lv===1&&Math.random()<.07)||(lv>=2&&lv<=4&&Math.random()<.3))return genLife(lv);
     if(lv===0&&Math.random()<.3){const a=R(1,7),A=a+1;return{key:'n'+a,html:`${a} の つぎは <span class="bl">?</span><span class="sm">${'●'.repeat(a)}</span>`,speak:[`${a} の つぎは？`,'ja-JP'],a:String(A),choices:textChoices(String(A),[a-1,a+2,a,A+1].filter(v=>v>=1).map(String),3)}}
     if(lv===0){const k=R(1,st>=3?8:6),f=pick(FRUITS);
       return{key:'c'+k+f,html:`<span class="pics">${f.repeat(k)}</span><span class="sm">いくつ あるかな？</span>`,speak:['いくつ あるかな？','ja-JP'],a:String(k),choices:textChoices(String(k),[k-2,k-1,k+1,k+2].filter(v=>v>=1).map(String),3)}}
@@ -1101,7 +1144,7 @@ function makeItem(st,d,boss,min=0){
 /* =============== save data =============== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-const APPV='v117';
+const APPV='v118';
 try{const c=document.createElement('canvas');c.width=9;c.height=9;const g=c.getContext('2d'),F=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};F(1,0,7,1,'#120d09');F(1,8,7,1,'#120d09');F(0,1,1,7,'#120d09');F(8,1,1,7,'#120d09');F(1,1,7,1,'#120d09');F(1,7,7,1,'#120d09');F(1,1,1,7,'#120d09');F(7,1,1,7,'#120d09');F(2,2,5,1,'#7a6a52');F(2,2,1,5,'#7a6a52');F(2,6,5,1,'#2a2018');F(6,2,1,5,'#2a2018');document.documentElement.style.setProperty('--pxf',`url(${c.toDataURL()})`)}catch(e){}
 const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));if(G.bgmOn===undefined)G.bgmOn=true;
 let P=null;
@@ -2864,6 +2907,13 @@ $('weakBtn').onclick=()=>{
 /* =============== weak list =============== */
 /* ===================== 📕 にがて とっくん（かいせつつき・1もんずつ） ===================== */
 function explainQ(w){const k=w.key||'',a=w.a,L=[];let m;
+  if(m=k.match(/^tk\d_(\d+):(\d+)(?:\+(\d+))?/)){const h=+m[1],mi=+m[2],st=+(m[3]||0);L.push(`🔵 みじかい はり（じ）が ${mi?`${h} と ${h%12+1} の あいだ → <b>${h}じ</b>`:`${h} → <b>${h}じ</b>`}`);
+    L.push(`🔴 ながい はり（ふん）が ${mi?`${Math.floor(mi/5)||12}${mi%5?' から '+(mi%5)+'めもり すすんだ':''} → 1つの すうじで 5ふん → <b>${mi}ふん</b>`:'12 → <b>ちょうど</b>'}`);
+    if(st)L.push(`${tStr(h,mi)} から ${st}ぷん すすめると <b>${esc(a)}</b>`);else L.push(`こたえは <b>${esc(a)}</b>`);return L}
+  if(m=k.match(/^mo\dc(\d+)-(\d+)/)){L.push(`おつり ＝ だした おかね − ねだん`);L.push(`${m[1]} − ${m[2]} = <b>${a}</b>えん`);return L}
+  if(m=k.match(/^mo\d_(.+)/)){const ps=m[1].split('.').map(x=>x.split('x').map(Number));L.push('おおきい おかねから じゅんばんに かぞえよう');ps.forEach(([v,c])=>L.push(`${v}えん × ${c}まい = ${v*c}えん`));L.push(`ぜんぶ たして <b>${a}</b>えん`);return L}
+  if(m=k.match(/^wp\d([+−×÷])(\d+)_(\d+)/)){const op=m[1],x=+m[2],y=+m[3];L.push({'+':'「ぜんぶで」「みんなで」→ たしざん','−':'「のこりは」「ちがいは」→ ひきざん','×':'「〜ずつ」が「いくつぶん」→ かけざん','÷':'「おなじ かずずつ わける」→ わりざん'}[op]);L.push(`しき：${x} ${op} ${y} = <b>${a}</b>`);return L}
+  if(m=k.match(/^wp\ds(\d+)x(\d+)-(\d+)/)){L.push('① さきに ぜんぶの ねだんを だそう');L.push(`${m[1]} × ${m[2]} = ${m[1]*m[2]}えん`);L.push('② だした おかねから ひこう');L.push(`${m[3]} − ${m[1]*m[2]} = <b>${a}</b>えん`);return L}
   const dots=(n,c='●')=>{let s='';for(let i=0;i<n;i++){s+=c;if(i%5===4&&i<n-1)s+=' '}return `<span class="exd">${s}</span>`};
   const B_=v=>`<b>${v}</b>`,lcm=(x,y)=>x*y/gcd(x,y),dp=s=>(String(s).split('.')[1]||'').length;
   const enW=e=>EN.concat(PHRASES,EN4).find(x=>x[1]===e);
@@ -2956,7 +3006,7 @@ $('sdSpk').onclick=()=>{if(SD&&SD.w&&SD.w.speak)say(...SD.w.speak)};
 function labelOf(q){const t=document.createElement('div');t.innerHTML=q.html;return (t.textContent||'').replace(/🔊/,'🔊 ').slice(0,14)}
 /* にがては じぶんの としの レベルまで（うえの がくねんの もんだいは いれない） */
 const ageLv=(p=P)=>{const a=+p.age||7;return a<=4?0:a<=5?1:a<=7?2:Math.min(LVN-1,a-5)};
-function qLvGuess(w){if(w.lv!=null)return w.lv;const k=w.key||'';let m;if(m=k.match(/^g([456])/))return +m[1]+1;if(m=k.match(/^e([456])/))return +m[1]+1;if(/^k1p/.test(k))return 1;if(m=k.match(/^k(\d)/))return +m[1];if(/^h/.test(k)||/^c\d/.test(k)||/^n\d/.test(k)||/^el/.test(k))return 0;if(/^ep/.test(k))return 1;if(/^ej/.test(k))return 2;if(/^es/.test(k))return 3;if(/^ee/.test(k))return 4;
+function qLvGuess(w){if(w.lv!=null)return w.lv;const k=w.key||'';let m;if(m=k.match(/^(tk|mo|wp)(\d)/))return +m[2];if(m=k.match(/^g([456])/))return +m[1]+1;if(m=k.match(/^e([456])/))return +m[1]+1;if(/^k1p/.test(k))return 1;if(m=k.match(/^k(\d)/))return +m[1];if(/^h/.test(k)||/^c\d/.test(k)||/^n\d/.test(k)||/^el/.test(k))return 0;if(/^ep/.test(k))return 1;if(/^ej/.test(k))return 2;if(/^es/.test(k))return 3;if(/^ee/.test(k))return 4;
   if(m=k.match(/^(\d+)([+−×÷])(\d+)$/)){const x=+m[1],y=+m[3],op=m[2];if(op==='÷'||x>=100)return 4;if(op==='×')return x>=10?4:3;if(x>20||y>20)return 3;if(x>10||x+y>10)return 2;return 1}if(/^10c/.test(k))return 1;return 0}
 function weakTrim(p=P){if(!p||!p.weak)return;const L=ageLv(p);p.weak=p.weak.filter(w=>qLvGuess(w)<=L)}
 function addWeak(q){if(qLvGuess(q)>ageLv())return;const w=P.weak.find(w=>w.key===q.key);
@@ -3365,7 +3415,7 @@ const pad=n=>String(n).padStart(2,'0');
 const dkey=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
 const MCAT={'4m':'かけざん（2けた×2けた）','4d':'わりざん（3けた÷1けた）','4r':'あまりの ある わりざん','4f':'しょうすうの たしひき','4q':'ぶんすうの たしざん','4a':'ながしかくの めんせき','5m':'しょうすう×せいすう','5n':'しょうすう×しょうすう','5q':'つうぶんの たしざん','5v':'へいきん','5t':'さんかくけいの めんせき','5p':'わりあい（％）','5l':'さいしょう こうばいすう','6m':'ぶんすうの かけざん','6d':'ぶんすうの わりざん','6r':'ひ','6c':'えんの めんせき','6s':'はやさ','6t':'みちのり','6u':'じかん','6x':'もじと しき'};
 function catOf(subj,key){
-  if(subj==='math'){if(key[0]==='c')return 'かずを かぞえる';if(key[0]==='g')return MCAT[key.slice(1,3)]||'けいさん';const m=key.match(/^(\d+)([+−×÷])(\d+)$/);if(!m)return 'けいさん';const x=+m[1],y=+m[3],op=m[2];
+  if(subj==='math'){if(key.startsWith('tk'))return 'とけい';if(key.startsWith('mo'))return 'おかね';if(key.startsWith('wp'))return 'ぶんしょうだい';if(key[0]==='c')return 'かずを かぞえる';if(key[0]==='g')return MCAT[key.slice(1,3)]||'けいさん';const m=key.match(/^(\d+)([+−×÷])(\d+)$/);if(!m)return 'けいさん';const x=+m[1],y=+m[3],op=m[2];
     if(op==='+')return x%10+y%10>=10?'たしざん（くりあがり あり）':'たしざん（くりあがり なし）';
     if(op==='−')return x%10<y%10?'ひきざん（くりさがり あり）':'ひきざん（くりさがり なし）';
     if(op==='×')return x<10&&y<10?`かけざん ${x}のだん`:'かけざん（2けた×1けた）';
