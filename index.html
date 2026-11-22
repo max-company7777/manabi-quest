@@ -1095,7 +1095,7 @@ function makeItem(st,d,boss,min=0){
 /* =============== save data =============== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-const APPV='v115';
+const APPV='v116';
 try{const c=document.createElement('canvas');c.width=9;c.height=9;const g=c.getContext('2d'),F=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};F(1,0,7,1,'#120d09');F(1,8,7,1,'#120d09');F(0,1,1,7,'#120d09');F(8,1,1,7,'#120d09');F(1,1,7,1,'#120d09');F(1,7,7,1,'#120d09');F(1,1,1,7,'#120d09');F(7,1,1,7,'#120d09');F(2,2,5,1,'#7a6a52');F(2,2,1,5,'#7a6a52');F(2,6,5,1,'#2a2018');F(6,2,1,5,'#2a2018');document.documentElement.style.setProperty('--pxf',`url(${c.toDataURL()})`)}catch(e){}
 const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));if(G.bgmOn===undefined)G.bgmOn=true;
 let P=null;
@@ -2213,10 +2213,10 @@ function lnHit(v,dmg,src){const vab=v.ab||[];
   if(v.kbLeft>0&&v.hp<=v.kbNext){v.kbLeft--;v.kbNext-=v.kbStep;lnKnock(v,40)}}
 function lnKnock(v,d){v.stun=.55;v.x+=(v.side==='p'?1:-1)*d;v.x=Math.max(LCE+10,Math.min(LCP-10,v.x));v.el.classList.remove('walk','atk');anim(v.el,'lnkb',550);snd(300,.08,'square',.04,-100)}
 /* ---- 🏰 しろほう（カスタム できる ひっさつ たいほう） ---- */
-const CANNON={beam:{n:'はどうほう',i:'💥',c:'#ffd23f',d:'ビームで てき ぜんぶに ダメージ＆ふっとばす',unl:0},
+const CANNON={beam:{n:'はどうほう',i:'💥',c:'#ffd23f',d:'ビームで てき ぜんぶに ダメージ＆ふっとばす（てきの しろには きかない）',unl:0},
   ice:{n:'こおりほう',i:'❄️',c:'#7af0ff',d:'てき ぜんぶを こおらせて しばらく うごけなくする',unl:3},
   wall:{n:'かべほう',i:'🧱',c:'#c8884a',d:'まえに かたい かべを だして てきを とおせんぼ',unl:6},
-  thunder:{n:'かみなりほう',i:'⚡',c:'#f0d020',d:'せんとうの てき3たいと てきの しろに おおダメージ',unl:10},
+  thunder:{n:'かみなりほう',i:'⚡',c:'#f0d020',d:'せんとうの てき3たいに おおダメージ（てきの しろには きかない）',unl:10},
   heal:{n:'いやしほう',i:'💚',c:'#58d14a',d:'なかま ぜんいんと じぶんの しろを かいふく',unl:15},
   missile:{n:'ミサイルほう',i:'🚀',c:'#ff6a2a',d:'ミサイルの れんしゃで てきを ねらいうち（てきの しろには きかない）',unl:20,ct:1.15},
   meteor:{n:'いんせきほう',i:'☄️',c:'#ff3a7a',d:'さいきょう！ きょだいな いんせきで てき ぜんぶを ふきとばす（てきの しろには きかない・チャージ ながめ）',unl:30,ct:1.5}};
@@ -2246,7 +2246,7 @@ function laneFire(){if(!LN||LN.ult<100||!LN.run)return;LN.ult=0;const t=canOf().
     const w=laneMk('p',{wall:1,hp:Math.round(R*55*f),atk:0,spd:0,rg:0,kb:0,x,life:12+canPl(t)*.5});w.el.classList.add('wallin')}
   else if(t==='thunder'){const tg=en.sort((a,b)=>b.x-a.x).slice(0,3);
     tg.forEach((u,i)=>setTimeout(()=>{if(!LN||u.dead)return;lnFireFx('lnbolt',u.x);snd(80,.25,'sawtooth',.08);lnHit(u,Math.round(R*26*f*(u.boss?.6:1)),null);if(!u.dead)lnKnock(u,50)},150+i*180));
-    setTimeout(()=>{if(!LN)return;lnFireFx('lnbolt',LCE+10);const d=Math.round(R*10*f);LN.eHp-=d;lnFloat(LCE+10,fmtS(d));anim($('lnCE'),'lnshake',300);snd(70,.3,'sawtooth',.08)},150+tg.length*180)}
+}
   else if(t==='missile'){const n=5+Math.floor(canPl(t)/3),W=$('lnField').clientWidth;
     for(let i=0;i<n;i++)setTimeout(()=>{if(!LN||!LN.run)return;const al=LN.units.filter(u=>!u.dead&&u.side==='e');const tg=al.length?pick(al):null,tx=tg?tg.x:LCE+80+Math.random()*300;
       const e=document.createElement('div');e.className='lnmsl';e.innerHTML='<i>🚀</i>';e.style.left=(LCP-20)/LW*W+'px';e.style.setProperty('--dx',((tx-(LCP-20))/LW*W)+'px');$('lnFx').appendChild(e);snd(500+Math.random()*300,.12,'sawtooth',.04,-300);
