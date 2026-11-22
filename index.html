@@ -3153,7 +3153,7 @@ function renderStats(){
   $('stCats').innerHTML=cats.sort((a,b)=>a.rate-b.rate||b.n-a.n).map(c=>`<div class="crow"><div class="cn">${F==='all'?`<span class="sb">${SN[c.subj]}</span>`:''}${c.name}</div>
     <div class="cbar"><i style="width:${c.rate*100}%;background:${col(c.rate)}"></i></div><div class="cv"><b style="color:${col(c.rate)}">${pct(c.rate)}</b><small>${c.n}もん・${c.avg.toFixed(1)}s</small></div></div>`).join('')||'<small style="color:var(--sub)">まだ きろくが ないよ</small>';
   // missed items
-  const miss=Object.values(S.items).filter(it=>it.miss>0&&(F==='all'||it.subj===F)).sort((a,b)=>b.miss-a.miss||b.miss/b.n-a.miss/a.n).slice(0,12);
+  const miss=Object.values(S.items||{}).filter(it=>it.miss>0&&(F==='all'||it.subj===F)).sort((a,b)=>b.miss-a.miss||b.miss/b.n-a.miss/a.n).slice(0,12);
   $('stMiss').innerHTML=miss.map(it=>`<span class="chip">${esc(it.label)} → ${esc(it.a)} <b style="color:#e8413c">✕${it.miss}</b></span>`).join('')||'<small style="color:var(--sub)">まちがえた もんだいは まだ ないよ</small>';
 }
 
