@@ -470,6 +470,7 @@ input{font:inherit}
 .limc{background:#0006;border:2px solid #5a2a8a;padding:3px;filter:grayscale(.85) brightness(.6)}.limc.own{filter:none;border-color:#ffd23f}
 .limc span{display:block;width:100%;aspect-ratio:1}.limc span svg,.limc span .hs{width:100%;height:100%}.limc small{display:block;font-size:9px;line-height:1.2}
 .gz.c5{background:linear-gradient(90deg,#3a1a5a,#0005)}
+.chbox{text-align:left;max-height:62vh;overflow:auto}.chh{color:var(--gold);font-size:14px;margin:8px 0 4px}.chg{display:grid;grid-template-columns:1fr 1fr;gap:5px}.chg .btn{font-size:13px;padding:9px 4px}.chg .toggle{background:#2a5a8a}
 </style>
 </head>
 <body>
@@ -1592,6 +1593,51 @@ function roomRender(){const r=roomOf(),W=WALLS.find(w=>w[0]===r.wall)||WALLS[0],
   document.querySelectorAll('#rmList [data-use]').forEach(b=>b.onclick=()=>{const [t,k]=b.dataset.use.split(':');r[t]=k;save();roomRender()})}
 function roomWander(){if(!$('room').classList.contains('on')){clearInterval(rmTimer);return}
   document.querySelectorAll('.rmm').forEach(e=>{if(Math.random()<.35)return;const x=R(10,82),y=R(3,24),cur=parseFloat(e.style.left);e.style.left=x+'%';e.style.bottom=y+'%';e.classList.toggle('flipx',x<cur);e.style.zIndex=30-y})}
+
+/* ===================== 🛠️ cheat (owner account only, PIN protected) ===================== */
+const pinHash=s=>{let h=5381;for(const c of 'mq-salt:'+s)h=((h*33)^c.charCodeAt(0))>>>0;return h.toString(36)};
+let lvTaps=[];
+function cheatGate(){const now=Date.now();lvTaps=lvTaps.filter(t=>now-t<2500).concat(now);if(lvTaps.length<7)return;lvTaps=[];
+  if(!G.chPin){showModal(`<div class="mt">🛠️ チートモードの せってい</div><p style="font-size:13px">この アカウント（<b>${esc(P.name)}</b>）を<br>チートできる アカウントに するよ。<br>あんしょうばんごう（4けた いじょう）を きめてね</p>
+      <input class="field" id="cp1" type="password" inputmode="numeric" placeholder="あんしょうばんごう"><input class="field" id="cp2" type="password" inputmode="numeric" placeholder="もういちど"><div id="cpm" style="color:#ff8a7a;font-size:13px;min-height:18px"></div>
+      <small style="color:var(--sub)">チート アカウントは かぞくの ランキングに でなくなるよ</small><button class="btn orange big" id="ok">せってい する</button><button class="btn gray" id="cl">やめる</button>`,
+      {cl:closeModal,ok:()=>{const a=$('cp1').value,b=$('cp2').value;if(a.length<4){$('cpm').textContent='4けた いじょうに してね';return}if(a!==b){$('cpm').textContent='おなじ ばんごうを いれてね';return}
+        G.chPin=pinHash(a);P.cheat=true;save();closeModal();toast('🛠️ チート アカウントに したよ');cheatOpen()}});return}
+  if(!P.cheat){toast('…');return}
+  showModal(`<div class="mt">🛠️ あんしょうばんごう</div><input class="field" id="cp1" type="password" inputmode="numeric" placeholder="あんしょうばんごう"><div id="cpm" style="color:#ff8a7a;font-size:13px;min-height:18px"></div><button class="btn orange big" id="ok">ひらく</button><button class="btn gray" id="cl">とじる</button>`,
+    {cl:closeModal,ok:()=>{if(pinHash($('cp1').value)!==G.chPin){$('cpm').textContent='ちがうよ';snd(200,.2,'square',.05);return}closeModal();cheatOpen()}});setTimeout(()=>$('cp1')&&$('cp1').focus(),100)}
+function cheatOpen(){if(!P||!P.cheat)return;
+  const btn=(id,t,c='')=>`<button class="btn ${c}" data-ch="${id}">${t}</button>`;
+  showModal(`<div class="mt">🛠️ チート</div><small style="color:var(--sub)">${esc(P.name)} せんよう</small><div class="chbox">
+    <div class="chh">💰 おかね・どうぐ</div><div class="chg">${btn('g1','🪙 +10万')}${btn('g2','🪙 +1000万')}${btn('tk','🎟️ +100')}${btn('gset','🪙 じゆうに')}</div>
+    <div class="chh">⭐ レベル・すすみ</div><div class="chg">${btn('lv','Lv を きめる')}${btn('stg','ステージを ひらく')}${btn('twr','とう きろく')}${btn('mst','ぜんぶ 🎓マスター')}</div>
+    <div class="chh">⚔️ そうび</div><div class="chg">${btn('eq','さいきょう そうび を つくる')}${btn('plus','そうび +を きめる')}${btn('box','ボックスを からに')}</div>
+    <div class="chh">🐾 なかま</div><div class="chg">${btn('mall','151しゅ ぜんぶ')}${btn('mult','きゅうきょく 3たい')}${btn('mspe','とくべつ なかま ぜんぶ')}${btn('mevo','すぐ しんか できる')}${btn('mlv','なかま Lv100')}${btn('egg','たまご すぐ かえる')}</div>
+    <div class="chh">👗 きせかえ・へや</div><div class="chg">${btn('cos','きせかえ ぜんぶ')}${btn('furn','かぐ ぜんぶ')}</div>
+    <div class="chh">🎮 バトル</div><div class="chg">${btn('god',(P.chGod?'✅':'⬜')+' むてき','toggle')}${btn('ohk',(P.chOhk?'✅':'⬜')+' いちげき','toggle')}</div>
+    <div class="chh">⚠️ その他</div><div class="chg">${btn('pin','あんしょうばんごうを かえる')}${btn('off','チートを やめる（ふつうの アカウントに）','gray')}</div>
+    </div><button class="btn gray" id="cl">とじる</button>`,{cl:()=>{closeModal();renderHome()}});
+  const ask=(q,def,cb)=>{const v=prompt(q,def);if(v===null)return;const n=Math.floor(+v);if(isNaN(n)||n<0){toast('すうじを いれてね');return}cb(n)};
+  const done=m=>{save();toast('🛠️ '+m);cheatOpen()};
+  const A={g1:()=>{P.gold+=1e5;done('+10万')},g2:()=>{P.gold+=1e7;done('+1000万')},tk:()=>{P.tk=(P.tk||0)+100;done('🎟️ +100')},gset:()=>ask('ゴールド',P.gold,n=>{P.gold=n;done('ゴールド '+n)}),
+    lv:()=>ask('レベル',P.lv,n=>{P.lv=Math.max(1,n);P.xp=0;done('Lv'+P.lv)}),stg:()=>ask('ひらく ステージ',(P.best.mix||0)+10,n=>{for(const k in P.best)P.best[k]=Math.max(P.best[k]||0,n);selStage=n;done('ステージ '+n+' まで')}),
+    twr:()=>ask('とうの さいこう きろく',(P.tower&&P.tower.best)||0,n=>{P.tower=P.tower||{best:0,runs:0};P.tower.best=n;done('とう '+n+'かい')}),
+    mst:()=>{P.mast=P.mast||{};SUBK.forEach(k=>{for(let i=0;i<LVN;i++)P.mast[k+i]=1});done('ぜんぶ マスター')},
+    eq:()=>{const st=Math.max(10,Math.round(P.lv/2));for(const k of SLOTS){let it,g=0;do{it=makeItem(st,7,true,4)}while((it.slot!==k||it.rar<4)&&g++<6000);if(it.slot===k){it.plus=(P.eq[k]&&P.eq[k].plus)||0;P.eq[k]=it;P.dex.items[ikey(it)]=1}}done('しんわ そうび')},
+    plus:()=>ask('すべての そうびの +',20,n=>{SLOTS.forEach(k=>{if(P.eq[k])P.eq[k].plus=n});done('+'+n)}),
+    box:()=>{if(confirm('ボックスの そうびを ぜんぶ けす？')){P.box=[];done('からっぽ')}},
+    mall:()=>{SPECIES.filter(x=>x[3]<5).forEach(x=>{P.dex.owned[x[0]]=1;P.dex.seen[x[0]]=1;if(!P.mons.some(m=>m.sp===x[0]))P.mons.push({id:uid(),sp:x[0],lv:1,xp:0,bond:0})});done('151しゅ')},
+    mult:()=>{ULTS.forEach(u=>{P.dex.owned[u.k]=1;P.dex.seen[u.k]=1;if(!P.mons.some(m=>m.sp===u.k))P.mons.push({id:uid(),sp:u.k,lv:1,xp:0,bond:0})});done('きゅうきょく')},
+    mspe:()=>{Object.keys(SP).filter(k=>SP[k].special&&(SP[k].special==='gacha'||/0$/.test(k))).forEach(k=>{P.dex.owned[k]=1;if(!P.mons.some(m=>m.sp===k))P.mons.push({id:uid(),sp:k,lv:1,xp:0,bond:0})});done('とくべつ なかま')},
+    mevo:()=>{P.mons.forEach(m=>{const n=evoNeed(m);if(n){m.lv=Math.max(m.lv,n.lv);m.bond=Math.max(m.bond||0,n.bond)}});done('しんか OK')},
+    mlv:()=>{P.mons.forEach(m=>{m.lv=Math.max(m.lv,100)});done('なかま Lv100')},
+    egg:()=>{P.eggs.forEach(e=>{e.inc=true;e.prog=e.need});save();closeModal();processHatch(()=>{renderHome();cheatOpen()})},
+    cos:()=>{const C=cosOf(P);Object.entries(COSCAT).forEach(([c,o])=>Object.keys(o).forEach(k=>C.owned[c+':'+k]=1));done('きせかえ ぜんぶ')},
+    furn:()=>{const r=roomOf();Object.entries(FURN).forEach(([t,f])=>f.v.forEach(v=>r.own[t+':'+v[0]]=1));WALLS.forEach(w=>r.own['wall:'+w[0]]=1);FLOORS.forEach(f=>r.own['floor:'+f[0]]=1);done('かぐ ぜんぶ')},
+    god:()=>{P.chGod=!P.chGod;done('むてき '+(P.chGod?'ON':'OFF'))},ohk:()=>{P.chOhk=!P.chOhk;done('いちげき '+(P.chOhk?'ON':'OFF'))},
+    pin:()=>{const a=prompt('あたらしい あんしょうばんごう（4けた いじょう）');if(!a)return;if(a.length<4){toast('4けた いじょう');return}G.chPin=pinHash(a);done('ばんごうを かえたよ')},
+    off:()=>{if(!confirm('チートを やめて ふつうの アカウントに もどす？（むてき・いちげきも OFF）'))return;P.cheat=false;P.chGod=false;P.chOhk=false;delete G.chPin;save();closeModal();renderHome();toast('ふつうの アカウントに もどったよ')}};
+  document.querySelectorAll('[data-ch]').forEach(b=>b.onclick=()=>{snd(660,.05);A[b.dataset.ch]()})}
 /* ===================== help ===================== */
 const HELP=[
  ['play','🎮 あそびかた',`<b>しゅつげき</b>を おすと バトル！ もんだいに せいかいすると てきに こうげき。<br>1ステージは 5たい（さいごは ボス）。ぜんぶ たおすと クリアで ゴールドや そうびが もらえるよ。<br>まちがえたり じかんぎれに なると ダメージ。HPが 0に なると まけ。<br><small>はやく こたえると ダメージ アップ・れんぞく せいかいで コンボ！</small>`],
@@ -1625,7 +1671,7 @@ const fmtS=n=>n<1e4?String(n):n<1e6?Math.floor(n/1e3)+'K':n<1e9?(n<1e7?Math.floo
 const fmtBig=n=>{const f=(v,u)=>(v>=100?Math.floor(v):v>=10?Math.floor(v*10)/10:Math.floor(v*100)/100)+u;return n>=1e12?f(n/1e12,'T'):n>=1e9?f(n/1e9,'B'):n>=1e6?f(n/1e6,'M'):n>=1e5?f(n/1e3,'K'):String(n)};
 function renderHome(){
   pixHome();
-  $('who').innerHTML=pi('person')+esc(P.name)+' ▾';
+  $('who').innerHTML=pi('person')+esc(P.name)+(P.cheat?' 🛠️':'')+' ▾';
   $('hLv').textContent=P.lv>=MAXLV?'MAX':P.lv;$('hXp').style.width=(P.lv>=MAXLV?100:Math.min(100,P.xp/xpNeed()*100))+'%';
   $('hGold').textContent=fmtBig(P.gold);$('hStreak').textContent=P.streak;
   $('hHero').innerHTML=heroSVG(P.eq,P);$('hPow').textContent=fmtBig(power());$('hTitle').textContent=titleOf(P)?'「'+titleOf(P)+'」':'';
@@ -1665,6 +1711,7 @@ $('who').onclick=()=>profileForm(P);
 $('setBtn').onclick=()=>profileForm(P);
 $('statBtn').onclick=()=>showStats();
 $('helpBtn').onclick=()=>{snd(660,.05);helpOpen()};
+document.querySelector('#home .top .lv').onclick=cheatGate;
 document.querySelector('#home .powbig').onclick=()=>{const lv=P.lv*2,eq=SLOTS.reduce((t,k)=>t+iscore(P.eq[k]),0),pt=partyPow();
   showModal(`<div class="mt">⚔️ パワーの うちわけ</div><div class="enhlist"><div><span>⭐ レベル（Lv${P.lv}×2）</span><b>${lv.toLocaleString()}</b></div><div><span>🛡️ そうび 10かしょ</span><b>${eq.toLocaleString()}</b></div><div><span>🐾 なかま（パーティ）</span><b>${pt.toLocaleString()}</b></div></div><p>ごうけい <b style="font-size:22px;color:var(--gold)">${power().toLocaleString()}</b></p><button class="btn gray" id="cl">とじる</button>`,{cl:closeModal})};
 $('towerBtn').onclick=()=>{snd(660,.05);showModal(`<div class="mt">🗼 むげんの とう</div><p>1かいに 1たい。どこまで のぼれるかな？<br>10かいごとに ボスと ボーナス！<br><small style="color:var(--sub)">HPは すこししか かいふく しないよ・もんだいは ミックス</small></p><p>じぶんの さいこう：<b style="color:var(--gold)">${(P.tower&&P.tower.best)||0}かい</b></p><button class="btn orange big" id="go">のぼる！</button><button class="btn gray" id="cl">やめる</button>`,{go:()=>{closeModal();startTower()},cl:closeModal})};
@@ -2267,8 +2314,8 @@ function renderRank(){
   $('rkTabs').innerHTML=RKS.map(([k,n])=>`<button class="btn db${rkTab===k?' sel':''}" data-k="${k}">${n}</button>`).join('');
   document.querySelectorAll('#rkTabs .db').forEach(b=>b.onclick=()=>{rkTab=b.dataset.k;renderRank()});
   const map=new Map();
-  G.profiles.filter(p=>!p.master).forEach(p=>map.set(p.id,{p,dev:G.devName||'この たんまつ',local:true}));
-  (rkRemote||[]).filter(p=>!p.master).forEach(p=>{if(!map.has(p.id))map.set(p.id,{p,dev:p._remote,upd:p._upd})});
+  G.profiles.filter(p=>!p.master&&!p.cheat).forEach(p=>map.set(p.id,{p,dev:G.devName||'この たんまつ',local:true}));
+  (rkRemote||[]).filter(p=>!p.master&&!p.cheat).forEach(p=>{if(!map.has(p.id))map.set(p.id,{p,dev:p._remote,upd:p._upd})});
   const def=RKS.find(r=>r[0]===rkTab),rows=[...map.values()].map(o=>Object.assign(o,{v:rkVal(o.p,rkTab)})).sort((a,b)=>b.v-a.v||b.p.lv-a.p.lv);
   const me=P&&!P.master?P.id:null;
   $('rkInfo').innerHTML=!FB_CONFIG?'<small style="color:var(--sub)">この たんまつの ぼうけんしゃだけの ランキングだよ</small>'
@@ -2428,7 +2475,7 @@ function heroAttack(dmg,cr,fast){
     const pms=partyMons(),pf=partyPow()/Math.max(1,pms.reduce((a,m)=>a+monPow(m),0));let cd=0;
     pms.forEach((m,i)=>{const mu=elMult(elOf(m.sp),elOf(B.mon.sp)),d=Math.round(monPow(m)*pf*mu);cd+=d;
       setTimeout(()=>{const el=document.querySelector('#partyB .pm[data-i="'+i+'"]');if(el)anim(el,'hop',350);floatTxt(elIcon(m.sp)+d+(mu>1?'!':''),'mon',mu>1?'crit':'info');if(mu>1&&i===0)setTimeout(()=>toast('こうかは ばつぐんだ！'),100)},280+i*160)});
-    B.mon.hp=Math.max(0,B.mon.hp-dmg-pd-cd);updMonHp();
+    B.mon.hp=(P.cheat&&P.chOhk)?0:Math.max(0,B.mon.hp-dmg-pd-cd);updMonHp();
     if(B.mon.hp<=0)setTimeout(defeat,350);else setTimeout(nextQ,500);
   },160);
 }
@@ -2438,6 +2485,7 @@ function monAttack(cb){
     if(Math.random()*100<dodge()){floatTxt('💨 かわした！','hero','info');snd(700,.15,'sine',.05,600);setTimeout(cb,600);return}
     anim($('hero'),'hurt',400);anim($('arena'),'flash',250);snd(120,.25,'sawtooth',.08,-60);vib(120);
     const md=Math.round(B.mon.dmg*(1-Math.min(60,fxSum('slow'))/100)),dm=Math.max(Math.ceil(md*.4),md-def());
+    if(P.cheat&&P.chGod){floatTxt('🛠️ むてき','hero','info');setTimeout(cb,600);return}
     B.hp=Math.max(0,B.hp-dm);updHeroHp();floatTxt('-'+dm+(def()?' 🛡️':''),'hero','hurt');
     if(B.hp<=0&&fxSum('revive')&&!B.revived){B.revived=true;setTimeout(()=>{B.hp=Math.round(maxHp()*.5);updHeroHp();floatTxt('🔥ふっかつ！','hero','info');fanfare()},500);setTimeout(cb,1100);return}
     setTimeout(B.hp<=0?gameOver:cb,600)},220);
