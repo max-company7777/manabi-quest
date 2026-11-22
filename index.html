@@ -681,6 +681,8 @@ input{font:inherit}
 .evoall{width:100%;margin-bottom:6px;animation:evglow 1.6s ease-in-out infinite}@keyframes evglow{50%{box-shadow:0 0 14px #7af07a}}
 .evalist{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;max-height:44vh;overflow:auto;margin:6px 0}.eva{display:flex;align-items:center;justify-content:center;gap:4px;background:rgba(0,0,0,.3);border-radius:8px;padding:4px}.eva img{width:40px;height:40px;image-rendering:pixelated}.eva i{font-style:normal;color:#ffd23f;font-size:12px}
 .evagrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(70px,1fr));gap:6px;max-height:50vh;overflow:auto;margin:6px 0}.evagrid>div{text-align:center}.evagrid img{width:52px;height:52px;image-rendering:pixelated}.evagrid small{display:block;font-size:9px;line-height:1.2}
+.dlbl{font-size:12px;color:#ffe9a0;text-align:left;margin:6px 2px 3px}.dchips{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}.dchip{background:rgba(0,0,0,.35);border:2px solid #555;color:#aaa;border-radius:8px;padding:6px 2px;font-size:13px;font-family:inherit}.dchip.on{border-color:var(--rh);color:var(--rh);background:rgba(255,255,255,.08);box-shadow:0 0 6px var(--rh) inset}
+.dfav{width:100%;margin:8px 0 4px;background:rgba(0,0,0,.35);border:2px solid #555;color:#ccc;border-radius:8px;padding:8px;font-size:14px;font-family:inherit;text-align:left}.dfav.on{border-color:#ffd23f;color:#ffd23f}
 </style>
 </head>
 <body>
@@ -1089,7 +1091,7 @@ function makeItem(st,d,boss,min=0){
 /* =============== save data =============== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-const APPV='v111';
+const APPV='v112';
 try{const c=document.createElement('canvas');c.width=9;c.height=9;const g=c.getContext('2d'),F=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};F(1,0,7,1,'#120d09');F(1,8,7,1,'#120d09');F(0,1,1,7,'#120d09');F(8,1,1,7,'#120d09');F(1,1,7,1,'#120d09');F(1,7,7,1,'#120d09');F(1,1,1,7,'#120d09');F(7,1,1,7,'#120d09');F(2,2,5,1,'#7a6a52');F(2,2,1,5,'#7a6a52');F(2,6,5,1,'#2a2018');F(6,2,1,5,'#2a2018');document.documentElement.style.setProperty('--pxf',`url(${c.toDataURL()})`)}catch(e){}
 const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));if(G.bgmOn===undefined)G.bgmOn=true;
 let P=null;
@@ -3121,7 +3123,7 @@ function renderBox(){
     $('bxCount').textContent=`なかま ${P.mons.length}たい`;
     const pm=partyMons();
     {const ev=P.mons.filter(evoReady);if(ev.length)h+=`<button class="btn green evoall" id="evoAll">✨ まとめて しんか（${ev.length}たい）</button>`}
-    {const dl=dupList();h+=`<button class="btn ${dl.length?'orange':'gray'}" id="dupBye"${dl.length?'':' disabled style="opacity:.55"'}>👋 ダブりを まとめて おわかれ${dl.length?`（${dl.length}たい）`:'（いまは なし）'}</button>`}
+    {const dl=dupList(),any=dl.length||dupList({r:[1,1,1,1,1,1],fav:true}).length;h+=`<button class="btn ${dl.length?'orange':'gray'}" id="dupBye"${any?'':' disabled style="opacity:.55"'}>👋 ダブりを まとめて おわかれ${dl.length?`（${dl.length}たい）`:'（いまは なし）'}</button>`}
     h+=`<div class="panel stbox"><div class="sth">⚔️ パーティ <small>（${partyMax()}たいまで いっしょに たたかう）</small></div><div class="prow big">`;
     for(let i=0;i<partyMax();i++){const m=pm[i];h+=m?`<button class="pslot mc${evoReady(m)?' evok':''}" data-id="${m.id}" style="--rc:${RAR[SP[m.sp].rar].c}"><div class="pms flip">${monsterSVG(m.sp)}</div><small>${elIcon(m.sp)}${SP[m.sp].name}<br>Lv${m.lv}</small>${evoReady(m)?'<i class="evtag">しんか!</i>':''}</button>`:`<div class="pslot empty"><div class="pms">＋</div><small>あき</small></div>`}
     h+=`</div><div class="elchart">${Object.keys(STRONG).filter(e=>STRONG[e].length).map(e=>`<span>${ELS[e].i}→${STRONG[e].map(x=>ELS[x].i).join('')}</span>`).join('')}<span>🌈→ぜんぶ（きゅうきょくだけ）</span></div><small style="color:var(--sub)">→ の あいてに なかまの こうげきが 1.5ばい！</small></div><div class="sth" style="padding:0 4px">📦 ボックス</div>`;
@@ -3213,9 +3215,10 @@ function boxItemModal(idx){
 }
 const byeGold=m=>{const s=SP[m.sp];return Math.round((20+m.lv*5)*Math.pow(s.rar+1,2)*(s.boss?1.5:1))};
 const canBye=m=>!P.party.includes(m.id)&&!m.fav;
-function dupList(){const g={};P.mons.forEach(m=>{if(SP[m.sp].rar<=2)(g[m.sp]=g[m.sp]||[]).push(m)});const out=[];
-  Object.values(g).forEach(arr=>{if(arr.length<2)return;const prot=arr.filter(m=>!canBye(m));const keep=prot.length?null:arr.slice().sort((a,b)=>b.lv-a.lv)[0];
-    arr.forEach(m=>{if(canBye(m)&&m!==keep)out.push(m)})});return out}
+let dupOpt={r:[1,1,1,0,0,0],fav:false};
+function dupList(o=dupOpt){const g={};P.mons.forEach(m=>{const r=SP[m.sp].rar;if(o.r[r])(g[m.sp]=g[m.sp]||[]).push(m)});const out=[],ok=m=>!P.party.includes(m.id)&&(o.fav||!m.fav);
+  Object.values(g).forEach(arr=>{if(arr.length<2)return;const prot=arr.filter(m=>!ok(m));const keep=prot.length?null:arr.slice().sort((a,b)=>b.lv-a.lv||(b.fav?1:0)-(a.fav?1:0))[0];
+    arr.forEach(m=>{if(ok(m)&&m!==keep)out.push(m)})});return out}
 function doBye(list){const g=list.reduce((a,m)=>a+byeGold(m),0),ids=new Set(list.map(m=>m.id));P.mons=P.mons.filter(m=>!ids.has(m.id));P.gold+=g;save();coin();return g}
 function byeModal(id){const m=P.mons.find(x=>x.id===id);if(!m)return;const s=SP[m.sp],big=s.rar>=2,g=byeGold(m);
   showModal(`<div class="mt">👋 おわかれする？</div><div class="hatch flip" style="width:110px">${monsterSVG(m.sp)}</div><p><b style="color:${RAR[s.rar].h}">${s.name}</b> Lv${m.lv}</p>
@@ -3223,13 +3226,17 @@ function byeModal(id){const m=P.mons.find(x=>x.id===id);if(!m)return;const s=SP[
     <p style="font-size:13px">おれいに <b class="goldt" style="font-size:20px">🪙${g}</b> もらえるよ<br><small style="color:var(--sub)">ずかんの きろくは のこるよ</small></p>
     <button class="btn gray big" id="no">やめる</button><button class="btn ${big?'orange':'purple'}" id="yes">👋 おわかれする</button>`,
     {no:()=>monModal(id),yes:()=>{const got=doBye([m]);closeModal();toast(`👋 ${s.name}、またね！ 🪙+${got}`);renderBox()}},'r'+s.rar)}
-function dupModal(){const list=dupList();if(!list.length){toast('まとめて おわかれできる なかまは いないよ');return}
-  const g=list.reduce((a,m)=>a+byeGold(m),0);
-  showModal(`<div class="mt">👋 ダブりを まとめて おわかれ</div><p style="font-size:13px">おなじ しゅるいが いるとき、いちばん レベルの たかい 1たいを のこして おわかれするよ。<br><small style="color:var(--sub)">（ふつう〜エピック・パーティと おきにいりは のぞく）</small></p>
-    <div class="bgrid" style="max-height:34vh;overflow-y:auto">${list.map(m=>`<div class="bcell" style="--rc:${RAR[SP[m.sp].rar].c}"><div class="flip">${monsterSVG(m.sp)}</div><b>Lv${m.lv}</b></div>`).join('')}</div>
-    <p>${list.length}たい → おれい <b class="goldt" style="font-size:20px">🪙${g}</b></p>
-    <button class="btn gray big" id="no">やめる</button><button class="btn purple" id="yes">👋 まとめて おわかれする</button>`,
-    {no:closeModal,yes:()=>{const got=doBye(list);closeModal();toast(`👋 ${list.length}たいと おわかれ 🪙+${got}`);renderBox()}})}
+function dupModal(){const list=dupList(),o=dupOpt;
+  const g=list.reduce((a,m)=>a+byeGold(m),0),hi=list.some(m=>SP[m.sp].rar>=3),nf=list.filter(m=>m.fav).length;
+  showModal(`<div class="mt">👋 ダブりを まとめて おわかれ</div><p style="font-size:13px">おなじ しゅるいの なかで いちばん レベルの たかい 1たいを のこして おわかれするよ。<br><small style="color:var(--sub)">パーティの なかまは のこるよ</small></p>
+    <div class="dlbl">レアリティ</div><div class="dchips">${RAR.map((r,i)=>`<button class="dchip${o.r[i]?' on':''}" data-dr="${i}" style="--rh:${r.h}">${r.n}</button>`).join('')}</div>
+    <button class="dfav${o.fav?' on':''}" id="dfav">${o.fav?'☑':'☐'} 🔒 おきにいりの ダブりも ふくめる</button>
+    ${list.length?`<div class="bgrid" style="max-height:30vh;overflow-y:auto">${list.map(m=>`<div class="bcell r${SP[m.sp].rar}" style="--rc:${RAR[SP[m.sp].rar].c};--rh:${RAR[SP[m.sp].rar].h}"><div class="flip">${monsterSVG(m.sp)}</div><b>Lv${m.lv}</b>${m.fav?'<i class="fv">🔒</i>':''}</div>`).join('')}</div>
+    ${hi||nf?`<p class="byewarn">⚠️ ${[hi?'でんせつ いじょう':'',nf?'おきにいり '+nf+'たい':''].filter(Boolean).join('・')}も ふくまれているよ！<br>おわかれすると もう もどってこないよ。</p>`:''}
+    <p>${list.length}たい → おれい <b class="goldt" style="font-size:20px">🪙${g.toLocaleString()}</b></p>`:'<p style="color:var(--sub);font-size:13px;margin:14px 0">この じょうけんの ダブりは いないよ</p>'}
+    <button class="btn gray big" id="no">やめる</button>${list.length?`<button class="btn ${hi||nf?'orange':'purple'}" id="yes">👋 ${list.length}たいと おわかれする</button>`:''}`,
+    {no:closeModal,dfav:()=>{o.fav=!o.fav;dupModal()},yes:()=>{const got=doBye(list);closeModal();toast(`👋 ${list.length}たいと おわかれ 🪙+${got.toLocaleString()}`);renderBox()}});
+  document.querySelectorAll('[data-dr]').forEach(b=>b.onclick=()=>{const i=+b.dataset.dr;o.r[i]=o.r[i]?0:1;dupModal()})}
 
 /* ---- evolution ---- */
 const EVOLV=[10,20,35,50,70],EVOBOND=[30,60,100,150,200];
