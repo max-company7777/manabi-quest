@@ -683,7 +683,7 @@ input{font:inherit}
 .evagrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(70px,1fr));gap:6px;max-height:50vh;overflow:auto;margin:6px 0}.evagrid>div{text-align:center}.evagrid img{width:52px;height:52px;image-rendering:pixelated}.evagrid small{display:block;font-size:9px;line-height:1.2}
 .dlbl{font-size:12px;color:#ffe9a0;text-align:left;margin:6px 2px 3px}.dchips{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}.dchip{background:rgba(0,0,0,.35);border:2px solid #555;color:#aaa;border-radius:8px;padding:6px 2px;font-size:13px;font-family:inherit}.dchip.on{border-color:var(--rh);color:var(--rh);background:rgba(255,255,255,.08);box-shadow:0 0 6px var(--rh) inset}
 .dfav{width:100%;margin:8px 0 4px;background:rgba(0,0,0,.35);border:2px solid #555;color:#ccc;border-radius:8px;padding:8px;font-size:14px;font-family:inherit;text-align:left}.dfav.on{border-color:#ffd23f;color:#ffd23f}
-.spblk{display:flex;align-items:center;gap:10px;background:rgba(0,0,0,.3);border-radius:10px;padding:6px 10px;margin:4px 0;text-align:left}.spg{width:40px;height:40px;flex:none;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:700;border-radius:8px;border:3px solid currentColor}.spg.gSS{color:#ff3a3a;font-size:20px;text-shadow:0 0 8px #ff3a3a}.spg.gS{color:#ff6fa8}.spg.gA{color:#ffae1a}.spg.gB{color:#3ec1ff}.spg.gC{color:#7ad07a}.spg.gD{color:#aaa}.spb{font-size:13px;line-height:1.5}.spb .sbf{font-style:normal;color:#ffd23f;letter-spacing:-1px}.spb .sbe{font-style:normal;color:#444;letter-spacing:-1px}.spb small{display:block;color:var(--sub);font-size:10px}
+.spblk{display:flex;align-items:center;gap:10px;background:rgba(0,0,0,.3);border-radius:10px;padding:6px 10px;margin:4px 0;text-align:left}.spg{width:40px;height:40px;flex:none;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:700;border-radius:8px;border:3px solid currentColor}.spg.gSS{font-size:20px;color:#fff;border-color:transparent;background:linear-gradient(#2a1a3a,#2a1a3a) padding-box,linear-gradient(135deg,#ff4f7b,#ffae1a,#ffe14a,#5be36a,#3ec1ff,#a070ff) border-box;text-shadow:0 0 6px #fff;animation:ssglow 2s linear infinite}@keyframes ssglow{to{filter:hue-rotate(360deg)}}.spg.gS{color:#ff6fa8}.spg.gA{color:#ffae1a}.spg.gB{color:#3ec1ff}.spg.gC{color:#7ad07a}.spg.gD{color:#aaa}.spb{font-size:13px;line-height:1.5}.spb .sbf{font-style:normal;color:#ffd23f;letter-spacing:-1px}.spb .sbe{font-style:normal;color:#444;letter-spacing:-1px}.spb small{display:block;color:var(--sub);font-size:10px}
 .lnmsl{position:absolute;bottom:45%;width:0;height:0;animation:lnmsl .62s cubic-bezier(.3,.1,.6,1) forwards;z-index:30}.lnmsl i{position:absolute;font-style:normal;font-size:22px;transform:translate(-50%,-50%) scaleX(-1) rotate(-30deg);filter:drop-shadow(6px 2px 4px #ff6a2a);animation:lnmslarc .62s ease-in-out forwards}@keyframes lnmsl{to{transform:translateX(var(--dx))}}@keyframes lnmslarc{0%{margin-top:0}50%{margin-top:-60px}100%{margin-top:40px}}
 .lnboom{position:absolute;bottom:18%;width:70px;height:70px;margin-left:-35px;border-radius:50%;background:radial-gradient(circle,#fff,#ffd23f 30%,#ff6a2a 55%,rgba(255,60,0,0) 72%);animation:lnboom .5s forwards;z-index:29}.lnboom.big{width:360px;height:360px;margin-left:-180px;bottom:-60px;animation-duration:1s;background:radial-gradient(circle,#fff,#fff6a0 18%,#ff8a3a 40%,#c0204a 58%,rgba(120,0,40,0) 72%)}@keyframes lnboom{0%{transform:scale(.2);opacity:1}60%{opacity:1}100%{transform:scale(1.2);opacity:0}}
 .lnmeteor{position:absolute;top:-120px;width:90px;height:90px;margin-left:-45px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#ffe0a0,#ff6a2a 40%,#7a1a1a 75%);box-shadow:0 0 40px 12px #ff5a2a,40px -40px 60px 10px rgba(255,120,40,.6);animation:lnmeteor .95s cubic-bezier(.5,0,1,1) forwards;z-index:30}@keyframes lnmeteor{0%{transform:translate(260px,-60px) scale(.6)}100%{transform:translate(0,calc(100% + 160px)) scale(1.3)}}
@@ -1095,7 +1095,7 @@ function makeItem(st,d,boss,min=0){
 /* =============== save data =============== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-const APPV='v114';
+const APPV='v115';
 try{const c=document.createElement('canvas');c.width=9;c.height=9;const g=c.getContext('2d'),F=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};F(1,0,7,1,'#120d09');F(1,8,7,1,'#120d09');F(0,1,1,7,'#120d09');F(8,1,1,7,'#120d09');F(1,1,7,1,'#120d09');F(1,7,7,1,'#120d09');F(1,1,1,7,'#120d09');F(7,1,1,7,'#120d09');F(2,2,5,1,'#7a6a52');F(2,2,1,5,'#7a6a52');F(2,6,5,1,'#2a2018');F(6,2,1,5,'#2a2018');document.documentElement.style.setProperty('--pxf',`url(${c.toDataURL()})`)}catch(e){}
 const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));if(G.bgmOn===undefined)G.bgmOn=true;
 let P=null;
@@ -3023,7 +3023,7 @@ for(const c in SPECIALS)SPECIALS[c].names.forEach((n,r)=>{const k=c+r;SP[k]={k,a
 const GMONS={luckycat:['ラッキーキャット',3,'ひかり'],starbun:['ほしうさぎ',3,'やみ'],aurodra:['オーロラドラゴン',4,'こおり']};
 for(const [k,[n,r,el]] of Object.entries(GMONS))SP[k]={k,art:k,name:n,rar:r,boss:false,p:{},el,special:'gacha'};
 ULTSK.ketsu4=['ぷりぷり ヒップアタック','crit','クリティカル',3,'%'];ULTSK.ruru5=['ゴールデン うんのよさ','gold','ゴールド',5,'%'];ULTSK.luckycat=['まねきの ちから','gold','ゴールド',4,'%'];ULTSK.starbun=['ほしの ねがい','xp','けいけんち',4,'%'];ULTSK.aurodra=['オーロラの いき','atkp','こうげき',3,'%'];
-SP.darulu={k:'darulu',art:'darulu',name:'魔王ダルル',rar:5,boss:true,p:{},el:'やみ',special:'gift',pmul:4};
+SP.darulu={k:'darulu',art:'darulu',name:'魔王ダルル',rar:5,boss:true,p:{},el:'にじ',special:'gift',pmul:4};
 SP.xsnow={k:'xsnow',art:'slime',name:'ゆきだるまスライム',rar:1,boss:false,p:{b:'#f4f8ff'},el:'こおり'};
 SP.xrein={k:'xrein',art:'wolf',name:'トナカイウルフ',rar:2,boss:false,p:{b:'#a06a3a'},el:'もり'};
 SP.xgift={k:'xgift',art:'mimic',name:'プレゼントミミック',rar:2,boss:false,p:{b:'#e8413c'},el:'ひかり'};
@@ -3034,11 +3034,11 @@ function pickSpecies(pool,d){const rar=rollRar(d,false);let c=pool.filter(k=>SP[
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
 const EGGNEED=[15,30,50,80,120,200],EGGCH=[.15,.2,.28,.4,.5,.15],MBASE=[4,7,12,20,32,60],MGROW=[1,2,3,4,6,10],MAXLV=Infinity,MONMAX=Infinity;
 /* individual strength per species: attack/HP shape from its traits (same as ぐんだん), a small fixed personal touch, then one total multiplier */
-const SPST={},SPC={riol:[1.4,1.15],sana:[.95,1.3],ketsu:[1.05,1.45],ruru:[1.25,1.05],luckycat:[.9,1.15],starbun:[1.1,.95],aurodra:[1.35,1.3]};
-function spStat(k){if(SPST[k])return SPST[k];const s=SP[k];if(!s)return{a:1,h:1,m:1};let a,h;
-  if(k==='darulu'){a=2;h=2.4}else{const c=SPC[s.special&&s.special!=='gacha'&&s.special!=='gift'?s.special:k];if(c){a=c[0];h=c[1]}else{let t;try{t=lStats(k)}catch(e){t={atk:1,hp:1}}a=t.atk;h=t.hp;if(s.special){a/=1.2;h/=1.2}}}
+const SPST={},SPC={riol:[1.9,1.6,1.32],sana:[1.5,2.1,1.3],ketsu:[1.05,1.45],ruru:[1.8,1.8,1.3],luckycat:[.9,1.15],starbun:[1.1,.95],aurodra:[1.35,1.3]};
+function spStat(k){if(SPST[k])return SPST[k];const s=SP[k];if(!s)return{a:1,h:1,m:1};let a,h,fm=0;
+  if(k==='darulu'){a=2;h=2.4}else{const c=SPC[s.special&&s.special!=='gacha'&&s.special!=='gift'?s.special:k];if(c){a=c[0];h=c[1];fm=c[2]||0}else{let t;try{t=lStats(k)}catch(e){t={atk:1,hp:1}}a=t.atk;h=t.hp;if(s.special){a/=1.2;h/=1.2}}}
   let hs=0;for(const ch of k)hs=(hs*31+ch.charCodeAt(0))>>>0;const j=.93+(hs%15)/100;
-  const raw=Math.pow(a,.65)*Math.pow(h,.35)*j/1.12,m=k==='darulu'?1:Math.max(.75,Math.min(1.4,1+(raw-1)*.6));
+  const raw=Math.pow(a,.65)*Math.pow(h,.35)*j/1.12,m=k==='darulu'?1:fm||Math.max(.75,Math.min(1.4,1+(raw-1)*.6));
   return SPST[k]={a,h,m}}
 const monPow=m=>{const s=SP[m.sp];return s?Math.round((MBASE[s.rar]+(m.lv-1)*MGROW[s.rar])*(s.boss?1.2:1)*(s.pmul||1)*spStat(m.sp).m):0};
 function spBlock(k){const t=spStat(k),g=spGrade(k),bar=(v,mx)=>{const n=Math.max(1,Math.min(5,Math.round(v/mx*5)));return '<i class="sbf">'+'■'.repeat(n)+'</i><i class="sbe">'+'■'.repeat(5-n)+'</i>'};
