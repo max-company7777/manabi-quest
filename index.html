@@ -678,6 +678,9 @@ input{font:inherit}
 .hud .mslots{grid-template-columns:repeat(5,minmax(0,1fr))!important}.hud .mslots .ms{width:auto!important;min-width:0!important;max-width:100%;box-sizing:border-box}.hud .mslots .ms img{max-width:100%;max-height:100%;object-fit:contain}
 .arena .hero{left:1%!important}
 .arena{overflow:hidden}.arena .hero .hs{width:min(34cqw,26cqh)!important}.arena .hero{left:0!important;bottom:calc(min(34cqw,26cqh) * -.3)!important}
+.evoall{width:100%;margin-bottom:6px;animation:evglow 1.6s ease-in-out infinite}@keyframes evglow{50%{box-shadow:0 0 14px #7af07a}}
+.evalist{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;max-height:44vh;overflow:auto;margin:6px 0}.eva{display:flex;align-items:center;justify-content:center;gap:4px;background:rgba(0,0,0,.3);border-radius:8px;padding:4px}.eva img{width:40px;height:40px;image-rendering:pixelated}.eva i{font-style:normal;color:#ffd23f;font-size:12px}
+.evagrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(70px,1fr));gap:6px;max-height:50vh;overflow:auto;margin:6px 0}.evagrid>div{text-align:center}.evagrid img{width:52px;height:52px;image-rendering:pixelated}.evagrid small{display:block;font-size:9px;line-height:1.2}
 </style>
 </head>
 <body>
@@ -1086,7 +1089,7 @@ function makeItem(st,d,boss,min=0){
 /* =============== save data =============== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-const APPV='v110';
+const APPV='v111';
 try{const c=document.createElement('canvas');c.width=9;c.height=9;const g=c.getContext('2d'),F=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};F(1,0,7,1,'#120d09');F(1,8,7,1,'#120d09');F(0,1,1,7,'#120d09');F(8,1,1,7,'#120d09');F(1,1,7,1,'#120d09');F(1,7,7,1,'#120d09');F(1,1,1,7,'#120d09');F(7,1,1,7,'#120d09');F(2,2,5,1,'#7a6a52');F(2,2,1,5,'#7a6a52');F(2,6,5,1,'#2a2018');F(6,2,1,5,'#2a2018');document.documentElement.style.setProperty('--pxf',`url(${c.toDataURL()})`)}catch(e){}
 const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));if(G.bgmOn===undefined)G.bgmOn=true;
 let P=null;
@@ -3117,6 +3120,7 @@ function renderBox(){
   }else if(boxTab==='mons'){
     $('bxCount').textContent=`なかま ${P.mons.length}たい`;
     const pm=partyMons();
+    {const ev=P.mons.filter(evoReady);if(ev.length)h+=`<button class="btn green evoall" id="evoAll">✨ まとめて しんか（${ev.length}たい）</button>`}
     {const dl=dupList();h+=`<button class="btn ${dl.length?'orange':'gray'}" id="dupBye"${dl.length?'':' disabled style="opacity:.55"'}>👋 ダブりを まとめて おわかれ${dl.length?`（${dl.length}たい）`:'（いまは なし）'}</button>`}
     h+=`<div class="panel stbox"><div class="sth">⚔️ パーティ <small>（${partyMax()}たいまで いっしょに たたかう）</small></div><div class="prow big">`;
     for(let i=0;i<partyMax();i++){const m=pm[i];h+=m?`<button class="pslot mc${evoReady(m)?' evok':''}" data-id="${m.id}" style="--rc:${RAR[SP[m.sp].rar].c}"><div class="pms flip">${monsterSVG(m.sp)}</div><small>${elIcon(m.sp)}${SP[m.sp].name}<br>Lv${m.lv}</small>${evoReady(m)?'<i class="evtag">しんか!</i>':''}</button>`:`<div class="pslot empty"><div class="pms">＋</div><small>あき</small></div>`}
@@ -3145,7 +3149,7 @@ function renderBox(){
   if($('bxSellWeak'))$('bxSellWeak').onclick=sellWeakFlow;
   document.querySelectorAll('.mc').forEach(b=>b.onclick=()=>monModal(b.dataset.id));
   document.querySelectorAll('.ec').forEach(b=>b.onclick=()=>eggModal(b.dataset.id));
-  if($('dupBye'))$('dupBye').onclick=dupModal;
+  if($('dupBye'))$('dupBye').onclick=dupModal;if($('evoAll'))$('evoAll').onclick=evoAllFlow;
   if($('hatchNow'))$('hatchNow').onclick=()=>processHatch(renderBox);
 }
 function enhBtn(it){const c=enhCost(it);return `<button class="btn orange" id="enh"${P.gold<c?' disabled style="opacity:.5"':''}>⚒️ きょうか +${(it.plus||0)+1}（パワー +10%）🪙${c}</button>${P.gold>=c+enhCost({...it,plus:(it.plus||0)+1})?`<button class="btn orange" id="enhmax">⚒️ できるだけ きょうか</button>`:''}<small style="color:var(--sub)">もっている ゴールド 🪙${P.gold}</small>`}
@@ -3251,6 +3255,15 @@ function doEvolve(id){const m=P.mons.find(x=>x.id===id);if(!m||!evoReady(m))retu
     <button class="btn green big" id="ok">やったー！</button></div>`,
     {ok:()=>{closeModal();const nu=ULTS.filter(u=>before<u.need&&ownedStd()>=u.need);if(nu.length)showUltUnlock(nu,()=>{renderBox()});else renderBox()}},'r'+SP[to].rar);
 }
+function evoAllFlow(){const L=P.mons.filter(evoReady);if(!L.length){toast('いま しんか できる なかまは いないよ');return}
+  const cell=(a,b)=>`<div class="eva"><div class="flip">${monsterSVG(a)}</div><i>▶</i><div class="flip">${monsterSVG(b)}</div></div>`;
+  showModal(`<div class="mt">✨ まとめて しんか</div><p>${L.length}たいが しんか できるよ！</p><div class="evalist">${L.slice(0,12).map(m=>cell(m.sp,evoOf(m.sp))).join('')}</div>${L.length>12?`<small>ほか ${L.length-12}たい</small>`:''}
+    <button class="btn green big" id="go">✨ ぜんぶ しんか！</button><button class="btn gray" id="cl">やめる</button>`,
+    {cl:closeModal,go:()=>{const before=ownedStd(),res=[];L.forEach(m=>{if(!evoReady(m))return;const to=evoOf(m.sp);res.push([m.sp,to]);m.sp=to;m.bond=0;P.dex.owned[to]=1;P.dex.seen[to]=1;P.evoN=(P.evoN||0)+1});save();
+      [523,659,784,1047,1319].forEach((f,i)=>snd(f,.2,'square',.05,0,i*.2));vib(200);fanfare();setTimeout(()=>fxConfetti(70),200);
+      const top=Math.max(...res.map(r=>SP[r[1]].rar));
+      showModal(`<div class="mt">🎉 ${res.length}たいが しんかした！</div><div class="evagrid">${res.map(([a,b])=>`<div><div class="flip">${monsterSVG(b)}</div><small style="color:${RAR[SP[b].rar].h}">${SP[b].name}</small></div>`).join('')}</div>
+        <button class="btn green big" id="ok">やったー！</button>`,{ok:()=>{closeModal();const nu=ULTS.filter(u=>before<u.need&&ownedStd()>=u.need);if(nu.length)showUltUnlock(nu,renderBox);else renderBox()}},'r'+top)}})}
 function bondUp(){const bn=EV().bond;partyMons().forEach(m=>{const was=evoReady(m);m.bond=(m.bond||0)+bn;if(!was&&evoReady(m))setTimeout(()=>toast(`✨ ${SP[m.sp].name}が しんか できるよ！`),900)})}
 function monModal(id){autoFav(P);
   const m=P.mons.find(x=>x.id===id);if(!m)return;const s=SP[m.sp],inP=P.party.includes(id);
