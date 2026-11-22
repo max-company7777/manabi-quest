@@ -422,7 +422,7 @@ input{font:inherit}
 .mapa{display:flex;align-items:center;gap:10px;padding:8px 10px!important;text-align:left;color:#fff;text-shadow:2px 2px 0 #000}.mapa.sel{outline:3px solid var(--gold)}.mapa.lock{filter:grayscale(1) brightness(.5)}
 #hStats b,#home .slot .sn b,#hPow,#home .top .pill b,#home .top .lv{font-family:'DotGothic16',monospace;-webkit-font-smoothing:none;font-smoothing:none}
 
-.modes{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.modes .mode{font-size:16px;padding:10px 0;color:#fff}
+.modes{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}.modes .mode{font-size:16px;padding:10px 0;color:#fff}
 .hgrid{display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:6px}.hgrid .btn{font-size:14px;padding:10px 2px}
 .tkn{font-size:12px;background:#0006;padding:0 4px}.achn{background:#e8413c;color:#fff;font-size:12px;padding:0 5px;margin-left:2px}
 .pi.big{width:110px;height:110px;margin:0}.gmach{margin:6px auto}
@@ -462,6 +462,7 @@ input{font:inherit}
 .rmm{position:absolute;width:13%;z-index:20;transition:left 2.4s linear,bottom 2.4s linear;cursor:pointer}.rmm svg,.rmm img{width:100%;height:auto;display:block}.rmm.flipx .flip{transform:scaleX(-1)}
 .rmrow{display:flex;align-items:center;gap:8px;background:#0005;border:2px solid var(--edge);padding:6px}.rmrow .btn{min-width:84px;padding:8px 6px}
 .rmimg{width:48px;height:36px;object-fit:contain;image-rendering:pixelated}.rmsw{width:40px;height:30px;border:2px solid #000}.rmn{flex:1;font-size:15px}.rmn small{display:block;font-size:11px;color:var(--sub)}.rmon{color:#5be05b;font-size:13px}
+.ghpop{width:110px;margin:0 auto;filter:drop-shadow(0 0 8px #9ad8ff) opacity(.85) saturate(.6);animation:ghin .8s}.ghpop .hs{width:100%}@keyframes ghin{0%{opacity:0;transform:scale(.3) translateY(20px)}60%{opacity:1;transform:scale(1.15)}100%{transform:scale(1)}}
 </style>
 </head>
 <body>
@@ -513,7 +514,6 @@ input{font:inherit}
     <button class="btn orange big" id="goBtn" style="font-size:26px">⚔️ しゅつげき！</button>
     <div class="modes">
       <button class="btn mode" id="towerBtn" style="background:#5a3a8a">🗼 とう</button>
-      <button class="btn mode" id="ghostBtn" style="background:#2a6a7a">👻 ゴースト</button>
       <button class="btn mode" id="gachaBtn" style="background:#b8402a">🎰 ふくびき</button>
     </div>
     <div class="row hgrid">
@@ -1304,7 +1304,7 @@ function dataImport(){
        Object.keys(G).forEach(k=>delete G[k]);Object.assign(G,{profiles:[],cur:null,snd:true},obj);G.cur=null;P=null;save();closeModal();show('players');renderPlayers();toast(`${G.profiles.length}にんの データを よみこんだよ！`)},
      cl:closeModal});
 }
-function selectProfile(id){P=G.profiles.find(p=>p.id===id);if(!P)return;ensureP(P);syncMaster(P);G.cur=id;save();selStage=P.best[P.subj]+1;show('home');renderHome();checkDaily()}
+function selectProfile(id){P=G.profiles.find(p=>p.id===id);if(!P)return;setTimeout(ghostPrefetch,1500);ensureP(P);syncMaster(P);G.cur=id;save();selStage=P.best[P.subj]+1;show('home');renderHome();checkDaily()}
 
 function checkDaily(){
   const t=new Date(),today=dayStr(t),y=new Date(t);y.setDate(t.getDate()-1);
@@ -1354,7 +1354,7 @@ const pi=(n,c='')=>{const k='pi|'+n;if(!IMGC[k])IMGC[k]=piURL(n);return `<img cl
 function pixHome(){
   const set=(id,ic,txt)=>{const e=$(id);if(e)e.innerHTML=pi(ic)+txt};
   set('weakBtn','book',`にがて <span id="weakN">${P?P.weak.length:0}</span>`);set('statBtn','chart','きろく');set('boxBtn','box','ボックス');
-  set('rankBtn','trophy','ランキング');set('shopBtn','bag','ショップ');set('setBtn','gear','せってい');set('helpBtn','help','ヘルプ');set('towerBtn','tower','とう');set('ghostBtn','ghost','ゴースト');set('gachaBtn','gacha',`ふくびき <span class="tkn">${pi('ticket')}${P?P.tk||0:0}</span>`);set('roomBtn','house','へや');set('achBtn','medal',`じっせき${P&&achClaimable()?` <span class="achn">${achClaimable()}</span>`:''}`);
+  set('rankBtn','trophy','ランキング');set('shopBtn','bag','ショップ');set('setBtn','gear','せってい');set('helpBtn','help','ヘルプ');set('towerBtn','tower','とう');set('gachaBtn','gacha',`ふくびき <span class="tkn">${pi('ticket')}${P?P.tk||0:0}</span>`);set('roomBtn','house','へや');set('achBtn','medal',`じっせき${P&&achClaimable()?` <span class="achn">${achClaimable()}</span>`:''}`);
   set('goBtn','swords','しゅつげき！');set('hBest','star','さいきょう そうび');set('hEnhAll','hammer','まとめて きょうか');
   const g=$('hGold').parentNode,st=$('hStreak').parentNode;if(!g.querySelector('.pi')){g.innerHTML=pi('coin')+'<b id="hGold">0</b>';st.innerHTML=pi('flame')+'<b id="hStreak">1</b><small>にち</small>';st.id='hStreakPill';st.onclick=()=>helpOpen('streak');g.onclick=()=>toast('🪙 '+P.gold.toLocaleString()+' ゴールド')}}
 
@@ -1460,7 +1460,9 @@ function miniTreasure(cb){const base=miniReward(),T=shuffle([['🪙',base],['�
     if(picks>=3){P.gold+=g;P.tk=(P.tk||0)+tk;save();setTimeout(()=>{document.querySelectorAll('.tcell').forEach((c,i)=>{if(!c.classList.contains('open')){c.textContent=T[i][0];c.classList.add('rest')}});$('ok').style.display=''},500)}})}
 
 /* ===================== 👻 ghost battle ===================== */
-let GH=null;
+let GH=null,_remGh=[];
+const ghostPool=()=>{const loc=G.profiles.filter(p=>P&&p.id!==P.id&&!p.master);return loc.concat((_remGh||[]).filter(r=>r&&r.id!==(P&&P.id)&&!r.master&&!loc.some(l=>l.id===r.id)))};
+function ghostPrefetch(){if(FB_CONFIG&&G.fam&&!ghostPrefetch.busy){ghostPrefetch.busy=1;syncDown().then(r=>{_remGh=(r||[]).map(p=>ensureP(p))}).catch(()=>{}).finally(()=>ghostPrefetch.busy=0)}}
 function ghostStats(p){const S=(p.stats&&p.stats.cats)||{};let n=0,ok=0,t=0;for(const c of Object.values(S)){n+=c.n;ok+=c.ok;t+=c.t||0}
   const acc=n>=10?ok/n:.75,sp=n>=10&&t?t/n:4.5;return{acc:Math.max(.45,Math.min(.97,acc)),sp:Math.max(1.6,Math.min(9,sp)),n}}
 async function ghostOpen(){const loc=G.profiles.filter(p=>p.id!==P.id&&!p.master);let rem=[];
@@ -1470,9 +1472,9 @@ async function ghostOpen(){const loc=G.profiles.filter(p=>p.id!==P.id&&!p.master
       ${G.fam&&FB_CONFIG&&!rem.length?'<small style="color:var(--sub)">☁️ ほかの たんまつの かぞくを よみこみちゅう…</small>':''}<button class="btn gray" id="cl">とじる</button>`,{cl:closeModal});
     document.querySelectorAll('.ghpick').forEach(b=>b.onclick=()=>{closeModal();ghostStart(all[+b.dataset.i].p)})};
   draw();if(FB_CONFIG&&G.fam){try{const r=await syncDown();rem=(r||[]).filter(p=>!p.master).map(p=>({p:ensureP(p),dev:p._remote}));if($('modal').classList.contains('on'))draw()}catch(e){}}}
-function ghostStart(op){const g=ghostStats(op);GH={op,g,round:0,me:0,opS:0,lock:true,bag:[]};show('ghost');
+function ghostStart(op,opt={}){const g=ghostStats(op);GH={op,g,round:0,me:0,opS:0,lock:true,bag:[],n:opt.n||10,back:opt.back||null};show('ghost');
   $('ghMe').innerHTML=heroSVG(P.eq,P);$('ghOp').innerHTML=heroSVG(op.eq,op);$('ghMeN').textContent=P.name;$('ghOpN').textContent=op.name+' 👻';ghostNext()}
-function ghostNext(){if(!GH)return;if(GH.round>=10){ghostEnd();return}GH.round++;$('ghRound').textContent=`${GH.round}/10`;$('ghMeS').textContent=GH.me;$('ghOpS').textContent=GH.opS;$('ghMsg').textContent='';
+function ghostNext(){if(!GH)return;if(GH.round>=GH.n){ghostEnd();return}GH.round++;$('ghRound').textContent=`${GH.round}/${GH.n}`;$('ghMeS').textContent=GH.me;$('ghOpS').textContent=GH.opS;$('ghMsg').textContent='';
   if(!GH.bag.length)GH.bag=shuffle(SUBK.slice());const sb=GH.bag.pop(),lv=P.diff[sb]||0,q=genQ(sb,lv,1);q.subj=sb;GH.q=q;
   $('ghQ').innerHTML=`<span class="qsub qs-${sb}">${SUBJ[sb].n} ★${lv+1}</span>`+q.html;const box=$('ghC');box.innerHTML='';box.className='choices'+(q.choices.length===3?' c3':'');
   q.choices.forEach(v=>{const b=document.createElement('button');b.className='ch'+(q.cs&&!(q.cs==='small'&&v.length<=4)?' '+q.cs:'');b.textContent=v;b.onclick=()=>ghostAns(b,v);box.appendChild(b)});
@@ -1487,10 +1489,14 @@ function ghostAns(btn,v){if(!GH||GH.lock)return;GH.lock=true;GH.done=true;const 
   if(ok){btn.classList.add('ok');GH.me++;$('ghMsg').innerHTML=`⚡ せいかい！（${t.toFixed(1)}びょう）`;anim($('ghMe'),'hop',350);snd(880,.1,'square',.05);snd(1320,.12,'square',.05,0,.08)}
   else{btn.classList.add('ng');markGh();addWeak(q);if(GH.okG&&GH.tg<1e9){GH.opS++;$('ghMsg').innerHTML='😣 ざんねん… ゴーストの ポイント'}else $('ghMsg').innerHTML='😣 ざんねん…';snd(180,.3,'square',.07,-80)}
   $('ghMeS').textContent=GH.me;$('ghOpS').textContent=GH.opS;setTimeout(ghostNext,ok?1000:1500)}
-function ghostEnd(){const w=GH.me>GH.opS,d=GH.me===GH.opS,st=Math.max(1,P.best.mix||1),g=Math.round(st*(w?40:d?20:10)*Math.max(1,DMULT[mixLv()])),tk=w?2:d?1:0;
+function ghostEnd(){const w=GH.me>GH.opS,d=GH.me===GH.opS,st=Math.max(1,P.best.mix||1),g=Math.round(st*(w?40:d?20:10)*Math.max(1,DMULT[mixLv()])*(GH.n/10)),tk=w?2:d?1:0,back=GH.back;
   P.gold+=g;P.tk=(P.tk||0)+tk;if(w)P.ghostWin=(P.ghostWin||0)+1;save();w?fanfare():coin();const op=GH.op,me=GH.me,os=GH.opS;
   showModal(`<div class="chest">${w?'🏆':d?'🤝':'👻'}</div><div class="mt">${w?'かち！':d?'ひきわけ！':'まけ…'}</div><p style="font-size:26px">${me} − ${os}</p><p>${esc(op.name)}の ゴースト${w?'に かった！':d?'と ひきわけ':'に まけちゃった'}<br><b class="goldt">🪙+${g}</b>${tk?`　${pi('ticket')}+${tk}`:''}</p>
-    <button class="btn orange big" id="rt">もういちど</button><button class="btn gray big" id="hm">ホームへ</button>`,{rt:()=>{closeModal();ghostStart(op)},hm:()=>{closeModal();GH=null;goHome()}})}
+    ${back?'<button class="btn orange big" id="bk">ぼうけんに もどる ▶</button>':'<button class="btn orange big" id="rt">もういちど</button><button class="btn gray big" id="hm">ホームへ</button>'}`,{bk:()=>{closeModal();GH=null;back()},rt:()=>{closeModal();ghostStart(op)},hm:()=>{closeModal();GH=null;goHome()}})}
+function ghostAmbush(cb){const pool=ghostPool();if(!pool.length){cb();return}const op=pick(pool);B.lock=true;
+  [196,185,175,165].forEach((f,i)=>snd(f,.25,'sine',.06,0,i*.12));vib(200);anim($('arena'),'flash',400);
+  showModal(`<div class="ghpop">${heroSVG(op.eq,op)}</div><div class="mt">👻 ${esc(op.name)}の ゴーストが<br>とつぜん あらわれた！</div><p style="font-size:13px">5もんの はやおし しょうぶ！<br>かつと ゴールドと ふくびきけん！</p><button class="btn orange big" id="go">しょうぶ！</button>`,
+    {go:()=>{closeModal();ghostStart(op,{n:5,back:()=>{show('battle');updHud();updHeroHp();cb()}})}})}
 
 /* ===================== 🏠 my room ===================== */
 const FSHAPE={
@@ -1569,7 +1575,7 @@ const HELP=[
  ['event','📅 きょうの イベント',`まいにち ちがう ボーナスが あるよ！<br>${EVENTS.map(e=>`${e.i} <b>${e.d}</b>：${e.t}`).join('<br>')}`],
  ['map','🗺️ ワールドマップ',`10ステージごとに あたらしい ばしょに すすむよ。ばしょごとに けしきと でてくる モンスターの ぞくせいが かわる。<br>ホームの マップから、いったことの ある ばしょを えらべるよ。`],
  ['tower','🗼 むげんの とう',`1かいに 1たいずつ たおして、どこまで のぼれるか ちょうせん！ 10かいごとに ボスが いて、たおすと ゴールドと ふくびきけん。<br>HPは すこししか かいふく しないので、そうびを つよくして いこう。さいこう きろくは ランキングにも のるよ。`],
- ['ghost','👻 ゴーストバトル',`かぞくの ぼうけんしゃの「ゴースト」と 10もんの はやおし しょうぶ！ ゴーストは その ひとの せいかいりつと こたえる はやさを まねするよ。<br>かつと ゴールドと ふくびきけん 2まい。☁️ かぞくで きょうゆう していると、ほかの たんまつの かぞくとも たたかえる。`],
+ ['ghost','👻 ゴーストバトル',`ぼうけんの とちゅうで、とつぜん かぞくの ぼうけんしゃの「ゴースト」が あらわれる ことが あるよ！ 5もんの はやおし しょうぶ！ ゴーストは その ひとの せいかいりつと こたえる はやさを まねするよ。<br>かつと ゴールドと ふくびきけん 2まい。☁️ かぞくで きょうゆう していると、ほかの たんまつの かぞくの ゴーストも でてくるよ。`],
  ['gacha','🎰 ふくびき',`もんだいに 10かい せいかいするごとに ふくびきけんが 1まい（きんようびは 2まい）。とう・ゴースト・じっせき・ミニゲームでも もらえるよ。<br>そうび・たまご・きせかえ・ゴールド、たまに きゅうきょくの カケラも でる！ 10かい まとめて ひくことも できる。`],
  ['ach','🏅 じっせき',`「せいかい 1000もん」「なかま 50しゅ」などの もくひょう。たっせいしたら「うけとる」で ゴールドと ふくびきけんが もらえるよ。ホームの ボタンの あかい かずは うけとれる じっせきの かず。`],
  ['room','🏠 マイルーム',`ゴールドで かぐ・かべ・ゆかを かって、じぶんの へやを かざれるよ。パーティと おきにいりの なかまが へやの なかを あるきまわる（タップすると はねるよ）。トロフィーには じっせきの かずが でる。`],
@@ -1633,8 +1639,7 @@ document.querySelector('#home .powbig').onclick=()=>{const lv=P.lv*2,eq=SLOTS.re
 $('towerBtn').onclick=()=>{snd(660,.05);showModal(`<div class="mt">🗼 むげんの とう</div><p>1かいに 1たい。どこまで のぼれるかな？<br>10かいごとに ボスと ボーナス！<br><small style="color:var(--sub)">HPは すこししか かいふく しないよ・もんだいは ミックス</small></p><p>じぶんの さいこう：<b style="color:var(--gold)">${(P.tower&&P.tower.best)||0}かい</b></p><button class="btn orange big" id="go">のぼる！</button><button class="btn gray" id="cl">やめる</button>`,{go:()=>{closeModal();startTower()},cl:closeModal})};
 $('gachaBtn').onclick=()=>{snd(660,.05);gachaOpen()};
 $('achBtn').onclick=()=>{snd(660,.05);achOpen()};
-$('ghostBtn').onclick=()=>{snd(660,.05);ghostOpen()};
-$('ghBack').onclick=()=>{if(GH){GH.done=true;GH=null}goHome()};
+$('ghBack').onclick=()=>{if(GH){GH.done=true;const b=GH.back;GH=null;if(b){b();return}}goHome()};
 $('ghQ').onclick=()=>{if(GH&&GH.q&&GH.q.speak)say(...GH.q.speak)};
 $('roomBtn').onclick=()=>{snd(660,.05);roomOpen()};
 $('rmBack').onclick=()=>{clearInterval(rmTimer);goHome()};
@@ -2281,6 +2286,7 @@ function updCombo(){const c=$('combo');c.textContent=B.combo>=2?`${B.combo} コ�
 function startBattle(subj,lv,stage,weakOnly,opt={}){
   const mix=subj==='mix';if(mix)lv=mixLv();
   B={subj:mix?'math':subj,lv,bsubj:subj,blv:lv,mix,bag:[],stage,weakOnly,wave:0,waves:opt.tower?1e9:5,tower:!!opt.tower,hp:maxHp(),combo:0,wrong:0,lock:true};
+  B.ghWave=(!weakOnly&&!opt.tower&&Math.random()<.18&&ghostPool().length)?R(2,4):0;
   show('battle');$('arena').style.background=B.tower?'linear-gradient(#1a1030,#4a3a6a)':arenaBg(stage);{const g=B.tower?['#5a5068','#3a3448','#9a8ab8']:AREA(stage).g,a=$('arena');a.style.setProperty('--g1',g[0]);a.style.setProperty('--g2',g[1]);a.style.setProperty('--g3',g[2])}$('pName').textContent=P.name;
   $('q').innerHTML='';$('choices').innerHTML='';$('gauge').style.width='0';$('gaugeW').classList.toggle('off',!GAUGE[lv]);
   updHud();updHeroHp();updCombo();spawn();
@@ -2395,7 +2401,7 @@ function defeat(){
   partyMons().forEach(m=>{if(m.lv>=MONMAX)return;m.xp+=1+Math.floor(B.stage/3);if(m.xp>=monXpNeed(m)){m.xp=0;m.lv++;setTimeout(()=>toast(`${SP[m.sp].name}が Lv${m.lv}に！`),1300)}});
   save();
   setTimeout(()=>{if(!B)return;
-    const after=()=>{if(B.tower){towerFloor(mo);return}if(B.wave>=B.waves)stageClear();else{B.hp=Math.min(maxHp(),B.hp+Math.round(maxHp()*.2)+capeH());updHeroHp();spawn()}};
+    const after=()=>{if(B.tower){towerFloor(mo);return}if(B.wave>=B.waves)stageClear();else{B.hp=Math.min(maxHp(),B.hp+Math.round(maxHp()*.2)+capeH());updHeroHp();if(B.ghWave&&B.wave===B.ghWave){B.ghWave=0;ghostAmbush(spawn)}else spawn()}};
     const egg=mo.ult?(Math.random()<EGGCH[5]?{id:uid(),rar:5,sp:mo.sp,prog:0,need:EGGNEED[5],inc:false}:null):mo.boss&&Math.random()<Math.min(.9,EGGCH[mo.rar||0]*ev.egg)?makeEgg(B.blv):null;
     let next=egg?()=>showEgg(egg,after):after;
     if(mo.ult&&!egg){const f=(P.frag[mo.sp]||0)+1;
