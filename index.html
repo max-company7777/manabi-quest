@@ -648,6 +648,8 @@ input{font:inherit}
 .famwhy{display:flex;justify-content:center;gap:6px;font-size:26px}.famch{display:flex;flex-direction:column;gap:8px}.famopt{text-align:left;padding:10px 12px;background:#2a6a9a;border:3px solid #000;color:#fff;box-shadow:inset 0 3px 0 #ffffff33,0 3px 0 #0008}.famopt:first-child{background:#3a8a3a}.famopt b{display:block;font-size:17px}.famopt small{display:block;font-size:12px;color:#ffe9a0;margin-top:3px}
 .famok{background:#1f5a3a;border:3px solid #000;padding:8px;font-size:16px}.famok small{display:block;font-size:11px;color:#bfe;margin-top:2px}.famadv{text-align:left;font-size:13px}.famadv summary{color:var(--sub);cursor:pointer;padding:4px 0}
 .famsteps{display:flex;flex-direction:column;gap:4px;text-align:left;font-size:13px}.famsteps div{display:flex;gap:8px;align-items:center;background:#0005;padding:5px 8px}.famsteps b{flex:none;width:22px;height:22px;border-radius:50%;background:#ffd23f;color:#2b2016;display:flex;align-items:center;justify-content:center}
+.padv{text-align:left;background:#0004;border:2px solid #000;padding:6px 8px;font-family:'M PLUS Rounded 1c',sans-serif}.padv summary{font-family:'DotGothic16';font-size:15px;color:#ffd23f;cursor:pointer}.psum{font-size:12px;color:var(--sub);margin:6px 0}.pnote{font-size:13px}
+.pav{margin:6px 0;padding:6px 8px;border-left:5px solid;background:#ffffff0a}.pav b{font-size:14px;font-family:'DotGothic16'}.pav ul{margin:4px 0 0;padding-left:18px;font-size:13px;line-height:1.6}.pav.g{border-color:#58d14a}.pav.y{border-color:#ffb020}.pav.b{border-color:#3ec1ff}.pav.h{border-color:#ff8ac8}
 .maptier{font-size:14px;color:var(--gold);margin:8px 0 2px;text-align:left;display:flex;align-items:center;justify-content:space-between;gap:6px}.maptier small{color:var(--sub);font-size:12px}.maptier .mwok{color:#ffd23f}.mwbtn{width:auto!important;margin:0!important;padding:4px 8px!important;font-size:13px!important;background:#d9771e;animation:pulse 1s infinite}.mwrew{font-size:11px;color:var(--sub);text-align:left;margin:0 0 4px}.mgift{font-size:22px;animation:pulse 1s infinite;padding:0 4px;white-space:nowrap}.mbadge{background:#e8413c;color:#fff;font-size:12px;padding:2px 5px;margin-right:4px;border-radius:4px}.mrew{display:flex;flex-direction:column;gap:6px;align-items:center;margin:6px 0}.mrit{display:flex;flex-wrap:wrap;gap:4px;justify-content:center}.mri{border:2px solid;padding:2px;display:inline-flex}.mri img{width:28px;height:28px}.mrsp{color:#ffd23f;font-size:14px}.limb.mapl{background:#1f5a3a}.mapa .mclr{color:#5be05b;font-size:18px}
 </style>
 </head>
@@ -1055,7 +1057,7 @@ function makeItem(st,d,boss,min=0){
 /* =============== save data =============== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-const APPV='v93';
+const APPV='v94';
 try{const c=document.createElement('canvas');c.width=9;c.height=9;const g=c.getContext('2d'),F=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};F(1,0,7,1,'#120d09');F(1,8,7,1,'#120d09');F(0,1,1,7,'#120d09');F(8,1,1,7,'#120d09');F(1,1,7,1,'#120d09');F(1,7,7,1,'#120d09');F(1,1,1,7,'#120d09');F(7,1,1,7,'#120d09');F(2,2,5,1,'#7a6a52');F(2,2,1,5,'#7a6a52');F(2,6,5,1,'#2a2018');F(6,2,1,5,'#2a2018');document.documentElement.style.setProperty('--pxf',`url(${c.toDataURL()})`)}catch(e){}
 const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));if(G.bgmOn===undefined)G.bgmOn=true;
 let P=null;
@@ -3513,6 +3515,42 @@ function profSummary(p){
   return{n,ok,wn,wok,tn,subj,weak,owned:SPECIES.filter(s=>s[3]<5&&p.dex.owned[s[0]]).length,ult:ULTS.filter(u=>p.dex.owned[u.k]).length,
     eq:SLOTS.filter(k=>p.eq[k]).length,box:p.boxN!=null?p.boxN:p.box.length,eggs:p.eggs.length}
 }
+/* ===================== 👪 おうちの かた むけ：ぶんせき と かかわりかた ===================== */
+function parentAdvice(p){const S=p.stats||{cats:{},days:{}},SN={math:'算数',eng:'英語',kanji:'国語'},nm=p.name;
+  const cats=Object.entries(S.cats||{}).map(([k,v])=>({sb:k.split('|')[0],name:k.split('|')[1],n:v.n,ok:v.ok,rate:v.n?v.ok/v.n:0,avg:v.n?v.t/v.n:0})).filter(c=>c.n>0);
+  const wk=(off)=>{const r={n:0,ok:0,d:0,s:{math:0,eng:0,kanji:0}};for(let i=0;i<7;i++){const d=new Date();d.setDate(d.getDate()-i-off);const dd=(S.days||{})[dkey(d)];if(!dd)continue;let a=0;for(const k in dd){r.n+=dd[k].n;r.ok+=dd[k].ok;a+=dd[k].n;if(r.s[k]!=null)r.s[k]+=dd[k].ok}if(a)r.d++}return r};
+  const tw=wk(0),lw=wk(7),pct=x=>Math.round(x*100);
+  const subj={};cats.forEach(c=>{const s=subj[c.sb]=subj[c.sb]||{n:0,ok:0,t:0};s.n+=c.n;s.ok+=c.ok;s.t+=c.avg*c.n});
+  const al=ageLv(p),dv=SUBK.map(k=>p.diff[k]||0);
+  const praise=[],improve=[],grow=[],home=[];
+  /* ほめる */
+  if((p.streak||0)>=3)praise.push(`${p.streak}日連続で取り組めています。「毎日続けているね」と、続けていること自体をほめてあげてください。`);
+  if(tw.d>=5)praise.push(`今週は${tw.d}日も学習しました。習慣がしっかりついてきています。`);
+  if(tw.ok>lw.ok&&lw.ok>0)praise.push(`先週より正解数が${tw.ok-lw.ok}問増えました（${lw.ok}→${tw.ok}問）。がんばりの「量」が伸びています。`);
+  const goods=cats.filter(c=>c.n>=8&&c.rate>=.9).sort((a,b)=>b.n-a.n).slice(0,2);goods.forEach(c=>praise.push(`${SN[c.sb]}の「${c.name}」は正解率${pct(c.rate)}%。もう得意分野です。「〇〇が得意になったね」と具体的に伝えると自信につながります。`));
+  const fast=cats.filter(c=>c.n>=8&&c.rate>=.85&&c.avg<4).sort((a,b)=>a.avg-b.avg)[0];if(fast)praise.push(`「${fast.name}」は平均${fast.avg.toFixed(1)}秒で答えられています。正確さとスピードが両立しています。`);
+  const mastered=SUBK.filter(k=>p.mast&&p.mast[k+(p.diff[k]||0)]);if(mastered.length)praise.push(`${mastered.map(k=>SN[k]).join('・')}で今の★をマスターしました。`);
+  /* もうすこし */
+  const weak=cats.filter(c=>c.n>=5&&c.rate<.75).sort((a,b)=>a.rate-b.rate).slice(0,3);weak.forEach(c=>improve.push(`${SN[c.sb]}「${c.name}」：正解率${pct(c.rate)}%（${c.n}問）。${tipFor(c.name)}`));
+  const slow=cats.filter(c=>c.n>=6&&c.rate>=.8&&c.avg>9).sort((a,b)=>b.avg-a.avg)[0];if(slow)improve.push(`「${slow.name}」は正解できていますが平均${slow.avg.toFixed(1)}秒と時間がかかっています。急かさず、同じ問題を繰り返して「慣れ」を作ると自然に速くなります。`);
+  const low=SUBK.filter(k=>tw.n>0&&tw.s[k]<tw.ok*.15);if(low.length&&tw.ok>=20)improve.push(`今週は${low.map(k=>SN[k]).join('・')}の取り組みが少なめです。ミックスモードなので自然に出ますが、苦手意識がないか声をかけてみてください。`);
+  if(tw.d<=2&&(S.days&&Object.keys(S.days).length))improve.push(`今週の学習は${tw.d}日です。1日5分でもよいので「毎日少しずつ」を目標にすると、記憶に残りやすくなります。`);
+  if((p.weak||[]).length>=8)improve.push(`にがてノートに${p.weak.length}問たまっています。「にがて とっくん」は解説付きでゆっくり進められるので、一緒に1問ずつ見てあげるのがおすすめです。`);
+  /* さらに のばす */
+  SUBK.forEach(k=>{const s=subj[k];if(s&&s.n>=20&&s.ok/s.n>=.9&&(p.diff[k]||0)<LVN-1)grow.push(`${SN[k]}は正解率${pct(s.ok/s.n)}%と安定しています。ホームで★を1つ上げて（${AGEHINT[(p.diff[k]||0)+1]}レベル）挑戦させてみましょう。`)});
+  SUBK.forEach((k,i)=>{if(dv[i]<al-1)grow.push(`${SN[k]}は年齢の目安（${AGEHINT[al]}）より易しい★で遊んでいます。できているなら少しずつ★を上げると、ちょうどよい難しさになります。`)});
+  if(goods.length)grow.push(`得意な「${goods[0].name}」を、買い物や料理など生活の中で使う場面を作ると、「わかる」から「使える」に伸びます。`);
+  if((p.lane&&p.lane.best||0)>=5)grow.push('ぐんだんバトルなど作戦を考える遊びにも熱心です。「どうしてその作戦にしたの？」と聞くと、考える力・説明する力が伸びます。');
+  /* おうちでの かかわり */
+  home.push('結果よりも「続けたこと」「工夫したこと」をほめると、やる気が長続きします。');
+  if(subj.eng&&subj.eng.n>10)home.push('英語は音が大切です。🔊ボタンで一緒に声に出して読むと、発音と記憶の両方に効果があります。');
+  if(subj.kanji&&subj.kanji.n>10)home.push('国語（漢字）は、看板や本で見つけた字を「これ知ってる？」とクイズにすると、楽しく定着します。');
+  if(subj.math&&subj.math.n>10)home.push('算数は、おやつを分ける・お金を数えるなど、具体物で考える経験が理解を深めます。');
+  home.push(`${nm}さんが話しかけてきたら、ゲームの話（なかま・ステージ）にも興味を持って聞いてあげると、親子の会話のきっかけになります。`);
+  const sec=(t,ic,cls,L)=>L.length?`<div class="pav ${cls}"><b>${ic} ${t}</b><ul>${L.map(x=>`<li>${x}</li>`).join('')}</ul></div>`:'';
+  const nodata=cats.reduce((a,c)=>a+c.n,0)<10;
+  return `<details class="padv"${nodata?'':' open'}><summary>📝 分析とおうちでのかかわり方</summary>${nodata?'<p class="pnote">もう少し問題を解くと、くわしい分析が表示されます（目安：10問以上）。</p>':
+    `<div class="psum">今週 ${tw.ok}問正解（正解率 ${tw.n?pct(tw.ok/tw.n):0}%・${tw.d}日）／先週 ${lw.ok}問・${lw.d}日</div>${sec('ここをほめてあげて','👏','g',praise.slice(0,4))}${sec('もう少しサポートを','💪','y',improve.slice(0,4))}${sec('さらに伸ばすには','🚀','b',grow.slice(0,3))}${sec('おうちでのかかわり方','🏠','h',home.slice(0,3))}`}</details>`}
 function adCard(p){const pct=(a,b)=>b?Math.round(a/b*100)+'%':'−',col=r=>r<.6?'#e8413c':r<.8?'#ffb020':'#58d14a',SN={math:'さんすう',eng:'えいご',kanji:'こくご'};const s=profSummary(p),pm=partyMons(p),ago=agoTxt(p.lastPlay||(p.lastDay?new Date(p.lastDay.replace(/-/g,'/')).getTime():0));
     return `<div class="panel adcard${p._remote?' remote':''}">${p._remote?`<div class="rtag">📱 ${esc(p._remote)}・${agoTxt(p._upd)} こうしん</div>`:''}
       <div class="adtop"><div class="av">${heroSVG(p.eq,p)}</div>
@@ -3528,6 +3566,7 @@ function adCard(p){const pct=(a,b)=>b?Math.round(a/b*100)+'%':'−',col=r=>r<.6?
       <div class="adsub">${['math','eng','kanji'].map(k=>{const v=s.subj[k];return `<span>${SN[k]} ★${(p.diff[k]||0)+1} <b style="color:${v?col(v.ok/v.n):'#888'}">${v?pct(v.ok,v.n):'−'}</b> <small>ST${p.best[k]}</small></span>`}).join('')}</div>
       ${s.weak.length?`<div class="adweak">⚠️ にがて：${s.weak.map(w=>`${SN[w.sb]}「${w.name}」${Math.round(w.rate*100)}%`).join('、')}</div>`:''}
       ${pm.length?`<div class="adparty">${pm.map(m=>`<div class="flip" title="${SP[m.sp].name}">${monsterSVG(m.sp)}</div>`).join('')}<small>なかま：${pm.map(m=>SP[m.sp].name+' Lv'+m.lv).join('・')}</small></div>`:''}
+      ${(()=>{try{return parentAdvice(p)}catch(e){return ''}})()}
       <button class="btn" data-sid="${p.id}" data-r="${p._remote?1:0}">📊 くわしい きろくを みる</button>
     </div>`}
 function showAdmin(){
