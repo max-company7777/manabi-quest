@@ -718,7 +718,7 @@ input{font:inherit}
       <button class="btn" id="weakBtn">📕 にがて <span id="weakN">0</span></button>
       <button class="btn" id="statBtn">📊 きろく</button>
       <button class="btn" id="rankBtn">🏆 ランキング</button>
-      <button class="btn" id="mapBtn">🗺️ マップ</button>
+      <button class="btn" id="famBtn" style="background:#2a6a9a">👀 みんなの ようす</button>
       <button class="btn" id="setBtn">⚙️ せってい</button>
       <button class="btn" id="helpBtn" style="background:#3a7ad9">❓ ヘルプ</button>
     </div>
@@ -1055,7 +1055,7 @@ function makeItem(st,d,boss,min=0){
 /* =============== save data =============== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-const APPV='v89';
+const APPV='v90';
 try{const c=document.createElement('canvas');c.width=9;c.height=9;const g=c.getContext('2d'),F=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};F(1,0,7,1,'#120d09');F(1,8,7,1,'#120d09');F(0,1,1,7,'#120d09');F(8,1,1,7,'#120d09');F(1,1,7,1,'#120d09');F(1,7,7,1,'#120d09');F(1,1,1,7,'#120d09');F(7,1,1,7,'#120d09');F(2,2,5,1,'#7a6a52');F(2,2,1,5,'#7a6a52');F(2,6,5,1,'#2a2018');F(6,2,1,5,'#2a2018');document.documentElement.style.setProperty('--pxf',`url(${c.toDataURL()})`)}catch(e){}
 const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));if(G.bgmOn===undefined)G.bgmOn=true;
 let P=null;
@@ -1550,6 +1550,7 @@ function profileForm(p){
 }
 $('addP').onclick=()=>profileForm(null);
 $('addM').onclick=()=>{snd(660,.05);showAdmin()};
+$('famBtn').onclick=()=>{snd(660,.05);showAdmin()};
 function dataMove(){
   showModal(`<div class="mt">💾 データの ひっこし</div><p style="font-size:14px">べつの ばしょ（PWAや べつの たんまつ）に<br>ぜんぶの ぼうけんしゃの データを うつせます。</p>
     <button class="btn green big" id="dx">📤 データを かきだす</button><button class="btn orange big" id="di">📥 データを よみこむ</button><button class="btn gray" id="cl">とじる</button>`,
@@ -1624,7 +1625,7 @@ function piURL(n){const [pal,rows]=PIX[n],cells=[],set=new Set(),m=new Map();row
 const pi=(n,c='')=>{const k='pi|'+n;if(!IMGC[k])IMGC[k]=piURL(n);return `<img class="pi ${c}" src="${IMGC[k]}" alt="">`};
 function pixHome(){
   const set=(id,ic,txt)=>{const e=$(id);if(e)e.innerHTML=pi(ic)+txt};
-  set('weakBtn','book',`にがて <span id="weakN">${P?P.weak.length:0}</span>`);set('statBtn','chart','きろく');set('mapBtn','star','マップ');
+  set('weakBtn','book',`にがて <span id="weakN">${P?P.weak.length:0}</span>`);set('statBtn','chart','きろく');set('famBtn','person','みんな');
   set('rankBtn','trophy','ランキング');
   const dk=(id,ic,t,badge)=>{const e=$(id);if(e)e.innerHTML=pi(ic)+`<i>${t}</i>`+(badge?`<b class="dkb">${badge}</b>`:'')};
   dk('towerBtn','tower','とう',P&&P.tower&&P.tower.best?P.tower.best+'F':'');dk('gachaBtn','gacha','ふくびき',P&&P.tk?P.tk:'');dk('roomBtn','house','へや');dk('achBtn','medal','じっせき',P&&achClaimable()?achClaimable():'');dk('boxBtn','box','ボックス',P&&P.mons.some(evoReady)?'✨':'');dk('shopBtn','bag','ショップ');dk('laneBtn','swords','ぐんだん',P?('🎫'+ltDaily()):'');set('setBtn','gear','せってい');set('helpBtn','help','ヘルプ');
@@ -2712,7 +2713,7 @@ $('setBtn').onclick=()=>profileForm(P);
 $('tJoin').onclick=()=>{snd(660,.05);joinByCode()};$('tInst').onclick=()=>{snd(660,.05);installGuide()};
 $('statBtn').onclick=()=>showStats();
 $('helpBtn').onclick=()=>{snd(660,.05);helpOpen()};
-$('mapBtn').onclick=()=>{snd(660,.05);mapOpen()};
+if($('mapBtn'))$('mapBtn').onclick=()=>{snd(660,.05);mapOpen()};
 document.querySelector('#home .top .lv').onclick=cheatGate;
 $('topGo').onclick=()=>$('goBtn').click();
 document.querySelector('#home .powbig').onclick=()=>{const lv=P.lv*2,eq=SLOTS.reduce((t,k)=>t+iscore(P.eq[k]),0),pt=partyPow();
