@@ -611,6 +611,13 @@ input{font:inherit}
 .mbox.mhatch{animation:hatchflip .7s cubic-bezier(.3,1.3,.5,1)!important}@keyframes hatchflip{0%{transform:perspective(600px) rotateY(90deg) scale(.6);opacity:0}100%{transform:none;opacity:1}}
 .invcode{font-family:'DotGothic16',monospace;font-size:28px;letter-spacing:3px;color:#ffd23f;background:#000a;padding:8px;border:3px solid #000;text-align:center;user-select:text;-webkit-user-select:text}.invurl{font-size:12px!important;user-select:text;-webkit-user-select:text}
 .instb{padding:8px 10px;text-align:left;opacity:.75}.instb.on{opacity:1;border-color:#ffd23f!important;box-shadow:0 0 0 2px #ffd23f}.instb ol{margin:6px 0 0;padding-left:22px;font-size:14px;line-height:1.6}.instb small{color:var(--sub)}.kbd{display:inline-block;background:#fff;color:#222;border-radius:4px;padding:0 5px;font-size:13px}
+.lanecard{position:relative;height:96px;border:3px solid #000;padding:0;overflow:hidden;image-rendering:pixelated;box-shadow:0 4px 0 #0008,inset 0 0 0 2px #ffffff30;cursor:pointer;flex-shrink:0;background:#2a6a9a;clip-path:polygon(3px 0,calc(100% - 3px) 0,100% 3px,100% calc(100% - 3px),calc(100% - 3px) 100%,3px 100%,0 calc(100% - 3px),0 3px)}
+.lanecard:active{transform:translateY(3px)}.lcbg{position:absolute;inset:0;background:var(--lsc) center bottom/cover;filter:saturate(1.1)}.lanecard::after{content:'';position:absolute;inset:0;background:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.3) 45%,transparent 60%) -150% 0/250% 100% no-repeat;animation:cshine 3.2s infinite;pointer-events:none}
+.lcc{position:absolute;bottom:4px;height:62px;width:auto;image-rendering:pixelated}.lcc.e{left:2px}.lcc.p{right:2px}
+.lcm{position:absolute;left:0;right:0;bottom:6px;height:34px}.lcu{position:absolute;bottom:0;width:30px;height:30px;font-style:normal;animation:lcmarch 6.4s linear infinite}.lcu img,.lcu svg{width:100%;height:100%;display:block;animation:lnwalk .42s steps(2) infinite}.lcu.en{animation-name:lcmarche;animation-duration:7s}.lcu.en img{transform:scaleX(-1)}
+@keyframes lcmarch{from{left:82%}to{left:12%}}@keyframes lcmarche{from{left:12%}to{left:82%}}
+.lct{position:absolute;left:50%;top:8px;z-index:2;transform:translateX(-50%);text-align:center;background:#000b;padding:3px 12px;border:2px solid #ffd23f;white-space:nowrap}.lct b{display:block;font-size:20px;color:#fff;text-shadow:2px 2px 0 #c0302a}.lct small{display:block;font-size:11px;color:#ffd23f}
+.lctk{position:absolute;right:4px;top:4px;z-index:3;background:#e8413c;color:#fff;font-size:13px;padding:1px 5px;border:2px solid #000;font-weight:bold;animation:pulse 1.2s infinite}.lctk small{font-size:10px}.lctk.none{background:#555;animation:none}
 .maptier{font-size:14px;color:var(--gold);margin:8px 0 2px;text-align:left;display:flex;align-items:center;justify-content:space-between;gap:6px}.maptier small{color:var(--sub);font-size:12px}.maptier .mwok{color:#ffd23f}.mwbtn{width:auto!important;margin:0!important;padding:4px 8px!important;font-size:13px!important;background:#d9771e;animation:pulse 1s infinite}.mwrew{font-size:11px;color:var(--sub);text-align:left;margin:0 0 4px}.mgift{font-size:22px;animation:pulse 1s infinite;padding:0 4px;white-space:nowrap}.mbadge{background:#e8413c;color:#fff;font-size:12px;padding:2px 5px;margin-right:4px;border-radius:4px}.mrew{display:flex;flex-direction:column;gap:6px;align-items:center;margin:6px 0}.mrit{display:flex;flex-wrap:wrap;gap:4px;justify-content:center}.mri{border:2px solid;padding:2px;display:inline-flex}.mri img{width:28px;height:28px}.mrsp{color:#ffd23f;font-size:14px}.limb.mapl{background:#1f5a3a}.mapa .mclr{color:#5be05b;font-size:18px}
 </style>
 </head>
@@ -672,6 +679,7 @@ input{font:inherit}
     <button class="btn mapcard" id="hMap"></button>
     <div class="stagepick"><button class="btn" id="sPrev">◀</button><span>ステージ <b id="sNum">1</b></span><button class="btn" id="sNext">▶</button></div>
     <button class="btn orange big" id="goBtn" style="font-size:26px">⚔️ しゅつげき！</button>
+    <button class="lanecard" id="hLane"></button>
     <div class="row hgrid">
       <button class="btn" id="weakBtn">📕 にがて <span id="weakN">0</span></button>
       <button class="btn" id="statBtn">📊 きろく</button>
@@ -1638,6 +1646,12 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden){if(AC&&AC.
 /* ===================== 🏕️ ホームの きょてん（ひる・よる＋あるく なかま） ===================== */
 const isNight=()=>{const h=new Date().getHours();return h>=18||h<6};
 let baseTimer=null;
+function renderLaneCard(){const el=$('hLane');if(!el||!P)return;P.lane=P.lane||{best:0};const lt=P.ltDay===dkey(new Date())?(P.lt??0):Math.max(P.lt??3,2),st=Math.min(P.lane.best+1,P.lane.sel||P.lane.best+1),a=AREA(Math.max(1,st*3));
+  const ms=laneDeck().slice(0,3);el.style.setProperty('--lsc',`url(${sceneURL(a,160,60)})`);
+  el.innerHTML=`<span class="lcbg"></span><img class="lcc e" src="${castleURL('e',0)}"><img class="lcc p" src="${castleURL('p',0)}">
+    <span class="lcm">${[`<i class="lcu" style="animation-delay:0s">${heroSVG(P.eq,P)}</i>`,...ms.map((m,i)=>`<i class="lcu" style="animation-delay:${-(i+1)*1.6}s">${monsterSVG(m.sp)}</i>`)].join('')}<i class="lcu en" style="animation-delay:-1s">${monsterSVG('slime')}</i><i class="lcu en" style="animation-delay:-4s">${monsterSVG('bat')}</i></span>
+    <span class="lct"><b>🏯 ぐんだん バトル</b><small>ステージ ${st}・さいこう ${P.lane.best}</small></span><span class="lctk${lt?'':' none'}">🎫 ${lt}<small>まい</small></span>`;
+  el.onclick=()=>{snd(660,.05);laneOpen()}}
 function renderBase(){const el=$('hBase');if(!el||!P)return;const a=AREA(selStage||1),nt=isNight(),W=200,H=Math.max(60,Math.round(W*el.clientHeight/Math.max(1,el.clientWidth||360)));
   el.style.background=`url(${sceneURL(a,W,H,{night:nt})}) center/100% 100%`;el.classList.toggle('night',nt);
   const ms=partyMons();el.querySelector('.bwalk').innerHTML=`<span class="bw hero" style="left:42%">${heroSVG(P.eq,P)}</span>`+ms.map((m,i)=>`<span class="bw mon" data-sp="${m.sp}" style="left:${15+i*22}%">${monsterSVG(m.sp)}</span>`).join('')+(nt?'<span class="bcamp">🔥</span>':'');
@@ -2324,7 +2338,7 @@ function renderHome(){
   $('who').innerHTML=pi('person')+esc(P.name)+(P.cheat?' 🛠️':'')+' ▾';
   $('hLv').textContent=P.lv>=MAXLV?'MAX':P.lv;$('hXp').style.width=(P.lv>=MAXLV?100:Math.min(100,P.xp/xpNeed()*100))+'%';
   countUp($('hGold'),P.gold);$('hStreak').textContent=P.streak;
-  $('hHero').innerHTML=heroSVG(P.eq,P);try{renderBase()}catch(e){}{const hb=document.querySelector('.herobox');if(hb){const sa=AREA(selStage||1);hb.style.setProperty('--scn',`url(${sceneURL(sa,96,120,{night:isNight()})})`)}}$('hPow').textContent=fmtBig(power());$('hTitle').textContent=titleOf(P)?'「'+titleOf(P)+'」':'';
+  $('hHero').innerHTML=heroSVG(P.eq,P);try{renderBase()}catch(e){}try{renderLaneCard()}catch(e){}{const hb=document.querySelector('.herobox');if(hb){const sa=AREA(selStage||1);hb.style.setProperty('--scn',`url(${sceneURL(sa,96,120,{night:isNight()})})`)}}$('hPow').textContent=fmtBig(power());$('hTitle').textContent=titleOf(P)?'「'+titleOf(P)+'」':'';
   $('hSlotsL').innerHTML=SLOT_L.map(k=>slotHTML(k,P.eq[k])).join('');
   $('hSlotsR').innerHTML=SLOT_R.map(k=>slotHTML(k,P.eq[k])).join('');
   $('hCount').textContent=`そうび ${SLOTS.filter(k=>P.eq[k]).length} / ${SLOTS.length}`;
