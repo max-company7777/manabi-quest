@@ -2422,7 +2422,7 @@ function updCombo(){const c=$('combo');c.textContent=B.combo>=2?`${B.combo} ã‚³ã
 function startBattle(subj,lv,stage,weakOnly,opt={}){
   const mix=subj==='mix';if(mix)lv=mixLv();
   B={subj:mix?'math':subj,lv,bsubj:subj,blv:lv,mix,bag:[],stage,weakOnly,wave:0,waves:opt.tower?1e9:5,tower:!!opt.tower,hp:maxHp(),combo:0,wrong:0,lock:true};
-  B.ghWave=(!weakOnly&&!opt.tower&&Math.random()<.18&&ghostPool().length)?R(2,4):0;
+  B.ghWave=(!weakOnly&&!opt.tower&&Math.random()<.4&&ghostPool().length)?R(2,4):0;
   show('battle');$('arena').style.background=B.tower?'linear-gradient(#1a1030,#4a3a6a)':arenaBg(stage);{const g=B.tower?['#5a5068','#3a3448','#9a8ab8']:AREA(stage).g,a=$('arena');a.style.setProperty('--g1',g[0]);a.style.setProperty('--g2',g[1]);a.style.setProperty('--g3',g[2])}$('pName').textContent=P.name;
   $('q').innerHTML='';$('choices').innerHTML='';$('gauge').style.width='0';$('gaugeW').classList.toggle('off',!GAUGE[lv]);
   updHud();updHeroHp();updCombo();spawn();
