@@ -63,7 +63,7 @@ input{font:inherit}
 .slot.empty .sn{color:#888}
 .herobox{position:relative;display:flex;flex-direction:column;align-items:center}
 .herobox .hs{width:100%;max-width:200px}
-.powbig{display:flex;align-items:center;gap:6px;background:#000a;border:3px solid var(--gold);padding:4px 14px;border-radius:6px;margin-top:-6px}
+.powbig{cursor:pointer;display:flex;align-items:center;gap:6px;background:#000a;border:3px solid var(--gold);padding:4px 14px;border-radius:6px;margin-top:-6px}
 .powbig small{font-size:13px;color:var(--sub)}
 .powbig b{font-size:30px;color:var(--gold);text-shadow:2px 2px 0 #000}
 .statrow{display:grid;grid-template-columns:repeat(3,auto);justify-content:center;gap:2px 10px;font-size:12px;margin-top:6px;color:var(--sub)}
@@ -232,7 +232,7 @@ input{font:inherit}
 .byewarn{background:#e8413c33;border:2px solid #e8413c;border-radius:6px;padding:6px;color:#ffb0a0;font-size:14px}
 .fv{position:absolute;top:1px;left:2px;font-style:normal;font-size:11px}
 
-.rktabs{display:grid;grid-template-columns:repeat(5,1fr);gap:4px}.rktabs .db{font-size:11px;padding:8px 0}
+.rktabs{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}.rktabs .db{font-size:11px;padding:8px 0}
 .rkrow{display:flex;align-items:center;gap:8px;padding:8px 10px}
 .rkrow.top1{border-color:#ffd23f;box-shadow:0 0 14px #ffd23f66}.rkrow.top2{border-color:#c9c9c9}.rkrow.top3{border-color:#c0703a}
 .rkrow.me{background:#3a4a2c}
@@ -421,6 +421,29 @@ input{font:inherit}
 .maplist{display:flex;flex-direction:column;gap:6px;max-height:60vh;overflow:auto;margin:6px 0}
 .mapa{display:flex;align-items:center;gap:10px;padding:8px 10px!important;text-align:left;color:#fff;text-shadow:2px 2px 0 #000}.mapa.sel{outline:3px solid var(--gold)}.mapa.lock{filter:grayscale(1) brightness(.5)}
 #hStats b,#home .slot .sn b,#hPow,#home .top .pill b,#home .top .lv{font-family:'DotGothic16',monospace;-webkit-font-smoothing:none;font-smoothing:none}
+
+.modes{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.modes .mode{font-size:16px;padding:10px 0;color:#fff}
+.hgrid{display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:6px}.hgrid .btn{font-size:14px;padding:10px 2px}
+.tkn{font-size:12px;background:#0006;padding:0 4px}.achn{background:#e8413c;color:#fff;font-size:12px;padding:0 5px;margin-left:2px}
+.pi.big{width:110px;height:110px;margin:0}.gmach{margin:6px auto}
+@keyframes gshake{0%,100%{transform:rotate(0)}20%{transform:rotate(-8deg)}40%{transform:rotate(8deg)}60%{transform:rotate(-6deg)}80%{transform:rotate(6deg)}}.gshake{animation:gshake .9s}
+.gres{display:grid;grid-template-columns:1fr;gap:6px;margin:8px 0}.gres.many{grid-template-columns:repeat(2,1fr);max-height:52vh;overflow:auto}
+.gz{display:flex;align-items:center;gap:8px;background:#0005;border:2px solid #555;padding:6px;text-align:left}.gz small{font-size:12px;line-height:1.3}
+.gz .gi{width:40px;height:40px;flex:none;display:grid;place-items:center;font-size:26px}.gz .gi svg,.gz .gi img{width:100%;height:100%}.gz .gi .pi{width:30px;height:30px;margin:0}
+.gz.c1{border-color:#4aa0e0}.gz.c2{border-color:#a060e0}.gz.c3{border-color:#ffb020}.gz.c4{border-color:#ff4a8a}.gz.c5{border-color:#7af0ff;box-shadow:0 0 8px #7af0ff}
+.achlist{display:flex;flex-direction:column;gap:6px;max-height:58vh;overflow:auto;text-align:left;margin:6px 0}
+.ach{display:flex;align-items:center;gap:8px;background:#0005;border:2px solid var(--edge);padding:6px}.ach.can{border-color:var(--gold)}
+.ach .ai{font-size:24px}.ach .ab{flex:1;min-width:0}.ach .ab b{font-size:14px;margin-right:4px}.ach .ab i{font-style:normal;font-size:10px;padding:0 3px;margin-right:2px;background:#0006;color:#888}
+.ach .ab i.d{color:#fff;background:#8a5a1a}.ach .ab i.g{color:#1b1410;background:var(--gold)}.ach small{display:block;font-size:10px;color:var(--sub)}
+.abar{height:6px;background:#000a;margin:3px 0}.abar i{display:block;height:100%;background:#5be05b}.ach .ok{font-size:20px}
+.fishbar{position:relative;height:34px;background:linear-gradient(#2a7ad9,#0a3a7a);border:3px solid var(--edge);margin:10px 0;overflow:hidden}
+.fishbar .zone{position:absolute;top:0;bottom:0;width:20%;background:#5be05b88}.fishbar .perfect{position:absolute;top:0;bottom:0;width:2%;background:#ffd23f}
+.fishbar b{position:absolute;top:4px;width:14px;height:20px;margin-left:-7px;background:#e8413c;border:2px solid #fff}.fishres{font-size:30px;min-height:40px}
+.tgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:8px auto;max-width:260px}.tcell{font-size:30px;padding:10px 0;background:#c8a060!important}.tcell.open{background:#f4e2a8!important}.tcell.rest{opacity:.5}
+
+.droph{display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:4px}.chest.sm{font-size:34px;line-height:1}.chest.sm svg,.chest.sm img{width:40px;height:40px}
+.cmp.sm{gap:6px;margin:2px 0}.cmp.sm .hs{width:64px}.cmp.sm .arrow{font-size:18px}
+.dropbtns{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:6px}.dropbtns .btn{padding:12px 2px;font-size:15px}.dropbtns small{display:block;font-size:11px;color:#ffd23f}
 </style>
 </head>
 <body>
@@ -470,14 +493,21 @@ input{font:inherit}
     <button class="btn mapcard" id="hMap"></button>
     <div class="stagepick"><button class="btn" id="sPrev">◀</button><span>ステージ <b id="sNum">1</b></span><button class="btn" id="sNext">▶</button></div>
     <button class="btn orange big" id="goBtn" style="font-size:26px">⚔️ しゅつげき！</button>
-    <div class="row" style="display:grid;grid-template-columns:1fr 1fr">
+    <div class="modes">
+      <button class="btn mode" id="towerBtn" style="background:#5a3a8a">🗼 とう</button>
+      <button class="btn mode" id="ghostBtn" style="background:#2a6a7a">👻 ゴースト</button>
+      <button class="btn mode" id="gachaBtn" style="background:#b8402a">🎰 ふくびき</button>
+    </div>
+    <div class="row hgrid">
       <button class="btn" id="weakBtn">📕 にがて <span id="weakN">0</span></button>
-      <button class="btn" id="statBtn">📊 きろく</button>
       <button class="btn" id="boxBtn">📦 ボックス</button>
-      <button class="btn" id="helpBtn" style="background:#3a7ad9">❓ ヘルプ</button>
+      <button class="btn" id="roomBtn">🏠 へや</button>
+      <button class="btn" id="achBtn">🏅 じっせき</button>
+      <button class="btn" id="statBtn">📊 きろく</button>
       <button class="btn" id="rankBtn">🏆 ランキング</button>
       <button class="btn" id="shopBtn">🛍️ ショップ</button>
       <button class="btn" id="setBtn">⚙️ せってい</button>
+      <button class="btn" id="helpBtn" style="background:#3a7ad9">❓ ヘルプ</button>
     </div>
   </div>
 </section>
@@ -1240,7 +1270,7 @@ function selectProfile(id){P=G.profiles.find(p=>p.id===id);if(!P)return;ensureP(
 function checkDaily(){
   const t=new Date(),today=dayStr(t),y=new Date(t);y.setDate(t.getDate()-1);
   if(P.lastDay===today)return;
-  P.streak=(P.lastDay===dayStr(y))?P.streak+1:1;P.lastDay=today;P.todayCorrect=0;P.todaySubj={math:0,eng:0,kanji:0};P.claimed=false;
+  P.streak=(P.lastDay===dayStr(y))?P.streak+1:1;P.maxStreak=Math.max(P.maxStreak||0,P.streak);P.lastDay=today;P.todayCorrect=0;P.todaySubj={math:0,eng:0,kanji:0};P.claimed=false;
   const bonus=10*Math.min(P.streak,7);P.gold+=bonus;save();
   setTimeout(()=>showModal(`<div class="chest">🔥</div><div class="mt">${P.streak}にち れんぞく！</div>
     <p>ログインボーナス<br><b class="goldt">🪙 +${bonus}</b></p>${P.streak<7?'<small>まいにち くると ふえるよ（7にちで さいだい）</small>':''}
@@ -1269,6 +1299,12 @@ const PIX={
  crown:[{y:'#ffd23f',Y:'#d99a1a',r:'#e8413c'},['y...y...y','yy.yyy.yy','yyyyyyyyy','yYrYyYrYy','yyyyyyyyy']],
  gift:[{r:'#e8413c',y:'#ffd23f',R:'#a02a20'},['..y...y..','...y.y...','rrrryrrrr','rRRRyRRRr','rrrryrrrr','.rRRyRRr.','.rRRyRRr.','.rRRyRRr.','.rrryrrr.']],
  egg:[{w:'#f4ead0',W:'#c8b090',y:'#ffd23f'},['...www...','..wwwww..','.wwywwww.','.wwwwwyw.','wwywwwwww','wwwwwywww','wwwwwwwWw','.wWwwwWw.','..WWWWW..']],
+ tower:[{g:'#9a8ab8',G:'#5a4a7a',k:'#1b1410',y:'#ffd23f'},['...y.....','..ggg....','..gkg....','.ggggg...','.gGgGg...','.ggkgg...','.gGgGg...','ggggggg..','gGgkgGg..']],
+ ghost:[{w:'#e8f4ff',W:'#9ab8d8',k:'#1b1410'},['..wwwww..','.wwwwwww.','wwkwwwkww','wwkwwwkww','wwwwwwwww','wwwkkkwww','wwwwwwwww','wwwwwwwww','w.ww.ww.w']],
+ gacha:[{r:'#e8413c',R:'#a02a20',w:'#e8f4ff',y:'#ffd23f',b:'#4aa0e0',g:'#5be05b'},['.rrrrrrr.','rwwwwwwwr','rwybwgwwr','rwwgwywwr','rwwwwwwwr','rrrrrrrrr','rRRRyRRRr','rRRRRRRRr','.rrrrrrr.']],
+ medal:[{r:'#e8413c',b:'#4a7ad9',y:'#ffd23f',Y:'#d99a1a'},['rr.....bb','.rr...bb.','..rr.bb..','...yyy...','..yyyyy..','.yyYyyyy.','.yyyyyyy.','..yyYyy..','...yyy...']],
+ house:[{r:'#d9442f',R:'#a02a20',w:'#f4ead0',W:'#c8a070',b:'#4aa0e0'},['....r....','...rrr...','..rrrrr..','.rrrrrrr.','rRRRRRRRr','.wwwwwww.','.wbwwwbw.','.wwwWwww.','.wwwWwww.']],
+ ticket:[{y:'#ffd23f',Y:'#d99a1a',r:'#e8413c'},['yyyyyyyyy','yYyyyyyYy','.yyryryy.','yyyrrryyy','.yyyryyy.','yYyyyyyYy','yyyyyyyyy']],
  help:[{b:'#3a7ad9',w:'#ffffff'},['.bbbbbbb.','bbbwwwbbb','bbwbbbwbb','bbbbbbwbb','bbbbbwbbb','bbbbwbbbb','bbbbbbbbb','bbbbwbbbb','.bbbbbbb.']],
  star:[{y:'#ffd23f',Y:'#d99a1a'},['....y....','...yyy...','yyyyyyyyy','.yyyYyyy.','..yyyyy..','.yyy.yyy.','.yY...Yy.']]};
 function piURL(n){const [pal,rows]=PIX[n],cells=[],set=new Set(),m=new Map();rows.forEach((r,y)=>[...r].forEach((c,x)=>{if(pal[c]){cells.push([x,y,pal[c]]);set.add(x+','+y)}}));
@@ -1279,7 +1315,7 @@ const pi=(n,c='')=>{const k='pi|'+n;if(!IMGC[k])IMGC[k]=piURL(n);return `<img cl
 function pixHome(){
   const set=(id,ic,txt)=>{const e=$(id);if(e)e.innerHTML=pi(ic)+txt};
   set('weakBtn','book',`にがて <span id="weakN">${P?P.weak.length:0}</span>`);set('statBtn','chart','きろく');set('boxBtn','box','ボックス');
-  set('rankBtn','trophy','ランキング');set('shopBtn','bag','ショップ');set('setBtn','gear','せってい');set('helpBtn','help','ヘルプ');
+  set('rankBtn','trophy','ランキング');set('shopBtn','bag','ショップ');set('setBtn','gear','せってい');set('helpBtn','help','ヘルプ');set('towerBtn','tower','とう');set('ghostBtn','ghost','ゴースト');set('gachaBtn','gacha',`ふくびき <span class="tkn">${pi('ticket')}${P?P.tk||0:0}</span>`);set('roomBtn','house','へや');set('achBtn','medal',`じっせき${P&&achClaimable()?` <span class="achn">${achClaimable()}</span>`:''}`);
   set('goBtn','swords','しゅつげき！');set('hBest','star','さいきょう そうび');set('hEnhAll','hammer','まとめて きょうか');
   const g=$('hGold').parentNode,st=$('hStreak').parentNode;if(!g.querySelector('.pi')){g.innerHTML=pi('coin')+'<b id="hGold">0</b>';st.innerHTML=pi('flame')+'<b id="hStreak">1</b><small>にち</small>';st.id='hStreakPill';st.onclick=()=>helpOpen('streak');g.onclick=()=>toast('🪙 '+P.gold.toLocaleString()+' ゴールド')}}
 
@@ -1306,6 +1342,83 @@ function mapOpen(){const top=(P.best[P.subj]||0)+1,cur=areaOf(selStage);
       <span class="mi">${open?a.i:'🔒'}</span><span class="mn">${open?a.n:'？？？'}<small>ステージ ${from}${i<AREAS.length-1?'〜'+(from+9):'〜'}${a.el&&open?'・'+ELS[a.el].i+a.el+'が おおい':''}</small></span></button>`}).join('')}</div>
     <button class="btn gray" id="cl">とじる</button>`,{cl:closeModal});
   document.querySelectorAll('.mapa:not(.lock)').forEach(b=>b.onclick=()=>{selStage=+b.dataset.st;closeModal();renderHome()})}
+
+/* ===================== 🗼 tower ===================== */
+function startTower(){P.tower=P.tower||{best:0,runs:0};P.tower.runs++;save();startBattle('mix',0,Math.max(1,P.best.mix||1),false,{tower:true});
+  setTimeout(()=>toast(`🗼 むげんの とう！ さいこう ${P.tower.best}かい`),400)}
+function towerFloor(mo){const f=B.wave;P.tower=P.tower||{best:0,runs:0};if(f>P.tower.best){P.tower.best=f;if(f%5===0)setTimeout(()=>toast(`🎉 しんきろく ${f}かい！`),300)}
+  if(f%10===0){const g=Math.round(f*60*DMULT[B.blv]*EV().g),tk=Math.floor(f/10);P.gold+=g;P.tk=(P.tk||0)+tk;save();fanfare();
+    showModal(`<div class="chest">🎁</div><div class="mt">${f}かい とうは！</div><p>ボーナス<br><b class="goldt">🪙+${g}</b>　${pi('ticket')}+${tk}</p><small>HPが すこし かいふく！ つぎは もっと つよいよ</small><button class="btn orange big" id="ok">のぼる ▶</button><button class="btn gray" id="rn">ここで やめる</button>`,
+      {ok:()=>{closeModal();B.hp=Math.min(maxHp(),B.hp+Math.round(maxHp()*.35));updHeroHp();spawn()},rn:()=>{closeModal();towerEnd(true)}});return}
+  save();B.hp=Math.min(maxHp(),B.hp+Math.round(maxHp()*.08)+capeH());updHeroHp();spawn()}
+function towerEnd(quit){if(!B)return;B.lock=true;const f=quit?B.wave-1:B.wave,best=P.tower.best;save();snd(400,.4,'triangle',.06,-100);
+  showModal(`<div class="chest">🗼</div><div class="mt">${Math.max(0,f)}かい まで のぼった！</div><p>じぶんの さいこう：<b style="color:var(--gold)">${best}かい</b></p><small>10かいごとに ボスと ボーナス！ そうびを つよくして また ちょうせん</small>
+    <button class="btn orange big" id="rt">もういちど</button><button class="btn gray big" id="hm">ホームへ</button>`,{rt:()=>{closeModal();startTower()},hm:()=>{closeModal();goHome()}})}
+
+/* ===================== 🎰 gacha ===================== */
+function gachaPrize(){const r=Math.random()*100,d=Math.max(1,mixLv()),st=Math.max(1,P.best.mix||1);
+  if(r<1){const uu=ultUnlocked();if(uu.length){const k=pick(uu).k;return{t:'frag',k,c:5,label:'きゅうきょくの カケラ',ic:monsterSVG(k)}}}
+  if(r<5)return{t:'tk',n:3,c:3,label:'ふくびきけん ×3',ic:pi('ticket')};
+  if(r<13){const all=[];Object.entries(COSCAT).forEach(([c,o])=>{if(c==='title')return;Object.entries(o).forEach(([k,v])=>{if(!cosOf(P).owned[c+':'+k])all.push([c,k,v[0]])})});if(all.length){const [c,k,n]=pick(all);return{t:'cos',key:c+':'+k,c:4,label:'きせかえ「'+n+'」',ic:'👗'}}}
+  if(r<26)return{t:'egg',e:makeEgg(d),c:3,label:'たまご',ic:''};
+  if(r<62){const mr=Math.random()<.05?3:Math.random()<.3?2:1,it=makeItem(st,d,false,mr);return{t:'item',it,c:it.rar,label:iname(it),ic:''}}
+  const g=Math.round((50+P.lv*4)*(1+Math.random()*2));return{t:'gold',n:g,c:0,label:'🪙 '+g,ic:pi('coin')}}
+function gachaApply(z){
+  if(z.t==='frag'){const f=(P.frag[z.k]||0)+1;if(f>=10){P.frag[z.k]=f-10;addEgg({id:uid(),rar:5,sp:z.k,prog:0,need:EGGNEED[5],inc:false});z.label+='（10こ → たまご！）'}else{P.frag[z.k]=f;z.label+=`（${f}/10）`}}
+  else if(z.t==='tk')P.tk=(P.tk||0)+z.n;else if(z.t==='cos')cosOf(P).owned[z.key]=1;else if(z.t==='egg'){addEgg(z.e);z.ic=eggIcon(z.e);z.label=RAR[z.e.rar].n+'の たまご'}
+  else if(z.t==='item'){P.dex.items[ikey(z.it)]=1;z.ic=itemIcon(z.it);if(P.box.length<boxCap())P.box.push(z.it);else{P.gold+=z.it.price;z.label+='（ボックスが いっぱいで うった）'}}
+  else if(z.t==='gold')P.gold+=z.n}
+function gachaOpen(){P.tk=P.tk||0;
+  showModal(`<div class="mt">${pi('gacha')}ふくびき</div><div class="gmach" id="gm">${pi('gacha','big')}</div>
+    <p>${pi('ticket')}<b style="font-size:20px;color:var(--gold)">${P.tk}</b> まい<br><small style="color:var(--sub)">もんだいに 10かい せいかいするごとに 1まい（きんようびは 2ばい）</small></p>
+    <div class="row"><button class="btn orange big" id="g1" ${P.tk<1?'disabled':''}>1かい ${pi('ticket')}1</button><button class="btn purple big" id="g10" ${P.tk<10?'disabled':''}>10かい ${pi('ticket')}10</button></div>
+    <small style="color:var(--sub)">そうび・たまご・きせかえ・ゴールド・カケラ が でるよ</small><button class="btn gray" id="cl">とじる</button>`,
+    {cl:()=>{closeModal();renderHome()},g1:()=>gachaRun(1),g10:()=>gachaRun(10)})}
+function gachaRun(n){if((P.tk||0)<n)return;P.tk-=n;P.gachaN=(P.gachaN||0)+n;const zs=[];for(let i=0;i<n;i++){const z=gachaPrize();gachaApply(z);zs.push(z)}save();
+  const gm=$('gm');document.querySelectorAll('#modal .btn').forEach(b=>b.disabled=true);if(gm)anim(gm,'gshake',900);[523,659,784,1047].forEach((f,i)=>snd(f,.12,'square',.05,0,i*.15));
+  setTimeout(()=>{const top=Math.max(...zs.map(z=>z.c));top>=3?fanfare():coin();
+    showModal(`<div class="mt">🎉 ${n}かい ひいたよ！</div><div class="gres${n>1?' many':''}">${zs.map(z=>`<div class="gz c${z.c}"><span class="gi">${z.ic||''}</span><small>${esc(z.label)}</small></div>`).join('')}</div>
+      <button class="btn orange big" id="ag">もういちど</button><button class="btn gray" id="cl">とじる</button>`,{ag:()=>gachaOpen(),cl:()=>{closeModal();renderHome()}})},1000)}
+
+/* ===================== 🏅 achievements ===================== */
+const ACHDEF=[['seikai','✅','せいかい',[100,500,1000,3000,10000],p=>p.total||0,'もん'],['streak','🔥','れんぞく',[3,7,14,30,100],p=>p.maxStreak||p.streak||0,'にち'],
+ ['lv','⭐','レベル',[10,50,100,300,1000],p=>p.lv,''],['dex','📖','なかまの しゅるい',[10,30,50,100,151],p=>ownedStd(p),'しゅ'],['ult','🌟','きゅうきょく',[1,2,3],p=>ULTS.filter(u=>p.dex.owned[u.k]).length,'たい'],
+ ['stage','🗺️','ステージ',[10,30,50,90],p=>Math.max(...Object.values(p.best||{0:0})),''],['tower','🗼','むげんの とう',[10,30,50,100],p=>(p.tower&&p.tower.best)||0,'かい'],
+ ['master','🎓','マスター',[1,3,6,12,24],p=>Object.keys(p.mast||{}).length,'こ'],['evo','✨','しんか',[1,5,20,50],p=>p.evoN||0,'かい'],
+ ['gacha','🎰','ふくびき',[1,10,50,100],p=>p.gachaN||0,'かい'],['ghost','👻','ゴーストに かつ',[1,5,20],p=>p.ghostWin||0,'かい'],['mini','🎣','ミニゲーム',[1,10,30],p=>p.miniN||0,'かい'],
+ ['plus','⚒️','きょうか',[10,20,30],p=>Math.max(0,...SLOTS.map(k=>(p.eq[k]&&p.eq[k].plus)||0)),''],['room','🏠','かぐ',[1,5,15],p=>Object.keys((p.room&&p.room.own)||{}).length,'こ']];
+const ACHR=[[300,1],[1000,2],[3000,3],[10000,5],[30000,10]];
+function achList(p=P){const o=[];ACHDEF.forEach(([id,ic,n,ts,fn,u])=>{const v=fn(p);ts.forEach((t,i)=>o.push({id:id+i,ic,n,t,v,u,i,done:v>=t,got:!!(p.ach&&p.ach[id+i]),rw:ACHR[Math.min(i,4)]}))});return o}
+const achClaimable=()=>achList().filter(a=>a.done&&!a.got).length;
+function achOpen(){const L=achList(),got=L.filter(a=>a.got).length;
+  showModal(`<div class="mt">${pi('medal')}じっせき</div><p><b style="color:var(--gold)">${got}</b> / ${L.length} こ</p><div class="achlist">${
+    ACHDEF.map(([id,ic,n])=>{const ts=L.filter(a=>a.id.startsWith(id)&&a.id.slice(id.length).match(/^\d+$/));const nx=ts.find(a=>!a.got)||ts[ts.length-1];
+      return `<div class="ach${nx.done&&!nx.got?' can':''}"><span class="ai">${ic}</span><div class="ab"><b>${n}</b>${ts.map(a=>`<i class="${a.got?'g':a.done?'d':''}">${a.t}${a.u}</i>`).join('')}
+        <div class="abar"><i style="width:${Math.min(100,nx.v/nx.t*100)}%"></i></div><small>${Math.min(nx.v,nx.t)} / ${nx.t}${nx.u}　ほうしゅう 🪙${nx.rw[0]}・🎟️${nx.rw[1]}</small></div>
+        ${nx.done&&!nx.got?`<button class="btn orange" data-a="${nx.id}">うけとる</button>`:nx.got?'<span class="ok">👑</span>':''}</div>`}).join('')}</div><button class="btn gray" id="cl">とじる</button>`,{cl:()=>{closeModal();renderHome()}});
+  document.querySelectorAll('.ach [data-a]').forEach(b=>b.onclick=()=>{const a=achList().find(x=>x.id===b.dataset.a);if(!a||!a.done||a.got)return;P.ach=P.ach||{};P.ach[a.id]=1;P.gold+=a.rw[0];P.tk=(P.tk||0)+a.rw[1];save();fanfare();toast(`🏅 ${a.n} ${a.t}${a.u}！ 🪙+${a.rw[0]} 🎟️+${a.rw[1]}`);achOpen()})}
+
+/* ===================== 🎣 minigames ===================== */
+function miniReward(){return Math.max(20,Math.round((B?B.stage:1)*15*DMULT[B?B.blv:0]))}
+function miniGame(cb){P.miniN=(P.miniN||0)+1;save();(Math.random()<.5?miniFish:miniTreasure)(cb)}
+function miniFish(cb){let cast=0,got=[],raf=0,pos=0,dir=1,zone=0,sp=0,res=null;const base=miniReward();
+  const start=()=>{zone=10+Math.random()*60;sp=.9+cast*.35;pos=0;dir=1;res=null;
+    showModal(`<div class="mt">🎣 ボーナス：つり ${cast+1}/3</div><p style="font-size:13px">ウキが <b style="color:#5be05b">みどり</b>に きたら「つる！」</p>
+      <div class="fishbar"><i class="zone" style="left:${zone}%"></i><i class="perfect" style="left:${zone+9}%"></i><b id="fm"></b></div><div class="fishres" id="fr">${got.join(' ')}</div>
+      <button class="btn green big" id="pull">🎣 つる！</button><button class="btn gray" id="skip">スキップ</button>`,{pull:pull,skip:()=>{cancelAnimationFrame(raf);finish()}});loop()};
+  const loop=()=>{pos+=dir*sp;if(pos>=100||pos<=0)dir*=-1;pos=Math.max(0,Math.min(100,pos));const m=$('fm');if(m)m.style.left=pos+'%';raf=requestAnimationFrame(loop)};
+  const pull=()=>{if(res!==null)return;cancelAnimationFrame(raf);const d=Math.abs(pos-(zone+10));
+    res=d<2.5?2:d<10?1:0;const f=res===2?'🐋':res===1?pick(['🐟','🐠','🐡']):'🥾';got.push(f);snd(res?880:200,.15,'square',.05);if(res===2)fanfare();
+    $('fr').innerHTML=got.join(' ')+`<br><small>${res===2?'でっかい！ パーフェクト！':res===1?'つれた！':'ながぐつ…'}</small>`;cast++;setTimeout(()=>cast<3?start():finish(),900)};
+  const finish=()=>{let g=0,tk=0;got.forEach(f=>{if(f==='🐋'){g+=base*3;tk++}else if(f!=='🥾')g+=base});P.gold+=g;P.tk=(P.tk||0)+tk;save();
+    showModal(`<div class="mt">🎣 つり けっか</div><div style="font-size:40px">${got.join(' ')||'−'}</div><p><b class="goldt">🪙+${g}</b>${tk?`　${pi('ticket')}+${tk}`:''}</p><button class="btn orange big" id="ok">つぎへ</button>`,{ok:()=>{closeModal();cb()}})};
+  start()}
+function miniTreasure(cb){const base=miniReward(),T=shuffle([['🪙',base],['🪙',base],['🪙',base],['💰',base*3],['💰',base*3],['🎟️',0],['💎',base*6],['💨',0],['💨',0]]);let picks=0,g=0,tk=0;
+  showModal(`<div class="mt">🗝️ ボーナス：たからさがし</div><p style="font-size:13px">すなを <b>3かい</b> ほって たからを さがそう！</p><div class="tgrid">${T.map((t,i)=>`<button class="btn tcell" data-i="${i}">🟫</button>`).join('')}</div><div id="tres" style="min-height:24px"></div><button class="btn orange big" id="ok" style="display:none">つぎへ</button>`,{ok:()=>{closeModal();cb()}});
+  document.querySelectorAll('.tcell').forEach(b=>b.onclick=()=>{if(picks>=3||b.classList.contains('open'))return;const t=T[+b.dataset.i];b.classList.add('open');b.textContent=t[0];picks++;
+    if(t[0]==='🎟️')tk++;else g+=t[1];snd(t[0]==='💨'?220:880,.12,'square',.05);if(t[0]==='💎')fanfare();
+    $('tres').innerHTML=`<b class="goldt">🪙+${g}</b>${tk?` ${pi('ticket')}+${tk}`:''}`;
+    if(picks>=3){P.gold+=g;P.tk=(P.tk||0)+tk;save();setTimeout(()=>{document.querySelectorAll('.tcell').forEach((c,i)=>{if(!c.classList.contains('open')){c.textContent=T[i][0];c.classList.add('rest')}});$('ok').style.display=''},500)}})}
 /* ===================== help ===================== */
 const HELP=[
  ['play','🎮 あそびかた',`<b>しゅつげき</b>を おすと バトル！ もんだいに せいかいすると てきに こうげき。<br>1ステージは 5たい（さいごは ボス）。ぜんぶ たおすと クリアで ゴールドや そうびが もらえるよ。<br>まちがえたり じかんぎれに なると ダメージ。HPが 0に なると まけ。<br><small>はやく こたえると ダメージ アップ・れんぞく せいかいで コンボ！</small>`],
@@ -1373,6 +1486,13 @@ $('who').onclick=()=>profileForm(P);
 $('setBtn').onclick=()=>profileForm(P);
 $('statBtn').onclick=()=>showStats();
 $('helpBtn').onclick=()=>{snd(660,.05);helpOpen()};
+document.querySelector('#home .powbig').onclick=()=>{const lv=P.lv*2,eq=SLOTS.reduce((t,k)=>t+iscore(P.eq[k]),0),pt=partyPow();
+  showModal(`<div class="mt">⚔️ パワーの うちわけ</div><div class="enhlist"><div><span>⭐ レベル（Lv${P.lv}×2）</span><b>${lv.toLocaleString()}</b></div><div><span>🛡️ そうび 10かしょ</span><b>${eq.toLocaleString()}</b></div><div><span>🐾 なかま（パーティ）</span><b>${pt.toLocaleString()}</b></div></div><p>ごうけい <b style="font-size:22px;color:var(--gold)">${power().toLocaleString()}</b></p><button class="btn gray" id="cl">とじる</button>`,{cl:closeModal})};
+$('towerBtn').onclick=()=>{snd(660,.05);showModal(`<div class="mt">🗼 むげんの とう</div><p>1かいに 1たい。どこまで のぼれるかな？<br>10かいごとに ボスと ボーナス！<br><small style="color:var(--sub)">HPは すこししか かいふく しないよ・もんだいは ミックス</small></p><p>じぶんの さいこう：<b style="color:var(--gold)">${(P.tower&&P.tower.best)||0}かい</b></p><button class="btn orange big" id="go">のぼる！</button><button class="btn gray" id="cl">やめる</button>`,{go:()=>{closeModal();startTower()},cl:closeModal})};
+$('gachaBtn').onclick=()=>{snd(660,.05);gachaOpen()};
+$('achBtn').onclick=()=>{snd(660,.05);achOpen()};
+if(typeof ghostOpen==='undefined')$('ghostBtn').onclick=()=>toast('👻 もうすぐ できるよ！');
+if(typeof roomOpen==='undefined')$('roomBtn').onclick=()=>toast('🏠 もうすぐ できるよ！');
 $('shopBtn').onclick=()=>openShop();
 $('shBack').onclick=()=>{show('home');renderHome()};
 $('rankBtn').onclick=()=>showRank();
@@ -1703,7 +1823,7 @@ function evoBlock(m){const n=evoOf(m.sp);if(!n)return SP[m.sp].rar>=5?'':'<small
     <div class="evr"><span>レベル ${Math.min(m.lv,q.lv)}/${q.lv}</span><div class="pbar"><i style="width:${Math.min(100,m.lv/q.lv*100)}%;background:var(--xp)"></i></div></div>
     <div class="evr"><span>いっしょに せいかい ${Math.min(b,q.bond)}/${q.bond}</span><div class="pbar"><i style="width:${Math.min(100,b/q.bond*100)}%"></i></div></div>
     ${ok?'<button class="btn orange big" id="evo">✨ しんかする！</button>':'<small style="color:var(--sub)">パーティに いれて もんだいに せいかいすると「いっしょに せいかい」が ふえるよ</small>'}</div>`}
-function doEvolve(id){const m=P.mons.find(x=>x.id===id);if(!m||!evoReady(m))return;const from=m.sp,to=evoOf(from),before=ownedStd();
+function doEvolve(id){const m=P.mons.find(x=>x.id===id);if(!m||!evoReady(m))return;P.evoN=(P.evoN||0)+1;const from=m.sp,to=evoOf(from),before=ownedStd();
   m.sp=to;m.bond=0;P.dex.owned[to]=1;P.dex.seen[to]=1;save();
   [523,659,784,1047,1319].forEach((f,i)=>snd(f,.2,'square',.05,0,i*.25));vib(200);
   showModal(`<div class="mt">✨ おや…？</div><div class="evostage"><div class="evo-a flip">${monsterSVG(from)}</div><div class="evo-b flip">${monsterSVG(to)}</div></div>
@@ -1933,10 +2053,10 @@ function feed(id,n){const m=P.mons.find(x=>x.id===id);if(!m)return;const c=snack
   if(!was&&evoReady(m))setTimeout(()=>toast(`✨ ${SP[m.sp].name}が しんか できるよ！`),900);monModal(id);renderBox()}
 
 /* ---- family ranking ---- */
-const RKS=[['week','📝 この7にち','せいかい','もん'],['lv','⭐ レベル','Lv',''],['pow','⚔️ パワー','パワー',''],['dex','📖 ずかん','なかま','しゅ'],['streak','🔥 れんぞく','れんぞく','にち']];
+const RKS=[['week','📝 この7にち','せいかい','もん'],['lv','⭐ レベル','Lv',''],['pow','⚔️ パワー','パワー',''],['dex','📖 ずかん','なかま','しゅ'],['streak','🔥 れんぞく','れんぞく','にち'],['tower','🗼 とう','','かい']];
 let rkTab='week',rkRemote=null,rkLoading=false;
 function weekOk(p){const S=p.stats||{days:{}};let ok=0;for(let i=0;i<7;i++){const d=new Date();d.setDate(d.getDate()-i);const e=(S.days||{})[dkey(d)]||{};for(const k in e)ok+=e[k].ok}return ok}
-function rkVal(p,k){ensureP(p);return k==='week'?weekOk(p):k==='lv'?p.lv:k==='pow'?power(p.eq,p.lv,p):k==='dex'?ownedStd(p):(p.streak||0)}
+function rkVal(p,k){ensureP(p);return k==='week'?weekOk(p):k==='lv'?p.lv:k==='pow'?power(p.eq,p.lv,p):k==='dex'?ownedStd(p):k==='tower'?((p.tower&&p.tower.best)||0):(p.streak||0)}
 async function showRank(){
   show('rank');rkRemote=null;renderRank();
   if(FB_CONFIG&&G.fam){rkLoading=true;renderRank();await syncUp();const r=await syncDown();rkLoading=false;rkRemote=r;renderRank()}
@@ -2013,10 +2133,10 @@ function updHud(){$('partyB').classList.toggle('many',partyMons().length>3);$('p
 function updCombo(){const c=$('combo');c.textContent=B.combo>=2?`${B.combo} コンボ！`:'';
   c.style.color=B.combo>=10?'#ff5df0':B.combo>=5?'#ff8a3d':'var(--gold)';if(B.combo>=2)anim(c,'pop',300)}
 
-function startBattle(subj,lv,stage,weakOnly){
+function startBattle(subj,lv,stage,weakOnly,opt={}){
   const mix=subj==='mix';if(mix)lv=mixLv();
-  B={subj:mix?'math':subj,lv,bsubj:subj,blv:lv,mix,bag:[],stage,weakOnly,wave:0,waves:5,hp:maxHp(),combo:0,wrong:0,lock:true};
-  show('battle');$('arena').style.background=arenaBg(stage);{const g=AREA(stage).g,a=$('arena');a.style.setProperty('--g1',g[0]);a.style.setProperty('--g2',g[1]);a.style.setProperty('--g3',g[2])}$('pName').textContent=P.name;
+  B={subj:mix?'math':subj,lv,bsubj:subj,blv:lv,mix,bag:[],stage,weakOnly,wave:0,waves:opt.tower?1e9:5,tower:!!opt.tower,hp:maxHp(),combo:0,wrong:0,lock:true};
+  show('battle');$('arena').style.background=B.tower?'linear-gradient(#1a1030,#4a3a6a)':arenaBg(stage);{const g=B.tower?['#5a5068','#3a3448','#9a8ab8']:AREA(stage).g,a=$('arena');a.style.setProperty('--g1',g[0]);a.style.setProperty('--g2',g[1]);a.style.setProperty('--g3',g[2])}$('pName').textContent=P.name;
   $('q').innerHTML='';$('choices').innerHTML='';$('gauge').style.width='0';$('gaugeW').classList.toggle('off',!GAUGE[lv]);
   updHud();updHeroHp();updCombo();spawn();
   if(mix){}else if(!weakOnly&&!counts(subj,lv))setTimeout(()=>toast(`★${recLv(subj)+1}いじょうで たまご・しんかが すすむよ`),1600);else if(!weakOnly&&mPen(subj,lv))setTimeout(()=>toast('🎓 マスターずみ：★を あげると ごほうび アップ'),1600);
@@ -2029,16 +2149,16 @@ function scaleMon(mo){const L=Math.min(B.blv,4),[hn,hb,hmin]=HITS[L],[dn,db]=DIE
   mo.maxHp=Math.min(Math.max(mo.maxHp,Math.round(E*h)),Math.round(E*(mo.boss?hb:hn)*1.6*(mo.ult?1.8:1)));
   mo.dmg=Math.max(mo.dmg,Math.round(maxHp()/(mo.ult?db*.7:mo.boss?db:dn)*(1+.05*mo.rar)))}
 function spawn(){
-  B.wave++;const wb=B.wave===B.waves,st=B.stage,uu=B.weakOnly?[]:ultUnlocked();
+  B.wave++;const wb=B.tower?B.wave%10===0:B.wave===B.waves,st=B.stage,uu=B.weakOnly||B.tower?[]:ultUnlocked();
   const ult=uu.length&&Math.random()<ultRate(wb)?pick(uu).k:null,boss=wb||!!ult;
   const sp=ult||pickSpecies(boss?BOSSES:NORMALS,B.blv),S_=SP[sp],rar=S_.rar,m=[sp,S_.name];P.dex.seen[sp]=1;
   const mlv=Math.max(1,Math.max(st*2,P.lv)+(ult?10:boss?3:R(-1,1))),es=mlv/2;
-  B.mon={boss,ult:!!ult,sp,rar,lv:mlv,es,n:(ult?'🌟 ':boss?'👑 ':'')+m[1],maxHp:Math.round((14+es*9)*(boss?3.2:1)*(1+.25*rar)*(ult?2.5:1)),dmg:Math.round((4+es*2.2)*(boss?1.4:1)*(1+.15*rar)*(ult?1.6:1))};scaleMon(B.mon);B.mon.hp=B.mon.maxHp;
+  B.mon={boss,ult:!!ult,sp,rar,lv:mlv,es,n:(ult?'🌟 ':boss?'👑 ':'')+m[1],maxHp:Math.round((14+es*9)*(boss?3.2:1)*(1+.25*rar)*(ult?2.5:1)),dmg:Math.round((4+es*2.2)*(boss?1.4:1)*(1+.15*rar)*(ult?1.6:1))};scaleMon(B.mon);if(B.tower){const f=B.wave;B.mon.maxHp=Math.round(B.mon.maxHp*(1+(f-1)*.07));B.mon.dmg=Math.round(B.mon.dmg*(1+(f-1)*.06));B.mon.n=(boss?'👑 ':'')+m[1]}B.mon.hp=B.mon.maxHp;
   B.gaugeDur=GAUGE[B.blv]*(boss?.85:1);
   const el=$('mon');$('monE').innerHTML=monsterSVG(m[0]);el.className='fighter mon'+(boss?' boss':'')+(ult?' ult':'')+' r'+rar;anim(el,'spawn',500);
   $('mName').innerHTML=`<small>${elIcon(sp)} Lv${mlv}</small> <span style="color:${RAR[rar].h}">${B.mon.n}</span> <small style="color:${RAR[rar].h}">${RAR[rar].n}</small>`;
   if(!boss&&rar>=2){toast(`✨ ${RAR[rar].n}モンスター！`);snd(1200,.3,'sine',.05,600)}updMonHp();
-  $('bStage').innerHTML=(B.weakOnly?'📕 にがて':B.mix?`🎲 ミックス<br>ステージ${st}`:`${SUBJ[B.subj].n} ★${B.lv+1}<br>ステージ${st}`)+` ${B.wave}/${B.waves}`;
+  $('bStage').innerHTML=B.tower?`🗼 むげんの とう<br><b style="color:var(--gold)">${B.wave}かい</b>`:(B.weakOnly?'📕 にがて':B.mix?`🎲 ミックス<br>ステージ${st}`:`${SUBJ[B.subj].n} ★${B.lv+1}<br>ステージ${st}`)+(B.tower?'':` ${B.wave}/${B.waves}`);
   if(ult){B.sawUlt=true;P.ultMiss=0;toast('🌟 きゅうきょくモンスターが あらわれた！');anim($('arena'),'ultfx',1500);[110,147,196,262].forEach((f,i)=>snd(f,.4,'sawtooth',.07,0,i*.18));vib(300)}
   else if(boss){toast('⚠️ ボスが あらわれた！');snd(150,.5,'sawtooth',.07,-60)}
   setTimeout(nextQ,ult?1600:boss?900:500);
@@ -2078,6 +2198,7 @@ function answer(btn,v){
 function correct(t){
   const q=B.q;B.combo++;P.total++;P.todayCorrect++;if(q.review)reduceWeak(q);
   if(!B.weakOnly&&counts(B.subj,B.lv)){progressEggs();bondUp();P.todaySubj=P.todaySubj||{};P.todaySubj[B.subj]=(P.todaySubj[B.subj]||0)+1;
+    P.tkProg=(P.tkProg||0)+1;if(P.tkProg>=10){P.tkProg=0;const n=EV().tk;P.tk=(P.tk||0)+n;setTimeout(()=>toast(`🎟️ ふくびきけんを ${n}まい ゲット！`),900)}
     const TS=P.todaySubj;if(!P.claimed&&TS[B.subj]===misPer()){setTimeout(()=>toast(`📜 ${SUBJ[B.subj].n}の ミッション クリア！`),600)}}
   const rg=Math.round(maxHp()*fxSum('regen')/100);if(rg&&B.hp<maxHp()){B.hp=Math.min(maxHp(),B.hp+rg);updHeroHp();setTimeout(()=>floatTxt('🌿+'+rg,'hero','xp'),200)}
 
@@ -2129,7 +2250,7 @@ function defeat(){
   partyMons().forEach(m=>{if(m.lv>=MONMAX)return;m.xp+=1+Math.floor(B.stage/3);if(m.xp>=monXpNeed(m)){m.xp=0;m.lv++;setTimeout(()=>toast(`${SP[m.sp].name}が Lv${m.lv}に！`),1300)}});
   save();
   setTimeout(()=>{if(!B)return;
-    const after=()=>{if(B.wave>=B.waves)stageClear();else{B.hp=Math.min(maxHp(),B.hp+Math.round(maxHp()*.2)+capeH());updHeroHp();spawn()}};
+    const after=()=>{if(B.tower){towerFloor(mo);return}if(B.wave>=B.waves)stageClear();else{B.hp=Math.min(maxHp(),B.hp+Math.round(maxHp()*.2)+capeH());updHeroHp();spawn()}};
     const egg=mo.ult?(Math.random()<EGGCH[5]?{id:uid(),rar:5,sp:mo.sp,prog:0,need:EGGNEED[5],inc:false}:null):mo.boss&&Math.random()<Math.min(.9,EGGCH[mo.rar||0]*ev.egg)?makeEgg(B.blv):null;
     let next=egg?()=>showEgg(egg,after):after;
     if(mo.ult&&!egg){const f=(P.frag[mo.sp]||0)+1;
@@ -2140,16 +2261,17 @@ function defeat(){
 function showDrop(it,cb,title='たからばこ！'){
   if(it.rar>=2)fanfare();else coin();P.dex.items[ikey(it)]=1;
   const cur=P.eq[it.slot],now=power(),neq=Object.assign({},P.eq,{[it.slot]:withPlus(it,cur)}),nxt=power(neq),diff=nxt-now;
-  showModal(`<div class="chest">${chestIcon(it.rar)}</div><div class="mt">${title}</div>${itemCard(it,true,cur)}
-    <div class="cmp"><div>${heroSVG(P.eq,P)}</div><div class="arrow">▶</div><div>${heroSVG(neq,P)}</div></div>
+  showModal(`<div class="mt droph"><span class="chest sm">${chestIcon(it.rar)}</span>${title}</div>${itemCard(it,true,cur)}
+    <div class="cmp sm"><div>${heroSVG(P.eq,P)}</div><div class="arrow">▶</div><div>${heroSVG(neq,P)}</div></div>
     <div class="powchg">パワー ${now} → <b class="${diff>=0?'up':'down'}">${nxt}（${diff>=0?'▲':'▼'}${Math.abs(diff)}）</b></div>
     ${cur&&cur.plus>0&&!it.plus?`<small style="color:#ffd23f">⚒️ そうびすると いまの +${cur.plus} を ひきつぐよ</small><br>`:''}${cur?`<small style="color:var(--sub)">いまの ${SLOTN[it.slot]}：${iname(cur)}（パワー ${iscore(cur)}）</small>`:''}
-    <div class="row"><button class="btn green big" id="eq">そうびする</button><button class="btn purple big" id="bx">📦 ボックスへ</button></div><button class="btn gray" id="sl">うる 🪙${it.price}</button>`,
+    <div class="dropbtns"><button class="btn green" id="eq">⚔️ そうび</button><button class="btn purple" id="bx">📦 ボックス</button><button class="btn gray" id="sl">🪙 うる<small>${fmtS(it.price)}</small></button></div>`,
     {eq:()=>equipFlow(it,cur,()=>{if(cur&&P.box.length<boxCap())P.box.push(cur);P.eq[it.slot]=it;save();if(B){updHud();updHeroHp()}closeModal();toast(`パワー ${power()}！`);cb&&cb()}),
      bx:()=>{if(P.box.length>=boxCap()){toast('ボックスが いっぱい！');return}P.box.push(it);save();closeModal();toast('ボックスに しまったよ');cb&&cb()},
      sl:()=>{P.gold+=it.price;coin();save();closeModal();cb&&cb()}},'r'+it.rar);
 }
 function stageClear(){
+  if(!B.weakOnly&&!B.miniDone&&Math.random()<.5){B.miniDone=true;B.lock=true;setTimeout(()=>miniGame(stageClear),300);return}
   if(!B.sawUlt&&!B.weakOnly&&ultUnlocked().length)P.ultMiss=(P.ultMiss||0)+1;
   const {stage:st,bsubj:subj}=B,stars=B.wrong===0?3:B.wrong<=2?2:1;
   if(!B.weakOnly&&st>P.best[subj]){P.best[subj]=st;selStage=st+1}
@@ -2161,7 +2283,7 @@ function stageClear(){
     {nx:()=>{closeModal();const lv=B.blv;processHatch(()=>startBattle(subj,lv,st+1,false))},hm:()=>{closeModal();goHome()}});
 }
 function gameOver(){
-  if(!B)return;B.lock=true;if(!B.sawUlt&&!B.weakOnly&&ultUnlocked().length)P.ultMiss=(P.ultMiss||0)+1;save();const {bsubj:subj,blv:lv,stage,weakOnly}=B;snd(300,.6,'triangle',.07,-220);
+  if(!B)return;if(B.tower){towerEnd();return}B.lock=true;if(!B.sawUlt&&!B.weakOnly&&ultUnlocked().length)P.ultMiss=(P.ultMiss||0)+1;save();const {bsubj:subj,blv:lv,stage,weakOnly}=B;snd(300,.6,'triangle',.07,-220);
   showModal(`<div class="chest">😵</div><div class="mt">やられちゃった…</div>
     <p>でも だいじょうぶ！<br>けいけんち と ゴールドは のこっているよ。<br>そうびを つよくして もういちど！</p>
     <button class="btn orange big" id="rt">もういちど</button><button class="btn gray big" id="hm">ホームへ</button>`,
@@ -2171,7 +2293,7 @@ function goHome(){B=null;try{speechSynthesis.cancel()}catch(e){}show('home');ren
 $('quit').onclick=()=>{if(!B||B.lock)return;B.lock=true;
   showModal(`<div class="mt">にげる？</div><p>ここまでの けいけんち と ゴールドは のこるよ。</p>
     <button class="btn green big" id="bk">たたかう！</button><button class="btn gray big" id="rn">にげる</button>`,
-    {bk:()=>{closeModal();B.gaugeStart=performance.now();B.lock=false},rn:()=>{closeModal();goHome()}})};
+    {bk:()=>{closeModal();B.gaugeStart=performance.now();B.lock=false},rn:()=>{closeModal();if(B&&B.tower)towerEnd(true);else goHome()}})};
 
 (function loop(){requestAnimationFrame(loop);
   if(!B||B.lock||!B.gaugeDur)return;
