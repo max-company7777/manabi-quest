@@ -710,6 +710,7 @@ img.shy{filter:hue-rotate(150deg) saturate(1.35) brightness(1.08) drop-shadow(0 
 .fanim{position:relative;height:160px}.fa{position:absolute;top:30px;width:90px}.fa img{width:100%;image-rendering:pixelated}.fa.l{left:10%;animation:fal 1.6s ease-in forwards}.fa.r{right:10%;animation:far 1.6s ease-in forwards}@keyframes fal{to{left:calc(50% - 45px);transform:rotate(720deg) scale(.3);opacity:0}}@keyframes far{to{right:calc(50% - 45px);transform:rotate(-720deg) scale(.3);opacity:0}}
 .fflash{position:absolute;left:50%;top:50%;width:20px;height:20px;margin:-10px;border-radius:50%;background:#fff;box-shadow:0 0 40px 20px #c15cff;animation:ffl 1.7s ease-in forwards;opacity:0}@keyframes ffl{70%{opacity:0;transform:scale(.5)}90%{opacity:1;transform:scale(6)}100%{opacity:1;transform:scale(14)}}
 .newb{background:#e8413c;color:#fff;font-size:11px;padding:1px 5px;border-radius:4px}
+.vslist{display:flex;flex-direction:column;gap:8px;max-height:52vh;overflow-y:auto;margin:6px 0}.vsb{display:flex;gap:8px;align-items:center;background:rgba(0,0,0,.35);border:2px solid #a070ff;border-radius:10px;padding:6px;color:#fff;font-family:inherit;text-align:left}.vsh{width:52px;flex:none}.vsh svg,.vsh img{width:100%;height:auto}.vsi{display:flex;flex-direction:column;gap:2px;min-width:0}.vsi b{font-size:17px}.vsi small{font-size:11px;color:var(--sub)}.vsm{display:flex;gap:2px}.vsm i{width:26px}.vsm img{width:26px;height:26px;image-rendering:pixelated}
 </style>
 </head>
 <body>
@@ -1179,7 +1180,7 @@ function makeItem(st,d,boss,min=0){
 /* =============== save data =============== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-const APPV='v121';
+const APPV='v122';
 try{const c=document.createElement('canvas');c.width=9;c.height=9;const g=c.getContext('2d'),F=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};F(1,0,7,1,'#120d09');F(1,8,7,1,'#120d09');F(0,1,1,7,'#120d09');F(8,1,1,7,'#120d09');F(1,1,7,1,'#120d09');F(1,7,7,1,'#120d09');F(1,1,1,7,'#120d09');F(7,1,1,7,'#120d09');F(2,2,5,1,'#7a6a52');F(2,2,1,5,'#7a6a52');F(2,6,5,1,'#2a2018');F(6,2,1,5,'#2a2018');document.documentElement.style.setProperty('--pxf',`url(${c.toDataURL()})`)}catch(e){}
 const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));if(G.bgmOn===undefined)G.bgmOn=true;
 let P=null;
@@ -2332,10 +2333,10 @@ function laneOpen(){P.lane=P.lane||{best:0};ltDaily();const st=Math.min(P.lane.b
     <small style="color:var(--sub)">さいこう：ステージ ${P.lane.best}</small>${(g=>g?`<div class="lgim">${LGIM[g][0]}<small>${LGIM[g][1]}</small></div>`:'')(laneGim(st))}<small style="color:var(--sub)">💡 おなじ ぞくせいの なかまを 3たい いじょう だすと「れんけい」で こうげき アップ！</small>
     <button class="btn" id="cn" style="background:#2a6a9a">🏰 しろほう：${CANNON[canOf().t].i} ${CANNON[canOf().t].n} Lv${canPl(canOf().t)}　カスタム ▶</button>
     <div class="ltbox">🎫 ぐんだんけん <b>${P.lt}</b> / ${LTMAX}<small>もんだいに ${LTPER}もん せいかいで +1（あと ${LTPER-(P.ltProg||0)}もん）${P.lt<LTMAX?`・じかん かいふくまで ${ltNext()}`:'・じかん かいふくは まんたん'}</small></div>
-    <button class="btn orange big" id="go">⚔️ たたかう！<small style="display:block;font-size:12px">🎫 1まい つかう</small></button><button class="btn gray" id="cl">とじる</button>`,
-    {cl:closeModal,cn:()=>laneCannon(laneOpen),go:()=>{closeModal();laneStart(+$('lsn').textContent)},
+    <button class="btn orange big" id="go">⚔️ たたかう！<small style="display:block;font-size:12px">🎫 1まい つかう</small></button><button class="btn purple" id="vs">🤜 かぞく たいせん<small style="display:block;font-size:11px">かぞくの デッキと たたかう（チケット いらない）</small></button><button class="btn gray" id="cl">とじる</button>`,
+    {cl:closeModal,vs:vsMenu,cn:()=>laneCannon(laneOpen),go:()=>{closeModal();laneStart(+$('lsn').textContent)},
      lp:()=>{$('lsn').textContent=Math.max(1,+$('lsn').textContent-1)},lnx:()=>{$('lsn').textContent=Math.min(P.lane.best+1,+$('lsn').textContent+1)}})}
-function laneStart(st){P.lane=P.lane||{best:0};ltDaily();if((P.lt||0)<1){ltNone();return}P.lt--;P.lane.sel=st;save();
+function laneStart(st,vs){P.lane=P.lane||{best:0};ltDaily();if(!vs){if((P.lt||0)<1){ltNone();return}P.lt--;P.lane.sel=st;}save();
   /* ふつうモードの つよさを そのまま つかう：ゆうしゃ＝レベル＋そうび、なかま＝なかまパワー（そうびの なかま％こみ） */
   const deck=laneDeck(),pb=1+fxSum('party')/100,heroP=Math.max(4,(P.lv*2+SLOTS.reduce((a,k)=>a+iscore(P.eq[k]),0))*.3);
   const cards=[{hero:1,cost:50,cd:2.5,pow:heroP,n:'ゆうしゃ'},...deck.map(m=>{const r=SP[m.sp].rar;return{m,sp:m.sp,cost:75+r*55,cd:3.5+r*1.8,pow:Math.max(1,monPow(m)/spStat(m.sp).m*pb),n:SP[m.sp].name}})].map(c=>Object.assign(c,{ready:0}));
@@ -2344,8 +2345,9 @@ function laneStart(st){P.lane=P.lane||{best:0};ltDaily();if((P.lt||0)<1){ltNone(
   const E=3+st*1.6+.04*st*st;
   const a=AREA(Math.max(1,st*3));
   LN={st,R,E,cards,units:[],en:100,enMax:600,wl:1,eHp:Math.round(E*170*(1+st*.06)),pHp:Math.round(R*150*(1+((P.bld&&P.bld.fort)||0)*.015)),t:0,nextSp:3,last:0,ult:0,run:true,bossOut:false,area:a,gold:0,kills:0,matches:0};
+  if(vs){const o=vsBuild(vs);LN.vs=o;LN.eHp=o.hp;LN.bossOut=true;LN.nextSp=2.5}
   LN.eMax=LN.eHp;LN.pMax=LN.pHp;LN.rlane=roomB('lane');LN.gim=laneGim(st);LN.syn={};LN.synT=0;LN.qT=9;$('lnField').classList.toggle('lnnight',LN.gim==='night');LN.crit=Math.min(60,crit()*.6);LN.critd=fxSum('critd')/100;LN.gb=1+goldBonus()/100;
-  show('lane');$('lnStage').innerHTML=`ステージ<br><b style="color:var(--gold)">${st}</b>`;
+  show('lane');$('lnStage').innerHTML=LN.vs?`🤜 VS<br><b style="color:var(--gold)">${esc(LN.vs.name)}</b>`:`ステージ<br><b style="color:var(--gold)">${st}</b>`;
   {const fl=$('lnField'),W=200,H=Math.max(70,Math.round(W*fl.clientHeight/Math.max(1,fl.clientWidth)));$('lnSky').style.background=`url(${sceneURL(a,W,H)}) center/100% 100%`;weather(fl,a.el)}
   $('lnCE').className='lncas e';$('lnCP').className='lncas p';$('lnCE').innerHTML=`<div class="lnchp" id="lnEHpT"></div><img class="lncimg" id="lnCEi" src="${castleURL('e',0,a.el)}">`;$('lnCP').innerHTML=`<div class="lnchp" id="lnPHpT"></div><img class="lncimg" id="lnCPi" src="${castleURL('p',0)}">`;LN.cdm={e:0,p:0};LN.smk=0;
   $('lnCards').innerHTML=cards.map((c,i)=>`<button class="lncard" data-i="${i}" style="--rc:${c.hero?'#ffd23f':RAR[SP[c.sp].rar].h}"><span class="lncs">${c.hero?heroSVG(P.eq,P):monsterSVG(c.sp)}</span><b>⚡${c.cost}</b><i class="lncab">${(t=>[...t.ab,...(t.fly?['fly']:[])].slice(0,2).map(x=>LAB[x][0]).join(''))(lStats(c.sp,c.hero))}</i><i class="lncd"></i></button>`).join('');
@@ -2357,7 +2359,7 @@ const laneGim=st=>st<4?null:st%6===0?'night':st%5===0?'quake':st%4===0?'wind':nu
 function lnBanner(t,cls=''){const e=document.createElement('div');e.className='lnban '+cls;e.textContent=t;$('lnFx').appendChild(e);setTimeout(()=>e.remove(),1600)}
 function laneMk(side,o){const el=document.createElement('div');el.className='lnu '+side+(o.boss?' boss':'')+' walk spawnin';
   const y=Math.round(Math.random()*12);el.style.bottom=`calc(17% + ${y-4}px)`;el.style.zIndex=50-y;
-  el.innerHTML=`${(o.ab&&o.ab.length&&!o.wall)?`<i class="lnab">${o.ab.slice(0,2).map(a=>LAB[a][0]).join('')}</i>`:''}<i class="lnsh"></i><span class="lnbody"><span class="lnsp">${o.wall?'<i class="lnwallb"></i>':o.hero?heroSVG(P.eq,P):monsterSVG(o.sp)}</span></span><i class="lnhp"><i></i></i>`;if(o.wall)el.classList.add('wallu');if(o.fly)el.classList.add('fly');$('lnUnits').appendChild(el);
+  el.innerHTML=`${(o.ab&&o.ab.length&&!o.wall)?`<i class="lnab">${o.ab.slice(0,2).map(a=>LAB[a][0]).join('')}</i>`:''}<i class="lnsh"></i><span class="lnbody"><span class="lnsp">${o.wall?'<i class="lnwallb"></i>':o.hero?(o.look?heroSVG(o.look.eq,o.look):heroSVG(P.eq,P)):(o.shy?monImg({sp:o.sp,shiny:1}):monsterSVG(o.sp))}</span></span><i class="lnhp"><i></i></i>`;if(o.wall)el.classList.add('wallu');if(o.fly)el.classList.add('fly');$('lnUnits').appendChild(el);
   setTimeout(()=>el.classList.remove('spawnin'),350);
   if(LN&&LN.gim==='wind'&&o.spd)o.spd*=side==='e'?1.3:.8;if(LN&&LN.gim==='night'&&o.rg>60)o.rg=Math.round(o.rg*.7);
   const u=Object.assign({side,el,x:o.x!=null?o.x:side==='p'?LCP-30:LCE+30,cool:.4,slowT:0,stun:0,kbLeft:o.kb??3},o);u.maxHp=u.hp;u.kbNext=u.maxHp*(1-1/(u.kbLeft+1));u.kbStep=u.maxHp/(u.kbLeft+1);LN.units.push(u);return u}
@@ -2432,7 +2434,7 @@ function laneFire(){if(!LN||LN.ult<100||!LN.run)return;LN.ult=0;const t=canOf().
     const ch=Math.round(LN.pMax*Math.min(.6,.15*f));LN.pHp=Math.min(LN.pMax,LN.pHp+ch);lnFloat(LCP-10,'🏰+'+fmtS(ch),'en')}}
 function laneTick(now){if(!LN||!LN.run)return;const dt=Math.min(.05,(now-LN.last)/1000);LN.last=now;LN.t+=dt;
   LN.en=Math.min(LN.enMax,LN.en+(6+LN.wl*3)*dt*(1+(LN.rlane||0)/100));LN.ult=Math.min(100,LN.ult+dt*100/canTime());LN.cards.forEach(c=>{if(c.ready>0)c.ready=Math.max(0,c.ready-dt)});
-  LN.nextSp-=dt;if(LN.nextSp<=0){laneEnemy(false);if(Math.random()<Math.min(.55,LN.st*.035))setTimeout(()=>LN&&LN.run&&laneEnemy(false),700);LN.nextSp=Math.max(2.2,6.5-LN.st*.12)*(.7+Math.random()*.6)}
+  if(LN.vs)vsAI(dt);else LN.nextSp-=dt;if(!LN.vs&&LN.nextSp<=0){laneEnemy(false);if(Math.random()<Math.min(.55,LN.st*.035))setTimeout(()=>LN&&LN.run&&laneEnemy(false),700);LN.nextSp=Math.max(2.2,6.5-LN.st*.12)*(.7+Math.random()*.6)}
   if(!LN.bossOut&&LN.eHp<LN.eMax*.6){LN.bossOut=true;laneEnemy(true);bossWarn($('lnField'));bgm('boss');anim($('lnField'),'lnquake',600);anim($('lnField'),'bosswarn',2600);[98,82,65].forEach((f,i)=>snd(f,.35,'sawtooth',.08,0,i*.18));vib(200)}
   for(const u of LN.units){if(u.dead)continue;const dir=u.side==='p'?-1:1;
     if(u.wall){u.life-=dt;if(u.life<=0)laneKill(u);continue}
@@ -2507,7 +2509,7 @@ function lpHasMove(){const g=LN.pz.g,t=(r1,c1,r2,c2)=>{const a=g[r1][c1],b=g[r2]
   for(let r=0;r<LPR;r++)for(let c=0;c<LPC;c++){if(c+1<LPC&&t(r,c,r,c+1))return true;if(r+1<LPR&&t(r,c,r+1,c))return true}return false}
 function lpShuffle(){let n=0;do{const all=LN.pz.g.flat().map(x=>x.k);const s=shuffle(all);let i=0;LN.pz.g.forEach(row=>row.forEach(x=>{x.k=s[i++];x.e.querySelector('img').src=gemURL(x.k)}))}while((lpFind().M.size||!lpHasMove())&&++n<50);lpFloat('シャッフル！')}
 function lpFloat(t){const e=document.createElement('div');e.className='lpfl';e.textContent=t;$('lnPzW').appendChild(e);setTimeout(()=>e.remove(),900)}
-function laneEnd(win){LN.run=false;if(win)try{qAdd('lane')}catch(e){}const st=LN.st,first=win&&st>P.lane.best;
+function laneEnd(win){if(LN.vs){vsEnd(win);return}LN.run=false;if(win)try{qAdd('lane')}catch(e){}const st=LN.st,first=win&&st>P.lane.best;
   {const sd=win?'e':'p',el=$(win?'lnCE':'lnCP');for(let i=0;i<7;i++)setTimeout(()=>{const r=el.getBoundingClientRect();const x=r.left+Math.random()*r.width,y=r.top+Math.random()*r.height;fxBurst(x,y,{n:18,colors:['#fff','#ffd23f','#ff6a2a','#555'],spd:6,size:6});fxRing(x,y,'#ffd23f',50);snd(70+Math.random()*60,.25,'sawtooth',.08)},i*120);
   anim($('lnField'),'lnquake',900);setTimeout(()=>{el.classList.add('fall');const fl=document.createElement('div');fl.className='lnwhite';$('lnFx').appendChild(fl);setTimeout(()=>fl.remove(),500);if(win){fxConfetti(90);lnBanner('🏆 しょうり！','win')}else lnBanner('💥 まけ…','lose')},850)}
   let g=Math.round((LN.gold+(win?st*60*DMULT[mixLv()]:0))*(LN.gb||1)),tk=win&&(first||st%5===0)?1+Math.floor(st/10):0,it=null;
@@ -2518,6 +2520,35 @@ function laneEnd(win){LN.run=false;if(win)try{qAdd('lane')}catch(e){}const st=LN
     ${win?'':'<small>パズルで れんさを ねらって エナジーを ためよう！ なかまの レベルアップも こうかてき</small>'}
     <button class="btn orange big" id="nx">${win?'つぎの ステージへ ▶':'もういちど'}</button><button class="btn gray big" id="hm">ホームへ</button>`,
     {nx:()=>{closeModal();laneStart(win?st+1:st)},hm:()=>{closeModal();LN=null;goHome()}}),1300)}
+
+/* ===================== 🤜 かぞく たいせん（ぐんだん） ===================== */
+const vsOpps=()=>G.profiles.filter(p=>p!==P&&p.id!==P.id&&!p.master&&p.name);
+function vsMenu(){const L=vsOpps(),V=P.vs||(P.vs={}),td=dkey(new Date());
+  showModal(`<div class="mt">🤜 かぞく たいせん</div><p style="font-size:13px">かぞくの なかまデッキと ぐんだんバトル！<br><small style="color:var(--sub)">あいては コンピューターが うごかすよ・その日 はじめての しょうりで ボーナス</small></p>
+    <div class="vslist">${L.length?L.map(p=>{const v=V[p.id]||{w:0,l:0},pw=vsPow(p),bonus=v.day!==td;return `<button class="vsb" data-vs="${p.id}"><span class="vsh">${heroSVG(p.eq,p)}</span><span class="vsi"><b>${esc(p.name)}</b><small>Lv${p.lv}・ぐんだんパワー ${fmtS(pw)}</small><span class="vsm">${partyMons(p).slice(0,5).map(m=>`<i>${monImg(m)}</i>`).join('')}</span><small>きみの せいせき ${v.w}かち ${v.l}まけ${bonus?' ・🎁 ボーナス あり':''}</small></span></button>`}).join(''):'<p style="color:var(--sub)">かぞくが まだ いないよ。<br>「かぞくで つながる」で かぞくを ふやそう！</p>'}</div>
+    <p style="font-size:12px;color:var(--sub)">きみの ぐんだんパワー ${fmtS(vsPow(P))}</p><button class="btn gray" id="bk">もどる</button>`,{bk:laneOpen});
+  document.querySelectorAll('[data-vs]').forEach(b=>b.onclick=()=>{closeModal();laneStart(Math.max(1,P.lane.best||1),b.dataset.vs)})}
+function vsDeck(p){const pm=partyMons(p);const seen=new Set();return pm.concat((p.mons||[]).filter(m=>!(p.party||[]).includes(m.id)).sort((a,b)=>monPow(b)-monPow(a))).filter(m=>SP[m.sp]&&!seen.has(m.id)&&seen.add(m.id)).slice(0,5)}
+function vsCards(p){const pb=1+fxSum('party',p.eq||{})/100,heroP=Math.max(4,((p.lv||1)*2+SLOTS.reduce((a,k)=>a+iscore((p.eq||{})[k]),0))*.3);
+  return[{hero:1,cost:50,cd:2.5,pow:heroP},...vsDeck(p).map(m=>{const r=SP[m.sp].rar;return{sp:m.sp,shy:m.shiny,cost:75+r*55,cd:3.5+r*1.8,pow:Math.max(1,monPow(m)/spStat(m.sp).m*pb)}})].map(c=>Object.assign(c,{ready:0}))}
+const vsPow=p=>Math.round(vsCards(p).reduce((a,c)=>a+c.pow,0));
+function vsBuild(id){const p=G.profiles.find(x=>String(x.id)===String(id)),cards=vsCards(p),R=Math.max(4,cards.reduce((a,c)=>a+c.pow,0)/cards.length);
+  return{id,name:p.name,look:p,cards,R,en:120,t:0,hp:Math.round(R*150*(1+((p.bld&&p.bld.fort)||0)*.015))}}
+/* the computer plays the opponent's deck: energy grows over time, it saves up for its best affordable unit */
+function vsAI(dt){const o=LN.vs;o.t+=dt;o.en=Math.min(600,o.en+(9+Math.min(14,o.t*.12))*dt);o.cards.forEach(c=>{if(c.ready>0)c.ready=Math.max(0,c.ready-dt)});
+  LN.nextSp-=dt;if(LN.nextSp>0)return;LN.nextSp=.8+Math.random()*.9;
+  const ok=o.cards.filter(c=>c.ready<=0&&o.en>=c.cost);if(!ok.length)return;const pref=ok.sort((a,b)=>b.cost-a.cost),c=Math.random()<.65?pref[0]:pick(ok);
+  o.en-=c.cost;c.ready=c.cd;const t=lStats(c.sp,c.hero),jit=.92+Math.random()*.16;
+  laneMk('e',{hero:c.hero,look:c.hero?o.look:null,sp:c.sp,shy:c.shy,hp:Math.round(c.pow*9*t.hp),atk:Math.max(1,Math.round(c.pow*t.atk*t.cd)),spd:70*t.sp*jit,rg:t.rg,cd:t.cd,ab:t.ab,fly:t.fly,slow:t.ab.includes('slow'),heal:t.ab.includes('heal'),kb:t.kb});anim($('lnCE'),'lnpuff',300)}
+function vsEnd(win){LN.run=false;const o=LN.vs,V=P.vs||(P.vs={}),v=V[o.id]||(V[o.id]={w:0,l:0}),td=dkey(new Date()),bonus=win&&v.day!==td;
+  if(win){v.w++;if(bonus)v.day=td}else v.l++;
+  const g=Math.round((LN.gold+(win?400*Math.max(1,DMULT[mixLv()]):100))*(LN.gb||1))*(bonus?3:1),tk=bonus?1:0;P.gold+=g;if(tk)P.lt=(P.lt||0)+tk;save();
+  {const el=$(win?'lnCE':'lnCP');anim($('lnField'),'lnquake',900);setTimeout(()=>{el.classList.add('fall');if(win){fxConfetti(90);lnBanner('🏆 しょうり！','win');fanfare()}else{lnBanner('💥 まけ…','lose');snd(150,.5,'sawtooth',.06,-60)}},700)}
+  setTimeout(()=>showModal(`<div class="chest${win?'':' nofx'}">${win?'🏆':'💥'}</div><div class="mt">${win?esc(o.name)+'に かった！':esc(o.name)+'に まけちゃった…'}</div>
+    <p>せいせき ${v.w}かち ${v.l}まけ<br><b class="goldt">🪙+${fmtS(g)}</b>${tk?`　🎫+1`:''}${bonus?'<br><small>🎁 きょう はじめての しょうり ボーナス（ゴールド3ばい）</small>':''}</p>
+    ${win?'':'<small>なかまを そだてたり がったい させて デッキを つよく しよう！</small>'}
+    <button class="btn purple big" id="ag">🤜 もういちど</button><button class="btn gray" id="bk">もどる</button>`,
+    {ag:()=>{closeModal();laneStart(LN.st,o.id)},bk:()=>{closeModal();LN=null;goHome();setTimeout(vsMenu,300)}}),1300)}
 
 /* ===================== 🗼 tower ===================== */
 function startTower(){P.tower=P.tower||{best:0,runs:0};P.tower.runs++;save();startBattle('mix',0,Math.max(1,P.best.mix||1),false,{tower:true});
