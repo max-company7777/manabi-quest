@@ -1204,7 +1204,7 @@ function makeItem(st,d,boss,min=0){
 /* =============== save data =============== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-const APPV='v129';
+const APPV='v130';
 try{const c=document.createElement('canvas');c.width=9;c.height=9;const g=c.getContext('2d'),F=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};F(1,0,7,1,'#120d09');F(1,8,7,1,'#120d09');F(0,1,1,7,'#120d09');F(8,1,1,7,'#120d09');F(1,1,7,1,'#120d09');F(1,7,7,1,'#120d09');F(1,1,1,7,'#120d09');F(7,1,1,7,'#120d09');F(2,2,5,1,'#7a6a52');F(2,2,1,5,'#7a6a52');F(2,6,5,1,'#2a2018');F(6,2,1,5,'#2a2018');document.documentElement.style.setProperty('--pxf',`url(${c.toDataURL()})`)}catch(e){}
 const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));if(G.bgmOn===undefined)G.bgmOn=true;
 let P=null;
@@ -2390,7 +2390,8 @@ function laneStart(st,vs){P.lane=P.lane||{best:0};ltDaily();if(!vs){if((P.lt||0)
   const cards=[{hero:1,cost:50,cd:2.5,pow:heroP,n:'ゆうしゃ'},...deck.map(m=>{const r=SP[m.sp].rar;return{m,sp:m.sp,cost:75+r*55,cd:3.5+r*1.8,pow:Math.max(1,monPow(m)/spStat(m.sp).m*pb),n:SP[m.sp].name}})].map(c=>Object.assign(c,{ready:0}));
   const R=Math.max(4,cards.reduce((a,c)=>a+c.pow,0)/cards.length);
   /* てきの つよさは ステージで きまる（そだてるほど らくに なる） */
-  const E=3+st*1.6+.04*st*st;
+  /* ステージの きほん つよさ と、じぶんの つよさに あわせた つよさの たかいほう（つよく なっても かんたんに ならない） */
+  const E=Math.max(3+st*1.6+.04*st*st,R*(window.LREL!=null?window.LREL:.12+Math.min(.8,st*.012)));
   const a=AREA(Math.max(1,st*3));
   LN={st,R,E,cards,units:[],en:100,enMax:600,wl:1,eHp:Math.round(E*170*(1+st*.06)),pHp:Math.round(R*150*(1+((P.bld&&P.bld.fort)||0)*.015)),t:0,nextSp:3,last:0,ult:0,run:true,bossOut:false,area:a,gold:0,kills:0,matches:0};
   if(vs){const o=vsBuild(vs);LN.vs=o;LN.eHp=o.hp;LN.bossOut=true;LN.nextSp=2.5}
@@ -2415,10 +2416,10 @@ function laneDeploy(i){if(!LN||!LN.run)return;const c=LN.cards[i];if(LN.en<c.cos
   LN.en-=c.cost;c.ready=c.cd;const t=lStats(c.sp,c.hero),jit=.92+Math.random()*.16;
   laneMk('p',{hero:c.hero,sp:c.sp,hp:Math.round(c.pow*9*t.hp),atk:Math.max(1,Math.round(c.pow*t.atk*t.cd)),spd:75*t.sp*jit,rg:t.rg,cd:t.cd,ab:t.ab,fly:t.fly,slow:t.ab.includes('slow'),heal:t.ab.includes('heal'),kb:t.kb});
   snd(520,.05,'square',.04);snd(780,.06,'square',.04,0,.05);anim($('lnCP'),'lnpuff',300);{const [cx,cy]=lnXY(LCP-30,.8);fxBurst(cx,cy,{n:8,colors:['#ffffff','#e8e0d0'],shape:'puff',spd:2,grav:-.03,size:7,life:26})}}
-function laneEnemy(boss){const pool=NORMALS.filter(k=>SP[k].rar<=Math.min(4,Math.floor(LN.st/6)));let c=pool;const ae=LN.area.el;
+function laneEnemy(boss){const EF=LN.E*(1+Math.min(1,LN.t/150));const pool=NORMALS.filter(k=>SP[k].rar<=Math.min(4,Math.floor(LN.st/6)));let c=pool;const ae=LN.area.el;
   if(ae&&Math.random()<.6){const c2=pool.filter(k=>elOf(k)===ae);if(c2.length)c=c2}
   const bp=BOSSES.filter(k=>SP[k].rar<=Math.min(4,1+Math.floor(LN.st/8))),sp=boss?pick(bp.length?bp:BOSSES):pick(c),t=lStats(sp),m=boss?4:1+SP[sp].rar*.25,jit=.92+Math.random()*.16;P.dex.seen[sp]=1;const ab=[...t.ab];if(boss&&!ab.includes('smash')&&!ab.includes('pierce'))ab.push('smash');
-  laneMk('e',{sp,boss,hp:Math.round(LN.E*9*t.hp*m*(boss?1.6:1)),atk:Math.max(1,Math.round(LN.E*t.atk*t.cd*(boss?1.8:1)*(1+SP[sp].rar*.15))),spd:62*t.sp*jit*(boss?.7:1),rg:boss?Math.max(t.rg,50):t.rg,cd:t.cd,ab,fly:t.fly,slow:ab.includes('slow'),heal:ab.includes('heal'),kb:boss?2:t.kb});
+  laneMk('e',{sp,boss,hp:Math.round(EF*9*t.hp*m*(boss?1.6:1)),atk:Math.max(1,Math.round(EF*t.atk*t.cd*(boss?1.8:1)*(1+SP[sp].rar*.15))),spd:62*t.sp*jit*(boss?.7:1),rg:boss?Math.max(t.rg,50):t.rg,cd:t.cd,ab,fly:t.fly,slow:ab.includes('slow'),heal:ab.includes('heal'),kb:boss?2:t.kb});
   anim($('lnCE'),'lnpuff',300)}
 function lnFloat(x,t,cls=''){const W=$('lnField').clientWidth,e=document.createElement('div');e.className='lndmg '+cls;e.textContent=t;e.style.left=(x/LW*W)+'px';$('lnFx').appendChild(e);setTimeout(()=>e.remove(),800)}
 function lnSpark(x,big){const W=$('lnField').clientWidth,e=document.createElement('div');e.className='lnspark'+(big?' big':'');e.style.left=(x/LW*W)+'px';$('lnFx').appendChild(e);setTimeout(()=>e.remove(),350)}
@@ -2482,7 +2483,9 @@ function laneFire(){if(!LN||LN.ult<100||!LN.run)return;LN.ult=0;const t=canOf().
     const ch=Math.round(LN.pMax*Math.min(.6,.15*f));LN.pHp=Math.min(LN.pMax,LN.pHp+ch);lnFloat(LCP-10,'🏰+'+fmtS(ch),'en')}}
 function laneTick(now){if(!LN||!LN.run)return;const dt=Math.min(.05,(now-LN.last)/1000);LN.last=now;LN.t+=dt;
   LN.en=Math.min(LN.enMax,LN.en+(6+LN.wl*3)*dt*(1+(LN.rlane||0)/100));LN.ult=Math.min(100,LN.ult+dt*100/canTime());LN.cards.forEach(c=>{if(c.ready>0)c.ready=Math.max(0,c.ready-dt)});
-  if(LN.vs)vsAI(dt);else LN.nextSp-=dt;if(!LN.vs&&LN.nextSp<=0){laneEnemy(false);if(Math.random()<Math.min(.55,LN.st*.035))setTimeout(()=>LN&&LN.run&&laneEnemy(false),700);LN.nextSp=Math.max(2.2,6.5-LN.st*.12)*(.7+Math.random()*.6)}
+  if(LN.vs)vsAI(dt);else LN.nextSp-=dt;if(!LN.vs&&LN.nextSp<=0){laneEnemy(false);if(Math.random()<Math.min(.6,LN.st*.03))setTimeout(()=>LN&&LN.run&&laneEnemy(false),700);LN.nextSp=Math.max(1.8,6.5-LN.st*.12)*(.7+Math.random()*.6)}
+  if(!LN.vs){LN.rushT=(LN.rushT||0)+dt;if(LN.rushT>=Math.max(18,32-LN.st*.3)){LN.rushT=0;lnBanner('⚠️ てきの ぐんだんが きた！','lose');const n=2+Math.min(4,Math.floor(LN.st/10));for(let i=0;i<n;i++)setTimeout(()=>LN&&LN.run&&laneEnemy(false),i*450)}}
+  if(LN.bossOut&&!LN.boss2&&!LN.vs&&LN.st>=8&&LN.eHp<LN.eMax*.25){LN.boss2=true;laneEnemy(true);bossWarn($('lnField'));anim($('lnField'),'lnquake',600);vib(200)}
   if(!LN.bossOut&&LN.eHp<LN.eMax*.6){LN.bossOut=true;laneEnemy(true);bossWarn($('lnField'));bgm('boss');anim($('lnField'),'lnquake',600);anim($('lnField'),'bosswarn',2600);[98,82,65].forEach((f,i)=>snd(f,.35,'sawtooth',.08,0,i*.18));vib(200)}
   for(const u of LN.units){if(u.dead)continue;const dir=u.side==='p'?-1:1;
     if(u.wall){u.life-=dt;if(u.life<=0)laneKill(u);continue}
