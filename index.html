@@ -473,7 +473,7 @@ input{font:inherit}
 .chbox{text-align:left;max-height:62vh;overflow:auto}.chh{color:var(--gold);font-size:14px;margin:8px 0 4px}.chg{display:grid;grid-template-columns:1fr 1fr;gap:5px}.chg .btn{font-size:13px;padding:9px 4px}.chg .toggle{background:#2a5a8a}
 .snk{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin:6px 0}.snk .btn{padding:8px 0;font-size:13px;line-height:1.3}.snk small{font-size:11px;color:#ffd23f}
 
-.dock{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;padding:2px 8px 6px;flex:none}
+.dock{display:grid;grid-template-columns:repeat(8,1fr);gap:4px;padding:2px 8px 6px;flex:none}
 .dock .dk{position:relative;display:flex;flex-direction:column;align-items:center;gap:1px;padding:5px 0 4px!important;background:var(--dc)!important;font-size:22px;line-height:1;min-width:0}
 .dock .dk .pi{width:26px;height:26px;margin:0}.dock .dk i{font-style:normal;font-size:10px;white-space:nowrap;letter-spacing:-.5px}
 .dock .dkb{position:absolute;top:-5px;right:-3px;background:#e8413c;color:#fff;font-size:10px;font-weight:400;padding:1px 4px;border:1px solid #000;line-height:1.2}
@@ -666,6 +666,11 @@ input{font:inherit}
 .dfpow{background:rgba(0,0,0,.35);border-radius:10px;padding:8px 12px;margin:6px 0;text-align:left}.dfrow{display:flex;justify-content:space-between;font-size:14px}.dfrow b{font-size:17px;color:#ffd23f}.dfrow b.lo{color:#ff6a6a}.dfrow b.ok{color:#7af07a}.dfbar{height:8px;background:#222;border-radius:4px;overflow:hidden;margin:5px 0 4px}.dfbar i{display:block;height:100%;background:linear-gradient(90deg,#ff4a4a,#ffd23f,#5be36a)}.dfpow small{font-size:12px;color:#ffe9a0}
 .dftips{display:flex;flex-direction:column;gap:6px;margin:6px 0}.dftip{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.07);border-radius:10px;padding:6px 8px;text-align:left}.dftip .ic{font-size:22px}.dftip .tx{flex:1;font-size:13px;line-height:1.35}.dftip .btn.sm{font-size:12px;padding:6px 8px;white-space:nowrap;margin:0}
 .bpow .brec{display:block;font-size:10px;color:#ffe9a0;line-height:1.1}.bpow .brec.lo{color:#ff7a7a}
+.hdtop{flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;background:var(--wood2);border:3px solid var(--edge);border-radius:6px;padding:2px 5px;min-width:38px;color:#fff}.hdtop .pi{width:18px;height:18px;margin:0}.hdtop i{font-style:normal;font-size:9px;line-height:1.1;white-space:nowrap}
+.gch .pi{width:56px;height:56px;margin:0 auto;display:block;animation:bob 1.6s ease-in-out infinite}.gcp{font-size:14px;line-height:1.6;margin:4px 0 8px}.gcp b{color:#ffd23f}
+.gcin{font-size:22px!important;text-align:center;letter-spacing:3px;text-transform:uppercase;border:3px solid #ffd23f!important}.gcin::placeholder{text-transform:none;letter-spacing:0;font-size:15px}
+.gchint{display:block;color:var(--sub);font-size:12px;margin-top:4px}.gcmsg{min-height:20px;color:#ff8a7a;font-size:13px;margin:4px 0}
+.gcgot{background:rgba(0,0,0,.3);border-radius:10px;padding:8px;margin:8px 0}.gcgt{font-size:13px;color:#ffe9a0;margin-bottom:4px}.gcgl{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}.gcgl>div{width:64px;text-align:center}.gcgl img{width:48px;height:48px;image-rendering:pixelated}.gcgl small{display:block;font-size:9px;line-height:1.2}
 </style>
 </head>
 <body>
@@ -685,6 +690,7 @@ input{font:inherit}
 <!-- home -->
 <section id="home" class="screen">
   <header class="top">
+    <button class="hdtop" id="hdTop"></button>
     <button class="who" id="who"></button>
     <div class="lv">Lv<b id="hLv">1</b></div>
     <div class="xpbar"><i id="hXp"></i></div>
@@ -700,6 +706,7 @@ input{font:inherit}
     <button class="btn dk" id="boxBtn" style="--dc:#5a4a3a">📦<i>ボックス</i></button>
     <button class="btn dk" id="shopBtn" style="--dc:#a03a7a">🛍️<i>ショップ</i></button>
     <button class="btn dk" id="laneBtn" style="--dc:#2a6a9a">🏯<i>ぐんだん</i></button>
+    <button class="btn dk" id="giftBtn" style="--dc:#c0306a">🎁<i>プレゼント</i></button>
   </nav>
   <div class="homebody">
     <div class="hbase" id="hBase"><div class="bwalk"></div><div class="binfo"></div></div>
@@ -1072,7 +1079,7 @@ function makeItem(st,d,boss,min=0){
 /* =============== save data =============== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-const APPV='v106';
+const APPV='v107';
 try{const c=document.createElement('canvas');c.width=9;c.height=9;const g=c.getContext('2d'),F=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};F(1,0,7,1,'#120d09');F(1,8,7,1,'#120d09');F(0,1,1,7,'#120d09');F(8,1,1,7,'#120d09');F(1,1,7,1,'#120d09');F(1,7,7,1,'#120d09');F(1,1,1,7,'#120d09');F(7,1,1,7,'#120d09');F(2,2,5,1,'#7a6a52');F(2,2,1,5,'#7a6a52');F(2,6,5,1,'#2a2018');F(6,2,1,5,'#2a2018');document.documentElement.style.setProperty('--pxf',`url(${c.toDataURL()})`)}catch(e){}
 const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));if(G.bgmOn===undefined)G.bgmOn=true;
 let P=null;
@@ -1515,11 +1522,15 @@ function renderPlayers(){if($('verT'))$('verT').textContent=APPV;try{const ts=$(
   $('addP').style.display=G.profiles.filter(p=>!p.master).length>=4?'none':'';
 }
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function giftCode(){
-  showModal(`<div class="mt">🎁 プレゼント コード</div><p>コードを いれると とくべつな なかまが もらえるよ！</p>
-    <input class="field" id="gcIn" maxlength="20" placeholder="コード" autocapitalize="characters" style="text-transform:uppercase;text-align:center;letter-spacing:2px">
-    <div id="gcMsg" style="min-height:20px;color:#ff8a7a;font-size:13px"></div>
-    <button class="btn orange big" id="gcOk">うけとる</button><button class="btn gray" id="cl">とじる</button>`,
+function giftCode(){const got=Object.keys(P.codes||{}).map(c=>GIFTS[c]).filter(Boolean);
+  showModal(`<div class="gch">${pi('gift')}</div><div class="mt">プレゼント コード</div>
+    <p class="gcp">おうちの ひとに おしえて もらった<br><b>コード</b>を いれると、<b>とくべつな なかま</b>が もらえるよ！</p>
+    <input class="field gcin" id="gcIn" maxlength="24" placeholder="ここに コードを いれる" autocapitalize="characters" autocomplete="off" autocorrect="off" spellcheck="false">
+    <small class="gchint">えいごの おおもじ・こもじ・ぜんかく どれでも OK</small>
+    <div id="gcMsg" class="gcmsg"></div>
+    <button class="btn orange big" id="gcOk">🎁 うけとる</button>
+    ${got.length?`<div class="gcgot"><div class="gcgt">もらった プレゼント（${got.length}）</div><div class="gcgl">${got.map(g=>`<div>${monsterSVG(g.sp)}<small>${SP[g.sp].name}</small></div>`).join('')}</div></div>`:''}
+    <button class="btn gray" id="cl">とじる</button>`,
     {cl:closeModal,gcOk:()=>{const raw=$('gcIn').value.normalize('NFKC'),kn=raw.replace(/[\u30a1-\u30f6]/g,ch=>String.fromCharCode(ch.charCodeAt(0)-96)).replace(/\s/g,''),KA={'ぷりぷり':'PURIPURI','ぷりぷりけっつー':'PURIPURI','くそるる':'KUSORURU','くそったれるる':'KUSORURU'},c=KA[kn]||raw.toUpperCase().replace(/[^A-Z0-9]/g,''),g=GIFTS[c];P.codes=P.codes||{};
       if(!g){$('gcMsg').textContent='コードが ちがうみたい…（アプリを ひらきなおすと なおることも あるよ）';snd(200,.2,'square',.05);return}
       if(P.codes[c]){$('gcMsg').textContent='この コードは もう つかったよ';return}
@@ -1528,7 +1539,7 @@ function giftCode(){
       fanfare();setTimeout(()=>[784,988,1175,1568].forEach((f,i)=>snd(f,.2,'square',.05,0,i*.12)),400);vib(200);
       showModal(`<div class="mt">🎉 プレゼント！</div><div class="evostage"><div class="evo-b flip" style="animation:none;opacity:1">${monsterSVG(g.sp)}</div></div>
         <p><b style="font-size:22px;color:#ffd23f">${SP[g.sp].name}</b>が なかまに なった！<br><small>${g.msg}</small></p>
-        <small style="color:var(--sub)">${inP?'パーティに いれたよ':'ボックスの「なかま」に いるよ'}・${EVOC[g.sp]?'レア度が あがるたびに しんかして さいごは きゅうきょくに！':'さいしょから きゅうきょく！'}</small>
+        <small style="color:var(--sub)">${inP?'パーティに いれたよ':'ボックスの「なかま」に いるよ'}・${EVOC[g.sp]?(()=>{let k=g.sp;while(EVOC[k])k=EVOC[k];return 'そだてると しんかして さいごは '+RAR[SP[k].rar].n+'に！'})():'さいしょから '+RAR[SP[g.sp].rar].n+'！'}</small>
         <button class="btn green big" id="cl">やったー！</button>`,{cl:()=>{closeModal();renderHome()}})}});
   setTimeout(()=>{const i=$('gcIn');if(i)i.focus()},100)}
 function profileForm(p){
@@ -1550,7 +1561,7 @@ function profileForm(p){
           if(p.eq.a.name==='ぬののふく')p.eq.a.color=color;Object.assign(p,{color,hair,hc,skin});save();closeModal();renderHome()}
         else{const np=newProfile(name,age,color);Object.assign(np,{hair,hc,skin});G.profiles.push(np);save();closeModal();selectProfile(np.id)}},
      fCancel:closeModal,
-     fSwitch:()=>{closeModal();G.cur=null;save();show('players');renderPlayers()},
+     fSwitch:()=>{closeModal();goTop()},
      fData:()=>dataMove(),
      fCloud:()=>cloudSetup(),
      fCode:()=>giftCode(),
@@ -1637,6 +1648,7 @@ const PIX={
  ghost:[{w:'#e8f4ff',W:'#9ab8d8',k:'#1b1410'},['..wwwww..','.wwwwwww.','wwkwwwkww','wwkwwwkww','wwwwwwwww','wwwkkkwww','wwwwwwwww','wwwwwwwww','w.ww.ww.w']],
  gacha:[{r:'#e8413c',R:'#a02a20',w:'#e8f4ff',y:'#ffd23f',b:'#4aa0e0',g:'#5be05b'},['.rrrrrrr.','rwwwwwwwr','rwybwgwwr','rwwgwywwr','rwwwwwwwr','rrrrrrrrr','rRRRyRRRr','rRRRRRRRr','.rrrrrrr.']],
  medal:[{r:'#e8413c',b:'#4a7ad9',y:'#ffd23f',Y:'#d99a1a'},['rr.....bb','.rr...bb.','..rr.bb..','...yyy...','..yyyyy..','.yyYyyyy.','.yyyyyyy.','..yyYyy..','...yyy...']],
+ door:[{w:'#a8703e',W:'#5a3a1a',f:'#d8b080',y:'#ffd23f'},['.fffffff.','.fWWWWWf.','.fWwwwWf.','.fWwwwWf.','.fWwwyWf.','.fWwwwWf.','.fWwwwWf.','.fWwwwWf.','fffffffff']],
  house:[{r:'#d9442f',R:'#a02a20',w:'#f4ead0',W:'#c8a070',b:'#4aa0e0'},['....r....','...rrr...','..rrrrr..','.rrrrrrr.','rRRRRRRRr','.wwwwwww.','.wbwwwbw.','.wwwWwww.','.wwwWwww.']],
  ticket:[{y:'#ffd23f',Y:'#d99a1a',r:'#e8413c'},['yyyyyyyyy','yYyyyyyYy','.yyryryy.','yyyrrryyy','.yyyryyy.','yYyyyyyYy','yyyyyyyyy']],
  help:[{b:'#3a7ad9',w:'#ffffff'},['.bbbbbbb.','bbbwwwbbb','bbwbbbwbb','bbbbbbwbb','bbbbbwbbb','bbbbwbbbb','bbbbbbbbb','bbbbwbbbb','.bbbbbbb.']],
@@ -1651,7 +1663,7 @@ function pixHome(){
   set('weakBtn','book',`にがて <span id="weakN">${P?P.weak.length:0}</span>`);set('statBtn','chart','きろく');set('famBtn','person','みんな');
   set('rankBtn','trophy','ランキング');
   const dk=(id,ic,t,badge)=>{const e=$(id);if(e)e.innerHTML=pi(ic)+`<i>${t}</i>`+(badge?`<b class="dkb">${badge}</b>`:'')};
-  dk('towerBtn','tower','とう',P&&P.tower&&P.tower.best?P.tower.best+'F':'');dk('gachaBtn','gacha','ふくびき',P&&P.tk?P.tk:'');dk('roomBtn','house','へや');dk('achBtn','medal','じっせき',P&&achClaimable()?achClaimable():'');dk('boxBtn','box','ボックス',P&&P.mons.some(evoReady)?'✨':'');dk('shopBtn','bag','ショップ');dk('laneBtn','swords','ぐんだん',P?('🎫'+ltDaily()):'');set('setBtn','gear','せってい');set('helpBtn','help','ヘルプ');
+  dk('towerBtn','tower','とう',P&&P.tower&&P.tower.best?P.tower.best+'F':'');dk('gachaBtn','gacha','ふくびき',P&&P.tk?P.tk:'');dk('roomBtn','house','へや');dk('achBtn','medal','じっせき',P&&achClaimable()?achClaimable():'');dk('boxBtn','box','ボックス',P&&P.mons.some(evoReady)?'✨':'');dk('shopBtn','bag','ショップ');dk('laneBtn','swords','ぐんだん',P?('🎫'+ltDaily()):'');dk('giftBtn','gift','コード');{const t=$('hdTop');if(t)t.innerHTML=pi('door')+'<i>トップ</i>'}set('setBtn','gear','せってい');set('helpBtn','help','ヘルプ');
   set('goBtn','swords','しゅつげき！');set('hBest','star','さいきょう そうび');set('hEnhAll','hammer','まとめて きょうか');
   const g=$('hGold').parentNode,st=$('hStreak').parentNode;if(!g.querySelector('.pi')){g.innerHTML=pi('coin')+'<b id="hGold">0</b>';st.innerHTML=pi('flame')+'<b id="hStreak">1</b><small>にち</small>';st.id='hStreakPill';st.onclick=()=>helpOpen('streak');g.onclick=()=>toast('🪙 '+P.gold.toLocaleString()+' ゴールド')}}
 
@@ -2743,6 +2755,9 @@ function renderHome(){
   {const b=$('goBtn'),wb=weakBlock(selStage);b.innerHTML=wb?pi('book')+`にがて ゼロで すすめる<small class="gosub">のこり ${P.weak.length}もん・あと ${weakLeft()}かい せいかい</small>`:pi('swords')+'しゅつげき！'+(()=>{const rc=recPow(selStage,P.subj==='mix'?mixLv():(P.diff[P.subj]||0)),pw=power();return `<small class="gosub">すいしょう パワー ${rc.toLocaleString()}${pw<rc?' ⚠️':' ✅'}</small>`})();b.classList.toggle('wkgo',wb)}
 }
 $('who').onclick=()=>profileForm(P);
+$('giftBtn').onclick=()=>giftCode();
+$('hdTop').onclick=()=>{snd(440,.08);showModal(`<div class="mt">🚪 トップに もどる？</div><p>ぼうけんしゃを えらぶ がめんに もどるよ。<br><small style="color:var(--sub)">データは そのまま のこるよ</small></p><button class="btn orange big" id="ok">トップへ</button><button class="btn gray" id="cl">やめる</button>`,{ok:()=>{closeModal();goTop()},cl:closeModal})};
+function goTop(){B=null;G.cur=null;save();show('players');renderPlayers()}
 $('setBtn').onclick=()=>profileForm(P);
 $('tJoin').onclick=()=>{snd(660,.05);joinByCode()};$('tInst').onclick=()=>{snd(660,.05);installGuide()};
 $('statBtn').onclick=()=>showStats();
