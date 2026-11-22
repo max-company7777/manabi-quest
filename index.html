@@ -642,6 +642,9 @@ input{font:inherit}
 @keyframes hrwalk{0%,100%{transform:translateX(0)}45%{transform:translateX(60%)}50%{transform:translateX(60%) scaleX(-1)}95%{transform:translateX(0) scaleX(-1)}}
 .hrplate{position:absolute;left:8px;top:8px;z-index:4;background:linear-gradient(#a06a3a,#7a4a26);border:3px solid #000;padding:3px 10px;font-size:15px;color:#fff;text-shadow:2px 2px 0 #0008;box-shadow:inset 0 2px 0 #ffffff33;text-align:left}.hrplate small{display:block;font-size:10px;color:#ffe9a0}
 .hrgo{position:absolute;right:8px;bottom:8px;z-index:4;background:#3a7a4a;border:3px solid #000;padding:4px 10px;font-size:13px;color:#fff;box-shadow:inset 0 2px 0 #ffffff33}
+.rbon{background:#0006;border:2px solid #000;padding:6px 8px;display:flex;flex-wrap:wrap;gap:4px;align-items:center}.rbon b{width:100%;color:#ffd23f;font-size:14px}.rbon span{font-size:12px;background:#222;padding:1px 6px;border-radius:3px;color:#888}.rbon span.on{background:#3a7a4a;color:#fff}.rbon small{width:100%;font-size:11px;color:var(--sub)}
+.topgo{flex:none;margin:0 8px 4px;display:flex;align-items:center;gap:6px;background:linear-gradient(#f0902e,#c8601a);border:3px solid #000;padding:3px 10px;box-shadow:inset 0 2px 0 #ffffff44,inset 0 -3px 0 #0004,0 3px 0 #0006;color:#fff;animation:topgo 2s ease-in-out infinite;clip-path:polygon(3px 0,calc(100% - 3px) 0,100% 3px,100% calc(100% - 3px),calc(100% - 3px) 100%,3px 100%,0 calc(100% - 3px),0 3px)}.topgo:active{transform:translateY(2px)}.topgo.wk{background:linear-gradient(#9a6ad8,#6a3ab0)}.topgo .pi{width:24px;height:24px;flex:none}.topgo b{font-size:17px;white-space:nowrap;text-shadow:2px 2px 0 #0006}.topgo small{flex:1;min-width:0;font-size:11px;color:#ffe9a0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:right}.topgo i{font-style:normal;font-size:13px}@keyframes topgo{50%{filter:brightness(1.12)}}
+
 .maptier{font-size:14px;color:var(--gold);margin:8px 0 2px;text-align:left;display:flex;align-items:center;justify-content:space-between;gap:6px}.maptier small{color:var(--sub);font-size:12px}.maptier .mwok{color:#ffd23f}.mwbtn{width:auto!important;margin:0!important;padding:4px 8px!important;font-size:13px!important;background:#d9771e;animation:pulse 1s infinite}.mwrew{font-size:11px;color:var(--sub);text-align:left;margin:0 0 4px}.mgift{font-size:22px;animation:pulse 1s infinite;padding:0 4px;white-space:nowrap}.mbadge{background:#e8413c;color:#fff;font-size:12px;padding:2px 5px;margin-right:4px;border-radius:4px}.mrew{display:flex;flex-direction:column;gap:6px;align-items:center;margin:6px 0}.mrit{display:flex;flex-wrap:wrap;gap:4px;justify-content:center}.mri{border:2px solid;padding:2px;display:inline-flex}.mri img{width:28px;height:28px}.mrsp{color:#ffd23f;font-size:14px}.limb.mapl{background:#1f5a3a}.mapa .mclr{color:#5be05b;font-size:18px}
 </style>
 </head>
@@ -668,6 +671,7 @@ input{font:inherit}
     <div class="pill">🪙<b id="hGold">0</b></div>
     <div class="pill">🔥<b id="hStreak">1</b></div>
   </header>
+  <button class="topgo" id="topGo"></button>
   <nav class="dock">
     <button class="btn dk" id="towerBtn" style="--dc:#5a3a8a">🗼<i>とう</i></button>
     <button class="btn dk" id="gachaBtn" style="--dc:#b8402a">🎰<i>ふくびき</i></button>
@@ -766,6 +770,7 @@ input{font:inherit}
   <div class="homebody">
     <div class="roombox" id="rmBox"><div class="rmwall" id="rmWall"></div><div class="rmfloor" id="rmFloor"></div><div id="rmItems"></div><div id="rmMons"></div></div>
     <div class="rktabs" id="rmTabs" style="grid-template-columns:repeat(4,1fr)"></div>
+    <div id="rmBon"></div>
     <div id="rmList" style="display:flex;flex-direction:column;gap:6px"></div>
   </div>
 </section>
@@ -1047,7 +1052,7 @@ function makeItem(st,d,boss,min=0){
 /* =============== save data =============== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-const APPV='v83';
+const APPV='v85';
 try{const c=document.createElement('canvas');c.width=9;c.height=9;const g=c.getContext('2d'),F=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};F(1,0,7,1,'#120d09');F(1,8,7,1,'#120d09');F(0,1,1,7,'#120d09');F(8,1,1,7,'#120d09');F(1,1,7,1,'#120d09');F(1,7,7,1,'#120d09');F(1,1,1,7,'#120d09');F(7,1,1,7,'#120d09');F(2,2,5,1,'#7a6a52');F(2,2,1,5,'#7a6a52');F(2,6,5,1,'#2a2018');F(6,2,1,5,'#2a2018');document.documentElement.style.setProperty('--pxf',`url(${c.toDataURL()})`)}catch(e){}
 const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));if(G.bgmOn===undefined)G.bgmOn=true;
 let P=null;
@@ -1077,8 +1082,8 @@ const capeH=()=>P.eq.k?capeOf(ep('k')):0;
 const fastB=()=>(P.eq.g?gloveOf(ep('g')):0)+fxSum('fast');
 const crit=()=>Math.min(100,8+(P.eq.c&&P.eq.c.eff==='crit'?critOf(ip(P.eq.c)):0)+fxSum('crit'));
 const healKill=()=>(P.eq.c&&P.eq.c.eff==='heal'?healOf(ip(P.eq.c)):0)+Math.round(maxHp()*fxSum('heal')/100);
-const xpBonus=()=>(P.eq.c&&P.eq.c.eff==='xp'?xpOf(ip(P.eq.c)):0)+fxSum('xp')+((P.bld&&P.bld.tower)||0)*1.5;
-const goldBonus=()=>(P.eq.c&&P.eq.c.eff==='gold'?goldOf(ip(P.eq.c)):0)+fxSum('gold')+((P.bld&&P.bld.farm)||0)*1.5;
+const xpBonus=()=>(P.eq.c&&P.eq.c.eff==='xp'?xpOf(ip(P.eq.c)):0)+fxSum('xp')+roomB('xp')+((P.bld&&P.bld.tower)||0)*1.5;
+const goldBonus=()=>(P.eq.c&&P.eq.c.eff==='gold'?goldOf(ip(P.eq.c)):0)+fxSum('gold')+roomB('gold')+((P.bld&&P.bld.farm)||0)*1.5;
 const xpNeed=()=>20+P.lv*15;
 const misPer=()=>P.age<=5?2:4;
 const ageOf=a=>a<=4?0:a<=6?1:a===7?2:Math.min(7,a-5),ageDef=p=>ageOf(p.age);
@@ -2111,7 +2116,7 @@ function laneStart(st){P.lane=P.lane||{best:0};ltDaily();if((P.lt||0)<1){ltNone(
   const E=3+st*1.6+.04*st*st;
   const a=AREA(Math.max(1,st*3));
   LN={st,R,E,cards,units:[],en:100,enMax:600,wl:1,eHp:Math.round(E*170*(1+st*.06)),pHp:Math.round(R*150*(1+((P.bld&&P.bld.fort)||0)*.04)),t:0,nextSp:3,last:0,ult:0,run:true,bossOut:false,area:a,gold:0,kills:0,matches:0};
-  LN.eMax=LN.eHp;LN.pMax=LN.pHp;LN.gim=laneGim(st);LN.syn={};LN.synT=0;LN.qT=9;$('lnField').classList.toggle('lnnight',LN.gim==='night');LN.crit=Math.min(60,crit()*.6);LN.critd=fxSum('critd')/100;LN.gb=1+goldBonus()/100;
+  LN.eMax=LN.eHp;LN.pMax=LN.pHp;LN.rlane=roomB('lane');LN.gim=laneGim(st);LN.syn={};LN.synT=0;LN.qT=9;$('lnField').classList.toggle('lnnight',LN.gim==='night');LN.crit=Math.min(60,crit()*.6);LN.critd=fxSum('critd')/100;LN.gb=1+goldBonus()/100;
   show('lane');$('lnStage').innerHTML=`ステージ<br><b style="color:var(--gold)">${st}</b>`;
   {const fl=$('lnField'),W=200,H=Math.max(70,Math.round(W*fl.clientHeight/Math.max(1,fl.clientWidth)));$('lnSky').style.background=`url(${sceneURL(a,W,H)}) center/100% 100%`;weather(fl,a.el)}
   $('lnCE').className='lncas e';$('lnCP').className='lncas p';$('lnCE').innerHTML=`<div class="lnchp" id="lnEHpT"></div><img class="lncimg" id="lnCEi" src="${castleURL('e',0,a.el)}">`;$('lnCP').innerHTML=`<div class="lnchp" id="lnPHpT"></div><img class="lncimg" id="lnCPi" src="${castleURL('p',0)}">`;LN.cdm={e:0,p:0};LN.smk=0;
@@ -2187,7 +2192,7 @@ function laneFire(){if(!LN||LN.ult<100||!LN.run)return;LN.ult=0;const t=canOf().
     LN.units.filter(u=>!u.dead&&u.side==='p').forEach(u=>{const h=Math.round(u.maxHp*Math.min(1,.4*f));u.hp=Math.min(u.maxHp,u.hp+h);lnFloat(u.x,'+'+fmtS(h),'en')});
     const ch=Math.round(LN.pMax*Math.min(.6,.15*f));LN.pHp=Math.min(LN.pMax,LN.pHp+ch);lnFloat(LCP-10,'🏰+'+fmtS(ch),'en')}}
 function laneTick(now){if(!LN||!LN.run)return;const dt=Math.min(.05,(now-LN.last)/1000);LN.last=now;LN.t+=dt;
-  LN.en=Math.min(LN.enMax,LN.en+(6+LN.wl*3)*dt);LN.ult=Math.min(100,LN.ult+dt*100/canTime());LN.cards.forEach(c=>{if(c.ready>0)c.ready=Math.max(0,c.ready-dt)});
+  LN.en=Math.min(LN.enMax,LN.en+(6+LN.wl*3)*dt*(1+(LN.rlane||0)/100));LN.ult=Math.min(100,LN.ult+dt*100/canTime());LN.cards.forEach(c=>{if(c.ready>0)c.ready=Math.max(0,c.ready-dt)});
   LN.nextSp-=dt;if(LN.nextSp<=0){laneEnemy(false);if(Math.random()<Math.min(.55,LN.st*.035))setTimeout(()=>LN&&LN.run&&laneEnemy(false),700);LN.nextSp=Math.max(2.2,6.5-LN.st*.12)*(.7+Math.random()*.6)}
   if(!LN.bossOut&&LN.eHp<LN.eMax*.6){LN.bossOut=true;laneEnemy(true);bossWarn($('lnField'));bgm('boss');anim($('lnField'),'lnquake',600);anim($('lnField'),'bosswarn',2600);[98,82,65].forEach((f,i)=>snd(f,.35,'sawtooth',.08,0,i*.18));vib(200)}
   for(const u of LN.units){if(u.dead)continue;const dir=u.side==='p'?-1:1;
@@ -2475,9 +2480,18 @@ function roomSceneURL(r,night){const W_=WALLS.find(w=>w[0]===r.wall)||WALLS[0],F
     if(k==='w'){drawSpr(g,sh,pal,x,yy)}else if(k==='r'){drawSpr(g,sh,pal,x,yy)}else{const top=yy-shh;g.fillStyle='rgba(0,0,0,.28)';g.beginPath();g.ellipse(x+sw/2,yy+1,sw/2+1,2,0,0,7);g.fill();drawSpr(g,sh,pal,x,top)}}
   if(night){g.fillStyle='rgba(10,15,60,.3)';g.fillRect(0,0,w,h);if(r.place.lamp){const gr=g.createRadialGradient(32,38,2,32,38,30);gr.addColorStop(0,'rgba(255,210,120,.45)');gr.addColorStop(1,'rgba(255,210,120,0)');g.fillStyle=gr;g.fillRect(0,0,w,h)}}
   return IMGC[key]=cv.toDataURL()}
+/* ---- へやボーナス：おいた かぐで ちいさな こうかが つく ---- */
+const FEFF={bed:'egg',desk:'xp',shelf:'xp',window:'gold',poster:'party',plant:'egg',rug:'party',lamp:'xp',tv:'gold',sofa:'party',tank:'egg',trophy:'gold',gmach:'lane',gchest:'gold',tree:'lane'};
+const REFN={gold:['🪙','ゴールド'],xp:['⭐','けいけんち'],party:['🐾','なかまパワー'],egg:['🥚','たまご'],lane:['⚡','ぐんだんエナジー']};
+const fVal=(t,vk)=>{const v=FURN[t]&&FURN[t].v.find(x=>x[0]===vk);if(!v)return 0;const pr=v[2];return pr<0?3:pr>=2000?3:pr>=800?2:1};
+function roomBonus(p=P){const r=p&&p.room;const o={gold:0,xp:0,party:0,egg:0,lane:0};if(!r||!r.place)return o;let n=0;
+  for(const [t,vk] of Object.entries(r.place)){if(!vk||!FEFF[t])continue;n++;o[FEFF[t]]+=fVal(t,vk)*(FEFF[t]==='lane'?2:1)}
+  if(r.wall&&r.wall!=='cream')o.party+=1;if(r.floor&&r.floor!=='wood')o.party+=1;if(n>=10)for(const k in o)o[k]+=3;o.n=n;return o}
+const roomB=k=>{try{return roomBonus()[k]||0}catch(e){return 0}};
+function roomBonusHTML(){const b=roomBonus();return `<div class="rbon"><b>✨ へやボーナス</b>${Object.entries(REFN).map(([k,[i,n]])=>`<span class="${b[k]?'on':''}">${i}${n} +${b[k]}%</span>`).join('')}<small>${b.n>=10?'🌟 かぐ 10こ いじょうで「すてきな へや」ボーナス ぜんぶ +3%！':`かぐを 10こ おくと「すてきな へや」ボーナス（いま ${b.n}こ）`}</small></div>`}
 function renderRoomCard(){const el=$('hRoom');if(!el||!P)return;const r=roomOf(),n=Object.keys(r.place).filter(t=>r.place[t]).length,ms=partyMons().slice(0,3);
   el.innerHTML=`<span class="hrsc" style="background-image:url(${roomSceneURL(r,isNight())})"></span>${ms.map((m,i)=>`<i class="hrm" style="left:${30+i*14}%;animation-delay:${-i*1.3}s">${monsterSVG(m.sp)}</i>`).join('')}<i class="hrhero">${heroSVG(P.eq,P)}</i>
-    <span class="hrplate">🏠 ${esc(P.name)}の へや<small>${n?'🛋️ かぐ '+n+'こ':'かぐを おいてみよう！'}</small></span><span class="hrgo">へやへ ▶</span>`;
+    <span class="hrplate">🏠 ${esc(P.name)}の へや<small>${n?(b=>Object.entries(REFN).filter(([k])=>b[k]).map(([k,[i]])=>i+'+'+b[k]+'%').join(' ')||'🛋️ かぐ '+n+'こ')(roomBonus()):'かぐを おくと ボーナス！'}</small></span><span class="hrgo">へやへ ▶</span>`;
   el.onclick=()=>{snd(660,.05);roomOpen()}}
 function roomRender(){const r=roomOf(),W=WALLS.find(w=>w[0]===r.wall)||WALLS[0],F=FLOORS.find(f=>f[0]===r.floor)||FLOORS[0];
   $('rmTitle').textContent=`🏠 ${P.name}の へや`;$('rmGold').innerHTML=pi('coin')+fmtBig(P.gold);
@@ -2488,6 +2502,7 @@ function roomRender(){const r=roomOf(),W=WALLS.find(w=>w[0]===r.wall)||WALLS[0],
   const ms=partyMons().concat(P.mons.filter(m=>m.fav&&!P.party.includes(m.id))).slice(0,6);
   $('rmMons').innerHTML=ms.map((m,i)=>`<div class="rmm" data-i="${i}" style="left:${20+i*12}%;bottom:${8+(i%3)*6}%"><span class="flip">${monsterSVG(m.sp)}</span></div>`).join('');
   document.querySelectorAll('.rmm').forEach(e=>e.onclick=()=>{anim(e,'hop',350);snd(880+R(0,400),.08,'square',.04)});
+  if($('rmBon'))$('rmBon').innerHTML=roomBonusHTML();
   const tabs=[['furn','🛋️ かぐ'],['wall','🧱 かべ'],['floor','🟫 ゆか'],['mine','✅ もってる']];
   $('rmTabs').innerHTML=tabs.map(([k,n])=>`<button class="btn db${rmTab===k?' sel':''}" data-k="${k}">${n}</button>`).join('');
   document.querySelectorAll('#rmTabs .db').forEach(b=>b.onclick=()=>{rmTab=b.dataset.k;roomRender()});
@@ -2495,7 +2510,7 @@ function roomRender(){const r=roomOf(),W=WALLS.find(w=>w[0]===r.wall)||WALLS[0],
   if(rmTab==='wall'||rmTab==='floor'){const L=rmTab==='wall'?WALLS:FLOORS;h=L.map(([k,n,pr,c1])=>{const own=!pr||r.own[rmTab+':'+k],on=r[rmTab]===k;
       return `<div class="rmrow"><span class="rmsw" style="background:${c1}"></span><span class="rmn">${n}</span>${on?'<b class="rmon">つかってる</b>':own?`<button class="btn green" data-use="${rmTab}:${k}">つかう</button>`:`<button class="btn orange" data-buy="${rmTab}:${k}:${pr}">🪙${pr}</button>`}</div>`}).join('')}
   else{for(const [t,f] of Object.entries(FURN))for(const [vk,n,pr] of f.v){const own=r.own[t+':'+vk],on=r.place[t]===vk;if(rmTab==='mine'&&!own)continue;
-      h+=`<div class="rmrow"><img class="rmimg" src="${furnImg(t,vk)}"><span class="rmn">${n}<small>${f.n}</small></span>${on?`<button class="btn gray" data-off="${t}">しまう</button>`:own?`<button class="btn green" data-put="${t}:${vk}">おく</button>`:pr===-3?'<span class="limb xml">🎄 イベント</span>':pr===-2?'<span class="limb mapl">🗺️ ほうしゅう</span>':pr<0?'<span class="limb">🎰 げんてい</span>':`<button class="btn orange" data-buy="${t}:${vk}:${pr}">🪙${pr}</button>`}</div>`}
+      h+=`<div class="rmrow"><img class="rmimg" src="${furnImg(t,vk)}"><span class="rmn">${n}<small>${f.n}・${REFN[FEFF[t]][0]}${REFN[FEFF[t]][1]} +${fVal(t,vk)*(FEFF[t]==='lane'?2:1)}%</small></span>${on?`<button class="btn gray" data-off="${t}">しまう</button>`:own?`<button class="btn green" data-put="${t}:${vk}">おく</button>`:pr===-3?'<span class="limb xml">🎄 イベント</span>':pr===-2?'<span class="limb mapl">🗺️ ほうしゅう</span>':pr<0?'<span class="limb">🎰 げんてい</span>':`<button class="btn orange" data-buy="${t}:${vk}:${pr}">🪙${pr}</button>`}</div>`}
     if(!h)h='<p style="color:var(--sub);text-align:center">まだ かぐを もっていないよ</p>'}
   $('rmList').innerHTML=h;
   document.querySelectorAll('#rmList [data-buy]').forEach(b=>b.onclick=()=>{const [t,vk,pr]=b.dataset.buy.split(':');if(P.gold<+pr){toast('ゴールドが たりないよ');return}
@@ -2627,7 +2642,7 @@ const fmtBig=n=>{const f=(v,u)=>(v>=100?Math.floor(v):v>=10?Math.floor(v*10)/10:
 function renderHome(){
   pixHome();
   $('who').innerHTML=pi('person')+esc(P.name)+(P.cheat?' 🛠️':'')+' ▾';
-  $('hLv').textContent=P.lv>=MAXLV?'MAX':P.lv;$('hXp').style.width=(P.lv>=MAXLV?100:Math.min(100,P.xp/xpNeed()*100))+'%';
+  $('hLv').textContent=P.lv>=MAXLV?'MAX':P.lv;{const d=P.subj==='mix'?mixLv():P.diff[P.subj],wb=weakBlock(selStage);$('topGo').innerHTML=`${pi(wb?'book':'swords')}<b>${wb?'にがて とっくん':'しゅつげき！'}</b><small>★${d+1}・${AGEHINT[d]}・St.${selStage}</small><i>▶</i>`;$('topGo').classList.toggle('wk',wb)}$('hXp').style.width=(P.lv>=MAXLV?100:Math.min(100,P.xp/xpNeed()*100))+'%';
   countUp($('hGold'),P.gold);$('hStreak').textContent=P.streak;
   $('hHero').innerHTML=heroSVG(P.eq,P);try{renderBase()}catch(e){}try{renderLaneCard()}catch(e){}try{renderQuestBar()}catch(e){}try{renderRaidBanner()}catch(e){}try{renderRoomCard()}catch(e){}try{renderXmasBanner()}catch(e){}{const hb=document.querySelector('.herobox');if(hb){const sa=AREA(selStage||1);hb.style.setProperty('--scn',`url(${sceneURL(sa,96,120,{night:isNight()})})`)}}$('hPow').textContent=fmtBig(power());$('hTitle').textContent=titleOf(P)?'「'+titleOf(P)+'」':'';
   $('hSlotsL').innerHTML=SLOT_L.map(k=>slotHTML(k,P.eq[k])).join('');
@@ -2670,6 +2685,7 @@ $('statBtn').onclick=()=>showStats();
 $('helpBtn').onclick=()=>{snd(660,.05);helpOpen()};
 $('mapBtn').onclick=()=>{snd(660,.05);mapOpen()};
 document.querySelector('#home .top .lv').onclick=cheatGate;
+$('topGo').onclick=()=>$('goBtn').click();
 document.querySelector('#home .powbig').onclick=()=>{const lv=P.lv*2,eq=SLOTS.reduce((t,k)=>t+iscore(P.eq[k]),0),pt=partyPow();
   showModal(`<div class="mt">⚔️ パワーの うちわけ</div><div class="enhlist"><div><span>⭐ レベル（Lv${P.lv}×2）</span><b>${lv.toLocaleString()}</b></div><div><span>🛡️ そうび 10かしょ</span><b>${eq.toLocaleString()}</b></div><div><span>🐾 なかま（パーティ）</span><b>${pt.toLocaleString()}</b></div></div><p>ごうけい <b style="font-size:22px;color:var(--gold)">${power().toLocaleString()}</b></p><button class="btn gray" id="cl">とじる</button>`,{cl:closeModal})};
 $('laneBtn').onclick=()=>{snd(660,.05);laneOpen()};
@@ -2907,7 +2923,7 @@ const monPow=m=>{const s=SP[m.sp];return s?Math.round((MBASE[s.rar]+(m.lv-1)*MGR
 const monXpNeed=m=>5+m.lv*2;
 function ensureP(p){setTimeout(()=>autoFav(p),0);if(p.weak&&!p.weakV2){p.weak.forEach(w=>w.n=Math.min((w.n||1)+2,WEAKMAX));p.weakV2=1}if(!Number.isFinite(p.gold))p.gold=0;if(!p.mixOn){p.mixOn=1;p.subj='mix';p.best=p.best||{};p.best.mix=Math.max(p.best.mix||0,p.best.math||0,p.best.eng||0,p.best.kanji||0)}p.frag=p.frag||{};p.ultMiss=p.ultMiss||0;p.box=p.box||[];p.mons=p.mons||[];p.party=p.party||[];p.eggs=p.eggs||[];p.dex=p.dex||{};p.dex.seen=p.dex.seen||{};p.dex.owned=p.dex.owned||{};p.dex.items=p.dex.items||{};return p}
 const partyMons=(p=P)=>(p.party||[]).map(id=>(p.mons||[]).find(m=>m.id===id)).filter(Boolean);
-const partyPow=(p=P,eq=p.eq)=>Math.round(partyMons(p).reduce((s,m)=>s+monPow(m),0)*(1+fxSum('party',eq||{})/100));
+const partyPow=(p=P,eq=p.eq)=>Math.round(partyMons(p).reduce((s,m)=>s+monPow(m),0)*(1+(fxSum('party',eq||{})+((p&&p.room)?roomBonus(p).party:0))/100));
 const ownedStd=(p=P)=>SPECIES.filter(s=>s[3]<5&&p.dex.owned[s[0]]).length;
 const ultUnlocked=()=>ULTS.filter(u=>ownedStd()>=u.need);
 const ultRate=boss=>{const st=Math.floor((P.ultMiss||0)/10);return boss?Math.min(.2,.03+.02*st):Math.min(.05,.005+.005*st)};
@@ -2930,7 +2946,7 @@ const incMax=()=>P.incMax||3;
 const partyMax=()=>P.partyMax||3;
 const PARTYP=[20000,50000,100000];
 function addEgg(e){if(P.eggs.filter(x=>x.inc).length<incMax())e.inc=true;P.eggs.push(e);save()}
-function progressEggs(){let r=false;const ex=(P.eq.c&&P.eq.c.eff==='egg'&&Math.random()*100<eggOf(ip(P.eq.c)))||Math.random()*100<((P.bld&&P.bld.hatch)||0)*2?1:0;P.eggs.forEach(e=>{if(e.inc&&e.prog<e.need){e.prog=Math.min(e.need,e.prog+1+ex);if(e.prog>=e.need)r=true}});if(r)setTimeout(()=>toast('🥚 たまごが かえりそう！'),700)}
+function progressEggs(){let r=false;const ex=(P.eq.c&&P.eq.c.eff==='egg'&&Math.random()*100<eggOf(ip(P.eq.c)))||Math.random()*100<((P.bld&&P.bld.hatch)||0)*2+roomB('egg')?1:0;P.eggs.forEach(e=>{if(e.inc&&e.prog<e.need){e.prog=Math.min(e.need,e.prog+1+ex);if(e.prog>=e.need)r=true}});if(r)setTimeout(()=>toast('🥚 たまごが かえりそう！'),700)}
 function processHatch(cb){
   const e=P.eggs.find(x=>x.inc&&x.prog>=x.need);if(!e){cb&&cb();return}
   const before=ownedStd();P.eggs=P.eggs.filter(x=>x!==e);const m={id:uid(),sp:e.sp,lv:1,xp:0};P.mons.push(m);P.dex.owned[e.sp]=1;P.dex.seen[e.sp]=1;
