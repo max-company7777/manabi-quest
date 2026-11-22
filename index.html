@@ -232,7 +232,7 @@ input{font:inherit}
 .byewarn{background:#e8413c33;border:2px solid #e8413c;border-radius:6px;padding:6px;color:#ffb0a0;font-size:14px}
 .fv{position:absolute;top:1px;left:2px;font-style:normal;font-size:11px}
 
-.rktabs{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}.rktabs .db{font-size:11px;padding:8px 0}
+.rktabs{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}.rktabs .db{font-size:11px;padding:8px 0}
 .rkrow{display:flex;align-items:center;gap:8px;padding:8px 10px}
 .rkrow.top1{border-color:#ffd23f;box-shadow:0 0 14px #ffd23f66}.rkrow.top2{border-color:#c9c9c9}.rkrow.top3{border-color:#c0703a}
 .rkrow.me{background:#3a4a2c}
@@ -2310,10 +2310,10 @@ function feed(id,n){const m=P.mons.find(x=>x.id===id);if(!m)return;const c=snack
   if(!was&&evoReady(m))setTimeout(()=>toast(`✨ ${SP[m.sp].name}が しんか できるよ！`),900);monModal(id);renderBox()}
 
 /* ---- family ranking ---- */
-const RKS=[['week','📝 この7にち','せいかい','もん'],['lv','⭐ レベル','Lv',''],['pow','⚔️ パワー','パワー',''],['dex','📖 ずかん','なかま','しゅ'],['streak','🔥 れんぞく','れんぞく','にち'],['tower','🗼 とう','','かい']];
+const RKS=[['week','📝 この7にち','せいかい','もん'],['total','✅ ぜんぶ','せいかい','もん'],['lv','⭐ レベル','Lv',''],['pow','⚔️ パワー','パワー',''],['dex','📖 ずかん','なかま','しゅ'],['streak','🔥 れんぞく','れんぞく','にち'],['tower','🗼 とう','','かい']];
 let rkTab='week',rkRemote=null,rkLoading=false;
 function weekOk(p){const S=p.stats||{days:{}};let ok=0;for(let i=0;i<7;i++){const d=new Date();d.setDate(d.getDate()-i);const e=(S.days||{})[dkey(d)]||{};for(const k in e)ok+=e[k].ok}return ok}
-function rkVal(p,k){ensureP(p);return k==='week'?weekOk(p):k==='lv'?p.lv:k==='pow'?power(p.eq,p.lv,p):k==='dex'?ownedStd(p):k==='tower'?((p.tower&&p.tower.best)||0):(p.streak||0)}
+function rkVal(p,k){ensureP(p);return k==='week'?weekOk(p):k==='total'?(p.total||0):k==='lv'?p.lv:k==='pow'?power(p.eq,p.lv,p):k==='dex'?ownedStd(p):k==='tower'?((p.tower&&p.tower.best)||0):(p.streak||0)}
 async function showRank(){
   show('rank');rkRemote=null;renderRank();
   if(FB_CONFIG&&G.fam){rkLoading=true;renderRank();await syncUp();const r=await syncDown();rkLoading=false;rkRemote=r;renderRank()}
