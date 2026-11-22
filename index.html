@@ -630,7 +630,7 @@ input{font:inherit}
     <div class="tscene" id="tScene"><div class="trun"></div><div class="title tlogo"><span>まなび</span><span>クエスト</span><small>だれが ぼうけんする？</small></div></div>
     <div id="plist" style="display:flex;flex-direction:column;gap:10px"></div>
     <button class="btn green big" id="addP">＋ あたらしい ぼうけんしゃ</button>
-    <button class="btn gray" id="addM">👨‍👩‍👧 おうちの ひと（みんなの ようす）</button>
+    <small style="position:fixed;right:6px;bottom:4px;font-size:10px;color:#fff6;z-index:1" id="verT"></small><button class="btn gray" id="addM">👨‍👩‍👧 おうちの ひと（みんなの ようす）</button>
     <div class="row"><button class="btn" id="tJoin" style="background:#2a6a9a;font-size:15px">📨 しょうたいコードで つながる</button><button class="btn" id="tInst" style="font-size:15px">📲 ホームに ついか</button></div>
   </div>
 </section>
@@ -1019,6 +1019,7 @@ function makeItem(st,d,boss,min=0){
 /* =============== save data =============== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const APPV='v67';
 const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));if(G.bgmOn===undefined)G.bgmOn=true;
 let P=null;
 /* しゅるいごとに さいしょに ゲットした 1たいは じどうで おきにいり */
@@ -1410,7 +1411,7 @@ function closeModal(){$('modal').classList.remove('on')}
 const dayStr=d=>d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
 
 /* =============== players =============== */
-function renderPlayers(){try{const ts=$('tScene');if(ts){ts.style.background=`url(${sceneURL(AREAS[(new Date().getDate())%10],160,90,{night:isNight()})}) center/cover`;const p0=G.profiles[0];ts.querySelector('.trun').innerHTML=`<span class="tr h">${heroSVG(p0?p0.eq:{w:{slot:'w',icon:'🗡️',rar:0}},p0||{lv:1,eq:{}})}</span><span class="tr m1">${monsterSVG('slime')}</span><span class="tr m2">${monsterSVG('bat')}</span><span class="tr m3">${monsterSVG('golem')}</span>`}}catch(e){}
+function renderPlayers(){if($('verT'))$('verT').textContent=APPV;try{const ts=$('tScene');if(ts){ts.style.background=`url(${sceneURL(AREAS[(new Date().getDate())%10],160,90,{night:isNight()})}) center/cover`;const p0=G.profiles[0];ts.querySelector('.trun').innerHTML=`<span class="tr h">${heroSVG(p0?p0.eq:{w:{slot:'w',icon:'🗡️',rar:0}},p0||{lv:1,eq:{}})}</span><span class="tr m1">${monsterSVG('slime')}</span><span class="tr m2">${monsterSVG('bat')}</span><span class="tr m3">${monsterSVG('golem')}</span>`}}catch(e){}
   $('plist').innerHTML=G.profiles.map(p=>`<button class="panel pcard" data-id="${p.id}"><div class="av">${heroSVG(p.eq,p)}</div>
     <div><div class="nm">${p.master?'👑 ':''}${esc(p.name)}</div>${titleOf(p)?`<small style="color:var(--gold)">「${titleOf(p)}」</small><br>`:''}<small>Lv${p.lv}・${p.age}さい</small></div><div class="pw"><small>パワー</small><b>${power(p.eq,p.lv,ensureP(p))}</b></div></button>`).join('')
     ||'<p style="text-align:center;color:var(--sub)">まずは ぼうけんしゃを つくろう！</p>';
@@ -1445,7 +1446,7 @@ function profileForm(p){
     <div class="lbl">はだの いろ</div><div class="colors" id="fSkin">${SKINS.map(c=>`<button class="col" data-c="${c}" style="background:${c}"></button>`).join('')}</div>
     <div class="lbl">なんさい？</div><div class="opts" id="fAge" style="grid-template-columns:repeat(5,1fr)">${ages.map(a=>`<button class="btn opt" data-a="${a}">${a}${a===12?'+':''}</button>`).join('')}</div>
     <div class="lbl">ふくの いろ</div><div class="colors" id="fCol">${COLORS.map(c=>`<button class="col" data-c="${c}" style="background:${c}"></button>`).join('')}</div>
-    ${p?`<div class="row"><button class="btn ${p.voice?'green':'gray'}" id="fVoice">🗣️ よみあげ ${p.voice?'ON':'OFF'}</button><button class="btn ${G.snd?'green':'gray'}" id="fSnd">🔊 こうかおん ${G.snd?'ON':'OFF'}</button></div><button class="btn ${G.bgmOn?'green':'gray'}" id="fBgm">🎵 BGM ${G.bgmOn?'ON':'OFF'}</button>`:''}
+    ${p?`<div class="row"><button class="btn ${p.voice?'green':'gray'}" id="fVoice">🗣️ よみあげ ${p.voice?'ON':'OFF'}</button><button class="btn ${G.snd?'green':'gray'}" id="fSnd">🔊 こうかおん ${G.snd?'ON':'OFF'}</button></div><button class="btn ${G.bgmOn?'green':'gray'}" id="fBgm">🎵 BGM ${G.bgmOn?'ON':'OFF'}</button><button class="btn" id="fUpd">🔄 さいしんばんに する <small>（いま ${APPV}）</small></button>`:''}
     <button class="btn green big" id="fOk">${p?'OK':'つくる！'}</button>
     ${p?'<button class="btn gray" id="fSwitch">👥 ぼうけんしゃを かえる</button><button class="btn gray" id="fData">💾 データの ひっこし</button><button class="btn gray" id="fCloud">☁️ かぞくで きょうゆう</button><button class="btn orange" id="fCode">🎁 プレゼント コード</button>':'<button class="btn gray" id="fCancel">やめる</button>'}`,
     {fOk:()=>{const name=$('fName').value.trim()||'ゆうしゃ';
@@ -1458,7 +1459,7 @@ function profileForm(p){
      fCloud:()=>cloudSetup(),
      fCode:()=>giftCode(),
      fVoice:()=>{p.voice=!p.voice;save();profileForm(p)},
-     fSnd:()=>{G.snd=!G.snd;save();profileForm(p)},fBgm:()=>{G.bgmOn=!G.bgmOn;save();if(G.bgmOn)bgm('home');else bgmStop();profileForm(p)}});
+     fSnd:()=>{G.snd=!G.snd;save();profileForm(p)},fUpd:()=>{toast('🔄 さいしんばんを よみこむよ');setTimeout(()=>location.reload(),400)},fBgm:()=>{G.bgmOn=!G.bgmOn;save();if(G.bgmOn)bgm('home');else bgmStop();profileForm(p)}});
   const sync=()=>{document.querySelectorAll('#fAge .opt').forEach(b=>b.classList.toggle('sel',+b.dataset.a===age));
     document.querySelectorAll('#fCol .col').forEach(b=>b.classList.toggle('sel',b.dataset.c===color));
     document.querySelectorAll('#fHair .opt').forEach(b=>b.classList.toggle('sel',b.dataset.h===hair));
