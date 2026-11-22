@@ -1503,7 +1503,7 @@ function miniTreasure(cb){const base=miniReward(),T=shuffle([['ğŸª™',base],['ğŸª
 let GH=null,_remGh=[];
 const ghostPool=()=>{const loc=G.profiles.filter(p=>P&&p.id!==P.id&&!p.master);return loc.concat((_remGh||[]).filter(r=>r&&r.id!==(P&&P.id)&&!r.master&&!loc.some(l=>l.id===r.id)))};
 function ghostPrefetch(){if(FB_CONFIG&&G.fam&&!ghostPrefetch.busy){ghostPrefetch.busy=1;syncDown().then(r=>{_remGh=(r||[]).map(p=>ensureP(p))}).catch(()=>{}).finally(()=>ghostPrefetch.busy=0)}}
-function ghostStats(p){const S=(p.stats&&p.stats.cats)||{};let n=0,ok=0,t=0;for(const c of Object.values(S)){n+=c.n;ok+=c.ok;t+=c.t||0}
+function ghostStats(p){if(p&&p.cheat)return{acc:.99,sp:.75,n:999,boss:true};const S=(p.stats&&p.stats.cats)||{};let n=0,ok=0,t=0;for(const c of Object.values(S)){n+=c.n;ok+=c.ok;t+=c.t||0}
   const acc=n>=10?ok/n:.75,sp=n>=10&&t?t/n:4.5;return{acc:Math.max(.45,Math.min(.97,acc)),sp:Math.max(1.6,Math.min(9,sp)),n}}
 async function ghostOpen(){const loc=G.profiles.filter(p=>p.id!==P.id&&!p.master);let rem=[];
   const draw=()=>{const all=loc.map(p=>({p,dev:null})).concat(rem.filter(r=>!loc.some(l=>l.id===r.p.id)&&r.p.id!==P.id));
