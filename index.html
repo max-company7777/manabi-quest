@@ -1047,7 +1047,7 @@ function makeItem(st,d,boss,min=0){
 /* =============== save data =============== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-const APPV='v80';
+const APPV='v81';
 try{const c=document.createElement('canvas');c.width=9;c.height=9;const g=c.getContext('2d'),F=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};F(1,0,7,1,'#120d09');F(1,8,7,1,'#120d09');F(0,1,1,7,'#120d09');F(8,1,1,7,'#120d09');F(1,1,7,1,'#120d09');F(1,7,7,1,'#120d09');F(1,1,1,7,'#120d09');F(7,1,1,7,'#120d09');F(2,2,5,1,'#7a6a52');F(2,2,1,5,'#7a6a52');F(2,6,5,1,'#2a2018');F(6,2,1,5,'#2a2018');document.documentElement.style.setProperty('--pxf',`url(${c.toDataURL()})`)}catch(e){}
 const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));if(G.bgmOn===undefined)G.bgmOn=true;
 let P=null;
@@ -1818,12 +1818,17 @@ function bgmSched(){if(!BG.cur||!AC)return;const tr=BGMS[BG.cur],sp=60/tr.bpm/2;
     BG.step++;BG.next+=sp}}
 function bgm(name){if(!G.bgmOn){bgmStop();return}if(name===BG.cur)return;try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();
   if(!BG.gain){BG.gain=AC.createGain();BG.gain.gain.value=.22;BG.gain.connect(AC.destination)}if(AC.state==='suspended')AC.resume();
-  BG.cur=name;BG.step=0;BG.next=AC.currentTime+.08;clearInterval(BG.timer);if(name){BG.timer=setInterval(bgmSched,90);bgmSched()}}catch(e){}}
+  if(AC.state!=='running'){BG.cur=null;return}BG.cur=name;BG.step=0;BG.next=AC.currentTime+.08;clearInterval(BG.timer);if(name){BG.timer=setInterval(bgmSched,90);bgmSched()}}catch(e){}}
 function bgmStop(){BG.cur=null;clearInterval(BG.timer)}
 const BGMAP={players:'home',home:'home',shop:'home',box:'home',room:'home',stats:'home',admin:'home',battle:'battle',ghost:'battle',lane:'lane',study:'study'};
 function bgmFor(id){bgm(BGMAP[id]||'home')}
-document.addEventListener('pointerdown',()=>{if(G.bgmOn&&!BG.cur){const on=document.querySelector('.screen.on');bgmFor(on?on.id:'home')}},{passive:true});
-document.addEventListener('visibilitychange',()=>{if(document.hidden){if(AC&&AC.state==='running')AC.suspend()}else if(AC&&G.bgmOn)AC.resume()});
+/* iPhone：おとは タップの なかでしか はじめられないので、タップの たびに ロックを はずす */
+function audioUnlock(){try{try{if(navigator.audioSession)navigator.audioSession.type='playback'}catch(e){}
+  AC=AC||new(window.AudioContext||window.webkitAudioContext)();if(AC.state!=='running')AC.resume();
+  if(!audioUnlock.done){const b=AC.createBuffer(1,1,22050),src=AC.createBufferSource();src.buffer=b;src.connect(AC.destination);src.start(0);audioUnlock.done=1}
+  if(G.bgmOn){const on=document.querySelector('.screen.on'),want=BGMAP[on?on.id:'home']||'home';if(BG.cur!==want&&BG.cur!=='boss')bgm(want);else if(BG.cur&&AC.currentTime>BG.next+1){BG.next=AC.currentTime+.05}}}catch(e){}}
+['touchend','click','keydown'].forEach(ev=>document.addEventListener(ev,audioUnlock,{passive:true}));
+document.addEventListener('visibilitychange',()=>{if(document.hidden){if(AC&&AC.state==='running')AC.suspend()}else if(AC&&G.bgmOn){AC.resume();BG.cur=null;const on=document.querySelector('.screen.on');setTimeout(()=>bgmFor(on?on.id:'home'),300)}});
 
 /* ===================== 🏕️ ホームの きょてん（ひる・よる＋あるく なかま） ===================== */
 const isNight=()=>{const h=new Date().getHours();return h>=18||h<6};
