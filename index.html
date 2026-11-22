@@ -1606,11 +1606,15 @@ function cheatGate(){const now=Date.now();lvTaps=lvTaps.filter(t=>now-t<2500).co
   if(!P.cheat){toast('…');return}
   showModal(`<div class="mt">🛠️ あんしょうばんごう</div><input class="field" id="cp1" type="password" inputmode="numeric" placeholder="あんしょうばんごう"><div id="cpm" style="color:#ff8a7a;font-size:13px;min-height:18px"></div><button class="btn orange big" id="ok">ひらく</button><button class="btn gray" id="cl">とじる</button>`,
     {cl:closeModal,ok:()=>{if(pinHash($('cp1').value)!==G.chPin){$('cpm').textContent='ちがうよ';snd(200,.2,'square',.05);return}closeModal();cheatOpen()}});setTimeout(()=>$('cp1')&&$('cp1').focus(),100)}
+/* stage that matches current power: the level whose 'standard' build (epic gear +5 at that level, no party) has the same power; stage = level/2 */
+function stageForPower(){const pw=power(),std={},keep=Math.random;let seed=7;Math.random=()=>((seed=(seed*16807)%2147483647)/2147483647);
+  const stdPow=L=>{for(const k of SLOTS){let it,g=0;do{it=makeItem(Math.max(1,Math.round(L/2)),2,false,2)}while(it.slot!==k&&g++<400);it.plus=5;it.lv=L;std[k]=it}return power(std,L,Object.assign({},P,{party:[]}))};
+  let lo=1,hi=200000;try{while(hi-lo>2){const m=Math.floor((lo+hi)/2);if(stdPow(m)<pw)lo=m;else hi=m}}finally{Math.random=keep}return Math.max(1,Math.ceil(lo/2))}
 function cheatOpen(){if(!P||!P.cheat)return;
   const btn=(id,t,c='')=>`<button class="btn ${c}" data-ch="${id}">${t}</button>`;
   showModal(`<div class="mt">🛠️ チート</div><small style="color:var(--sub)">${esc(P.name)} せんよう</small><div class="chbox">
     <div class="chh">💰 おかね・どうぐ</div><div class="chg">${btn('g1','🪙 +10万')}${btn('g2','🪙 +1000万')}${btn('tk','🎟️ +100')}${btn('gset','🪙 じゆうに')}</div>
-    <div class="chh">⭐ レベル・すすみ</div><div class="chg">${btn('lv','Lv を きめる')}${btn('stg','ステージを ひらく')}${btn('twr','とう きろく')}${btn('mst','ぜんぶ 🎓マスター')}</div>
+    <div class="chh">⭐ レベル・すすみ</div><div class="chg">${btn('lv','Lv を きめる')}${btn('stg','ステージを ひらく')}${btn('pstg','パワーに あわせる（ステージ＋せいかいすう）','toggle')}${btn('tot','せいかいすうを きめる')}${btn('twr','とう きろく')}${btn('mst','ぜんぶ 🎓マスター')}</div>
     <div class="chh">⚔️ そうび</div><div class="chg">${btn('eq','さいきょう そうび を つくる')}${btn('plus','そうび +を きめる')}${btn('box','ボックスを からに')}</div>
     <div class="chh">🐾 なかま</div><div class="chg">${btn('mall','151しゅ ぜんぶ')}${btn('mult','きゅうきょく 3たい')}${btn('mspe','とくべつ なかま ぜんぶ')}${btn('mevo','すぐ しんか できる')}${btn('mlv','なかま Lv100')}${btn('egg','たまご すぐ かえる')}</div>
     <div class="chh">👗 きせかえ・へや</div><div class="chg">${btn('cos','きせかえ ぜんぶ')}${btn('furn','かぐ ぜんぶ')}</div>
@@ -1621,6 +1625,10 @@ function cheatOpen(){if(!P||!P.cheat)return;
   const done=m=>{save();toast('🛠️ '+m);cheatOpen()};
   const A={g1:()=>{P.gold+=1e5;done('+10万')},g2:()=>{P.gold+=1e7;done('+1000万')},tk:()=>{P.tk=(P.tk||0)+100;done('🎟️ +100')},gset:()=>ask('ゴールド',P.gold,n=>{P.gold=n;done('ゴールド '+n)}),
     lv:()=>ask('レベル',P.lv,n=>{P.lv=Math.max(1,n);P.xp=0;done('Lv'+P.lv)}),stg:()=>ask('ひらく ステージ',(P.best.mix||0)+10,n=>{for(const k in P.best)P.best[k]=Math.max(P.best[k]||0,n);selStage=n;done('ステージ '+n+' まで')}),
+    pstg:()=>{const st=stageForPower(),cur=Math.max(...Object.values(P.best));
+      const tot=st*13;if(!confirm(`いまの パワー ${power().toLocaleString()} に みあうのは…\n・クリアずみ ステージ：${cur} → ${st}\n・せいかいすう：${(P.total||0).toLocaleString()} → ${tot.toLocaleString()}\nに かえる？`))return;
+      for(const k in P.best)P.best[k]=st;selStage=st+1;P.total=tot;done(`ステージ ${st}・せいかい ${tot.toLocaleString()}もん`)},
+    tot:()=>ask('せいかいすう（ぜんぶで）',P.total||0,n=>{P.total=n;done('せいかい '+n.toLocaleString()+'もん')}),
     twr:()=>ask('とうの さいこう きろく',(P.tower&&P.tower.best)||0,n=>{P.tower=P.tower||{best:0,runs:0};P.tower.best=n;done('とう '+n+'かい')}),
     mst:()=>{P.mast=P.mast||{};SUBK.forEach(k=>{for(let i=0;i<LVN;i++)P.mast[k+i]=1});done('ぜんぶ マスター')},
     eq:()=>{const st=Math.max(10,Math.round(P.lv/2));for(const k of SLOTS){let it,g=0;do{it=makeItem(st,7,true,4)}while((it.slot!==k||it.rar<4)&&g++<6000);if(it.slot===k){it.plus=(P.eq[k]&&P.eq[k].plus)||0;P.eq[k]=it;P.dex.items[ikey(it)]=1}}done('しんわ そうび')},
