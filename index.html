@@ -1203,7 +1203,7 @@ function makeItem(st,d,boss,min=0){
 /* =============== save data =============== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-const APPV='v126';
+const APPV='v127';
 try{const c=document.createElement('canvas');c.width=9;c.height=9;const g=c.getContext('2d'),F=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};F(1,0,7,1,'#120d09');F(1,8,7,1,'#120d09');F(0,1,1,7,'#120d09');F(8,1,1,7,'#120d09');F(1,1,7,1,'#120d09');F(1,7,7,1,'#120d09');F(1,1,1,7,'#120d09');F(7,1,1,7,'#120d09');F(2,2,5,1,'#7a6a52');F(2,2,1,5,'#7a6a52');F(2,6,5,1,'#2a2018');F(6,2,1,5,'#2a2018');document.documentElement.style.setProperty('--pxf',`url(${c.toDataURL()})`)}catch(e){}
 const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));if(G.bgmOn===undefined)G.bgmOn=true;
 let P=null;
@@ -1992,10 +1992,10 @@ function questOpen(){qInit();const row=(q,w)=>{const rw=qRw(w);return `<div clas
 function renderQuestBar(){const el=$('hQuest');if(!el||!P)return;qInit();const d=P.qd.list.filter(q=>q.c||q.p>=q.g).length,w=P.qw.list.filter(q=>q.c||q.p>=q.g).length,c=qClaimable();
   el.innerHTML=`<span>📜</span><span><b>クエスト</b><small>きょう ${d}/3・しゅう ${w}/3</small></span>${c?`<b class="qbadge">🎁 ${c}</b>`:'<span class="mgo">▶</span>'}`;el.onclick=()=>{snd(660,.05);questOpen()}}
 /* ===================== 📖 ずかん コンプリート ほうしゅう ===================== */
-const DEXR=[[5,{g:300,lt:1}],[10,{g:800,tk:2,title:'collect1'}],[20,{g:1500,lt:2,tk:2}],[30,{g:3000,egg:2}],[40,{title:'collect2',tk:3,lt:2}],[60,{g:8000,egg:3}],[80,{mon:'starbun',lt:3}],[100,{title:'collect3',tk:5}],[120,{egg:4,lt:5}],[140,{mon:'aurodra',tk:10}]];
+const DEXR=[[5,{g:300,lt:1}],[10,{g:800,tk:2,title:'collect1'}],[20,{g:1500,lt:2,tk:2}],[30,{g:3000,egg:2}],[40,{title:'collect2',tk:3,lt:2}],[60,{g:8000,egg:3}],[80,{mon:'starbun',lt:3}],[100,{title:'collect3',tk:5}],[120,{egg:4,lt:5}],[140,{mon:'aurodra',tk:10}],[160,{g:30000,tk:8,lt:5}],[182,{g:200000,tk:20,lt:10}]];
 const dexRwTxt=r=>[r.g?'🪙'+fmtS(r.g):'',r.tk?'🎟️'+r.tk:'',r.lt?'🎫'+r.lt:'',r.egg!=null?'🥚'+RAR[r.egg].n:'',r.title?'🏷️「'+TITLES[r.title][0]+'」':'',r.mon?'🐾'+SP[r.mon].name:''].filter(Boolean).join(' ');
-function dexRewardHTML(){const o=ownedStd();P.dexR=P.dexR||{};const got=DEXR.filter(([n])=>P.dexR[n]).length,show=DEXR.filter(([n])=>!P.dexR[n]).slice(0,3);return `<div class="panel stbox"><div class="sth">🏆 ずかん ほうしゅう <small>なかまにした しゅるい ${o}・うけとりずみ ${got}/${DEXR.length}</small></div>${show.length?'':'<p>🎉 ぜんぶ うけとったよ！</p>'}${show.map(([n,r],i)=>{const got=P.dexR[n],ok=o>=n;return `<div class="qrow${got?' done':''}"><div class="qt">${n}しゅるい あつめる<div class="qbar"><i style="width:${Math.min(100,o/n*100)}%"></i><span>${Math.min(o,n)}/${n}</span></div><small>${dexRwTxt(r)}</small></div>${got?'<b class="own">✓</b>':ok?`<button class="btn orange" data-dx="${n}">うけとる</button>`:''}</div>`}).join('')}</div>`}
-function dexClaim(n){const e=DEXR.find(x=>x[0]===n);if(!e||P.dexR[n]||ownedStd()<n)return;const r=e[1];P.dexR[n]=1;if(r.g)P.gold+=r.g;if(r.tk)P.tk=(P.tk||0)+r.tk;if(r.lt)ltAdd(r.lt);if(r.egg!=null){const pool=SPECIES.filter(s=>s[3]===r.egg);addEgg({id:uid(),rar:r.egg,sp:pick(pool)[0],prog:0,need:EGGNEED[r.egg],inc:false})}
+function dexRewardHTML(){const o=ownedAll();P.dexR=P.dexR||{};const got=DEXR.filter(([n])=>P.dexR[n]).length,show=DEXR.filter(([n])=>!P.dexR[n]).slice(0,3);return `<div class="panel stbox"><div class="sth">🏆 ずかん ほうしゅう <small>なかまにした しゅるい ${o}・うけとりずみ ${got}/${DEXR.length}</small></div>${show.length?'':'<p>🎉 ぜんぶ うけとったよ！</p>'}${show.map(([n,r],i)=>{const got=P.dexR[n],ok=o>=n;return `<div class="qrow${got?' done':''}"><div class="qt">${n}しゅるい あつめる<div class="qbar"><i style="width:${Math.min(100,o/n*100)}%"></i><span>${Math.min(o,n)}/${n}</span></div><small>${dexRwTxt(r)}</small></div>${got?'<b class="own">✓</b>':ok?`<button class="btn orange" data-dx="${n}">うけとる</button>`:''}</div>`}).join('')}</div>`}
+function dexClaim(n){const e=DEXR.find(x=>x[0]===n);if(!e||P.dexR[n]||ownedAll()<n)return;const r=e[1];P.dexR[n]=1;if(r.g)P.gold+=r.g;if(r.tk)P.tk=(P.tk||0)+r.tk;if(r.lt)ltAdd(r.lt);if(r.egg!=null){const pool=SPECIES.filter(s=>s[3]===r.egg);addEgg({id:uid(),rar:r.egg,sp:pick(pool)[0],prog:0,need:EGGNEED[r.egg],inc:false})}
   if(r.title)cosOf(P).owned['title:'+r.title]=1;if(r.mon){P.mons.push({id:uid(),sp:r.mon,lv:1,xp:0});P.dex.owned[r.mon]=1}save();fanfare();fxConfetti(50);toast('🏆 ずかん ほうしゅう ゲット！ '+dexRwTxt(r));renderBox()}
 /* ===================== 📅 しゅうかん レポート ===================== */
 function weekReport(T){const S=T.stats||{days:{}},now=new Date(),mon=new Date(now);mon.setHours(0,0,0,0);mon.setDate(now.getDate()-((now.getDay()+6)%7));
@@ -2638,7 +2638,7 @@ function gachaRun(n){if((P.tk||0)<n)return;P.tk-=n;qAdd('gacha',n);P.gachaN=(P.g
 
 /* ===================== 🏅 achievements ===================== */
 const ACHDEF=[['seikai','✅','せいかい',[100,500,1000,3000,10000],p=>p.total||0,'もん'],['streak','🔥','れんぞく',[3,7,14,30,100],p=>p.maxStreak||p.streak||0,'にち'],
- ['lv','⭐','レベル',[10,50,100,300,1000],p=>p.lv,''],['dex','📖','なかまの しゅるい',[10,30,50,100,151],p=>ownedStd(p),'しゅ'],['ult','🌟','きゅうきょく',[1,2,3],p=>ULTS.filter(u=>p.dex.owned[u.k]).length,'たい'],
+ ['lv','⭐','レベル',[10,50,100,300,1000],p=>p.lv,''],['dex','📖','なかまの しゅるい',[10,30,50,100,151,182],p=>ownedAll(p),'しゅ'],['ult','🌟','きゅうきょく',[1,2,3],p=>ULTS.filter(u=>p.dex.owned[u.k]).length,'たい'],
  ['stage','🗺️','ステージ',[10,30,50,90],p=>Math.max(...Object.values(p.best||{0:0})),''],['tower','🗼','むげんの とう',[10,30,50,100],p=>(p.tower&&p.tower.best)||0,'かい'],
  ['master','🎓','マスター',[1,3,6,12,24],p=>Object.keys(p.mast||{}).length,'こ'],['evo','✨','しんか',[1,5,20,50],p=>p.evoN||0,'かい'],
  ['gacha','🎰','ふくびき',[1,10,50,100],p=>p.gachaN||0,'かい'],['ghost','👻','ゴーストに かつ',[1,5,20],p=>p.ghostWin||0,'かい'],['mini','🎣','ミニゲーム',[1,10,30],p=>p.miniN||0,'かい'],
@@ -3303,6 +3303,8 @@ function ensureP(p){try{if(p.dex&&p.mons)p.mons.forEach(m=>{if(m&&m.sp){p.dex.ow
 const partyMons=(p=P)=>(p.party||[]).map(id=>(p.mons||[]).find(m=>m.id===id)).filter(Boolean);
 const partyPow=(p=P,eq=p.eq)=>Math.round(partyMons(p).reduce((s,m)=>s+monPow(m),0)*(1+(fxSum('party',eq||{})+((p&&p.room)?roomBonus(p).party:0))/100));
 const ownedStd=(p=P)=>SPECIES.filter(s=>s[3]<5&&p.dex.owned[s[0]]).length;
+const specKeys=()=>specDexGroups().flatMap(g=>g.ks),DEX_N=()=>STD_N+specKeys().length;
+const ownedAll=(p=P)=>ownedStd(p)+specKeys().filter(k=>p.dex.owned[k]).length,seenAll=(p=P)=>SPECIES.filter(s=>s[3]<5&&p.dex.seen[s[0]]).length+specKeys().filter(k=>p.dex.seen[k]||p.dex.owned[k]).length;
 const ultUnlocked=()=>ULTS.filter(u=>ownedStd()>=u.need);
 const ultRate=boss=>{const st=Math.floor((P.ultMiss||0)/10);return boss?Math.min(.2,.03+.02*st):Math.min(.05,.005+.005*st)};
 const boxCap=()=>P.master?9999:100;
@@ -3416,9 +3418,9 @@ function renderBox(){
     h+=`</div></div><div class="sth" style="padding:0 4px">📦 まっている たまご</div><div class="bgrid">${rest.map(e=>`<button class="bcell ec" data-id="${e.id}" style="--rc:${RAR[e.rar].c}">${eggIcon(e)}<b>${RAR[e.rar].n}</b></button>`).join('')||'<small style="color:var(--sub)">ないよ</small>'}</div>`;
     if(inc.some(e=>e.prog>=e.need))h+='<button class="btn orange big" id="hatchNow">🐣 たまごを かえす！</button>';
   }else{
-    const owned=ownedStd(),seen=SPECIES.filter(s=>s[3]<5&&P.dex.seen[s[0]]).length,items=Object.keys(P.dex.items).length;
+    const owned=ownedAll(),seen=seenAll(),items=Object.keys(P.dex.items).length;
     $('bxCount').textContent='';
-    h+=dexRewardHTML();h+=`<div class="panel stsum"><div><small>なかまにした</small><b>${owned}/${STD_N}</b></div><div><small>であった</small><b>${seen}/${STD_N}</b></div><div><small>そうび</small><b>${items}/${CAT_N}</b></div></div>`;
+    h+=dexRewardHTML();h+=`<div class="panel stsum"><div><small>なかまにした</small><b>${owned}/${DEX_N()}</b></div><div><small>であった</small><b>${seen}/${DEX_N()}</b></div><div><small>そうび</small><b>${items}/${CAT_N}</b></div></div>`;
     h+=`<div class="panel stbox ultbox"><div class="sth" style="color:var(--r5)">🌟 きゅうきょく <small>${ULTS.filter(u=>P.dex.owned[u.k]).length}/3${ultUnlocked().length&&P.ultMiss>=10?`　🔺であいやすさ アップちゅう！（×${Math.round(ultRate(false)/.005)}）`:''}</small></div><div class="ultrow">${ULTS.map(u=>{const s=SP[u.k],o=P.dex.owned[u.k],se=P.dex.seen[u.k],op=ownedStd()>=u.need;
       return `<div class="ultc${o?'':' sil'}${o?' ultglow':''}"><div class="flip">${monsterSVG(u.k)}</div><b>${o||se?s.name:op?'？？？':'🔒'}</b><small>${op?`💠 カケラ ${P.frag[u.k]||0}/10<br>`:''}${o?elTag(u.k):op?(se?'であった！':'どこかに いる…'):`なかま ${u.need}しゅ で かいほう（あと ${u.need-ownedStd()}）`}</small></div>`}).join('')}</div></div>`;
     h+=specDexHTML();
@@ -3894,7 +3896,7 @@ function feed(id,n){const m=P.mons.find(x=>x.id===id);if(!m)return;const c=snack
 const RKS=[['week','📝 この7にち','せいかい','もん'],['total','✅ ぜんぶ','せいかい','もん'],['lv','⭐ レベル','Lv',''],['pow','⚔️ パワー','パワー',''],['dex','📖 ずかん','なかま','しゅ'],['streak','🔥 れんぞく','れんぞく','にち'],['tower','🗼 とう','','かい']];
 let rkTab='week',rkRemote=null,rkLoading=false;
 function weekOk(p){const S=p.stats||{days:{}};let ok=0;for(let i=0;i<7;i++){const d=new Date();d.setDate(d.getDate()-i);const e=(S.days||{})[dkey(d)]||{};for(const k in e)ok+=e[k].ok}return ok}
-function rkVal(p,k){ensureP(p);return k==='week'?weekOk(p):k==='total'?(p.total||0):k==='lv'?p.lv:k==='pow'?power(p.eq,p.lv,p):k==='dex'?ownedStd(p):k==='tower'?((p.tower&&p.tower.best)||0):(p.streak||0)}
+function rkVal(p,k){ensureP(p);return k==='week'?weekOk(p):k==='total'?(p.total||0):k==='lv'?p.lv:k==='pow'?power(p.eq,p.lv,p):k==='dex'?ownedAll(p):k==='tower'?((p.tower&&p.tower.best)||0):(p.streak||0)}
 async function showRank(){
   show('rank');rkRemote=null;renderRank();
   if(FB_CONFIG&&G.fam){rkLoading=true;renderRank();await syncUp();const r=await syncDown();rkLoading=false;rkRemote=r;renderRank()}
