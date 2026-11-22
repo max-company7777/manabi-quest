@@ -1040,7 +1040,7 @@ function makeItem(st,d,boss,min=0){
 /* =============== save data =============== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-const APPV='v76';
+const APPV='v77';
 try{const c=document.createElement('canvas');c.width=9;c.height=9;const g=c.getContext('2d'),F=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};F(1,0,7,1,'#120d09');F(1,8,7,1,'#120d09');F(0,1,1,7,'#120d09');F(8,1,1,7,'#120d09');F(1,1,7,1,'#120d09');F(1,7,7,1,'#120d09');F(1,1,1,7,'#120d09');F(7,1,1,7,'#120d09');F(2,2,5,1,'#7a6a52');F(2,2,1,5,'#7a6a52');F(2,6,5,1,'#2a2018');F(6,2,1,5,'#2a2018');document.documentElement.style.setProperty('--pxf',`url(${c.toDataURL()})`)}catch(e){}
 const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));if(G.bgmOn===undefined)G.bgmOn=true;
 let P=null;
@@ -1780,7 +1780,7 @@ function bldURL(k,l){const tr=bldTier(l),key='bld2|'+k+'|'+tr;if(IMGC[key])retur
 function bldOpen(){P.bld=P.bld||{};showModal(`<div class="mt">🏘️ きょてんづくり</div><p style="font-size:13px">ゴールドで たてものを たてると、ぼうけんが らくに なるよ！ 🪙 ${fmtS(P.gold)}</p>
   <div class="bldlist">${Object.entries(BLD).map(([k,b])=>{const l=bldLv(k),c=bldCost(k,l);return `<div class="bldr"><img src="${bldURL(k,Math.max(1,l))}" style="${l?'':'filter:grayscale(1) brightness(.5)'}"><div class="bldi"><b>${b.i} ${b.n} <small>${l?'Lv'+l+'/'+BLDMAX:'まだ ない'}</small></b><div class="qbar"><i style="width:${l/BLDMAX*100}%"></i></div><small>${l?b.d(l):'たてると：'+b.d(1)}${l&&l<BLDMAX?` ▶ <b style="color:#7bea5a;display:inline;font-size:11px">${b.d(l+1).replace(/^[^+-]*/,'')}</b>`:''}</small></div>${l<BLDMAX?`<button class="btn ${P.gold>=c?'orange':'gray'}" data-bd="${k}"${P.gold<c?' disabled':''}>${l?'⬆️':'🔨'}🪙${fmtS(c)}</button>`:'<b class="own">MAX</b>'}${l===9||l===19?'<span class="bldup">✨ つぎの レベルで みためが かわるよ！</span>':''}</div>`}).join('')}</div>
   <button class="btn gray" id="cl">とじる</button>`,{cl:()=>{closeModal();renderHome()}});
-  document.querySelectorAll('[data-bd]').forEach(e=>e.onclick=()=>{const k=e.dataset.bd,l=bldLv(k),c=bldCost(k,l);if(P.gold<c||l>=BLDMAX)return;P.gold-=c;P.bld[k]=l+1;save();fanfare();fxConfetti(40);toast(`${BLD[k].i} ${BLD[k].n} ${l?'Lv'+(l+1)+'に！':'が できた！'}`);bldOpen()})}
+  document.querySelectorAll('[data-bd]').forEach(e=>e.onclick=()=>{const k=e.dataset.bd,l=bldLv(k),c=bldCost(k,l);if(P.gold<c||l>=BLDMAX)return;P.gold-=c;P.bld[k]=l+1;save();fanfare();fxConfetti(40);toast(`${BLD[k].i} ${BLD[k].n} ${l?'Lv'+(l+1)+'に！':'が できた！'}`);const L=document.querySelector('.bldlist'),sc=L?L.scrollTop:0,ms=$('mbox').scrollTop;bldOpen();const L2=document.querySelector('.bldlist');if(L2)L2.scrollTop=sc;$('mbox').scrollTop=ms;$('mbox').style.animation='none'})}
 /* ===================== 💃 モーション ===================== */
 let idleT=null;function battleIdle(){clearTimeout(idleT);idleT=setTimeout(()=>{if(B&&!B.lock&&$('battle').classList.contains('on')){const h=$('hero');anim(h,pick(['flourish','lookaround','hopsm']),900)}if(B)battleIdle()},4000+Math.random()*4000)}
 
