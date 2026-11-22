@@ -721,6 +721,12 @@ img.shy{filter:hue-rotate(150deg) saturate(1.35) brightness(1.08) drop-shadow(0 
 .spkmic{width:110px;height:110px;border-radius:50%;margin:10px auto;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:42px;background:radial-gradient(circle at 40% 35%,#ff8a7a,#e8413c);border:4px solid #fff;color:#fff;box-shadow:0 5px 0 #8a1a1a;font-family:inherit}.spkmic small{font-size:11px}.spkmic.on{animation:micp 1s ease-in-out infinite;background:radial-gradient(circle at 40% 35%,#7af07a,#2a9a3a)}.spkmic:disabled{opacity:.4}@keyframes micp{50%{transform:scale(1.08);box-shadow:0 0 0 12px rgba(122,240,122,.3)}}
 .spkres{min-height:46px;font-size:18px}.spkres small{font-size:12px;color:var(--sub)}
 .slv{font-size:12px;color:#ffe9a0}.slv b{font-size:16px;color:#ffd23f}.slbtns{display:flex;gap:6px;margin-top:6px}.slbtns .btn{flex:1;font-size:13px;padding:6px 4px}.slbtns small{display:block;font-size:10px}.slmax{color:#ffd23f;font-size:13px;margin-top:4px}
+.isbody{gap:8px}.isfield{position:relative;width:100%;aspect-ratio:200/130;border:3px solid #000;border-radius:8px;overflow:hidden;box-shadow:0 4px 0 #0008}.isbg{position:absolute;inset:0;width:100%;height:100%}
+.ism{position:absolute;width:13%;background:none;border:0;padding:0;transition:left 1.9s linear,bottom 1.9s linear;cursor:pointer;transform:translateX(-50%)}.ism img{width:100%;image-rendering:pixelated;filter:drop-shadow(0 3px 0 rgba(0,0,0,.25))}.ism.flipx .flip{transform:scaleX(-1)}.ism.walking .flip{animation:lnwalk .42s steps(2) infinite}.ish{position:absolute;top:-6px;right:-4px;font-style:normal;font-size:12px}
+.isheart{position:absolute;left:30%;top:-10px;font-style:normal;font-size:18px;animation:ishu 1.2s ease-out forwards}@keyframes ishu{to{transform:translateY(-30px);opacity:0}}
+.islist{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px}.isr{display:flex;align-items:center;gap:6px;background:rgba(0,0,0,.3);border:2px solid #555;border-radius:8px;padding:4px;color:#fff;font-family:inherit;text-align:left}.isr img{width:36px;height:36px;image-rendering:pixelated}.isr b{display:block;font-size:11px}.isr small{font-size:10px;color:var(--sub)}
+.islb{display:block;width:100%;height:6px;background:#333;border-radius:3px;overflow:hidden;margin-top:2px}.islb>i{display:block;height:100%;background:linear-gradient(90deg,#ff9ac0,#ff3a7a)}.islb.big{height:10px;width:80%;margin:4px auto}
+.hrgo.isgo{right:auto;left:auto;right:96px;background:#2a7ab0}
 </style>
 </head>
 <body>
@@ -874,6 +880,10 @@ img.shy{filter:hue-rotate(150deg) saturate(1.35) brightness(1.08) drop-shadow(0 
   <div class="lnultg"><i id="lnUltG"></i></div>
   <div class="lncards" id="lnCards"></div>
   <div class="lnpzw" id="lnPzW"><div class="lnpz" id="lnPz"></div></div>
+</section>
+<section id="island" class="screen">
+  <header class="hud"><button class="btn x" id="isBack">◀</button><div style="font-size:17px">🏝️ なかまの しま</div><div class="pill" id="isLove"></div></header>
+  <div class="homebody isbody"><div class="isfield" id="isF"></div><div id="isPanel"></div></div>
 </section>
 <section id="write" class="screen">
   <header class="hud"><button class="btn x" id="wrBack">✕</button><div style="font-size:17px">✍️ かきとり</div><div class="pill" id="wrLeft"></div></header>
@@ -1292,7 +1302,7 @@ function makeItem(st,d,boss,min=0){
 /* =============== save data =============== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-const APPV='v133';
+const APPV='v134';
 try{const c=document.createElement('canvas');c.width=9;c.height=9;const g=c.getContext('2d'),F=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};F(1,0,7,1,'#120d09');F(1,8,7,1,'#120d09');F(0,1,1,7,'#120d09');F(8,1,1,7,'#120d09');F(1,1,7,1,'#120d09');F(1,7,7,1,'#120d09');F(1,1,1,7,'#120d09');F(7,1,1,7,'#120d09');F(2,2,5,1,'#7a6a52');F(2,2,1,5,'#7a6a52');F(2,6,5,1,'#2a2018');F(6,2,1,5,'#2a2018');document.documentElement.style.setProperty('--pxf',`url(${c.toDataURL()})`)}catch(e){}
 const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));if(G.bgmOn===undefined)G.bgmOn=true;
 let P=null;
@@ -2957,8 +2967,8 @@ const roomB=k=>{try{return roomBonus()[k]||0}catch(e){return 0}};
 function roomBonusHTML(){const b=roomBonus();return `<div class="rbon"><b>✨ へやボーナス</b>${Object.entries(REFN).map(([k,[i,n]])=>`<span class="${b[k]?'on':''}">${i}${n} +${b[k]}%</span>`).join('')}<small>${b.n>=10?'🌟 かぐ 10こ いじょうで「すてきな へや」ボーナス ぜんぶ +3%！':`かぐを 10こ おくと「すてきな へや」ボーナス（いま ${b.n}こ）`}</small></div>`}
 function renderRoomCard(){const el=$('hRoom');if(!el||!P)return;const r=roomOf(),n=Object.keys(r.place).filter(t=>r.place[t]).length,ms=partyMons().slice(0,3);
   el.innerHTML=`<span class="hrsc" style="background-image:url(${roomSceneURL(r,isNight(),()=>{if($('home').classList.contains('on'))renderRoomCard()})})"></span>${ms.map((m,i)=>`<i class="hrm" style="left:${30+i*14}%;animation-delay:${-i*1.3}s">${monImg(m)}</i>`).join('')}<i class="hrhero">${heroSVG(P.eq,P)}</i>
-    <span class="hrplate">🏠 ${esc(P.name)}の へや<small>${n?(b=>Object.entries(REFN).filter(([k])=>b[k]).map(([k,[i]])=>i+'+'+b[k]+'%').join(' ')||'🛋️ かぐ '+n+'こ')(roomBonus()):'かぐを おくと ボーナス！'}</small></span><span class="hrgo">へやへ ▶</span>`;
-  el.onclick=()=>{snd(660,.05);roomOpen()}}
+    <span class="hrplate">🏠 ${esc(P.name)}の へや<small>${n?(b=>Object.entries(REFN).filter(([k])=>b[k]).map(([k,[i]])=>i+'+'+b[k]+'%').join(' ')||'🛋️ かぐ '+n+'こ')(roomBonus()):'かぐを おくと ボーナス！'}</small></span><span class="hrgo">へやへ ▶</span><span class="hrgo isgo" id="isGo">🏝️ しま</span>`;
+  el.onclick=e=>{snd(660,.05);if(e.target.closest('#isGo')){islandOpen();return}roomOpen()}}
 function roomRender(){const r=roomOf(),W=WALLS.find(w=>w[0]===r.wall)||WALLS[0],F=FLOORS.find(f=>f[0]===r.floor)||FLOORS[0];
   $('rmTitle').textContent=`🏠 ${P.name}の へや`;$('rmGold').innerHTML=pi('coin')+fmtBig(P.gold);
   $('rmBox').style.background=`url(${roomSceneURL(r,isNight(),()=>{if($('room').classList.contains('on'))roomRender()})}) center/100% 100%`;$('rmWall').style.background='none';$('rmFloor').style.background='none';$('rmBox').classList.remove('lit','night');
@@ -3427,7 +3437,7 @@ function spStat(k){if(SPST[k])return SPST[k];const s=SP[k];if(!s)return{a:1,h:1,
   let hs=0;for(const ch of k)hs=(hs*31+ch.charCodeAt(0))>>>0;const j=.93+(hs%15)/100;
   const raw=Math.pow(a,.65)*Math.pow(h,.35)*j/1.12,m=k==='darulu'?1:fm||Math.max(.75,Math.min(1.4,1+(raw-1)*.6));
   return SPST[k]={a,h,m}}
-const monPow=m=>{const s=SP[m.sp];return s?Math.round((MBASE[s.rar]+(m.lv-1)*MGROW[s.rar])*(s.boss?1.2:1)*(s.pmul||1)*spStat(m.sp).m*(m.shiny?1.25:1)):0};
+const monPow=m=>{const s=SP[m.sp];return s?Math.round((MBASE[s.rar]+(m.lv-1)*MGROW[s.rar])*(s.boss?1.2:1)*(s.pmul||1)*spStat(m.sp).m*(m.shiny?1.25:1)*(1+Math.min(100,m.love||0)/1000)):0};
 function spBlock(k){const t=spStat(k),g=spGrade(k),bar=(v,mx)=>{const n=Math.max(1,Math.min(5,Math.round(v/mx*5)));return '<i class="sbf">'+'■'.repeat(n)+'</i><i class="sbe">'+'■'.repeat(5-n)+'</i>'};
   return `<div class="spblk"><div class="spg g${g}">${g}</div><div class="spb"><div>⚔️ こうげき ${bar(t.a,2)}</div><div>❤️ たいりょく ${bar(t.h,2.4)}</div><small>${k==='darulu'?'まおうの ちからは べつかく！':'おなじ レアでも しゅぞくで つよさが ちがうよ'}</small></div></div>`}
 const spGrade=k=>{if(k==='darulu')return 'SS';const v=spStat(k).m;return v>=1.25?'S':v>=1.1?'A':v>=.95?'B':v>=.85?'C':'D'};
@@ -3761,6 +3771,40 @@ function slBlock(m){const sl=m.sl||1;if(sl>=SLMAX)return '<div class="slmax">�
 function slUp(id,how){const m=P.mons.find(x=>x.id===id);if(!m||(m.sl||1)>=SLMAX||m.lv<slNeedLv(m))return;
   if(how==='g'){const c=slCost(m);if(P.gold<c)return;P.gold-=c}else{const d=slDup(m);if(!d)return;P.mons=P.mons.filter(x=>x.id!==d.id)}
   m.sl=(m.sl||1)+1;save();sfxDo('levelup');fxConfetti(40);toast(`🌟 とくぎ Lv${m.sl}！`);monModal(id)}
+/* ===================== 🏝️ なかまの しま ===================== */
+let isTimer=null;
+const loveOf=m=>m.love||0,loveRank=v=>v>=100?'💖 だいすき':v>=70?'❤️ なかよし':v>=40?'🧡 なついてる':v>=15?'💛 ちょっと なれた':'🤍 はじめまして';
+function isMons(){const seen=new Set(),L=[...partyMons(),...P.mons.filter(m=>m.fav),...P.mons.slice().sort((a,b)=>b.lv-a.lv)].filter(m=>m&&!seen.has(m.id)&&seen.add(m.id));return L.slice(0,14)}
+function islandSVG(){return `<svg viewBox="0 0 200 130" preserveAspectRatio="none" class="isbg"><defs><linearGradient id="isk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7ac8ff"/><stop offset="1" stop-color="#cfefff"/></linearGradient><linearGradient id="isea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3aa0e0"/><stop offset="1" stop-color="#1a6ab0"/></linearGradient></defs>
+  <rect width="200" height="40" fill="url(#isk)"/><circle cx="168" cy="16" r="8" fill="#fff6a0"/><g fill="#fff" opacity=".9"><ellipse cx="40" cy="14" rx="14" ry="4"/><ellipse cx="50" cy="11" rx="9" ry="4"/><ellipse cx="120" cy="20" rx="12" ry="3"/></g>
+  <rect y="38" width="200" height="92" fill="url(#isea)"/><g stroke="#cfefff" stroke-width=".8" fill="none" opacity=".6"><path d="M8 50q4-2 8 0t8 0"/><path d="M160 56q4-2 8 0t8 0"/><path d="M20 118q4-2 8 0t8 0"/><path d="M170 112q4-2 8 0t8 0"/></g>
+  <ellipse cx="100" cy="84" rx="92" ry="38" fill="#f0d890"/><ellipse cx="100" cy="82" rx="82" ry="31" fill="#e8c870"/><ellipse cx="100" cy="80" rx="72" ry="25" fill="#6ac85a"/><ellipse cx="100" cy="78" rx="62" ry="19" fill="#7ad86a"/>
+  <g><rect x="28" y="54" width="3" height="20" fill="#8a5a2a"/><path d="M29.5 54l-10 4M29.5 54l10 4M29.5 54l-7-6M29.5 54l7-6M29.5 54v-8" stroke="#2a8a3a" stroke-width="3" stroke-linecap="round"/></g>
+  <g><rect x="166" y="58" width="3" height="18" fill="#8a5a2a"/><path d="M167.5 58l-9 4M167.5 58l9 4M167.5 58l-6-6M167.5 58l6-6" stroke="#2a8a3a" stroke-width="3" stroke-linecap="round"/></g>
+  <g transform="translate(140 56)"><rect x="0" y="8" width="20" height="12" fill="#c8905a"/><path d="M-3 9l13-10 13 10z" fill="#c0402a"/><rect x="8" y="13" width="5" height="7" fill="#6a3a1a"/></g>
+  <g fill="#ff6fa8"><circle cx="60" cy="90" r="1.6"/><circle cx="120" cy="94" r="1.6"/><circle cx="84" cy="70" r="1.4" fill="#ffd23f"/><circle cx="150" cy="86" r="1.4" fill="#fff"/></g></svg>`}
+function islandOpen(){show('island');const L=isMons(),F=$('isF');
+  F.innerHTML=islandSVG()+L.map((m,i)=>{const x=22+Math.random()*56,y=8+Math.random()*30;return `<button class="ism" data-im="${m.id}" style="left:${x}%;bottom:${y}%;z-index:${Math.round(100-y)}"><span class="flip">${monImg(m)}</span><i class="ish">${loveOf(m)>=100?'💖':''}</i></button>`}).join('');
+  F.querySelectorAll('[data-im]').forEach(b=>b.onclick=()=>isMonModal(b.dataset.im));
+  $('isBack').onclick=()=>{clearInterval(isTimer);goHome()};islandPanel();clearInterval(isTimer);isTimer=setInterval(isWander,2200)}
+function isWander(){const F=$('isF');if(!F||!$('island').classList.contains('on')){clearInterval(isTimer);return}
+  F.querySelectorAll('.ism').forEach(w=>{if(Math.random()<.45)return;const cx=parseFloat(w.style.left),cy=parseFloat(w.style.bottom),x=Math.max(20,Math.min(80,cx+(Math.random()*24-12))),y=Math.max(6,Math.min(40,cy+(Math.random()*12-6)));
+    w.style.left=x+'%';w.style.bottom=y+'%';w.style.zIndex=Math.round(100-y);w.classList.toggle('flipx',x>cx);w.classList.add('walking');setTimeout(()=>w.classList.remove('walking'),1900)})}
+function islandPanel(){const L=isMons(),tot=L.reduce((a,m)=>a+loveOf(m),0),td=dkey(new Date()),got=P.isDay===td,g=Math.round((200+tot*12)*Math.max(1,DMULT[mixLv()]));
+  $('isLove').textContent='💗 '+tot;
+  $('isPanel').innerHTML=`<div class="panel stbox"><div class="sth">🏝️ しまの なかま <small>${L.length}たい（パーティ・おきにいり・つよい じゅん）</small></div><small style="color:var(--sub)">なかまを タップして えさを あげたり なでたり しよう。なつくと なかまパワーが すこし アップ！</small>
+    <button class="btn ${got?'gray':'orange'} big" id="isGift"${got?' disabled':''}>${got?'🎁 きょうの おみやげは もらったよ':`🎁 なかまの おみやげ（🪙${fmtS(g)}${tot>=300?'＋🎫':''}）`}</button>
+    <div class="islist">${L.map(m=>`<button class="isr" data-im="${m.id}"><span class="flip">${monImg(m)}</span><span><b>${SP[m.sp].name}</b><small>${loveRank(loveOf(m))}</small><i class="islb"><i style="width:${loveOf(m)}%"></i></i></span></button>`).join('')}</div></div>`;
+  document.querySelectorAll('#isPanel [data-im]').forEach(b=>b.onclick=()=>isMonModal(b.dataset.im));
+  if(!got)$('isGift').onclick=()=>{P.isDay=td;P.gold+=g;if(tot>=300)P.lt=(P.lt||0)+1;save();fanfare();fxConfetti(50);toast(`🎁 おみやげ 🪙+${fmtS(g)}${tot>=300?' 🎫+1':''}`);islandPanel()}}
+const feedCost=m=>40*(SP[m.sp].rar+1);
+function isMonModal(id){const m=P.mons.find(x=>x.id===id);if(!m)return;const v=loveOf(m),now=Date.now(),canPet=now-(m.petT||0)>3600e3,fc=feedCost(m);
+  showModal(`<div class="hatch flip">${monImg(m)}</div><div class="mt">${SP[m.sp].name}</div><p>${loveRank(v)}<br><i class="islb big"><i style="width:${v}%"></i></i><small>なつきど ${v}/100　なかまパワー +${(v/10).toFixed(1)}%</small></p>
+    <div class="row"><button class="btn orange" id="fd"${v>=100||P.gold<fc?' disabled style="opacity:.5"':''}>🍎 えさ +5<small style="display:block">🪙${fc}</small></button><button class="btn ${canPet?'green':'gray'}" id="pt"${canPet&&v<100?'':' disabled style="opacity:.6"'}>🤚 なでる +2<small style="display:block">${canPet?'いつでも OK':Math.ceil((3600e3-(now-(m.petT||0)))/60000)+'ふん まって'}</small></button></div>
+    <button class="btn gray" id="cl">とじる</button>`,
+    {fd:()=>{if(P.gold<fc||v>=100)return;P.gold-=fc;m.love=Math.min(100,v+5);isLoveFx(m);save();isMonModal(id);islandPanel()},
+     pt:()=>{m.petT=now;m.love=Math.min(100,v+2);isLoveFx(m);save();isMonModal(id);islandPanel()},cl:closeModal})}
+function isLoveFx(m){snd(880,.1,'sine',.05,200);const b=document.querySelector(`.ism[data-im="${m.id}"]`);if(b){const h=document.createElement('i');h.className='isheart';h.textContent='💗';b.appendChild(h);setTimeout(()=>h.remove(),1200);anim(b,'pop',400)}if(m.love>=100)toast(`💖 ${SP[m.sp].name}が だいすきに なった！`)}
 function bondUp(){const bn=EV().bond;partyMons().forEach(m=>{const was=evoReady(m);m.bond=(m.bond||0)+bn;if(!was&&evoReady(m))setTimeout(()=>toast(`✨ ${SP[m.sp].name}が しんか できるよ！`),900)})}
 function monModal(id){autoFav(P);
   const m=P.mons.find(x=>x.id===id);if(!m)return;const s=SP[m.sp],inP=P.party.includes(id);
