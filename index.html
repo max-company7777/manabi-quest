@@ -454,7 +454,7 @@ input{font:inherit}
 .ghlist{display:flex;flex-direction:column;gap:6px;max-height:55vh;overflow:auto;margin:6px 0}.ghpick{display:flex;align-items:center;gap:10px;text-align:left;padding:6px 10px!important}
 .ghi{width:46px;flex:none}.ghi .hs{width:100%}.ghn{font-size:16px}.ghn small{display:block;font-size:11px;color:var(--sub)}
 
-.roombox{position:relative;width:100%;aspect-ratio:4/3;border:3px solid var(--edge);overflow:hidden;image-rendering:pixelated;flex:none}
+.roombox{position:relative;width:100%;aspect-ratio:4/3;border:4px solid #000;box-shadow:0 4px 0 #0008;overflow:hidden;image-rendering:pixelated;flex:none}
 .rmwall{position:absolute;left:0;right:0;top:0;height:58%}.rmfloor{position:absolute;left:0;right:0;bottom:0;height:42%;border-top:4px solid #0004}
 .rmf{position:absolute;image-rendering:pixelated;z-index:5;filter:drop-shadow(0 3px 0 rgba(0,0,0,.35))}.rm-window,.rm-poster,.rm-shelf,.rm-trophy{filter:drop-shadow(2px 2px 0 rgba(0,0,0,.3))}.roombox::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 40%,transparent 55%,rgba(0,0,0,.35));z-index:30;pointer-events:none}.roombox.lit::after{content:'';position:absolute;left:36%;top:22%;width:28%;height:78%;background:linear-gradient(rgba(255,250,200,.28),rgba(255,250,200,0));clip-path:polygon(15% 0,85% 0,120% 100%,-20% 100%);z-index:3;pointer-events:none}.rm-rug{z-index:2}.rm-tank{z-index:10}.rm-bed,.rm-desk,.rm-sofa{z-index:8}.rm-lamp,.rm-plant{z-index:9}
 .rmtc{position:absolute;z-index:6;font-size:11px;background:#000a;padding:0 3px;transform:translateX(-10%)}
@@ -636,10 +636,12 @@ input{font:inherit}
 .fighter.flourish>.in{animation:flourish .9s}@keyframes flourish{20%{transform:rotate(-8deg) translateY(-4px)}45%{transform:rotate(10deg) scale(1.05)}70%{transform:rotate(-4deg)}}.fighter.lookaround>.in{animation:lookaround .9s}@keyframes lookaround{25%,40%{transform:scaleX(-1)}60%,100%{transform:none}}.fighter.hopsm>.in{animation:hopsm .6s}@keyframes hopsm{30%{transform:translateY(-14px)}60%{transform:translateY(0) scale(1.05,.95)}}
 .fighter.victory>.in{animation:victory 1.2s}@keyframes victory{15%{transform:translateY(-30px) rotate(-10deg)}35%{transform:translateY(-40px) rotate(360deg)}55%{transform:translateY(0) scale(1.1,.9)}70%{transform:translateY(-12px)}85%{transform:none}}
 .lnfield.lnnight::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 85% 60%,transparent 18%,rgba(5,5,30,.72) 55%);pointer-events:none;z-index:24}.lgim{background:#2a1a3a;border:2px solid #000;padding:4px 8px;color:#ffd23f}.lgim small{display:block;color:var(--sub);font-size:11px}
-.hroom{display:flex;gap:10px;align-items:stretch;padding:6px!important;background:#5a3a2a;border:3px solid #000;box-shadow:0 4px 0 #0008,inset 0 0 0 2px #ffffff22;cursor:pointer;flex-shrink:0;text-align:left;color:#fff;clip-path:polygon(3px 0,calc(100% - 3px) 0,100% 3px,100% calc(100% - 3px),calc(100% - 3px) 100%,3px 100%,0 calc(100% - 3px),0 3px)}.hroom:active{transform:translateY(3px)}
-.hrbox{position:relative;width:46%;aspect-ratio:4/3;flex:none;border:3px solid #000;overflow:hidden;image-rendering:pixelated}.hrbox.night::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 40% 70%,rgba(255,200,120,.2),transparent 50%),rgba(10,15,60,.45)}.hrf{position:absolute;image-rendering:pixelated;filter:drop-shadow(0 2px 0 rgba(0,0,0,.3))}.hrf.rm-rug{z-index:1}.hrf{z-index:2}
-.hrm{position:absolute;bottom:6%;width:18%;z-index:4;font-style:normal;animation:hrwalk 5s ease-in-out infinite}.hrm img{width:100%;display:block}@keyframes hrwalk{0%,100%{transform:translateX(0)}50%{transform:translateX(30%) scaleX(-1)}}
-.hrtx{flex:1;display:flex;flex-direction:column;gap:3px;justify-content:center;min-width:0}.hrtx b{font-size:15px}.hrtx small{font-size:11px;color:#ffd23f}.hrgo{margin-top:auto;align-self:flex-end;background:#3a7a4a;border:2px solid #000;padding:3px 8px;font-size:13px}
+.hroom{position:relative;display:block;width:100%;aspect-ratio:16/10;max-height:300px;padding:0!important;border:3px solid #000;box-shadow:0 4px 0 #0008,inset 0 0 0 2px #ffffff22;cursor:pointer;flex-shrink:0;overflow:hidden;background:#2a1a10;clip-path:polygon(3px 0,calc(100% - 3px) 0,100% 3px,100% calc(100% - 3px),calc(100% - 3px) 100%,3px 100%,0 calc(100% - 3px),0 3px)}.hroom:active{transform:translateY(3px)}
+.hrsc{position:absolute;inset:0;background-size:100% auto;background-position:center 60%;image-rendering:pixelated}.hroom::after{content:'';position:absolute;inset:0;box-shadow:inset 0 0 30px rgba(0,0,0,.45);pointer-events:none}
+.hrm{position:absolute;bottom:6%;width:10%;max-width:50px;z-index:3;font-style:normal;animation:hrwalk 7s steps(28) infinite}.hrm img{width:100%;display:block}.hrhero{position:absolute;left:22%;bottom:6%;width:8%;max-width:40px;z-index:3;font-style:normal;animation:breathe 2.6s ease-in-out infinite;transform-origin:50% 100%}.hrhero svg,.hrhero img{width:100%;height:auto;display:block}
+@keyframes hrwalk{0%,100%{transform:translateX(0)}45%{transform:translateX(60%)}50%{transform:translateX(60%) scaleX(-1)}95%{transform:translateX(0) scaleX(-1)}}
+.hrplate{position:absolute;left:8px;top:8px;z-index:4;background:linear-gradient(#a06a3a,#7a4a26);border:3px solid #000;padding:3px 10px;font-size:15px;color:#fff;text-shadow:2px 2px 0 #0008;box-shadow:inset 0 2px 0 #ffffff33;text-align:left}.hrplate small{display:block;font-size:10px;color:#ffe9a0}
+.hrgo{position:absolute;right:8px;bottom:8px;z-index:4;background:#3a7a4a;border:3px solid #000;padding:4px 10px;font-size:13px;color:#fff;box-shadow:inset 0 2px 0 #ffffff33}
 .maptier{font-size:14px;color:var(--gold);margin:8px 0 2px;text-align:left;display:flex;align-items:center;justify-content:space-between;gap:6px}.maptier small{color:var(--sub);font-size:12px}.maptier .mwok{color:#ffd23f}.mwbtn{width:auto!important;margin:0!important;padding:4px 8px!important;font-size:13px!important;background:#d9771e;animation:pulse 1s infinite}.mwrew{font-size:11px;color:var(--sub);text-align:left;margin:0 0 4px}.mgift{font-size:22px;animation:pulse 1s infinite;padding:0 4px;white-space:nowrap}.mbadge{background:#e8413c;color:#fff;font-size:12px;padding:2px 5px;margin-right:4px;border-radius:4px}.mrew{display:flex;flex-direction:column;gap:6px;align-items:center;margin:6px 0}.mrit{display:flex;flex-wrap:wrap;gap:4px;justify-content:center}.mri{border:2px solid;padding:2px;display:inline-flex}.mri img{width:28px;height:28px}.mrsp{color:#ffd23f;font-size:14px}.limb.mapl{background:#1f5a3a}.mapa .mclr{color:#5be05b;font-size:18px}
 </style>
 </head>
@@ -1045,7 +1047,7 @@ function makeItem(st,d,boss,min=0){
 /* =============== save data =============== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-const APPV='v79';
+const APPV='v80';
 try{const c=document.createElement('canvas');c.width=9;c.height=9;const g=c.getContext('2d'),F=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};F(1,0,7,1,'#120d09');F(1,8,7,1,'#120d09');F(0,1,1,7,'#120d09');F(8,1,1,7,'#120d09');F(1,1,7,1,'#120d09');F(1,7,7,1,'#120d09');F(1,1,1,7,'#120d09');F(7,1,1,7,'#120d09');F(2,2,5,1,'#7a6a52');F(2,2,1,5,'#7a6a52');F(2,6,5,1,'#2a2018');F(6,2,1,5,'#2a2018');document.documentElement.style.setProperty('--pxf',`url(${c.toDataURL()})`)}catch(e){}
 const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));if(G.bgmOn===undefined)G.bgmOn=true;
 let P=null;
@@ -2392,19 +2394,40 @@ function roomBgURL(W,F){const key='rbg|'+W[0]+'|'+F[0];if(IMGC[key])return IMGC[
   let y=WY,rh=4,row=0;while(y<h){const off=(row*13)%24;for(let x=-off;x<w;x+=24){const v=((x*7+row*11)%5)/30;R_(x,y,24,rh,mixc(fa,[255,255,255],v));R_(x,y,1,rh,fb);R_(x,y,24,1,mixc(fa,[255,255,255],.18))}R_(0,y+rh-1,w,1,fb);y+=rh;rh=Math.min(9,rh+1);row++}
   for(let i=0;i<8;i++)R_(0,WY+i,w,1,`rgba(0,0,0,${.35-i*.04})`);
   return IMGC[key]=cv.toDataURL()}
-function renderRoomCard(){const el=$('hRoom');if(!el||!P)return;const r=roomOf(),W=WALLS.find(w=>w[0]===r.wall)||WALLS[0],F=FLOORS.find(f=>f[0]===r.floor)||FLOORS[0];
-  const order=['rug','window','poster','shelf','trophy','tank','tv','gmach','tree','bed','desk','sofa','lamp','plant','gchest'],n=Object.keys(r.place).filter(t=>r.place[t]).length,own=Object.keys(r.own||{}).length,ms=partyMons().slice(0,3);
-  el.innerHTML=`<span class="hrbox${isNight()?' night':''}" style="background:url(${roomBgURL(W,F)}) center/100% 100%">${order.filter(t=>r.place[t]&&FURN[t]).map(t=>{const [x,top,w,bot]=FURN[t].pos;return `<img class="hrf rm-${t}" src="${furnImg(t,r.place[t])}" style="left:${x}%;width:${w}%;${top!=null?'top:'+top+'%':'bottom:'+bot+'%'}">`}).join('')}${ms.map((m,i)=>`<i class="hrm" style="left:${18+i*26}%;animation-delay:${-i*.7}s">${monsterSVG(m.sp)}</i>`).join('')}</span>
-    <span class="hrtx"><b>🏠 ${esc(P.name)}の へや</b><small>🛋️ かぐ ${n}こ（もちもの ${own}こ）</small><small>${n?'なかまが くつろいでいるよ':'かぐを おいて へやを つくろう！'}</small><span class="hrgo">へやへ ▶</span></span>`;
+/* ---- へやの ドット シーン（おくゆき つき） ---- */
+const RSLOT={window:[38,4,'w'],poster:[70,7,'w'],shelf:[12,8,'w'],trophy:[28,22,'w'],plant:[9,44,'b'],tree:[19,44,'b'],lamp:[30,44,'b'],tv:[36,44,'b'],gmach:[54,44,'b'],tank:[64,44,'b'],rug:[25,56,'r'],bed:[1,68,'f'],sofa:[34,69,'f'],desk:[64,67,'f'],gchest:[78,56,'f']};
+function drawSpr(g,rows,pal,x0,y0){const set=new Set(),cells=[];rows.forEach((r,y)=>[...r].forEach((c,x)=>{const col=pal[c]||FBASE[c];if(c!=='.'&&col){cells.push([x,y,col]);set.add(x+','+y)}}));
+  g.fillStyle=OL;for(const[x,y]of cells)for(const[a,b]of[[1,0],[-1,0],[0,1],[0,-1]])if(!set.has((x+a)+','+(y+b)))g.fillRect(x0+x+a,y0+y+b,1,1);for(const[x,y,c]of cells){g.fillStyle=c;g.fillRect(x0+x,y0+y,1,1)}}
+function roomSceneURL(r,night){const W_=WALLS.find(w=>w[0]===r.wall)||WALLS[0],F_=FLOORS.find(f=>f[0]===r.floor)||FLOORS[0],pk=Object.entries(r.place).filter(([t,v])=>v&&FURN[t]).map(([t,v])=>t+v).sort().join(',');
+  const key='rsc|'+W_[0]+F_[0]+pk+(night?'n':'');if(IMGC[key])return IMGC[key];const w=96,h=72,cv=document.createElement('canvas');cv.width=w;cv.height=h;const g=cv.getContext('2d');
+  const C=c=>typeof c==='string'?c:rgb(c),R_=(x,y,ww,hh,c)=>{g.fillStyle=C(c);g.fillRect(x,y,ww,hh)},poly=(pts,c)=>{g.fillStyle=C(c);g.beginPath();pts.forEach(([x,y],i)=>i?g.lineTo(x,y):g.moveTo(x,y));g.closePath();g.fill()};
+  const a=hx(W_[3]),b=hx(W_[4]),fa=hx(F_[3]),fb=hx(F_[4]),BW0=8,BW1=88,BY=38;
+  /* うしろの かべ */R_(BW0,0,BW1-BW0,BY,a);for(let x=BW0+4;x<BW1;x+=8)R_(x,2,1,BY-16,mixc(a,b,.7));for(let y=6;y<BY-16;y+=8)for(let x=BW0+8;x<BW1;x+=8)R_(x,y,1,1,mixc(a,b,.5));
+  const wa=mixc(fb,[60,40,20],.45);R_(BW0,BY-14,BW1-BW0,14,wa);R_(BW0,BY-14,BW1-BW0,1,mixc(wa,[255,255,255],.3));for(let x=BW0+3;x<BW1-6;x+=13){R_(x,BY-11,10,8,mixc(wa,[255,255,255],.07));R_(x,BY-11,10,1,mixc(wa,[0,0,0],.25));R_(x,BY-4,10,1,mixc(wa,[255,255,255],.2))}R_(BW0,BY-2,BW1-BW0,2,mixc(wa,[0,0,0],.45));R_(BW0,0,BW1-BW0,2,mixc(b,[0,0,0],.3));
+  /* よこの かべ */const sa=mixc(a,[0,0,0],.18),sb=mixc(sa,[0,0,0],.15);poly([[0,0],[BW0,0],[BW0,BY],[0,BY+9]],sa);poly([[w,0],[BW1,0],[BW1,BY],[w,BY+9]],sa);
+  poly([[0,BY-3],[BW0,BY-14],[BW0,BY],[0,BY+9]],mixc(wa,[0,0,0],.18));poly([[w,BY-3],[BW1,BY-14],[BW1,BY],[w,BY+9]],mixc(wa,[0,0,0],.18));R_(BW0,0,1,BY,sb);R_(BW1-1,0,1,BY,sb);
+  /* ゆか */poly([[0,BY+9],[BW0,BY],[BW1,BY],[w,BY+9],[w,h],[0,h]],fa);let y=BY,rh=3,row=0;while(y<h){g.save();g.beginPath();g.moveTo(0,BY+9);g.lineTo(BW0,BY);g.lineTo(BW1,BY);g.lineTo(w,BY+9);g.lineTo(w,h);g.lineTo(0,h);g.clip();
+    const off=(row*11)%16;for(let x=-off;x<w;x+=16){const v=((x*7+row*13)%5)/28;R_(x,y,16,rh,mixc(fa,[255,255,255],v));R_(x,y,1,rh,fb)}R_(0,y+rh-1,w,1,fb);g.restore();y+=rh;rh=Math.min(8,rh+1);row++}
+  for(let i=0;i<5;i++){g.fillStyle=`rgba(0,0,0,${.28-i*.05})`;g.fillRect(BW0,BY+i,BW1-BW0,1)}
+  /* ひかり */if(r.place.window&&!night){g.fillStyle='rgba(255,250,210,.18)';poly([[39,BY],[56,BY],[66,h],[30,h]],'rgba(255,250,210,.16)')}
+  /* かぐ */const order=['window','poster','shelf','trophy','rug','plant','tree','lamp','tv','gmach','tank','gchest','bed','sofa','desk'];
+  for(const t of order){const vk=r.place[t];if(!vk||!FURN[t]||!RSLOT[t])continue;const v=FURN[t].v.find(x=>x[0]===vk);if(!v)continue;const sh=FSHAPE[t],sw=Math.max(...sh.map(x=>x.length)),shh=sh.length;let [x,yy,k]=RSLOT[t];
+    let pal=v[3];if(t==='window'&&night)pal=Object.assign({},pal,{s:'#1a2a5a',w:'#ffe680'});
+    if(k==='w'){drawSpr(g,sh,pal,x,yy)}else if(k==='r'){drawSpr(g,sh,pal,x,yy)}else{const top=yy-shh;g.fillStyle='rgba(0,0,0,.28)';g.beginPath();g.ellipse(x+sw/2,yy+1,sw/2+1,2,0,0,7);g.fill();drawSpr(g,sh,pal,x,top)}}
+  if(night){g.fillStyle='rgba(10,15,60,.3)';g.fillRect(0,0,w,h);if(r.place.lamp){const gr=g.createRadialGradient(32,38,2,32,38,30);gr.addColorStop(0,'rgba(255,210,120,.45)');gr.addColorStop(1,'rgba(255,210,120,0)');g.fillStyle=gr;g.fillRect(0,0,w,h)}}
+  return IMGC[key]=cv.toDataURL()}
+function renderRoomCard(){const el=$('hRoom');if(!el||!P)return;const r=roomOf(),n=Object.keys(r.place).filter(t=>r.place[t]).length,ms=partyMons().slice(0,3);
+  el.innerHTML=`<span class="hrsc" style="background-image:url(${roomSceneURL(r,isNight())})"></span>${ms.map((m,i)=>`<i class="hrm" style="left:${30+i*14}%;animation-delay:${-i*1.3}s">${monsterSVG(m.sp)}</i>`).join('')}<i class="hrhero">${heroSVG(P.eq,P)}</i>
+    <span class="hrplate">🏠 ${esc(P.name)}の へや<small>${n?'🛋️ かぐ '+n+'こ':'かぐを おいてみよう！'}</small></span><span class="hrgo">へやへ ▶</span>`;
   el.onclick=()=>{snd(660,.05);roomOpen()}}
 function roomRender(){const r=roomOf(),W=WALLS.find(w=>w[0]===r.wall)||WALLS[0],F=FLOORS.find(f=>f[0]===r.floor)||FLOORS[0];
   $('rmTitle').textContent=`🏠 ${P.name}の へや`;$('rmGold').innerHTML=pi('coin')+fmtBig(P.gold);
-  $('rmBox').style.background=`url(${roomBgURL(W,F)}) center/100% 100%`;$('rmWall').style.background='none';$('rmFloor').style.background='none';$('rmBox').classList.toggle('lit',!!r.place.window&&!isNight());
+  $('rmBox').style.background=`url(${roomSceneURL(r,isNight())}) center/100% 100%`;$('rmWall').style.background='none';$('rmFloor').style.background='none';$('rmBox').classList.remove('lit','night');
   const order=['rug','window','poster','shelf','trophy','tank','tv','gmach','bed','desk','sofa','lamp','plant','gchest'];
-  $('rmItems').innerHTML=order.filter(t=>r.place[t]).map(t=>{const [x,top,w,bot]=FURN[t].pos;return `<img class="rmf rm-${t}" src="${furnImg(t,r.place[t])}" style="left:${x}%;width:${w}%;${top!=null?'top:'+top+'%':'bottom:'+bot+'%'}">${t==='trophy'?`<span class="rmtc" style="left:${x}%;top:${top+12}%">🏅${Object.keys(P.ach||{}).length}</span>`:''}`}).join('')
+  $('rmItems').innerHTML=(r.place.trophy?`<span class="rmtc" style="left:29%;top:42%">🏅${Object.keys(P.ach||{}).length}</span>`:'')+`<div class="rmhero" style="left:30%;bottom:14%">${heroSVG(P.eq,P)}</div>`;
     +`<div class="rmhero" style="left:8%;bottom:20%">${heroSVG(P.eq,P)}</div>`;
   const ms=partyMons().concat(P.mons.filter(m=>m.fav&&!P.party.includes(m.id))).slice(0,6);
-  $('rmMons').innerHTML=ms.map((m,i)=>`<div class="rmm" data-i="${i}" style="left:${15+i*12}%;bottom:${6+(i%3)*7}%"><span class="flip">${monsterSVG(m.sp)}</span></div>`).join('');
+  $('rmMons').innerHTML=ms.map((m,i)=>`<div class="rmm" data-i="${i}" style="left:${20+i*12}%;bottom:${8+(i%3)*6}%"><span class="flip">${monsterSVG(m.sp)}</span></div>`).join('');
   document.querySelectorAll('.rmm').forEach(e=>e.onclick=()=>{anim(e,'hop',350);snd(880+R(0,400),.08,'square',.04)});
   const tabs=[['furn','🛋️ かぐ'],['wall','🧱 かべ'],['floor','🟫 ゆか'],['mine','✅ もってる']];
   $('rmTabs').innerHTML=tabs.map(([k,n])=>`<button class="btn db${rmTab===k?' sel':''}" data-k="${k}">${n}</button>`).join('');
@@ -2422,7 +2445,7 @@ function roomRender(){const r=roomOf(),W=WALLS.find(w=>w[0]===r.wall)||WALLS[0],
   document.querySelectorAll('#rmList [data-off]').forEach(b=>b.onclick=()=>{delete r.place[b.dataset.off];save();roomRender()});
   document.querySelectorAll('#rmList [data-use]').forEach(b=>b.onclick=()=>{const [t,k]=b.dataset.use.split(':');r[t]=k;save();roomRender()})}
 function roomWander(){if(!$('room').classList.contains('on')){clearInterval(rmTimer);return}
-  document.querySelectorAll('.rmm').forEach(e=>{if(Math.random()<.35)return;const x=R(10,82),y=R(3,24),cur=parseFloat(e.style.left);e.style.left=x+'%';e.style.bottom=y+'%';e.classList.toggle('flipx',x<cur);e.style.zIndex=30-y})}
+  document.querySelectorAll('.rmm').forEach(e=>{if(Math.random()<.35)return;const x=R(14,78),y=R(4,26),cur=parseFloat(e.style.left);e.style.left=x+'%';e.style.bottom=y+'%';e.classList.toggle('flipx',x<cur);e.style.zIndex=30-y})}
 
 /* ===================== 🛠️ cheat (owner account only, PIN protected) ===================== */
 const pinHash=s=>{let h=5381;for(const c of 'mq-salt:'+s)h=((h*33)^c.charCodeAt(0))>>>0;return h.toString(36)};
