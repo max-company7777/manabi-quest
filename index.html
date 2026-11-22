@@ -1786,7 +1786,7 @@ const lStars=(v,a)=>'▮'.repeat(Math.max(1,Math.min(5,Math.round(v/a))));
 function lTraitTag(sp,hero){const t=lStats(sp,hero),sp2=t.sp,rg=t.rg;return `<b>${t.n}</b> <span class="ltg">🏃${sp2>=1.6?'はやい':sp2>=1?'ふつう':sp2>=.7?'ゆっくり':'のろい'}</span><span class="ltg">🎯${rg>=140?'とおい':rg>=70?'ちゅう':'ちかい'}</span>${[...t.ab,...(t.fly?['fly']:[])].map(a=>`<span class="ltg">${LAB[a][0]}${LAB[a][1]}</span>`).join('')}`}
 function lnStrike(u,tgt,dir){const ab=u.ab||[];let dmg=u.atk;
   if(ab.includes('charge')&&!u.charged){u.charged=1;dmg*=3;lnFloat(u.x,'とっしん！','en')}
-  if(ab.includes('crit')&&Math.random()<.25){dmg*=2.5;u.critHit=1}else u.critHit=0;
+  if((ab.includes('crit')&&Math.random()<.25)||(u.side==='p'&&Math.random()*100<LN.crit)){dmg*=2+LN.critd;u.critHit=1}else u.critHit=0;
   if(ab.includes('smash')||ab.includes('pierce')){const reach=ab.includes('pierce')?u.rg:Math.min(u.rg,60)+30;let n=0;for(const v of LN.units)if(!v.dead&&v.side!==u.side){const d=(v.x-u.x)*dir;if(d>=-10&&d<=reach){lnHit(v,dmg,u);n++}}if(!n&&tgt&&!tgt.dead)lnHit(tgt,dmg,u)}
   else if(tgt&&!tgt.dead)lnHit(tgt,dmg,u)}
 
@@ -1842,12 +1842,15 @@ function laneOpen(){P.lane=P.lane||{best:0};ltDaily();const st=Math.min(P.lane.b
     {cl:closeModal,cn:()=>laneCannon(laneOpen),go:()=>{closeModal();laneStart(+$('lsn').textContent)},
      lp:()=>{$('lsn').textContent=Math.max(1,+$('lsn').textContent-1)},lnx:()=>{$('lsn').textContent=Math.min(P.lane.best+1,+$('lsn').textContent+1)}})}
 function laneStart(st){P.lane=P.lane||{best:0};ltDaily();if((P.lt||0)<1){ltNone();return}P.lt--;P.lane.sel=st;save();
-  const deck=laneDeck(),R=Math.max(4,deck.length?deck.reduce((a,m)=>a+monPow(m),0)/deck.length:4+P.lv*.5);
-  const E=Math.max(3*Math.pow(1.16,st-1),R*(.45+.035*Math.min(st,30)));
-  const cards=[{hero:1,cost:50,cd:2.5,pow:R*.9,n:'ゆうしゃ'},...deck.map(m=>{const r=SP[m.sp].rar;return{m,sp:m.sp,cost:75+r*55,cd:3.5+r*1.8,pow:monPow(m),n:SP[m.sp].name}})].map(c=>Object.assign(c,{ready:0}));
+  /* ふつうモードの つよさを そのまま つかう：ゆうしゃ＝レベル＋そうび、なかま＝なかまパワー（そうびの なかま％こみ） */
+  const deck=laneDeck(),pb=1+fxSum('party')/100,heroP=Math.max(4,(P.lv*2+SLOTS.reduce((a,k)=>a+iscore(P.eq[k]),0))*.3);
+  const cards=[{hero:1,cost:50,cd:2.5,pow:heroP,n:'ゆうしゃ'},...deck.map(m=>{const r=SP[m.sp].rar;return{m,sp:m.sp,cost:75+r*55,cd:3.5+r*1.8,pow:Math.max(1,monPow(m)*pb),n:SP[m.sp].name}})].map(c=>Object.assign(c,{ready:0}));
+  const R=Math.max(4,cards.reduce((a,c)=>a+c.pow,0)/cards.length);
+  /* てきの つよさは ステージで きまる（そだてるほど らくに なる） */
+  const E=3+st*1.6+.04*st*st;
   const a=AREA(Math.max(1,st*3));
   LN={st,R,E,cards,units:[],en:100,enMax:600,wl:1,eHp:Math.round(E*170*(1+st*.06)),pHp:Math.round(R*150),t:0,nextSp:3,last:0,ult:0,run:true,bossOut:false,area:a,gold:0,kills:0,matches:0};
-  LN.eMax=LN.eHp;LN.pMax=LN.pHp;
+  LN.eMax=LN.eHp;LN.pMax=LN.pHp;LN.crit=Math.min(60,crit()*.6);LN.critd=fxSum('critd')/100;LN.gb=1+goldBonus()/100;
   show('lane');$('lnStage').innerHTML=`ステージ<br><b style="color:var(--gold)">${st}</b>`;
   {const fl=$('lnField'),W=200,H=Math.max(70,Math.round(W*fl.clientHeight/Math.max(1,fl.clientWidth)));$('lnSky').style.background=`url(${sceneURL(a,W,H)}) center/100% 100%`;weather(fl,a.el)}
   $('lnCE').className='lncas e';$('lnCP').className='lncas p';$('lnCE').innerHTML=`<div class="lnchp" id="lnEHpT"></div><img class="lncimg" id="lnCEi" src="${castleURL('e',0)}">`;$('lnCP').innerHTML=`<div class="lnchp" id="lnPHpT"></div><img class="lncimg" id="lnCPi" src="${castleURL('p',0)}">`;LN.cdm={e:0,p:0};LN.smk=0;
@@ -1997,7 +2000,7 @@ function lpFloat(t){const e=document.createElement('div');e.className='lpfl';e.t
 function laneEnd(win){LN.run=false;const st=LN.st,first=win&&st>P.lane.best;
   {const sd=win?'e':'p',el=$(win?'lnCE':'lnCP');for(let i=0;i<7;i++)setTimeout(()=>{const r=el.getBoundingClientRect();const x=r.left+Math.random()*r.width,y=r.top+Math.random()*r.height;fxBurst(x,y,{n:18,colors:['#fff','#ffd23f','#ff6a2a','#555'],spd:6,size:6});fxRing(x,y,'#ffd23f',50);snd(70+Math.random()*60,.25,'sawtooth',.08)},i*120);
   anim($('lnField'),'lnquake',900);setTimeout(()=>{el.classList.add('fall');const fl=document.createElement('div');fl.className='lnwhite';$('lnFx').appendChild(fl);setTimeout(()=>fl.remove(),500);if(win){fxConfetti(90);lnBanner('🏆 しょうり！','win')}else lnBanner('💥 まけ…','lose')},850)}
-  let g=LN.gold+(win?Math.round(st*60*DMULT[mixLv()]):0),tk=win&&(first||st%5===0)?1+Math.floor(st/10):0,it=null;
+  let g=Math.round((LN.gold+(win?st*60*DMULT[mixLv()]:0))*(LN.gb||1)),tk=win&&(first||st%5===0)?1+Math.floor(st/10):0,it=null;
   if(win){if(first){P.lane.best=st;const nu=Object.values(CANNON).find(v=>v.unl===st);if(nu)setTimeout(()=>toast(`🏰 しろほう「${nu.n}」が つかえるように なった！`),2500);it=makeItem(Math.max(1,st*3),Math.max(1,mixLv()),true,Math.min(4,Math.floor(st/5)));if(P.box.length<boxCap())P.box.push(it);else{g+=itPrice(it);it=null}}P.lane.sel=Math.min(P.lane.best+1,st+1);fanfare()}else snd(150,.5,'sawtooth',.06,-60);
   P.gold+=g;P.tk=(P.tk||0)+tk;save();const kills=LN.kills;
   setTimeout(()=>showModal(`<div class="chest">${win?'🏆':'💥'}</div><div class="mt">${win?'しょうり！':'しろが こわされた…'}</div>
