@@ -1047,7 +1047,7 @@ function makeItem(st,d,boss,min=0){
 /* =============== save data =============== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-const APPV='v82';
+const APPV='v83';
 try{const c=document.createElement('canvas');c.width=9;c.height=9;const g=c.getContext('2d'),F=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};F(1,0,7,1,'#120d09');F(1,8,7,1,'#120d09');F(0,1,1,7,'#120d09');F(8,1,1,7,'#120d09');F(1,1,7,1,'#120d09');F(1,7,7,1,'#120d09');F(1,1,1,7,'#120d09');F(7,1,1,7,'#120d09');F(2,2,5,1,'#7a6a52');F(2,2,1,5,'#7a6a52');F(2,6,5,1,'#2a2018');F(6,2,1,5,'#2a2018');document.documentElement.style.setProperty('--pxf',`url(${c.toDataURL()})`)}catch(e){}
 const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));if(G.bgmOn===undefined)G.bgmOn=true;
 let P=null;
@@ -1419,15 +1419,46 @@ function monsterSVG(type){const k='m|'+type;if(!IMGC[k])IMGC[k]=monsterURL(type)
 
 /* =============== sound / speech =============== */
 let AC=null;
+/* ===================== 🔊 こうかおん（モダン シンセ） ===================== */
+const SX={bus:null,rev:null,nz:null};
+function sxInit(){if(SX.bus)return;AC=AC||new(window.AudioContext||window.webkitAudioContext)();const comp=AC.createDynamicsCompressor();comp.threshold.value=-10;comp.ratio.value=6;comp.connect(AC.destination);
+  SX.bus=AC.createGain();SX.bus.gain.value=.9;SX.bus.connect(comp);const len=AC.sampleRate*1.2,ir=AC.createBuffer(2,len,AC.sampleRate);for(let c=0;c<2;c++){const d=ir.getChannelData(c);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,4)}
+  SX.rev=AC.createConvolver();SX.rev.buffer=ir;const rg=AC.createGain();rg.gain.value=.5;SX.rev.connect(rg);rg.connect(SX.bus);
+  const nb=AC.createBuffer(1,AC.sampleRate,AC.sampleRate),nd=nb.getChannelData(0);for(let i=0;i<nd.length;i++)nd[i]=Math.random()*2-1;SX.nz=nb}
+function sxOut(node,v,rev){const g=AC.createGain();g.gain.value=v;node.connect(g);g.connect(SX.bus);if(rev){const r=AC.createGain();r.gain.value=rev;g.connect(r);r.connect(SX.rev)}}
+function sxTone(t,f,d,{type='sine',v=.2,a=.004,slide=0,cut=0,rev=.15,det=0,fm=0}={}){const o=AC.createOscillator(),g=AC.createGain();o.type=type;o.frequency.setValueAtTime(f,t);if(slide)o.frequency.exponentialRampToValueAtTime(Math.max(30,f+slide),t+d);o.detune.value=det;
+  if(fm){const m=AC.createOscillator(),mg=AC.createGain();m.frequency.value=f*fm;mg.gain.setValueAtTime(f*1.2,t);mg.gain.exponentialRampToValueAtTime(1,t+d);m.connect(mg);mg.connect(o.frequency);m.start(t);m.stop(t+d+.05)}
+  g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(1,t+a);g.gain.exponentialRampToValueAtTime(.001,t+d);let n=o;if(cut){const lp=AC.createBiquadFilter();lp.type='lowpass';lp.frequency.value=cut;o.connect(lp);n=lp}n.connect(g);sxOut(g,v,rev);o.start(t);o.stop(t+d+.05)}
+function sxNoise(t,d,{type='bandpass',f=2000,f2=0,q=1,v=.2,rev=.1}={}){const s=AC.createBufferSource();s.buffer=SX.nz;const fl=AC.createBiquadFilter();fl.type=type;fl.Q.value=q;fl.frequency.setValueAtTime(f,t);if(f2)fl.frequency.exponentialRampToValueAtTime(f2,t+d);const g=AC.createGain();g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.001,t+d);s.connect(fl);fl.connect(g);sxOut(g,1,rev);s.start(t,Math.random()*.5);s.stop(t+d+.05)}
+const SFX={
+ click:t=>{sxTone(t,1800,.05,{type:'sine',v:.12,rev:0});sxNoise(t,.02,{type:'highpass',f:6000,v:.05,rev:0})},
+ correct:t=>{[1046,1568].forEach((f,i)=>{sxTone(t+i*.07,f,.35,{type:'sine',v:.22,fm:2,rev:.3});sxTone(t+i*.07,f*2,.2,{type:'triangle',v:.05,rev:.3})});sxNoise(t+.1,.25,{type:'highpass',f:9000,v:.04,rev:.4})},
+ wrong:t=>{sxTone(t,220,.28,{type:'triangle',v:.25,slide:-90,rev:.05});sxTone(t+.12,165,.35,{type:'triangle',v:.2,slide:-60,rev:.05});sxNoise(t,.12,{type:'lowpass',f:500,v:.15})},
+ coin:t=>{sxTone(t,1975,.25,{type:'sine',v:.18,fm:3.5,rev:.25});sxTone(t+.06,2637,.4,{type:'sine',v:.16,fm:3.5,rev:.35})},
+ fanfare:t=>{const n=[523,659,784,1046];n.forEach((f,i)=>{sxTone(t+i*.08,f,.5,{type:'sawtooth',v:.07,cut:3200,det:-8,rev:.35});sxTone(t+i*.08,f,.5,{type:'sawtooth',v:.07,cut:3200,det:8,rev:.35})});
+   [1046,1318,1568].forEach(f=>sxTone(t+.36,f,1.1,{type:'sawtooth',v:.05,cut:4000,rev:.5,a:.02}));sxNoise(t+.36,.9,{type:'highpass',f:7000,v:.05,rev:.6});sxTone(t+.36,2093,.8,{type:'sine',v:.08,fm:2,rev:.6})},
+ whoosh:(t,d=.15)=>{sxNoise(t,d,{type:'bandpass',f:600,f2:5000,q:2,v:.3,rev:.05});sxTone(t+d*.7,120,.12,{type:'sine',v:.35,slide:-70,rev:0})},
+ hit:(t,big)=>{sxTone(t,big?140:180,.18,{type:'sine',v:.45,slide:-110,rev:0});sxNoise(t,.08,{type:'lowpass',f:big?1800:3000,v:.35,rev:.05});if(big)sxNoise(t,.3,{type:'highpass',f:5000,v:.08,rev:.4})},
+ boom:t=>{sxTone(t,90,.6,{type:'sine',v:.5,slide:-55,rev:.1});sxNoise(t,.5,{type:'lowpass',f:900,f2:200,v:.45,rev:.3})},
+ rise:(t,f)=>{sxTone(t,f,.25,{type:'sine',v:.15,slide:f,rev:.3});sxNoise(t,.2,{type:'highpass',f:4000,f2:9000,v:.05,rev:.3})},
+ pop:(t,f)=>{sxTone(t,f,.09,{type:'sine',v:.2,slide:f*.6,rev:.1})},
+ bell:(t,f,d)=>{sxTone(t,f,Math.max(.25,d*2.2),{type:'sine',v:.17,fm:2,rev:.3});sxTone(t,f*2,Math.max(.15,d*1.2),{type:'triangle',v:.04,rev:.3})},
+ bass:(t,f,d,type)=>{sxTone(t,f,Math.max(.15,d*1.2),{type:type==='sawtooth'?'sawtooth':'triangle',v:.28,cut:900,rev:.05,slide:-f*.2});sxNoise(t,.06,{type:'lowpass',f:700,v:.15})}};
 function snd(f,d=.1,type='square',v=.06,slide=0,delay=0){
   if(!G.snd)return;
-  try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();
-    const t=AC.currentTime+delay,o=AC.createOscillator(),g=AC.createGain();
-    o.type=type;o.frequency.setValueAtTime(f,t);if(slide)o.frequency.exponentialRampToValueAtTime(Math.max(40,f+slide),t+d);
-    g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.001,t+d);o.connect(g).connect(AC.destination);o.start(t);o.stop(t+d+.02)}catch(e){}
+  try{sxInit();if(AC.state!=='running')AC.resume();const t=AC.currentTime+delay;
+    if((f===660||f===600)&&d<=.06&&!slide)return SFX.click(t);
+    if(type==='sawtooth'&&slide<0&&f>=500)return SFX.whoosh(t,d);
+    if(f<=130)return d>=.3||type==='sawtooth'?SFX.boom(t):SFX.hit(t,f<100);
+    if(f<=300)return slide<=0?SFX.wrong(t):SFX.pop(t,f);
+    if(slide>0)return SFX.rise(t,f);
+    if(slide<0)return SFX.pop(t,f);
+    return SFX.bell(t,f,d)}catch(e){}
 }
-const fanfare=()=>[523,659,784,1047].forEach((f,i)=>snd(f,.18,'square',.05,0,i*.1));
-const coin=()=>{snd(1200,.07,'square',.04);snd(1600,.12,'square',.04,0,.07)};
+const sndRaw=snd;
+const sfxDo=(k,...a)=>{if(!G.snd)return;try{sxInit();if(AC.state!=='running')AC.resume();SFX[k](AC.currentTime,...a)}catch(e){}};
+const fanfare=()=>sfxDo('fanfare');
+const coin=()=>sfxDo('coin');
 function vib(ms){try{navigator.vibrate&&navigator.vibrate(ms)}catch(e){}}
 function say(t,lang){try{if(!t)return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang=lang;u.rate=lang==='en-US'?.8:.95;speechSynthesis.speak(u)}catch(e){}}
 
@@ -2748,8 +2779,8 @@ function studyNext(){if(!SD)return;if(!P.weak.length){studyEnd();return}
 function studyAns(btn,v){if(!SD||SD.lock)return;SD.lock=true;const w=SD.w,ok=v===w.a;if(w.sayChoice)say(v,w.sayChoice);
   document.querySelectorAll('#sdC .ch').forEach(b=>{if(b.textContent===w.a)b.classList.add('ok')});
   let head;
-  if(w.isSim){if(ok){snd(880,.1,'square',.05);head='⭕ せいかい！ その ちょうし！'}else{btn.classList.add('ng');snd(180,.3,'square',.07,-80);addWeak(w);head=`❌ ざんねん… せいかいは「${esc(w.a)}」<br><small>にがてノートに いれたよ</small>`}}
-  else if(ok){SD.ok++;w.n=(w.n||1)-1;snd(880,.1,'square',.05);snd(1320,.12,'square',.05,0,.08);
+  if(w.isSim){if(ok){sfxDo('correct');head='⭕ せいかい！ その ちょうし！'}else{btn.classList.add('ng');snd(180,.3,'square',.07,-80);addWeak(w);head=`❌ ざんねん… せいかいは「${esc(w.a)}」<br><small>にがてノートに いれたよ</small>`}}
+  else if(ok){SD.ok++;w.n=(w.n||1)-1;sfxDo('correct');
     if(w.n<=0){P.weak=P.weak.filter(x=>x!==w);qAdd('weakfix');head='⭕ せいかい！ にがてを ひとつ こくふく 🎉'}else{SD.q.push(w.key);head=`⭕ せいかい！ あと ${w.n}かいで こくふく`}}
   else{SD.ng++;btn.classList.add('ng');w.n=Math.min((w.n||1)+1,WEAKMAX);SD.q.splice(Math.min(2,SD.q.length),0,w.key);snd(180,.3,'square',.07,-80);head=`❌ ざんねん… せいかいは「${esc(w.a)}」`}
   save();const ex=explainQ(w);
@@ -3007,7 +3038,7 @@ function renderBox(){
   if($('hatchNow'))$('hatchNow').onclick=()=>processHatch(renderBox);
 }
 function enhBtn(it){const c=enhCost(it);return `<button class="btn orange" id="enh"${P.gold<c?' disabled style="opacity:.5"':''}>⚒️ きょうか +${(it.plus||0)+1}（パワー +10%）🪙${c}</button>${P.gold>=c+enhCost({...it,plus:(it.plus||0)+1})?`<button class="btn orange" id="enhmax">⚒️ できるだけ きょうか</button>`:''}<small style="color:var(--sub)">もっている ゴールド 🪙${P.gold}</small>`}
-function doEnh(it,cb){const c=enhCost(it);if(P.gold<c){toast('ゴールドが たりないよ');return}P.gold-=c;it.plus=(it.plus||0)+1;save();snd(880,.08,'square',.05);snd(1320,.15,'square',.05,0,.08);toast(`⚒️ ${iname(it)}！`);closeModal();cb&&cb()}
+function doEnh(it,cb){const c=enhCost(it);if(P.gold<c){toast('ゴールドが たりないよ');return}P.gold-=c;it.plus=(it.plus||0)+1;save();sfxDo('correct');toast(`⚒️ ${iname(it)}！`);closeModal();cb&&cb()}
 function enhPlan(items,gold){const sim=items.map(it=>({it,plus:it.plus||0,add:0}));let spent=0;
   for(let g=0;g<5000;g++){let best=null,bc=Infinity;for(const o of sim){const c=enhCost({...o.it,plus:o.plus});if(c<bc){bc=c;best=o}}
     if(!best||spent+bc>gold)break;spent+=bc;best.plus++;best.add++}
@@ -3017,7 +3048,7 @@ function enhAllFlow(items,title,cb){const pl=enhPlan(items,P.gold);
   if(!pl.total){const c=Math.min(...items.map(enhCost));toast(`ゴールドが たりないよ（あと 🪙${c-P.gold}）`);return}
   showModal(`<div class="mt">⚒️ ${title}</div><p>やすい ものから じゅんばんに きょうか するよ</p><div class="enhlist">${pl.rows.map(o=>`<div><span>${o.it.name}</span><span>+${o.it.plus||0} → <b>+${o.plus}</b></span></div>`).join('')}</div><p>ぜんぶで <b style="color:#ffd23f">+${pl.total}</b>　🪙${pl.spent} つかう<br><small style="color:var(--sub)">のこり 🪙${P.gold-pl.spent}</small></p><button class="btn orange big" id="go">⚒️ きょうか する！</button><button class="btn gray" id="cl">やめる</button>`,
     {cl:closeModal,go:()=>{const before=items.reduce((a,it)=>a+ip(it),0);P.gold-=pl.spent;for(const o of pl.rows)o.it.plus=o.plus;save();
-      snd(880,.08,'square',.05);snd(1320,.15,'square',.05,0,.08);snd(1760,.2,'square',.05,0,.16);closeModal();
+      sfxDo('correct');snd(1760,.2,'square',.05,0,.16);closeModal();
       toast(`⚒️ +${pl.total} きょうか！ パワー +${items.reduce((a,it)=>a+ip(it),0)-before}`);cb&&cb()}})}
 const spentOn=it=>{let t=0;const base=(10+(it.lv||Math.round(it.p/RAR[it.rar].m))*3)*(it.rar+1);for(let i=0;i<(it.plus||0);i++)t+=Math.round(base*Math.pow(1.25,i));return t};
 const xferCost=it=>Math.max(10,Math.round(spentOn(it)*.25));
@@ -3038,7 +3069,7 @@ function bestFlow(){const now=power(),pl=bestPlan();
         if(cur&&cur.plus>0){c.it.plus=(c.it.plus||0)+cur.plus;cur.plus=0}P.box.splice(i,1);if(cur)P.box.push(cur);P.eq[c.k]=c.it;P.dex.items[ikey(c.it)]=1}
       save();snd(660,.08,'square',.05);snd(990,.12,'square',.05,0,.08);snd(1320,.2,'square',.05,0,.16);closeModal();renderHome();toast(`⚡ パワー ${now} → ${power()}！`)}})}
 function equipFlow(it,cur,apply){
-  if(cur&&cur.plus>0){const n=cur.plus;it.plus=(it.plus||0)+n;cur.plus=0;snd(880,.08,'square',.05);snd(1320,.15,'square',.05,0,.08);apply();setTimeout(()=>toast(`⚒️ +${n} を ひきついだよ！`),300);return}
+  if(cur&&cur.plus>0){const n=cur.plus;it.plus=(it.plus||0)+n;cur.plus=0;sfxDo('correct');apply();setTimeout(()=>toast(`⚒️ +${n} を ひきついだよ！`),300);return}
   apply();
 }
 /* ---- bulk sell weak gear: items that would NOT raise power if equipped (+transfer counted) ---- */
@@ -3371,7 +3402,7 @@ function renderShop(){
 }
 const snackCost=(m,n)=>Math.round((n*50+15*(n*m.lv+n*(n-1)/2))*({1:1,5:.9,10:.85,100:.8}[n]||1));
 function feed(id,n){const m=P.mons.find(x=>x.id===id);if(!m)return;const c=snackCost(m,n);if(P.gold<c){toast('ゴールドが たりないよ');return}
-  const was=evoReady(m);P.gold-=c;m.lv+=n;m.xp=0;save();snd(988,.1,'square',.05);snd(1319,.14,'square',.05,0,.1);toast(`🍪 ${SP[m.sp].name}が Lv${m.lv}に！`);
+  const was=evoReady(m);P.gold-=c;m.lv+=n;m.xp=0;save();sfxDo('rise',988);toast(`🍪 ${SP[m.sp].name}が Lv${m.lv}に！`);
   if(!was&&evoReady(m))setTimeout(()=>toast(`✨ ${SP[m.sp].name}が しんか できるよ！`),900);monModal(id);renderBox()}
 
 /* ---- family ranking ---- */
@@ -3521,7 +3552,7 @@ function answer(btn,v){
     setTimeout(()=>monAttack(nextQ),1300)}
 }
 function correct(t){
-  const q=B.q;B.combo++;P.total++;P.todayCorrect++;if(q.review)reduceWeak(q);if(!B.weakOnly)ltGain();try{qAdd('ok');qAdd('ok_'+B.subj);qAdd('combo',B.combo)}catch(e){}
+  sfxDo('correct');const q=B.q;B.combo++;P.total++;P.todayCorrect++;if(q.review)reduceWeak(q);if(!B.weakOnly)ltGain();try{qAdd('ok');qAdd('ok_'+B.subj);qAdd('combo',B.combo)}catch(e){}
   if(!B.weakOnly&&counts(B.subj,B.lv)){progressEggs();bondUp();P.todaySubj=P.todaySubj||{};P.todaySubj[B.subj]=(P.todaySubj[B.subj]||0)+1;
     P.tkProg=(P.tkProg||0)+1;if(P.tkProg>=10){P.tkProg=0;const n=EV().tk;P.tk=(P.tk||0)+n;setTimeout(()=>toast(`🎟️ ふくびきけんを ${n}まい ゲット！`),900)}
     const TS=P.todaySubj;if(!P.claimed&&TS[B.subj]===misPer()){setTimeout(()=>toast(`📜 ${SUBJ[B.subj].n}の ミッション クリア！`),600)}}
