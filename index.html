@@ -444,6 +444,15 @@ input{font:inherit}
 .droph{display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:4px}.chest.sm{font-size:34px;line-height:1}.chest.sm svg,.chest.sm img{width:40px;height:40px}
 .cmp.sm{gap:6px;margin:2px 0}.cmp.sm .hs{width:64px}.cmp.sm .arrow{font-size:18px}
 .dropbtns{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:6px}.dropbtns .btn{padding:12px 2px;font-size:15px}.dropbtns small{display:block;font-size:11px;color:#ffd23f}
+
+.gharena{position:relative;margin:0 10px;border:3px solid var(--edge);background:linear-gradient(#1a2a4a,#2a1a3a);display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:10px 6px 30px;flex:1;min-height:200px}
+.ghside{display:flex;flex-direction:column;align-items:center;gap:2px}.ghav{width:min(34vw,140px)}.ghav .hs{width:100%}.ghside.op .ghav{filter:drop-shadow(0 0 6px #9ad8ff) opacity(.8) saturate(.6)}
+.ghside b{font-size:14px}.ghsc{font-size:34px;color:var(--gold);text-shadow:2px 2px 0 #000}.ghvs{font-size:26px;color:#ff6a6a;text-shadow:2px 2px 0 #000}
+.ghthink{position:absolute;left:10px;right:10px;bottom:8px;height:8px;background:#000a;border:2px solid var(--edge)}.ghthink i{display:block;height:100%;width:0;background:#9ad8ff}
+.ghmsg{position:absolute;left:0;right:0;bottom:20px;text-align:center;font-size:15px;text-shadow:2px 2px 0 #000}
+#ghost{display:none;flex-direction:column}#ghost.on{display:flex}
+.ghlist{display:flex;flex-direction:column;gap:6px;max-height:55vh;overflow:auto;margin:6px 0}.ghpick{display:flex;align-items:center;gap:10px;text-align:left;padding:6px 10px!important}
+.ghi{width:46px;flex:none}.ghi .hs{width:100%}.ghn{font-size:16px}.ghn small{display:block;font-size:11px;color:var(--sub)}
 </style>
 </head>
 <body>
@@ -554,6 +563,19 @@ input{font:inherit}
 </section>
 
 <!-- battle -->
+<section id="ghost" class="screen">
+  <header class="hud"><button class="btn x" id="ghBack">✕</button><div style="font-size:17px">👻 ゴーストバトル</div><div class="pill" id="ghRound"></div></header>
+  <div class="gharena">
+    <div class="ghside"><div class="ghav" id="ghMe"></div><b id="ghMeN"></b><div class="ghsc" id="ghMeS">0</div></div>
+    <div class="ghvs">VS</div>
+    <div class="ghside op"><div class="ghav" id="ghOp"></div><b id="ghOpN"></b><div class="ghsc" id="ghOpS">0</div></div>
+    <div class="ghthink"><i id="ghBar"></i></div><div class="ghmsg" id="ghMsg"></div>
+  </div>
+  <div class="qpanel">
+    <div class="panel qwrap hasq"><div class="q" id="ghQ"></div></div>
+    <div class="choices" id="ghC"></div>
+  </div>
+</section>
 <section id="battle" class="screen">
   <header class="hud">
     <button id="quit" class="btn x">✕</button>
@@ -1419,6 +1441,39 @@ function miniTreasure(cb){const base=miniReward(),T=shuffle([['🪙',base],['�
     if(t[0]==='🎟️')tk++;else g+=t[1];snd(t[0]==='💨'?220:880,.12,'square',.05);if(t[0]==='💎')fanfare();
     $('tres').innerHTML=`<b class="goldt">🪙+${g}</b>${tk?` ${pi('ticket')}+${tk}`:''}`;
     if(picks>=3){P.gold+=g;P.tk=(P.tk||0)+tk;save();setTimeout(()=>{document.querySelectorAll('.tcell').forEach((c,i)=>{if(!c.classList.contains('open')){c.textContent=T[i][0];c.classList.add('rest')}});$('ok').style.display=''},500)}})}
+
+/* ===================== 👻 ghost battle ===================== */
+let GH=null;
+function ghostStats(p){const S=(p.stats&&p.stats.cats)||{};let n=0,ok=0,t=0;for(const c of Object.values(S)){n+=c.n;ok+=c.ok;t+=c.t||0}
+  const acc=n>=10?ok/n:.75,sp=n>=10&&t?t/n:4.5;return{acc:Math.max(.45,Math.min(.97,acc)),sp:Math.max(1.6,Math.min(9,sp)),n}}
+async function ghostOpen(){const loc=G.profiles.filter(p=>p.id!==P.id&&!p.master);let rem=[];
+  const draw=()=>{const all=loc.map(p=>({p,dev:null})).concat(rem.filter(r=>!loc.some(l=>l.id===r.p.id)&&r.p.id!==P.id));
+    showModal(`<div class="mt">${pi('ghost')}ゴーストバトル</div><p style="font-size:13px">かぞくの キャラの「ゴースト」と はやおし しょうぶ！<br>あいての せいかいりつ と はやさを まねして こたえてくるよ（10もん）</p>
+      <div class="ghlist">${all.length?all.map((o,i)=>{const g=ghostStats(o.p);return `<button class="btn ghpick" data-i="${i}"><span class="ghi">${heroSVG(o.p.eq,o.p)}</span><span class="ghn">${esc(o.p.name)}<small>Lv${o.p.lv}・せいかいりつ ${Math.round(g.acc*100)}%・1もん ${g.sp.toFixed(1)}びょう${o.dev?'・📱'+esc(o.dev):''}</small></span></button>`}).join(''):'<p style="color:var(--sub)">まだ あいてが いないよ。<br>べつの ぼうけんしゃを つくるか、☁️ かぞくで きょうゆう すると たたかえるよ</p>'}</div>
+      ${G.fam&&FB_CONFIG&&!rem.length?'<small style="color:var(--sub)">☁️ ほかの たんまつの かぞくを よみこみちゅう…</small>':''}<button class="btn gray" id="cl">とじる</button>`,{cl:closeModal});
+    document.querySelectorAll('.ghpick').forEach(b=>b.onclick=()=>{closeModal();ghostStart(all[+b.dataset.i].p)})};
+  draw();if(FB_CONFIG&&G.fam){try{const r=await syncDown();rem=(r||[]).filter(p=>!p.master).map(p=>({p:ensureP(p),dev:p._remote}));if($('modal').classList.contains('on'))draw()}catch(e){}}}
+function ghostStart(op){const g=ghostStats(op);GH={op,g,round:0,me:0,opS:0,lock:true,bag:[]};show('ghost');
+  $('ghMe').innerHTML=heroSVG(P.eq,P);$('ghOp').innerHTML=heroSVG(op.eq,op);$('ghMeN').textContent=P.name;$('ghOpN').textContent=op.name+' 👻';ghostNext()}
+function ghostNext(){if(!GH)return;if(GH.round>=10){ghostEnd();return}GH.round++;$('ghRound').textContent=`${GH.round}/10`;$('ghMeS').textContent=GH.me;$('ghOpS').textContent=GH.opS;$('ghMsg').textContent='';
+  if(!GH.bag.length)GH.bag=shuffle(SUBK.slice());const sb=GH.bag.pop(),lv=P.diff[sb]||0,q=genQ(sb,lv,1);q.subj=sb;GH.q=q;
+  $('ghQ').innerHTML=`<span class="qsub qs-${sb}">${SUBJ[sb].n} ★${lv+1}</span>`+q.html;const box=$('ghC');box.innerHTML='';box.className='choices'+(q.choices.length===3?' c3':'');
+  q.choices.forEach(v=>{const b=document.createElement('button');b.className='ch'+(q.cs&&!(q.cs==='small'&&v.length<=4)?' '+q.cs:'');b.textContent=v;b.onclick=()=>ghostAns(b,v);box.appendChild(b)});
+  if(q.speak&&(q.auto||P.voice))setTimeout(()=>say(...q.speak),150);
+  const tg=GH.g.sp*(.6+Math.random()*.8)*(1+lv*.05),okG=Math.random()<GH.g.acc;GH.tg=tg;GH.okG=okG;GH.t0=performance.now();GH.lock=false;GH.done=false;
+  const tick=()=>{if(!GH||GH.done)return;const e=(performance.now()-GH.t0)/1000;$('ghBar').style.width=Math.min(100,e/tg*100)+'%';
+    if(e>=tg){GH.done=true;GH.lock=true;if(okG){GH.opS++;$('ghMsg').innerHTML='👻 ゴーストが さきに せいかい！';anim($('ghOp'),'hop',350);snd(240,.2,'square',.05);markGh()}else{GH.done=false;GH.lock=false;$('ghMsg').innerHTML='👻 ゴーストは まちがえた！ いまだ！';GH.tg=1e9;return}
+      $('ghOpS').textContent=GH.opS;setTimeout(ghostNext,1300);return}requestAnimationFrame(tick)};requestAnimationFrame(tick)}
+function markGh(){document.querySelectorAll('#ghC .ch').forEach(b=>{if(b.textContent===GH.q.a)b.classList.add('ok')})}
+function ghostAns(btn,v){if(!GH||GH.lock)return;GH.lock=true;GH.done=true;const q=GH.q,t=(performance.now()-GH.t0)/1000;if(q.sayChoice)say(v,q.sayChoice);
+  P.lastPlay=Date.now();const ok=v===q.a;
+  if(ok){btn.classList.add('ok');GH.me++;$('ghMsg').innerHTML=`⚡ せいかい！（${t.toFixed(1)}びょう）`;anim($('ghMe'),'hop',350);snd(880,.1,'square',.05);snd(1320,.12,'square',.05,0,.08)}
+  else{btn.classList.add('ng');markGh();addWeak(q);if(GH.okG&&GH.tg<1e9){GH.opS++;$('ghMsg').innerHTML='😣 ざんねん… ゴーストの ポイント'}else $('ghMsg').innerHTML='😣 ざんねん…';snd(180,.3,'square',.07,-80)}
+  $('ghMeS').textContent=GH.me;$('ghOpS').textContent=GH.opS;setTimeout(ghostNext,ok?1000:1500)}
+function ghostEnd(){const w=GH.me>GH.opS,d=GH.me===GH.opS,st=Math.max(1,P.best.mix||1),g=Math.round(st*(w?40:d?20:10)*Math.max(1,DMULT[mixLv()])),tk=w?2:d?1:0;
+  P.gold+=g;P.tk=(P.tk||0)+tk;if(w)P.ghostWin=(P.ghostWin||0)+1;save();w?fanfare():coin();const op=GH.op,me=GH.me,os=GH.opS;
+  showModal(`<div class="chest">${w?'🏆':d?'🤝':'👻'}</div><div class="mt">${w?'かち！':d?'ひきわけ！':'まけ…'}</div><p style="font-size:26px">${me} − ${os}</p><p>${esc(op.name)}の ゴースト${w?'に かった！':d?'と ひきわけ':'に まけちゃった'}<br><b class="goldt">🪙+${g}</b>${tk?`　${pi('ticket')}+${tk}`:''}</p>
+    <button class="btn orange big" id="rt">もういちど</button><button class="btn gray big" id="hm">ホームへ</button>`,{rt:()=>{closeModal();ghostStart(op)},hm:()=>{closeModal();GH=null;goHome()}})}
 /* ===================== help ===================== */
 const HELP=[
  ['play','🎮 あそびかた',`<b>しゅつげき</b>を おすと バトル！ もんだいに せいかいすると てきに こうげき。<br>1ステージは 5たい（さいごは ボス）。ぜんぶ たおすと クリアで ゴールドや そうびが もらえるよ。<br>まちがえたり じかんぎれに なると ダメージ。HPが 0に なると まけ。<br><small>はやく こたえると ダメージ アップ・れんぞく せいかいで コンボ！</small>`],
@@ -1491,7 +1546,9 @@ document.querySelector('#home .powbig').onclick=()=>{const lv=P.lv*2,eq=SLOTS.re
 $('towerBtn').onclick=()=>{snd(660,.05);showModal(`<div class="mt">🗼 むげんの とう</div><p>1かいに 1たい。どこまで のぼれるかな？<br>10かいごとに ボスと ボーナス！<br><small style="color:var(--sub)">HPは すこししか かいふく しないよ・もんだいは ミックス</small></p><p>じぶんの さいこう：<b style="color:var(--gold)">${(P.tower&&P.tower.best)||0}かい</b></p><button class="btn orange big" id="go">のぼる！</button><button class="btn gray" id="cl">やめる</button>`,{go:()=>{closeModal();startTower()},cl:closeModal})};
 $('gachaBtn').onclick=()=>{snd(660,.05);gachaOpen()};
 $('achBtn').onclick=()=>{snd(660,.05);achOpen()};
-if(typeof ghostOpen==='undefined')$('ghostBtn').onclick=()=>toast('👻 もうすぐ できるよ！');
+$('ghostBtn').onclick=()=>{snd(660,.05);ghostOpen()};
+$('ghBack').onclick=()=>{if(GH){GH.done=true;GH=null}goHome()};
+$('ghQ').onclick=()=>{if(GH&&GH.q&&GH.q.speak)say(...GH.q.speak)};
 if(typeof roomOpen==='undefined')$('roomBtn').onclick=()=>toast('🏠 もうすぐ できるよ！');
 $('shopBtn').onclick=()=>openShop();
 $('shBack').onclick=()=>{show('home');renderHome()};
