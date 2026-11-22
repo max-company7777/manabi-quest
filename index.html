@@ -671,6 +671,12 @@ input{font:inherit}
 .gcin{font-size:22px!important;text-align:center;letter-spacing:3px;text-transform:uppercase;border:3px solid #ffd23f!important}.gcin::placeholder{text-transform:none;letter-spacing:0;font-size:15px}
 .gchint{display:block;color:var(--sub);font-size:12px;margin-top:4px}.gcmsg{min-height:20px;color:#ff8a7a;font-size:13px;margin:4px 0}
 .gcgot{background:rgba(0,0,0,.3);border-radius:10px;padding:8px;margin:8px 0}.gcgt{font-size:13px;color:#ffe9a0;margin-bottom:4px}.gcgl{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}.gcgl>div{width:64px;text-align:center}.gcgl img{width:48px;height:48px;image-rendering:pixelated}.gcgl small{display:block;font-size:9px;line-height:1.2}
+.hud{gap:6px!important;padding:8px 8px!important}.hud .bpow{flex:none;padding:2px 8px}.hud .bpow b{font-size:19px}.hud .mslots{flex:1 1 0;max-width:150px;min-width:0}
+.bst{flex:none;margin-left:auto;width:74px;font-size:11px;line-height:1.25;text-align:right;white-space:nowrap}.bst small{display:block;font-size:11px;color:#ffe9a0}.bst span{display:block}.bst b{font-size:15px;color:var(--gold);margin-left:2px}.bst .bw{font-size:9px;letter-spacing:1px;color:#ffd23f}
+.pm{margin-left:calc(min(17cqw,13.5cqh) * var(--sc,1) * -.5)}
+.arena .hero{left:-7%!important}.arena .mon{bottom:35%!important}
+.hud .mslots{grid-template-columns:repeat(5,minmax(0,1fr))!important}.hud .mslots .ms{width:auto!important;min-width:0!important;max-width:100%;box-sizing:border-box}.hud .mslots .ms img{max-width:100%;max-height:100%;object-fit:contain}
+.arena .hero{left:calc(min(28cqw,21cqh) * -.28)!important}
 </style>
 </head>
 <body>
@@ -1079,7 +1085,7 @@ function makeItem(st,d,boss,min=0){
 /* =============== save data =============== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-const APPV='v107';
+const APPV='v108';
 try{const c=document.createElement('canvas');c.width=9;c.height=9;const g=c.getContext('2d'),F=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};F(1,0,7,1,'#120d09');F(1,8,7,1,'#120d09');F(0,1,1,7,'#120d09');F(8,1,1,7,'#120d09');F(1,1,7,1,'#120d09');F(1,7,7,1,'#120d09');F(1,1,1,7,'#120d09');F(7,1,1,7,'#120d09');F(2,2,5,1,'#7a6a52');F(2,2,1,5,'#7a6a52');F(2,6,5,1,'#2a2018');F(6,2,1,5,'#2a2018');document.documentElement.style.setProperty('--pxf',`url(${c.toDataURL()})`)}catch(e){}
 const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));if(G.bgmOn===undefined)G.bgmOn=true;
 let P=null;
@@ -3630,7 +3636,7 @@ function arenaBg(st){if(P&&P.cos&&P.cos.bg&&BGS[P.cos.bg])return BGS[P.cos.bg][2
 function updHeroHp(){const m=maxHp();B.hp=Math.min(B.hp,m);$('pHp').style.width=B.hp/m*100+'%';$('pHpT').textContent=`${B.hp} / ${m}`}
 function updMonHp(){$('mHp').style.width=B.mon.hp/B.mon.maxHp*100+'%'}
 /* なかまの じんけい（おくゆき：x%・bottom%・おおきさ） */
-const FORM=[[31,2,.92],[45,3,.9],[59,4,.88],[38,17,.8],[51,18,.78],[64,19,.76]];
+const FORM=[[37,3,.92],[53,3,.92],[69,3,.92],[29,20,.8],[45,20,.8],[61,20,.8]];
 /* recommended power for a stage: what a player who equips current drops and keeps leveling usually has */
 function recPow(st,d=0){st=Math.max(1,st);const L=st,ilv=st*2,gp=Math.round((3+ilv+d*3)*1.25*1.08)*10,mp=5*(MBASE[1]+Math.max(0,Math.round(st*.7)-1)*MGROW[1]);return Math.round((L*2+gp+mp)*.75)}
 function diffF(st,d){const r=recPow(st,d)/Math.max(1,power());return Math.max(.8,Math.min(3,1+st/8,r))}
@@ -3641,7 +3647,7 @@ function updPHp(){partyMons().forEach((m,i)=>{const el=document.querySelector('#
 function updCd(){const e=$('mCd');if(!e||!B||!B.mon)return;const c=B.mon.cd;e.style.display=c>50?'none':'';e.innerHTML=`<i>⚔️</i>あと<b>${c}</b>`;e.classList.toggle('hot',c<=1)}
 const VH={};function monVis(sp){if(VH[sp])return VH[sp];let v=1;try{const S=SP[sp],A=MONART[S.art];if(A){const ys=[];A.m.forEach((r,y)=>{if(/[^.]/.test(r))ys.push(y)});const h=ys.length?ys[ys.length-1]-ys[0]+1:16;v=Math.max(.82,Math.min(1.2,.8/(h/(A.size||16))))}}catch(e){}return VH[sp]=v}
 (function(){const h=$('battle').querySelector('.hud'),sl=$('bSlots');if(h&&sl)h.insertBefore(sl,$('bStage'))})();
-function updHud(){const pm0=partyMons(),isF=m=>{try{return lStats(m.sp).fly}catch(e){return 0}},pm=[...pm0.filter(m=>!isF(m)),...pm0.filter(isF)];$('partyB').classList.remove('many');$('partyB').innerHTML=pm.map((m,j)=>{const i=pm0.indexOf(m),[x,b,sc0]=FORM[j]||FORM[5],sc=sc0*monVis(m.sp);let fly=isF(m);return `<div class="pm${fly?' fly':''}" data-i="${i}" style="left:${x}%;bottom:${b}%;--sc:${sc};z-index:${10-i};animation-delay:${-i*.37}s"><i class="psh"></i><span class="in flip" style="animation-delay:${-i*.29}s">${monsterSVG(m.sp)}</span><i class="php"><b></b></i></div>`}).join('');if(B)setTimeout(updPHp,0);$('bPow').textContent=power();if(B&&!B.weakOnly&&!B.tower&&!B.xmas&&B.rec){const r=$('bRec');r.textContent='すいしょう '+B.rec.toLocaleString();r.classList.toggle('lo',power()<B.rec)}else $('bRec').textContent='';$('bSlots').innerHTML=SLOTS.map(k=>slotHTML(k,P.eq[k],1)).join('');$('heroSpr').innerHTML=heroSVG(P.eq,Object.assign({},P,{back:1}))}
+function updHud(){const pm0=partyMons(),isF=m=>{try{return lStats(m.sp).fly}catch(e){return 0}},pm=pm0;$('partyB').classList.remove('many');$('partyB').innerHTML=pm.map((m,j)=>{const i=pm0.indexOf(m),[x,b,sc0]=FORM[j]||FORM[5],sc=sc0*monVis(m.sp);return `<div class="pm" data-i="${i}" style="left:${x}%;bottom:${b}%;--sc:${sc};z-index:${j<3?20:10};animation-delay:${-i*.37}s"><i class="psh"></i><span class="in flip" style="animation-delay:${-i*.29}s">${monsterSVG(m.sp)}</span><i class="php"><b></b></i></div>`}).join('');if(B)setTimeout(updPHp,0);$('bPow').textContent=power();if(B&&!B.weakOnly&&!B.tower&&!B.xmas&&B.rec){const r=$('bRec');r.textContent='すいしょう '+B.rec.toLocaleString();r.classList.toggle('lo',power()<B.rec)}else $('bRec').textContent='';$('bSlots').innerHTML=SLOTS.map(k=>slotHTML(k,P.eq[k],1)).join('');$('heroSpr').innerHTML=heroSVG(P.eq,Object.assign({},P,{back:1}))}
 function updCombo(){const c=$('combo');c.textContent=B.combo>=2?`${B.combo} コンボ！`:'';
   c.style.color=B.combo>=10?'#ff5df0':B.combo>=5?'#ff8a3d':'var(--gold)';if(B.combo>=2)anim(c,'pop',300)}
 
@@ -3673,7 +3679,7 @@ function spawn(){
   const el=$('mon');$('monE').innerHTML=monsterSVG(m[0]);el.className='fighter mon'+(boss?' boss':'')+(ult?' ult':'')+' r'+rar;anim(el,boss&&!ult?'bossin':'spawn',boss&&!ult?900:500);if(boss&&!ult){bossWarn($('arena'));anim($('arena'),'darken',1800);bgm('boss')}else if(BG.cur==='boss')bgm('battle');
   $('mName').innerHTML=`<small>${elIcon(sp)} Lv${mlv}</small> <span style="color:${RAR[rar].h}">${B.mon.n}</span> <small style="color:${RAR[rar].h}">${RAR[rar].n}</small>`;
   if(!boss&&rar>=2){toast(`✨ ${RAR[rar].n}モンスター！`);snd(1200,.3,'sine',.05,600)}updMonHp();updCd();
-  $('bStage').innerHTML=B.tower?`🗼 むげんの とう<br><b style="color:var(--gold)">${B.wave}かい</b>`:(B.weakOnly?'📕 にがて':B.mix?`🎲 ミックス<br>ステージ${st}`:`${SUBJ[B.subj].n} ★${B.lv+1}<br>ステージ${st}`)+(B.tower?'':` ${B.wave}/${B.waves}`);
+  $('bStage').innerHTML=B.tower?`🗼 むげんの とう<br><b style="color:var(--gold)">${B.wave}かい</b>`:`<small>${B.weakOnly?'📕 にがて':B.mix?'🎲 ミックス':SUBJ[B.subj].n+' ★'+(B.lv+1)}</small>${B.weakOnly?'':`<span>ステージ<b>${st}</b></span>`}<span class="bw">${'●'.repeat(B.wave)}${'○'.repeat(Math.max(0,B.waves-B.wave))}</span>`;
   if(ult){B.sawUlt=true;P.ultMiss=0;toast('🌟 きゅうきょくモンスターが あらわれた！');anim($('arena'),'ultfx',1500);[110,147,196,262].forEach((f,i)=>snd(f,.4,'sawtooth',.07,0,i*.18));vib(300)}
   else if(boss){toast('⚠️ ボスが あらわれた！');snd(150,.5,'sawtooth',.07,-60)}
   setTimeout(nextQ,ult?1600:boss?900:500);
