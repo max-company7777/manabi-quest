@@ -517,6 +517,16 @@ input{font:inherit}
 .lpg{position:absolute;left:0;top:0;width:calc(100% / 6);height:calc(100% / 5);padding:3px;transition:transform .2s ease-in;cursor:pointer}.lpg b{display:flex;align-items:center;justify-content:center;width:100%;height:100%;background:linear-gradient(135deg,var(--g2) 0 30%,var(--g1) 30%);border:3px solid rgba(0,0,0,.6);box-shadow:inset -3px -3px 0 rgba(0,0,0,.25),inset 3px 3px 0 rgba(255,255,255,.35);color:#fff;font-size:clamp(16px,5vw,24px);text-shadow:2px 2px 0 rgba(0,0,0,.4)}
 .lpg.sel b{outline:3px solid #fff;animation:pulse .5s infinite}.lpg.pop b{animation:lppop .22s forwards}@keyframes lppop{50%{transform:scale(1.3);filter:brightness(2)}100%{transform:scale(0);opacity:0}}.lpg.nope b{animation:lnshake .3s}
 .lpfl{position:absolute;left:50%;top:30%;transform:translateX(-50%);color:#7af0ff;font-size:20px;font-weight:bold;text-shadow:2px 2px 0 #000;white-space:nowrap;z-index:5;pointer-events:none;animation:lnfl .9s forwards}@keyframes lnfl{to{top:5%;opacity:0}}
+.lncan{position:absolute;right:50px;bottom:calc(16% + 30px);z-index:6;font-size:22px;transform-origin:80% 80%}.lncan i{display:block;width:36px;height:26px;background:#3a3a4a;border:3px solid #000;border-radius:6px 14px 14px 6px;display:flex;align-items:center;justify-content:center;font-style:normal;font-size:16px;transform:rotate(-12deg);box-shadow:inset 0 -4px 0 #0006}
+.lncan.rdy i{background:var(--cc);animation:pulse .5s infinite;box-shadow:0 0 12px var(--cc)}.cnfire{animation:cnfire .5s}@keyframes cnfire{20%{transform:translateX(8px) scale(1.2)}}
+.lnu.frozen .lnsp{filter:brightness(1.3) hue-rotate(160deg) saturate(2)}.lnu.frozen .lnbody{position:relative}.lnu.frozen .lnbody::after{content:'';position:absolute;inset:-4px;background:rgba(150,230,255,.45);border:2px solid #cff6ff}
+.lnu.wallu{left:-18px;width:36px}.lnu.wallu .lnsp{width:36px;height:72px}.lnwallb{display:block;width:100%;height:100%;background:repeating-linear-gradient(0deg,#a06a3a 0 14px,#3a2a1a 14px 16px),#a06a3a;border:3px solid #2a1a0a;box-shadow:inset 4px 0 0 #c8884a}.lnu.wallin .lnbody{animation:wallin .4s}@keyframes wallin{0%{transform:translateY(-120px)}80%{transform:translateY(4px)}}
+.lnice{position:absolute;inset:0;background:linear-gradient(90deg,rgba(150,230,255,.7),rgba(255,255,255,.2));animation:lnice 1s forwards}@keyframes lnice{0%{clip-path:inset(0 0 0 100%)}40%{clip-path:inset(0 0 0 0);opacity:1}100%{opacity:0}}
+.lnbolt{position:absolute;top:0;bottom:16%;width:16px;margin-left:-8px;background:linear-gradient(#fff,#fff6a0 40%,#f0d020);clip-path:polygon(40% 0,100% 0,60% 40%,100% 40%,20% 100%,40% 55%,0 55%);filter:drop-shadow(0 0 8px #ffe680);animation:lnbolt .5s forwards}@keyframes lnbolt{0%{opacity:0;transform:scaleY(.2);transform-origin:top}20%{opacity:1;transform:scaleY(1)}100%{opacity:0}}
+.lnheal{position:absolute;inset:0;background:radial-gradient(circle at 80% 70%,rgba(120,255,120,.55),transparent 60%);animation:lnheal 1s forwards}@keyframes lnheal{0%{opacity:0}30%{opacity:1}100%{opacity:0}}
+.cnlist{display:flex;flex-direction:column;gap:6px;max-height:48vh;overflow:auto}.cncard{display:flex;align-items:center;gap:8px;padding:6px 8px;text-align:left}.cncard.on{border-color:#ffd23f;box-shadow:0 0 0 2px #ffd23f}.cncard.lock{opacity:.6}
+.cnic{width:40px;height:40px;flex:none;display:flex;align-items:center;justify-content:center;font-size:24px;background:#222;border:3px solid var(--cc)}.cninfo{flex:1;min-width:0}.cninfo b{display:block;font-size:15px}.cninfo small{font-size:11px;color:var(--sub)}
+.cnbtns{display:flex;flex-direction:column;gap:3px;align-items:stretch}.cnbtns .btn{padding:4px 6px;font-size:12px}.cnbtns .own{font-size:11px;color:#ffd23f;text-align:center}
 .lnit img{width:40px;height:40px;vertical-align:middle}.lndeck{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin:6px 0}.lndeck span{display:flex;flex-direction:column;align-items:center;font-size:11px}.lndeck img{width:40px;height:40px}
 .maptier{font-size:14px;color:var(--gold);margin:8px 0 2px;text-align:left;display:flex;align-items:center;justify-content:space-between;gap:6px}.maptier small{color:var(--sub);font-size:12px}.maptier .mwok{color:#ffd23f}.mwbtn{width:auto!important;margin:0!important;padding:4px 8px!important;font-size:13px!important;background:#d9771e;animation:pulse 1s infinite}.mwrew{font-size:11px;color:var(--sub);text-align:left;margin:0 0 4px}.mgift{font-size:22px;animation:pulse 1s infinite;padding:0 4px;white-space:nowrap}.mbadge{background:#e8413c;color:#fff;font-size:12px;padding:2px 5px;margin-right:4px;border-radius:4px}.mrew{display:flex;flex-direction:column;gap:6px;align-items:center;margin:6px 0}.mrit{display:flex;flex-wrap:wrap;gap:4px;justify-content:center}.mri{border:2px solid;padding:2px;display:inline-flex}.mri img{width:28px;height:28px}.mrsp{color:#ffd23f;font-size:14px}.limb.mapl{background:#1f5a3a}.mapa .mclr{color:#5be05b;font-size:18px}
 </style>
@@ -654,7 +664,7 @@ input{font:inherit}
 <section id="lane" class="screen">
   <header class="hud"><button class="btn x" id="lnBack">✕</button><div style="font-size:16px;flex:1">🏯 ぐんだん バトル</div><div class="bst" id="lnStage"></div></header>
   <div class="lnfield" id="lnField"><div class="lnsky" id="lnSky"></div><div class="lncloud c1"></div><div class="lncloud c2"></div><div class="lnfar" id="lnFar"></div><div class="lnground"></div>
-    <div class="lncas e" id="lnCE"></div><div class="lncas p" id="lnCP"></div><div id="lnUnits"></div><div id="lnFx"></div></div>
+    <div class="lncas e" id="lnCE"></div><div class="lncas p" id="lnCP"></div><div class="lncan" id="lnCan"></div><div id="lnUnits"></div><div id="lnFx"></div></div>
   <div class="lnenw" id="lnEnW"><button class="btn lnwl" id="lnWl"></button><div class="lnen"><i id="lnEn"></i><span id="lnEnT"></span></div><button class="btn lnult" id="lnUlt"></button></div>
   <div class="lnultg"><i id="lnUltG"></i></div>
   <div class="lncards" id="lnCards"></div>
@@ -1522,29 +1532,30 @@ function laneOpen(){P.lane=P.lane||{best:0};const st=Math.min(P.lane.best+1,P.la
     <div class="lndeck">${deck.length?deck.map(m=>`<span>${monsterSVG(m.sp)}<small>${lRole(m.sp).n}</small></span>`).join(''):'<small>なかまが いないと ゆうしゃ だけで たたかうよ</small>'}</div>
     <div class="stagepick" style="margin:6px 0"><button class="btn" id="lp">◀</button><span>ステージ <b id="lsn">${st}</b></span><button class="btn" id="lnx">▶</button></div>
     <small style="color:var(--sub)">さいこう：ステージ ${P.lane.best}</small>
+    <button class="btn" id="cn" style="background:#2a6a9a">🏰 しろほう：${CANNON[canOf().t].i} ${CANNON[canOf().t].n} Lv${canPl(canOf().t)}　カスタム ▶</button>
     <button class="btn orange big" id="go">⚔️ たたかう！</button><button class="btn gray" id="cl">とじる</button>`,
-    {cl:closeModal,go:()=>{closeModal();laneStart(+$('lsn').textContent)},
+    {cl:closeModal,cn:()=>laneCannon(laneOpen),go:()=>{closeModal();laneStart(+$('lsn').textContent)},
      lp:()=>{$('lsn').textContent=Math.max(1,+$('lsn').textContent-1)},lnx:()=>{$('lsn').textContent=Math.min(P.lane.best+1,+$('lsn').textContent+1)}})}
 function laneStart(st){P.lane=P.lane||{best:0};P.lane.sel=st;save();
   const deck=laneDeck(),R=Math.max(4,deck.length?deck.reduce((a,m)=>a+monPow(m),0)/deck.length:4+P.lv*.5);
   const E=Math.max(3*Math.pow(1.16,st-1),R*(.45+.035*Math.min(st,30)));
   const cards=[{hero:1,cost:50,cd:2.5,pow:R*.9,n:'ゆうしゃ'},...deck.map(m=>{const r=SP[m.sp].rar;return{m,sp:m.sp,cost:75+r*55,cd:3.5+r*1.8,pow:monPow(m),n:SP[m.sp].name}})].map(c=>Object.assign(c,{ready:0}));
   const a=AREA(Math.max(1,st*3));
-  LN={st,R,E,cards,units:[],en:100,enMax:600,wl:1,eHp:Math.round(E*170*(1+st*.06)),pHp:Math.round(R*150),t:0,nextSp:3,last:0,ult:0,ULTN:10,run:true,bossOut:false,area:a,gold:0,kills:0,matches:0};
+  LN={st,R,E,cards,units:[],en:100,enMax:600,wl:1,eHp:Math.round(E*170*(1+st*.06)),pHp:Math.round(R*150),t:0,nextSp:3,last:0,ult:0,run:true,bossOut:false,area:a,gold:0,kills:0,matches:0};
   LN.eMax=LN.eHp;LN.pMax=LN.pHp;
   show('lane');$('lnStage').innerHTML=`ステージ<br><b style="color:var(--gold)">${st}</b>`;
   $('lnSky').style.background=a.sky;$('lnFar').className='lnfar t'+(a.t||0);
   $('lnCE').innerHTML=`<div class="lnchp" id="lnEHpT"></div>${pi('tower')}`;$('lnCP').innerHTML=`<div class="lnchp" id="lnPHpT"></div>${pi('tower')}`;
   $('lnCards').innerHTML=cards.map((c,i)=>`<button class="lncard" data-i="${i}"><span class="lncs">${c.hero?heroSVG(P.eq,P):monsterSVG(c.sp)}</span><b>⚡${c.cost}</b><i class="lncd"></i></button>`).join('');
   document.querySelectorAll('.lncard').forEach(b=>b.onclick=()=>laneDeploy(+b.dataset.i));
-  $('lnUnits').innerHTML='';$('lnFx').innerHTML='';lpInit();LN.last=performance.now();requestAnimationFrame(laneTick);
+  $('lnUnits').innerHTML='';$('lnFx').innerHTML='';$('lnCan').innerHTML=`<i style="--cc:${CANNON[canOf().t].c}">${CANNON[canOf().t].i}</i>`;lpInit();LN.last=performance.now();requestAnimationFrame(laneTick);
   setTimeout(()=>lnBanner('⚔️ バトル スタート！'),200)}
 function lnBanner(t,cls=''){const e=document.createElement('div');e.className='lnban '+cls;e.textContent=t;$('lnFx').appendChild(e);setTimeout(()=>e.remove(),1600)}
 function laneMk(side,o){const el=document.createElement('div');el.className='lnu '+side+(o.boss?' boss':'')+' walk spawnin';
   const y=Math.round(Math.random()*12);el.style.bottom=`calc(17% + ${y-4}px)`;el.style.zIndex=50-y;
-  el.innerHTML=`<i class="lnsh"></i><span class="lnbody"><span class="lnsp">${o.hero?heroSVG(P.eq,P):monsterSVG(o.sp)}</span></span><i class="lnhp"><i></i></i>`;$('lnUnits').appendChild(el);
+  el.innerHTML=`<i class="lnsh"></i><span class="lnbody"><span class="lnsp">${o.wall?'<i class="lnwallb"></i>':o.hero?heroSVG(P.eq,P):monsterSVG(o.sp)}</span></span><i class="lnhp"><i></i></i>`;if(o.wall)el.classList.add('wallu');$('lnUnits').appendChild(el);
   setTimeout(()=>el.classList.remove('spawnin'),350);
-  const u=Object.assign({side,el,x:side==='p'?LCP-30:LCE+30,cool:.4,slowT:0,stun:0,kbLeft:o.kb||3},o);u.maxHp=u.hp;u.kbNext=u.maxHp*(1-1/(u.kbLeft+1));u.kbStep=u.maxHp/(u.kbLeft+1);LN.units.push(u);return u}
+  const u=Object.assign({side,el,x:o.x!=null?o.x:side==='p'?LCP-30:LCE+30,cool:.4,slowT:0,stun:0,kbLeft:o.kb??3},o);u.maxHp=u.hp;u.kbNext=u.maxHp*(1-1/(u.kbLeft+1));u.kbStep=u.maxHp/(u.kbLeft+1);LN.units.push(u);return u}
 function laneDeploy(i){if(!LN||!LN.run)return;const c=LN.cards[i];if(LN.en<c.cost||c.ready>0){snd(200,.08,'square',.04);anim(document.querySelectorAll('.lncard')[i],'lnno',300);return}
   LN.en-=c.cost;c.ready=c.cd;const ro=c.hero?{hp:1.3,atk:1,sp:1,rg:34,kb:3}:lRole(c.sp);
   laneMk('p',{hero:c.hero,sp:c.sp,hp:Math.round(c.pow*9*ro.hp),atk:Math.max(1,Math.round(c.pow*ro.atk)),spd:75*ro.sp,rg:ro.rg,slow:ro.slow,heal:ro.heal,area:ro.area,kb:ro.kb});
@@ -1561,12 +1572,49 @@ function lnHit(v,dmg,src){v.hp-=dmg;lnFloat(v.x,fmtS(Math.round(dmg)),v.side==='
   if(v.hp<=0)return laneKill(v);
   if(v.kbLeft>0&&v.hp<=v.kbNext){v.kbLeft--;v.kbNext-=v.kbStep;lnKnock(v,40)}}
 function lnKnock(v,d){v.stun=.55;v.x+=(v.side==='p'?1:-1)*d;v.x=Math.max(LCE+10,Math.min(LCP-10,v.x));v.el.classList.remove('walk','atk');anim(v.el,'lnkb',550);snd(300,.08,'square',.04,-100)}
+/* ---- 🏰 しろほう（カスタム できる ひっさつ たいほう） ---- */
+const CANNON={beam:{n:'はどうほう',i:'💥',c:'#ffd23f',d:'ビームで てき ぜんぶに ダメージ＆ふっとばす',unl:0},
+  ice:{n:'こおりほう',i:'❄️',c:'#7af0ff',d:'てき ぜんぶを こおらせて しばらく うごけなくする',unl:3},
+  wall:{n:'かべほう',i:'🧱',c:'#c8884a',d:'まえに かたい かべを だして てきを とおせんぼ',unl:6},
+  thunder:{n:'かみなりほう',i:'⚡',c:'#f0d020',d:'せんとうの てき3たいと てきの しろに おおダメージ',unl:10},
+  heal:{n:'いやしほう',i:'💚',c:'#58d14a',d:'なかま ぜんいんと じぶんの しろを かいふく',unl:15}};
+const canOf=()=>{P.lane=P.lane||{best:0};const c=P.lane.can=P.lane.can||{t:'beam',pl:{},cl:1};c.pl=c.pl||{};return c};
+const canPl=t=>canOf().pl[t]||1,canTime=()=>Math.max(12,32-2*(canOf().cl-1));
+const canPlCost=l=>Math.round(200*Math.pow(1.55,l-1)),canClCost=l=>Math.round(400*Math.pow(1.7,l-1));
+function laneCannon(back){const c=canOf(),b=P.lane.best||0;
+  const h=Object.entries(CANNON).map(([k,v])=>{const un=b>=v.unl,on=c.t===k,pl=canPl(k);
+    return `<div class="panel cncard${on?' on':''}${un?'':' lock'}"><div class="cnic" style="--cc:${v.c}">${un?v.i:'🔒'}</div><div class="cninfo"><b>${v.n}${un?` <small>Lv${pl}</small>`:''}</b><small>${un?v.d:`ぐんだん ステージ ${v.unl} クリアで かいほう`}</small></div>
+      ${un?`<div class="cnbtns">${on?'<span class="own">そうびちゅう</span>':`<button class="btn green" data-cs="${k}">つかう</button>`}${pl<20?`<button class="btn orange" data-cu="${k}"${P.gold<canPlCost(pl)?' disabled':''}>⬆️🪙${fmtS(canPlCost(pl))}</button>`:'<small>MAX</small>'}</div>`:''}</div>`}).join('');
+  showModal(`<div class="mt">🏰 しろほう カスタム</div><p style="font-size:13px">じぶんの しろに ついている たいほう。ゲージが たまったら ドーン！<br>🪙 ${fmtS(P.gold)}</p>
+    <div class="cnlist">${h}</div>
+    <div class="panel cncard"><div class="cnic" style="--cc:#7af0ff">⏱️</div><div class="cninfo"><b>チャージ Lv${c.cl}</b><small>ゲージが たまる じかん：${canTime()}びょう</small></div><div class="cnbtns">${c.cl<11?`<button class="btn orange" id="ccl"${P.gold<canClCost(c.cl)?' disabled':''}>⬆️🪙${fmtS(canClCost(c.cl))}</button>`:'<small>MAX</small>'}</div></div>
+    <button class="btn gray" id="bk">もどる</button>`,
+    {bk:()=>back?back():closeModal(),ccl:()=>{const k=canClCost(c.cl);if(P.gold<k)return;P.gold-=k;c.cl++;save();coin();laneCannon(back)}});
+  document.querySelectorAll('[data-cs]').forEach(e=>e.onclick=()=>{c.t=e.dataset.cs;save();snd(880,.06,'square',.04);laneCannon(back)});
+  document.querySelectorAll('[data-cu]').forEach(e=>e.onclick=()=>{const k=e.dataset.cu,l=canPl(k),cost=canPlCost(l);if(P.gold<cost)return;P.gold-=cost;c.pl[k]=l+1;save();coin();fanfare();toast(`${CANNON[k].i} ${CANNON[k].n} Lv${l+1}！`);laneCannon(back)})}
+function lnFireFx(cls,x){const W=$('lnField').clientWidth,e=document.createElement('div');e.className=cls;if(x!=null)e.style.left=(x/LW*W)+'px';$('lnFx').appendChild(e);setTimeout(()=>e.remove(),1000);return e}
+function laneFire(){if(!LN||LN.ult<100||!LN.run)return;LN.ult=0;const t=canOf().t,f=1+.25*(canPl(t)-1),R=LN.R,en=LN.units.filter(u=>!u.dead&&u.side==='e');
+  anim($('lnCan'),'cnfire',500);anim($('lnField'),'lnquake',600);vib(220);lnBanner(`${CANNON[t].i} ${CANNON[t].n}！`,'small');
+  if(t==='beam'){lnFireFx('lnbeam');[262,196,147,110].forEach((q,i)=>snd(q,.3,'sawtooth',.07,0,i*.08));
+    setTimeout(()=>{const d=Math.round(R*14*f);LN.units.filter(u=>!u.dead&&u.side==='e').forEach(u=>{lnHit(u,u.boss?d*.5:d,null);if(!u.dead)lnKnock(u,70)})},350)}
+  else if(t==='ice'){lnFireFx('lnice');[1200,900,1500].forEach((q,i)=>snd(q,.25,'sine',.06,0,i*.07));
+    setTimeout(()=>{const dur=Math.min(7,2.5+.25*(canPl(t)-1)),d=Math.round(R*3*f);LN.units.filter(u=>!u.dead&&u.side==='e').forEach(u=>{lnHit(u,d,null);if(!u.dead){u.stun=u.boss?dur*.6:dur;u.el.classList.remove('walk','atk');u.el.classList.add('frozen')}})},300)}
+  else if(t==='wall'){snd(120,.4,'square',.08);snd(90,.3,'square',.08,0,.15);
+    const front=LN.units.filter(u=>!u.dead&&u.side==='p'&&!u.wall).reduce((m,u)=>Math.min(m,u.x),LCP-60),x=Math.max(LCE+120,Math.min(front-40,LCP-120));
+    const w=laneMk('p',{wall:1,hp:Math.round(R*55*f),atk:0,spd:0,rg:0,kb:0,x,life:12+canPl(t)*.5});w.el.classList.add('wallin')}
+  else if(t==='thunder'){const tg=en.sort((a,b)=>b.x-a.x).slice(0,3);
+    tg.forEach((u,i)=>setTimeout(()=>{if(!LN||u.dead)return;lnFireFx('lnbolt',u.x);snd(80,.25,'sawtooth',.08);lnHit(u,Math.round(R*26*f*(u.boss?.6:1)),null);if(!u.dead)lnKnock(u,50)},150+i*180));
+    setTimeout(()=>{if(!LN)return;lnFireFx('lnbolt',LCE+10);const d=Math.round(R*10*f);LN.eHp-=d;lnFloat(LCE+10,fmtS(d));anim($('lnCE'),'lnshake',300);snd(70,.3,'sawtooth',.08)},150+tg.length*180)}
+  else if(t==='heal'){lnFireFx('lnheal');[523,659,784,1047].forEach((q,i)=>snd(q,.15,'sine',.05,0,i*.08));
+    LN.units.filter(u=>!u.dead&&u.side==='p').forEach(u=>{const h=Math.round(u.maxHp*Math.min(1,.4*f));u.hp=Math.min(u.maxHp,u.hp+h);lnFloat(u.x,'+'+fmtS(h),'en')});
+    const ch=Math.round(LN.pMax*Math.min(.6,.15*f));LN.pHp=Math.min(LN.pMax,LN.pHp+ch);lnFloat(LCP-10,'🏰+'+fmtS(ch),'en')}}
 function laneTick(now){if(!LN||!LN.run)return;const dt=Math.min(.05,(now-LN.last)/1000);LN.last=now;LN.t+=dt;
-  LN.en=Math.min(LN.enMax,LN.en+(6+LN.wl*3)*dt);LN.cards.forEach(c=>{if(c.ready>0)c.ready=Math.max(0,c.ready-dt)});
+  LN.en=Math.min(LN.enMax,LN.en+(6+LN.wl*3)*dt);LN.ult=Math.min(100,LN.ult+dt*100/canTime());LN.cards.forEach(c=>{if(c.ready>0)c.ready=Math.max(0,c.ready-dt)});
   LN.nextSp-=dt;if(LN.nextSp<=0){laneEnemy(false);if(Math.random()<Math.min(.55,LN.st*.035))setTimeout(()=>LN&&LN.run&&laneEnemy(false),700);LN.nextSp=Math.max(2.2,6.5-LN.st*.12)*(.7+Math.random()*.6)}
   if(!LN.bossOut&&LN.eHp<LN.eMax*.6){LN.bossOut=true;laneEnemy(true);lnBanner('👑 ボス しゅつげん！','boss');anim($('lnField'),'lnquake',600);[98,82,65].forEach((f,i)=>snd(f,.35,'sawtooth',.08,0,i*.18));vib(200)}
   for(const u of LN.units){if(u.dead)continue;const dir=u.side==='p'?-1:1;
-    if(u.stun>0){u.stun-=dt;if(u.stun<=0)u.el.classList.add('walk');continue}
+    if(u.wall){u.life-=dt;if(u.life<=0)laneKill(u);continue}
+    if(u.stun>0){u.stun-=dt;if(u.stun<=0){u.el.classList.remove('frozen');u.el.classList.add('walk')}continue}
     let tgt=null,best=1e9;
     for(const v of LN.units){if(v.dead||v.side===u.side)continue;const d=(v.x-u.x)*dir;if(d>=-8&&d<=u.rg&&d<best){best=d;tgt=v}}
     const cx=u.side==='p'?LCE:LCP;if(!tgt&&(cx-u.x)*dir<=u.rg)tgt='castle';
@@ -1589,13 +1637,11 @@ function laneDraw(){const W=$('lnField').clientWidth;
   $('lnEHpT').textContent=`${fmtS(Math.max(0,Math.ceil(LN.eHp)))}/${fmtS(LN.eMax)}`;$('lnPHpT').textContent=`${fmtS(Math.max(0,Math.ceil(LN.pHp)))}/${fmtS(LN.pMax)}`;
   $('lnEn').style.width=LN.en/LN.enMax*100+'%';$('lnEnT').textContent=`⚡ ${Math.floor(LN.en)} / ${LN.enMax}`;
   const wc=LN.wl*60;$('lnWl').innerHTML=LN.wl<8?`⬆️Lv${LN.wl}<small>⚡${wc}</small>`:'⬆️MAX';$('lnWl').disabled=LN.wl>=8||LN.en<wc;
-  $('lnUlt').innerHTML=`💥<small>${Math.min(LN.ULTN,LN.ult)}/${LN.ULTN}</small>`;$('lnUlt').disabled=LN.ult<LN.ULTN;$('lnUlt').classList.toggle('rdy',LN.ult>=LN.ULTN);
-  $('lnUltG').style.width=Math.min(100,LN.ult/LN.ULTN*100)+'%';
+  const ci=CANNON[canOf().t].i,rdy=LN.ult>=100;$('lnUlt').innerHTML=`${ci}<small>${rdy?'はっしゃ！':Math.floor(LN.ult)+'%'}</small>`;$('lnUlt').disabled=!rdy;$('lnUlt').classList.toggle('rdy',rdy);$('lnCan').classList.toggle('rdy',rdy);
+  $('lnUltG').style.width=Math.min(100,LN.ult)+'%';
   document.querySelectorAll('.lncard').forEach((b,i)=>{const c=LN.cards[i];b.classList.toggle('no',LN.en<c.cost);b.classList.toggle('ok',LN.en>=c.cost&&!c.ready);b.querySelector('.lncd').style.height=(c.ready/c.cd*100)+'%'})}
 $('lnWl').onclick=()=>{if(!LN)return;const wc=LN.wl*60;if(LN.wl>=8||LN.en<wc)return;LN.en-=wc;LN.wl++;LN.enMax=600+(LN.wl-1)*250;snd(990,.1,'square',.05);lnBanner(`⬆️ エナジー Lv${LN.wl}！`,'small')};
-$('lnUlt').onclick=()=>{if(!LN||LN.ult<LN.ULTN)return;LN.ult=0;const W=$('lnField').clientWidth,bm=document.createElement('div');bm.className='lnbeam';$('lnFx').appendChild(bm);setTimeout(()=>bm.remove(),900);
-  anim($('lnField'),'lnquake',700);[262,196,147,110].forEach((f,i)=>snd(f,.3,'sawtooth',.07,0,i*.08));vib(250);
-  setTimeout(()=>{if(!LN)return;const dmg=Math.round(LN.R*14);for(const u of LN.units)if(!u.dead&&u.side==='e'){lnHit(u,u.boss?dmg*.5:dmg,null);if(!u.dead)lnKnock(u,70)}},350)};
+$('lnUlt').onclick=laneFire;
 $('lnBack').onclick=()=>{if(!LN)return goHome();if(confirm('バトルを やめる？')){LN.run=false;LN=null;goHome()}};
 /* ---- パズル（3つ そろえて エナジー） ---- */
 const LPC=6,LPR=5;
@@ -1620,7 +1666,7 @@ function lpFind(){const g=LN.pz.g,M=new Set(),groups=[];
 async function lpSwap(a,b){if(LN.pz.lock||!LN.run)return;LN.pz.lock=true;const g=LN.pz.g;g[a.r][a.c]=b;g[b.r][b.c]=a;lpPos();snd(600,.03,'square',.03);await lsleep(170);
   if(!LN)return;let f=lpFind();if(!f.M.size){g[a.r][a.c]=b;g[b.r][b.c]=a;lpPos();a.e.classList.add('nope');b.e.classList.add('nope');setTimeout(()=>{a.e.classList.remove('nope');b.e.classList.remove('nope')},300);await lsleep(170);LN.pz.lock=false;return}
   let chain=0;while(f.M.size&&LN&&LN.run){chain++;const n=f.M.size,bonus=f.groups.filter(x=>x.length>=4).length;
-    const en=Math.round((n*9+bonus*30)*(1+(chain-1)*.5));LN.en=Math.min(LN.enMax,LN.en+en);LN.ult+=f.groups.length;LN.matches++;
+    const en=Math.round((n*9+bonus*30)*(1+(chain-1)*.5));LN.en=Math.min(LN.enMax,LN.en+en);LN.ult=Math.min(100,LN.ult+f.groups.length*4);LN.matches++;
     lpFloat(chain>1?`${chain}れんさ！ ⚡+${en}`:`⚡+${en}`);[660,784,988,1175,1318].slice(0,Math.min(5,chain)).forEach((fq,i)=>snd(fq,.07,'square',.04,0,i*.04));
     f.M.forEach(x=>x.e.classList.add('pop'));await lsleep(220);if(!LN)return;
     f.M.forEach(x=>{x.e.remove();g[x.r][x.c]=null});
@@ -1634,7 +1680,7 @@ function lpFloat(t){const e=document.createElement('div');e.className='lpfl';e.t
 function laneEnd(win){LN.run=false;const st=LN.st,first=win&&st>P.lane.best;
   if(win){$('lnCE').classList.add('fall');lnBanner('🏆 しょうり！','win')}else{$('lnCP').classList.add('fall');lnBanner('💥 まけ…','lose')}
   let g=LN.gold+(win?Math.round(st*60*DMULT[mixLv()]):0),tk=win&&(first||st%5===0)?1+Math.floor(st/10):0,it=null;
-  if(win){if(first){P.lane.best=st;it=makeItem(Math.max(1,st*3),Math.max(1,mixLv()),true,Math.min(4,Math.floor(st/5)));if(P.box.length<boxCap())P.box.push(it);else{g+=itPrice(it);it=null}}P.lane.sel=Math.min(P.lane.best+1,st+1);fanfare()}else snd(150,.5,'sawtooth',.06,-60);
+  if(win){if(first){P.lane.best=st;const nu=Object.values(CANNON).find(v=>v.unl===st);if(nu)setTimeout(()=>toast(`🏰 しろほう「${nu.n}」が つかえるように なった！`),2500);it=makeItem(Math.max(1,st*3),Math.max(1,mixLv()),true,Math.min(4,Math.floor(st/5)));if(P.box.length<boxCap())P.box.push(it);else{g+=itPrice(it);it=null}}P.lane.sel=Math.min(P.lane.best+1,st+1);fanfare()}else snd(150,.5,'sawtooth',.06,-60);
   P.gold+=g;P.tk=(P.tk||0)+tk;save();const kills=LN.kills;
   setTimeout(()=>showModal(`<div class="chest">${win?'🏆':'💥'}</div><div class="mt">${win?'しょうり！':'しろが こわされた…'}</div>
     <p>たおした てき ${kills}たい<br><b class="goldt">🪙+${fmtS(g)}</b>${tk?`　${pi('ticket')}+${tk}`:''}</p>${it?`<p>はじめての クリア ごほうび<br><span class="lnit">${itemIcon(it)}</span> <b style="color:${RAR[it.rar].h}">${esc(it.name)}</b></p>`:''}
@@ -1934,7 +1980,7 @@ const HELP=[
  ['event','📅 きょうの イベント',`まいにち ちがう ボーナスが あるよ！<br>${EVENTS.map(e=>`${e.i} <b>${e.d}</b>：${e.t}`).join('<br>')}`],
  ['map','🗺️ ワールドマップ',`10ステージごとに あたらしい ばしょに すすむよ。ばしょごとに けしきと でてくる モンスターの ぞくせいが かわる。<br>ホームの マップから、いったことの ある ばしょを えらべるよ。<br>🎁 ばしょの さいごの ステージを クリアすると ゴールド・ふくびきけん・つよい そうびが もらえる。せかいの ばしょを ぜんぶ クリアすると「せいは ほうしゅう」で げんていの しょうごう・オーラ・かぐ（まかい・かみがみは たまごも）！ ♾️ はてしない せかいでは 50ステージごとに もらえるよ。`],
  ['tower','🗼 むげんの とう',`1かいに 1たいずつ たおして、どこまで のぼれるか ちょうせん！ 10かいごとに ボスが いて、たおすと ゴールドと ふくびきけん。<br>HPは すこししか かいふく しないので、そうびを つよくして いこう。さいこう きろくは ランキングにも のるよ。`],
- ['lane','🏯 ぐんだん バトル',`なかまを くりだして てきの しろを こわす たいせん モード。<br>したの パズルで おなじ いろを 3つ いじょう そろえると ⚡エナジーが たまる（れんさや 4つ そろえで もっと）。エナジーで なかまを だせるよ。<br>なかまの ぞくせいで とくちょうが かわる：🪨かべ（かたい）・⚡✨とおくから こうげき・🔥こうげき つよい・❄️てきを おそくする・🌙はやい・🌿まわりを かいふく。<br>そろえた かずで 💥ひっさつが たまる！ ⬆️で エナジーの たまる はやさを アップ。はじめて クリアした ステージは そうびが もらえる。`],
+ ['lane','🏯 ぐんだん バトル',`なかまを くりだして てきの しろを こわす たいせん モード。<br>したの パズルで おなじ いろを 3つ いじょう そろえると ⚡エナジーが たまる（れんさや 4つ そろえで もっと）。エナジーで なかまを だせるよ。<br>なかまの ぞくせいで とくちょうが かわる：🪨かべ（かたい）・⚡✨とおくから こうげき・🔥こうげき つよい・❄️てきを おそくする・🌙はやい・🌿まわりを かいふく。<br>じかんと パズルで 🏰しろほうの ゲージが たまる！ しろほうは 5しゅるい（はどう・こおり・かべ・かみなり・いやし）から えらべて、ゴールドで パワーと チャージを きょうかできるよ。 ⬆️で エナジーの たまる はやさを アップ。はじめて クリアした ステージは そうびが もらえる。`],
  ['ghost','👻 ゴーストバトル',`ぼうけんの とちゅうで、とつぜん かぞくの ぼうけんしゃの「ゴースト」が あらわれる ことが あるよ！ 5もんの はやおし しょうぶ！ ゴーストは その ひとの せいかいりつと こたえる はやさを まねするよ。<br>かつと ゴールドと ふくびきけん 2まい。☁️ かぞくで きょうゆう していると、ほかの たんまつの かぞくの ゴーストも でてくるよ。`],
  ['gacha','🎰 ふくびき',`もんだいに 10かい せいかいするごとに ふくびきけんが 1まい（きんようびは 2まい）。とう・ゴースト・じっせき・ミニゲームでも もらえるよ。<br>そうび・たまご・きせかえ・ゴールド、たまに きゅうきょくの カケラも でる！ 10かい まとめて ひくことも できる。<br>★<b>ふくびき げんてい</b>：ここでしか もらえない きせかえ（せいきしの よろい・ぼうし・オーラ）、なかま（ラッキーキャット・ほしうさぎ・オーロラドラゴン）、かぐ が あるよ。`],
  ['ach','🏅 じっせき',`「せいかい 1000もん」「なかま 50しゅ」などの もくひょう。たっせいしたら「うけとる」で ゴールドと ふくびきけんが もらえるよ。ホームの ボタンの あかい かずは うけとれる じっせきの かず。`],
