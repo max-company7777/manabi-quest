@@ -454,7 +454,7 @@ input{font:inherit}
 .ghlist{display:flex;flex-direction:column;gap:6px;max-height:55vh;overflow:auto;margin:6px 0}.ghpick{display:flex;align-items:center;gap:10px;text-align:left;padding:6px 10px!important}
 .ghi{width:46px;flex:none}.ghi .hs{width:100%}.ghn{font-size:16px}.ghn small{display:block;font-size:11px;color:var(--sub)}
 
-.roombox{position:relative;width:100%;aspect-ratio:4/3;border:4px solid #000;box-shadow:0 4px 0 #0008;overflow:hidden;image-rendering:pixelated;flex:none}
+.roombox{position:relative;width:min(100%,calc(46vh / var(--zf,1) * 4 / 3));margin:0 auto;aspect-ratio:4/3;border:4px solid #000;box-shadow:0 4px 0 #0008;overflow:hidden;image-rendering:pixelated;flex:none}
 .rmwall{position:absolute;left:0;right:0;top:0;height:58%}.rmfloor{position:absolute;left:0;right:0;bottom:0;height:42%;border-top:4px solid #0004}
 .rmf{position:absolute;image-rendering:pixelated;z-index:5;filter:drop-shadow(0 3px 0 rgba(0,0,0,.35))}.rm-window,.rm-poster,.rm-shelf,.rm-trophy{filter:drop-shadow(2px 2px 0 rgba(0,0,0,.3))}.roombox.lit::after{content:'';position:absolute;left:36%;top:22%;width:28%;height:78%;background:linear-gradient(rgba(255,250,200,.28),rgba(255,250,200,0));clip-path:polygon(15% 0,85% 0,120% 100%,-20% 100%);z-index:3;pointer-events:none}.rm-rug{z-index:2}.rm-tank{z-index:10}.rm-bed,.rm-desk,.rm-sofa{z-index:8}.rm-lamp,.rm-plant{z-index:9}
 .rmtc{position:absolute;z-index:6;font-size:11px;background:#000a;padding:0 3px;transform:translateX(-10%)}
@@ -636,9 +636,9 @@ input{font:inherit}
 .fighter.flourish>.in{animation:flourish .9s}@keyframes flourish{20%{transform:rotate(-8deg) translateY(-4px)}45%{transform:rotate(10deg) scale(1.05)}70%{transform:rotate(-4deg)}}.fighter.lookaround>.in{animation:lookaround .9s}@keyframes lookaround{25%,40%{transform:scaleX(-1)}60%,100%{transform:none}}.fighter.hopsm>.in{animation:hopsm .6s}@keyframes hopsm{30%{transform:translateY(-14px)}60%{transform:translateY(0) scale(1.05,.95)}}
 .fighter.victory>.in{animation:victory 1.2s}@keyframes victory{15%{transform:translateY(-30px) rotate(-10deg)}35%{transform:translateY(-40px) rotate(360deg)}55%{transform:translateY(0) scale(1.1,.9)}70%{transform:translateY(-12px)}85%{transform:none}}
 .lnfield.lnnight::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 85% 60%,transparent 18%,rgba(5,5,30,.72) 55%);pointer-events:none;z-index:24}.lgim{background:#2a1a3a;border:2px solid #000;padding:4px 8px;color:#ffd23f}.lgim small{display:block;color:var(--sub);font-size:11px}
-.hroom{position:relative;display:block;width:100%;aspect-ratio:16/10;max-height:300px;padding:0!important;border:3px solid #000;box-shadow:0 4px 0 #0008,inset 0 0 0 2px #ffffff22;cursor:pointer;flex-shrink:0;overflow:hidden;background:#2a1a10;clip-path:polygon(3px 0,calc(100% - 3px) 0,100% 3px,100% calc(100% - 3px),calc(100% - 3px) 100%,3px 100%,0 calc(100% - 3px),0 3px)}.hroom:active{transform:translateY(3px)}
-.hrsc{position:absolute;inset:0;background-size:100% auto;background-position:center 60%;image-rendering:pixelated}.hroom::after{content:'';position:absolute;inset:0;box-shadow:inset 0 0 30px rgba(0,0,0,.45);pointer-events:none}
-.hrm{position:absolute;bottom:6%;width:10%;max-width:50px;z-index:3;font-style:normal;animation:hrwalk 7s steps(28) infinite}.hrm img{width:100%;display:block}.hrhero{position:absolute;left:22%;bottom:6%;width:8%;max-width:40px;z-index:3;font-style:normal;animation:breathe 2.6s ease-in-out infinite;transform-origin:50% 100%}.hrhero svg,.hrhero img{width:100%;height:auto;display:block}
+.hroom{position:relative;display:block;width:100%;aspect-ratio:16/10;padding:0!important;border:3px solid #000;box-shadow:0 4px 0 #0008,inset 0 0 0 2px #ffffff22;cursor:pointer;flex-shrink:0;overflow:hidden;background:#2a1a10;clip-path:polygon(3px 0,calc(100% - 3px) 0,100% 3px,100% calc(100% - 3px),calc(100% - 3px) 100%,3px 100%,0 calc(100% - 3px),0 3px)}.hroom:active{transform:translateY(3px)}
+.hrsc{position:absolute;inset:0;background-size:100% auto;background-position:center 75%;image-rendering:pixelated}.hroom::after{content:'';position:absolute;inset:0;box-shadow:inset 0 0 30px rgba(0,0,0,.45);pointer-events:none}
+.hrm{position:absolute;bottom:7%;width:9%;z-index:3;font-style:normal;animation:hrwalk 7s steps(28) infinite}.hrm img{width:100%;display:block}.hrhero{position:absolute;left:20%;bottom:7%;width:10%;z-index:3;font-style:normal;animation:breathe 2.6s ease-in-out infinite;transform-origin:50% 100%}.hrhero svg,.hrhero img{width:100%;height:auto;display:block}
 @keyframes hrwalk{0%,100%{transform:translateX(0)}45%{transform:translateX(60%)}50%{transform:translateX(60%) scaleX(-1)}95%{transform:translateX(0) scaleX(-1)}}
 .hrplate{position:absolute;left:8px;top:8px;z-index:4;background:linear-gradient(#a06a3a,#7a4a26);border:3px solid #000;padding:3px 10px;font-size:15px;color:#fff;text-shadow:2px 2px 0 #0008;box-shadow:inset 0 2px 0 #ffffff33;text-align:left}.hrplate small{display:block;font-size:10px;color:#ffe9a0}
 .hrgo{position:absolute;right:8px;bottom:8px;z-index:4;background:#3a7a4a;border:3px solid #000;padding:4px 10px;font-size:13px;color:#fff;box-shadow:inset 0 2px 0 #ffffff33}
@@ -1055,7 +1055,7 @@ function makeItem(st,d,boss,min=0){
 /* =============== save data =============== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-const APPV='v92';
+const APPV='v93';
 try{const c=document.createElement('canvas');c.width=9;c.height=9;const g=c.getContext('2d'),F=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};F(1,0,7,1,'#120d09');F(1,8,7,1,'#120d09');F(0,1,1,7,'#120d09');F(8,1,1,7,'#120d09');F(1,1,7,1,'#120d09');F(1,7,7,1,'#120d09');F(1,1,1,7,'#120d09');F(7,1,1,7,'#120d09');F(2,2,5,1,'#7a6a52');F(2,2,1,5,'#7a6a52');F(2,6,5,1,'#2a2018');F(6,2,1,5,'#2a2018');document.documentElement.style.setProperty('--pxf',`url(${c.toDataURL()})`)}catch(e){}
 const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));if(G.bgmOn===undefined)G.bgmOn=true;
 let P=null;
