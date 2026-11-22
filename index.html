@@ -471,6 +471,7 @@ input{font:inherit}
 .limc span{display:block;width:100%;aspect-ratio:1}.limc span svg,.limc span .hs{width:100%;height:100%}.limc small{display:block;font-size:9px;line-height:1.2}
 .gz.c5{background:linear-gradient(90deg,#3a1a5a,#0005)}
 .chbox{text-align:left;max-height:62vh;overflow:auto}.chh{color:var(--gold);font-size:14px;margin:8px 0 4px}.chg{display:grid;grid-template-columns:1fr 1fr;gap:5px}.chg .btn{font-size:13px;padding:9px 4px}.chg .toggle{background:#2a5a8a}
+.snk{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin:6px 0}.snk .btn{padding:8px 0;font-size:13px;line-height:1.3}.snk small{font-size:11px;color:#ffd23f}
 </style>
 </head>
 <body>
@@ -2111,13 +2112,13 @@ function monModal(id){
     <small style="color:var(--sub)">${elIcon(m.sp)} は ${(STRONG[elOf(m.sp)]||[]).map(e=>ELS[e].i+e).join('・')||'ぜんぶ'}に つよい（ダメージ 1.5ばい）</small>
     <p>Lv ${m.lv>=MONMAX?'MAX':m.lv}　なかまパワー <b style="color:var(--gold)">${monPow(m)}</b></p>
     <div class="pbar"><i style="width:${m.xp/monXpNeed(m)*100}%;background:var(--xp)"></i></div><small style="color:var(--sub)">パーティで モンスターを たおすと レベルアップ</small>
-    <div class="row"><button class="btn" id="sn1"${P.gold<snackCost(m,1)?' disabled style="opacity:.5"':''}>🍪 +1Lv<br><small>🪙${snackCost(m,1)}</small></button><button class="btn" id="sn5"${P.gold<snackCost(m,5)?' disabled style="opacity:.5"':''}>🍰 +5Lv<br><small>🪙${snackCost(m,5)}</small></button></div>
+    <div class="snk">${[[1,'🍪'],[5,'🍰'],[10,'🎂'],[100,'🍱']].map(([n,e])=>`<button class="btn" id="sn${n}"${P.gold<snackCost(m,n)?' disabled style="opacity:.5"':''}>${e} +${n}Lv<br><small>🪙${fmtS(snackCost(m,n))}</small></button>`).join('')}</div>
     ${evoBlock(m)}
     ${inP?'<button class="btn gray big" id="out">パーティから はずす</button>':'<button class="btn green big" id="in">パーティに いれる</button>'}
     <div class="row"><button class="btn ${m.fav?'orange':'gray'}" id="fav">${m.fav?'🔒 おきにいり ちゅう':'🔓 おきにいりに する'}</button>${canBye(m)?`<button class="btn gray" id="bye">👋 おわかれ</button>`:''}</div>
     ${!canBye(m)?`<small style="color:var(--sub)">${inP?'パーティの なかまとは おわかれ できないよ':'おきにいりの なかまとは おわかれ できないよ'}</small>`:''}
     <button class="btn gray" id="cl">とじる</button>`,
-    {sn1:()=>feed(id,1),sn5:()=>feed(id,5),evo:()=>doEvolve(id),fav:()=>{m.fav=!m.fav;save();monModal(id);renderBox()},bye:()=>byeModal(id),in:()=>{if(P.party.length<partyMax()){P.party.push(id);save();closeModal();renderBox();return}
+    {sn1:()=>feed(id,1),sn5:()=>feed(id,5),sn10:()=>feed(id,10),sn100:()=>feed(id,100),evo:()=>doEvolve(id),fav:()=>{m.fav=!m.fav;save();monModal(id);renderBox()},bye:()=>byeModal(id),in:()=>{if(P.party.length<partyMax()){P.party.push(id);save();closeModal();renderBox();return}
         const pm=partyMons();showModal(`<div class="mt">だれと いれかえる？</div><div class="prow big">${pm.map((x,i)=>`<button class="pslot" id="sw${i}" style="--rc:${RAR[SP[x.sp].rar].c}"><div class="pms flip">${monsterSVG(x.sp)}</div><small>${SP[x.sp].name}</small></button>`).join('')}</div><button class="btn gray" id="cl">やめる</button>`,
           Object.assign({cl:closeModal},...pm.map((x,i)=>({['sw'+i]:()=>{P.party[i]=id;save();closeModal();renderBox()}}))))},
      out:()=>{P.party=P.party.filter(x=>x!==id);save();closeModal();renderBox()},cl:closeModal},'r'+s.rar);
@@ -2318,7 +2319,7 @@ function renderShop(){
   if($('incBuy'))$('incBuy').onclick=()=>{const np=INCP[incMax()-3];if(P.gold<np)return;P.gold-=np;P.incMax=incMax()+1;const w=P.eggs.find(x=>!x.inc);if(w)w.inc=true;save();coin();toast(`🥚 ふかきが ${incMax()}こに なった！`);renderShop()};
   if($('goMons'))$('goMons').onclick=()=>openBox('mons');
 }
-const snackCost=(m,n)=>Math.round((50+m.lv*15)*(n===5?4.5:1));
+const snackCost=(m,n)=>Math.round((n*50+15*(n*m.lv+n*(n-1)/2))*({1:1,5:.9,10:.85,100:.8}[n]||1));
 function feed(id,n){const m=P.mons.find(x=>x.id===id);if(!m)return;const c=snackCost(m,n);if(P.gold<c){toast('ゴールドが たりないよ');return}
   const was=evoReady(m);P.gold-=c;m.lv+=n;m.xp=0;save();snd(988,.1,'square',.05);snd(1319,.14,'square',.05,0,.1);toast(`🍪 ${SP[m.sp].name}が Lv${m.lv}に！`);
   if(!was&&evoReady(m))setTimeout(()=>toast(`✨ ${SP[m.sp].name}が しんか できるよ！`),900);monModal(id);renderBox()}
