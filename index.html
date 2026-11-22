@@ -636,7 +636,7 @@ input{font:inherit}
 .fighter.flourish>.in{animation:flourish .9s}@keyframes flourish{20%{transform:rotate(-8deg) translateY(-4px)}45%{transform:rotate(10deg) scale(1.05)}70%{transform:rotate(-4deg)}}.fighter.lookaround>.in{animation:lookaround .9s}@keyframes lookaround{25%,40%{transform:scaleX(-1)}60%,100%{transform:none}}.fighter.hopsm>.in{animation:hopsm .6s}@keyframes hopsm{30%{transform:translateY(-14px)}60%{transform:translateY(0) scale(1.05,.95)}}
 .fighter.victory>.in{animation:victory 1.2s}@keyframes victory{15%{transform:translateY(-30px) rotate(-10deg)}35%{transform:translateY(-40px) rotate(360deg)}55%{transform:translateY(0) scale(1.1,.9)}70%{transform:translateY(-12px)}85%{transform:none}}
 .lnfield.lnnight::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 85% 60%,transparent 18%,rgba(5,5,30,.72) 55%);pointer-events:none;z-index:24}.lgim{background:#2a1a3a;border:2px solid #000;padding:4px 8px;color:#ffd23f}.lgim small{display:block;color:var(--sub);font-size:11px}
-.hroom{position:relative;display:block;width:100%;aspect-ratio:16/7;padding:0!important;border:3px solid #000;box-shadow:0 4px 0 #0008,inset 0 0 0 2px #ffffff22;cursor:pointer;flex-shrink:0;overflow:hidden;background:#2a1a10;clip-path:polygon(3px 0,calc(100% - 3px) 0,100% 3px,100% calc(100% - 3px),calc(100% - 3px) 100%,3px 100%,0 calc(100% - 3px),0 3px)}.hroom:active{transform:translateY(3px)}
+.hroom{position:relative;display:block;width:100%;aspect-ratio:16/5.2;padding:0!important;border:3px solid #000;box-shadow:0 4px 0 #0008,inset 0 0 0 2px #ffffff22;cursor:pointer;flex-shrink:0;overflow:hidden;background:#2a1a10;clip-path:polygon(3px 0,calc(100% - 3px) 0,100% 3px,100% calc(100% - 3px),calc(100% - 3px) 100%,3px 100%,0 calc(100% - 3px),0 3px)}.hroom:active{transform:translateY(3px)}
 .hrsc{position:absolute;inset:0;background-size:100% auto;background-position:center 75%;image-rendering:pixelated}.hroom::after{content:'';position:absolute;inset:0;box-shadow:inset 0 0 30px rgba(0,0,0,.45);pointer-events:none}
 .hrm{position:absolute;bottom:7%;width:9%;z-index:3;font-style:normal;animation:hrwalk 7s steps(28) infinite}.hrm img{width:100%;display:block}.hrhero{position:absolute;left:20%;bottom:7%;width:10%;z-index:3;font-style:normal;animation:breathe 2.6s ease-in-out infinite;transform-origin:50% 100%}.hrhero svg,.hrhero img{width:100%;height:auto;display:block}
 @keyframes hrwalk{0%,100%{transform:translateX(0)}45%{transform:translateX(60%)}50%{transform:translateX(60%) scaleX(-1)}95%{transform:translateX(0) scaleX(-1)}}
@@ -717,6 +717,9 @@ img.shy{filter:hue-rotate(150deg) saturate(1.35) brightness(1.08) drop-shadow(0 
 .spdex .spdg{margin:6px 0}.spdt{font-size:13px;color:#fff;margin:2px 4px}.spdt small{margin-left:6px;color:var(--sub);font-size:11px}.spdr{display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:4px}.spdr .bcell b{font-size:9px;line-height:1.1}.spdr .bt{font-size:8px!important}
 .rphs{display:flex;align-items:center;justify-content:center;gap:4px;margin:6px 0}.rphs>i{color:#888;font-style:normal}.rph{width:70px;text-align:center;background:rgba(0,0,0,.35);border:2px solid #444;border-radius:8px;padding:3px}.rph img{width:44px;height:44px;image-rendering:pixelated}.rph b{display:block;font-size:28px;line-height:44px;color:#666}.rph small{display:block;font-size:9px}.rph.clr{border-color:#58d14a;opacity:.75}.rph.clr img{filter:grayscale(.8)}.rph.cur{border-color:#ffd23f;box-shadow:0 0 8px #ffd23f}
 .q .pmap{width:min(70vw,250px);height:auto;display:block;margin:0 auto}.nq .pmap{width:160px}
+.spkhd{font-size:12px;color:var(--sub)}.spkem{font-size:64px;line-height:1.1}.spkw{font-size:34px;font-weight:700;color:#ffd23f;font-family:'M PLUS Rounded 1c',sans-serif}.spkja{font-size:14px;color:var(--sub);margin-bottom:6px}
+.spkmic{width:110px;height:110px;border-radius:50%;margin:10px auto;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:42px;background:radial-gradient(circle at 40% 35%,#ff8a7a,#e8413c);border:4px solid #fff;color:#fff;box-shadow:0 5px 0 #8a1a1a;font-family:inherit}.spkmic small{font-size:11px}.spkmic.on{animation:micp 1s ease-in-out infinite;background:radial-gradient(circle at 40% 35%,#7af07a,#2a9a3a)}.spkmic:disabled{opacity:.4}@keyframes micp{50%{transform:scale(1.08);box-shadow:0 0 0 12px rgba(122,240,122,.3)}}
+.spkres{min-height:46px;font-size:18px}.spkres small{font-size:12px;color:var(--sub)}
 </style>
 </head>
 <body>
@@ -787,7 +790,7 @@ img.shy{filter:hue-rotate(150deg) saturate(1.35) brightness(1.08) drop-shadow(0 
     <div class="row hgrid">
       <button class="btn" id="weakBtn">📕 にがて <span id="weakN">0</span></button>
       <button class="btn" id="noteBtn">📒 ノート</button>
-      <button class="btn" id="wrBtn">✍️ かきとり</button>
+      <button class="btn" id="wrBtn">🎯 れんしゅう</button>
       <button class="btn" id="statBtn">📊 きろく</button>
       <button class="btn" id="rankBtn">🏆 ランキング</button>
       <button class="btn" id="famBtn" style="background:#2a6a9a">👀 みんなの ようす</button>
@@ -1278,7 +1281,7 @@ function makeItem(st,d,boss,min=0){
 /* =============== save data =============== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-const APPV='v131';
+const APPV='v132';
 try{const c=document.createElement('canvas');c.width=9;c.height=9;const g=c.getContext('2d'),F=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};F(1,0,7,1,'#120d09');F(1,8,7,1,'#120d09');F(0,1,1,7,'#120d09');F(8,1,1,7,'#120d09');F(1,1,7,1,'#120d09');F(1,7,7,1,'#120d09');F(1,1,1,7,'#120d09');F(7,1,1,7,'#120d09');F(2,2,5,1,'#7a6a52');F(2,2,1,5,'#7a6a52');F(2,6,5,1,'#2a2018');F(6,2,1,5,'#2a2018');document.documentElement.style.setProperty('--pxf',`url(${c.toDataURL()})`)}catch(e){}
 const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));if(G.bgmOn===undefined)G.bgmOn=true;
 let P=null;
@@ -1841,7 +1844,40 @@ function writeJudge(){if(!WR||!WR.strokes.length){toast('ゆびで かいてね'
     if(WR.step===1){WR.miss=(WR.miss||0)+1;if(WR.miss>=3){WR.miss=0;WR.step=0;$('wrM').innerHTML+='<br><small>もういちど なぞって れんしゅう しよう</small>';setTimeout(()=>writeNext(),1400)}}}}
 function writeEnd(){const n=WR.ok,g=Math.round(n*15*Math.max(1,DMULT[mixLv()]));P.gold+=g;try{gainXp(n*10)}catch(e){}save();fanfare();const k=WR.set;WR=null;
   showModal(`<div class="chest">✍️</div><div class="mt">かきとり おわり！</div><p>${n}もじ かけたよ！<br>ごほうび <b class="goldt">🪙+${g}</b></p><button class="btn orange big" id="ag">もういちど</button><button class="btn gray" id="hm">ホームへ</button>`,{ag:()=>{closeModal();writeStart(k)},hm:()=>{closeModal();goHome()}})}
-$('wrBtn').onclick=()=>{snd(660,.05);writeMenu()};
+$('wrBtn').onclick=()=>{snd(660,.05);practiceMenu()};
+function practiceMenu(){showModal(`<div class="mt">🎯 れんしゅう</div><div class="wrsets"><button class="btn orange" id="pw">✍️ かきとり<small>ゆびで もじを かく</small></button><button class="btn" style="background:#3a7ad9" id="ps">🎤 えいごの はつおん<small>こえに だして いってみよう</small></button></div><button class="btn gray" id="cl">とじる</button>`,{pw:writeMenu,ps:speakMenu,cl:closeModal})}
+/* ---- 🎤 えいごの はつおん（音声認識） ---- */
+const SRC=window.SpeechRecognition||window.webkitSpeechRecognition;let SPK=null;
+const normE=t=>String(t).toLowerCase().replace(/[^a-z' ]/g,'').replace(/\s+/g,' ').trim();
+function lev(a,b){const m=a.length,n=b.length,d=[...Array(n+1).keys()];for(let i=1;i<=m;i++){let p=d[0];d[0]=i;for(let j=1;j<=n;j++){const t=d[j];d[j]=Math.min(d[j]+1,d[j-1]+1,p+(a[i-1]===b[j-1]?0:1));p=t}}return d[n]}
+function speakMenu(){const W=P.spk||(P.spk={}),L=EN,P2=PHRASES,done=Object.keys(W).filter(k=>W[k]>=1).length;
+  showModal(`<div class="mt">🎤 えいごの はつおん</div><p style="font-size:13px">おてほんを きいて、マイクに むかって いってみよう！</p>
+    ${SRC?'':'<p class="byewarn">⚠️ この アプリの がめんでは マイクが つかえないみたい。<br>Safari や Chrome で ひらくと つかえるよ。</p>'}
+    <div class="wrsets"><button class="btn orange" data-sk="w">🍎 たんご<small>いえた ${Object.keys(W).filter(k=>W[k]>=1&&!k.includes(' ')).length}/${L.length}</small></button><button class="btn purple" data-sk="p">💬 あいさつ・ぶん<small>いえた ${Object.keys(W).filter(k=>W[k]>=1&&k.includes(' ')).length}/${P2.length}</small></button></div>
+    <button class="btn gray" id="cl">とじる</button>`,{cl:closeModal});
+  document.querySelectorAll('[data-sk]').forEach(b=>b.onclick=()=>{closeModal();speakStart(b.dataset.sk)})}
+function speakStart(k){const W=P.spk||(P.spk={}),src=k==='w'?EN:PHRASES,un=src.filter(x=>!(W[normE(x[1])]>=1)),pool=shuffle(un).concat(shuffle(src.filter(x=>W[normE(x[1])]>=1))).slice(0,6);
+  SPK={k,q:pool,i:0,ok:0,tries:0};speakQ()}
+function speakQ(){const S=SPK;if(S.i>=S.q.length){speakEnd();return}const [em,w,ja]=S.q[S.i];
+  showModal(`<div class="spkhd">${S.i+1} / ${S.q.length}</div><div class="spkem">${em}</div><div class="spkw">${esc(w)}</div><div class="spkja">${esc(ja)}</div>
+    <button class="btn" id="sl" style="background:#3a7ad9">🔊 おてほんを きく</button>
+    <button class="spkmic" id="sm"${SRC?'':' disabled'}>🎤<small>おして いう</small></button><div class="spkres" id="sr"></div>
+    <div class="row"><button class="btn gray" id="sk">⏭️ つぎへ</button><button class="btn gray" id="sq">やめる</button></div>`,
+    {sl:()=>say(w,'en-US'),sk:()=>{S.i++;S.tries=0;speakQ()},sq:()=>{closeModal();SPK=null}});
+  setTimeout(()=>say(w,'en-US'),250);$('sm').onclick=()=>speakListen(w)}
+function speakListen(w){if(!SRC)return;const r=new SRC(),btn=$('sm'),out=$('sr');r.lang='en-US';r.interimResults=false;r.maxAlternatives=5;
+  btn.classList.add('on');btn.innerHTML='👂<small>きいてるよ…</small>';out.innerHTML='';let got=false;
+  r.onresult=e=>{got=true;const alts=[...e.results[0]].map(a=>a.transcript),t=normE(w),best=alts.map(a=>{const n=normE(a);return{n,sc:n===t||n.includes(t)?1:1-lev(n,t)/Math.max(t.length,n.length,1)}}).sort((a,b)=>b.sc-a.sc)[0];speakJudge(w,best)};
+  r.onerror=e=>{out.innerHTML=e.error==='not-allowed'?'🎤 マイクを つかって いいか きかれたら「きょか」してね':'きこえなかったよ。もういちど おしてね';reset()};
+  r.onend=()=>{if(!got&&!out.innerHTML)out.innerHTML='きこえなかったよ。もういちど おしてね';reset()};
+  const reset=()=>{btn.classList.remove('on');btn.innerHTML='🎤<small>おして いう</small>'};
+  try{r.start()}catch(e){out.textContent='マイクが つかえないよ';reset()}}
+function speakJudge(w,b){const S=SPK,out=$('sr'),ok=b.sc>=.8;S.tries++;
+  try{record({key:'ev'+normE(w),a:w,html:`🎤 ${esc(w)}`,subj:'eng'},ok,3)}catch(e){}
+  if(ok){S.ok++;const W=P.spk||(P.spk={}),k=normE(w);W[k]=(W[k]||0)+1;P.total++;save();sfxDo('correct');fxConfetti(30);out.innerHTML=`⭕ <b>${b.sc>=.99?'パーフェクト！':'じょうず！'}</b><br><small>「${esc(b.n)}」って きこえたよ</small>`;setTimeout(()=>{if(SPK===S){S.i++;S.tries=0;speakQ()}},1600)}
+  else{snd(200,.2,'square',.05);out.innerHTML=`${b.sc>=.55?'🔺 おしい！':'もういちど！'}<br><small>「${esc(b.n||'…')}」って きこえたよ</small>${S.tries>=3?'<br><small>むずかしかったら「つぎへ」でも OK</small>':''}`}}
+function speakEnd(){const n=SPK.ok,g=Math.round(n*15*Math.max(1,DMULT[mixLv()]));P.gold+=g;try{gainXp(n*10)}catch(e){}save();fanfare();const k=SPK.k;SPK=null;
+  showModal(`<div class="chest">🎤</div><div class="mt">はつおん おわり！</div><p>${n}こ いえたよ！<br>ごほうび <b class="goldt">🪙+${g}</b></p><button class="btn orange big" id="ag">もういちど</button><button class="btn gray" id="hm">ホームへ</button>`,{ag:()=>speakStart(k),hm:()=>{closeModal();goHome()}})}
 var WQOK=false;
 function genWriteQ(lv){const set=lv<=1?WSETS[0]:lv===2?WSETS[1]:WSETS[2],[ch,rd,em]=pick(set.list()),tr=lv<=1;
   return{key:'w'+ch,a:ch,html:`<span class="wrq">${em?`<span class="wrem">${em}</span>`:''}「<b>${rd}</b>」を ${tr?'なぞろう':'かこう'}</span>`,speak:[rd,'ja-JP'],choices:[],write:{ch,rd,em,tr}}}
@@ -1963,7 +1999,7 @@ function piURL(n){const [pal,rows]=PIX[n],cells=[],set=new Set(),m=new Map();row
 const pi=(n,c='')=>{const k='pi|'+n;if(!IMGC[k])IMGC[k]=piURL(n);return `<img class="pi ${c}" src="${IMGC[k]}" alt="">`};
 function pixHome(){
   const set=(id,ic,txt)=>{const e=$(id);if(e)e.innerHTML=pi(ic)+txt};
-  set('weakBtn','book',`にがて <span id="weakN">${P?P.weak.length:0}</span>`);set('statBtn','chart','きろく');set('noteBtn','book','ノート');{const e=$('wrBtn');if(e)e.innerHTML='✍️ かきとり'}set('famBtn','person','みんな');
+  set('weakBtn','book',`にがて <span id="weakN">${P?P.weak.length:0}</span>`);set('statBtn','chart','きろく');set('noteBtn','book','ノート');{const e=$('wrBtn');if(e)e.innerHTML='🎯 れんしゅう'}set('famBtn','person','みんな');
   set('rankBtn','trophy','ランキング');
   const dk=(id,ic,t,badge)=>{const e=$(id);if(e)e.innerHTML=pi(ic)+`<i>${t}</i>`+(badge?`<b class="dkb">${badge}</b>`:'')};
   dk('towerBtn','tower','とう',P&&P.tower&&P.tower.best?P.tower.best+'F':'');dk('gachaBtn','gacha','ふくびき',P&&P.tk?P.tk:'');dk('roomBtn','house','へや');dk('achBtn','medal','じっせき',P&&achClaimable()?achClaimable():'');dk('boxBtn','box','ボックス',P&&P.mons.some(evoReady)?'✨':'');dk('shopBtn','bag','ショップ');dk('laneBtn','swords','ぐんだん',P?('🎫'+ltDaily()):'');dk('giftBtn','gift','コード');{const t=$('hdTop');if(t)t.innerHTML=pi('door')+'<i>トップ</i>'}set('setBtn','gear','せってい');set('helpBtn','help','ヘルプ');
@@ -3748,7 +3784,7 @@ function catOf(subj,key){
     return 'わりざん'}
   if(subj==='chi'){if(/^c[mr]/.test(key))return 'とどうふけん（ちず）';if(key.startsWith('cc'))return 'けんちょう しょざいち';if(key.startsWith('cb'))return 'めいぶつ';const m=key.match(/^cq(\d)/);return m?['いきもの','きせつ・むし','いきもの・しょくぶつ','ぎょうじ・からだ','りか（3ねん）','りか（4ねん）','りか（5ねん）','りか（6ねん）'][+m[1]]:'ちしき'}
   if(subj==='life'){const k2=key.slice(0,2);return {tk:'とけい',mo:'おかね',wp:'ぶんしょうだい',td:'じかんの けいさん',sp:'はやさ',up:'たんか'}[k2]||'せいかつ'}
-  if(subj==='eng')return {el:'きいて えらぶ',ep:'え→えいたんご',ej:'にほんご→えいご',es:'つづり',ee:'えいご→にほんご',e4:'ようび・つき・てんき',e5:'ぶんを かんせい',e6:'かこの ことば'}[key.slice(0,2)]||'えいご';
+  if(subj==='eng')return {el:'きいて えらぶ',ep:'え→えいたんご',ej:'にほんご→えいご',es:'つづり',ev:'はつおん',ee:'えいご→にほんご',e4:'ようび・つき・てんき',e5:'ぶんを かんせい',e6:'かこの ことば'}[key.slice(0,2)]||'えいご';
   if(/^w/.test(key))return 'かきとり';if(key.startsWith('h'))return 'ひらがな';if(key.startsWith('k1p'))return 'かんじ1年（え→かんじ）';
   const k=key.match(/^k([2-7])/);return k?{2:'かんじ1年（よみ）',3:'かんじ2年（よみ）',4:'かんじ3年（じゅくご）',5:'かんじ4年（よみ）',6:'かんじ5年（よみ）',7:'かんじ6年（よみ）'}[k[1]]:'こくご';
 }
