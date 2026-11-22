@@ -1072,7 +1072,7 @@ function makeItem(st,d,boss,min=0){
 /* =============== save data =============== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-const APPV='v104';
+const APPV='v105';
 try{const c=document.createElement('canvas');c.width=9;c.height=9;const g=c.getContext('2d'),F=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};F(1,0,7,1,'#120d09');F(1,8,7,1,'#120d09');F(0,1,1,7,'#120d09');F(8,1,1,7,'#120d09');F(1,1,7,1,'#120d09');F(1,7,7,1,'#120d09');F(1,1,1,7,'#120d09');F(7,1,1,7,'#120d09');F(2,2,5,1,'#7a6a52');F(2,2,1,5,'#7a6a52');F(2,6,5,1,'#2a2018');F(6,2,1,5,'#2a2018');document.documentElement.style.setProperty('--pxf',`url(${c.toDataURL()})`)}catch(e){}
 const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));if(G.bgmOn===undefined)G.bgmOn=true;
 let P=null;
@@ -2604,14 +2604,14 @@ function cheatWeekAdd(d){const S=P.stats||(P.stats={cats:{},days:{},items:{}});d
   if(d>0){const W=[1,1.2,.8,1.1,.9,1.3,1],sw=W.reduce((x,y)=>x+y,0);let left=d;for(let i=6;i>=0;i--){const dt=new Date();dt.setDate(dt.getDate()-i);const part=i===0?left:Math.round(d*W[i]/sw);left-=part;if(part<=0)continue;const dd=S.days[dkey(dt)]||(S.days[dkey(dt)]={});SUBK.forEach((k,j)=>{const a=Math.floor(part/3)+(j<part%3?1:0),e=dd[k]||(dd[k]={n:0,ok:0});e.n+=a;e.ok+=a})}return}
   let r=-d;for(let i=0;i<7&&r>0;i++){const dt=new Date();dt.setDate(dt.getDate()-i);const dd=S.days[dkey(dt)];if(!dd)continue;for(const k in dd){const t=Math.min(r,dd[k].ok);dd[k].ok-=t;dd[k].n=Math.max(dd[k].ok,dd[k].n-t);r-=t;if(r<=0)break}}}
 let mlvScope='party';
-function monLvCheat(){const tg=()=>mlvScope==='party'?partyMons():P.mons,mx=Math.max(0,...P.mons.map(m=>m.lv));
+function monLvCheat(){const tg=()=>mlvScope==='party'?partyMons():P.mons,mx=Math.max(0,...P.mons.map(m=>m.lv).filter(Number.isFinite));
   showModal(`<div class="mt">🐾 なかまの レベル</div><div class="swr">${[['party','⚔️ パーティだけ'],['all','📦 ぜんぶの なかま']].map(([k,n])=>`<button class="fchip${mlvScope===k?' sel':''}" data-sc="${k}">${n}</button>`).join('')}</div>
     <p style="font-size:13px">たいしょう：${tg().length}たい（いまの さいこう Lv${mx}）<br><small style="color:var(--sub)">いまより ひくい Lvには さがらないよ</small></p>
     <div class="chg">${[[100,'Lv100'],[500,'Lv500'],[1000,'Lv1000'],[P.lv,'じぶんと おなじ Lv'+P.lv],[mx,'いちばん たかい なかまに そろえる（Lv'+mx+'）'],['ask','じゆうに']].map(([v,n])=>`<button class="btn" data-mv="${v}">${n}</button>`).join('')}</div>
-    <button class="btn gray" id="bk">もどる</button>`,{bk:cheatOpen});
+    ${P.mons.some(m=>!(Number.isFinite(m.lv)&&m.lv>=1))?'<button class="btn orange" id="fx">🩹 こわれた Lvを なおす</button>':''}<button class="btn gray" id="bk">もどる</button>`,{bk:cheatOpen,fx:()=>{const n=fixMonLv(P);save();toast(`🩹 ${n}たいを なおしたよ`);monLvCheat()}});
   document.querySelectorAll('[data-sc]').forEach(b=>b.onclick=()=>{mlvScope=b.dataset.sc;monLvCheat()});
   document.querySelectorAll('[data-mv]').forEach(b=>b.onclick=()=>{let v=b.dataset.mv;if(v==='ask'){const a=prompt('なかまの レベル',P.lv);if(a===null)return;v=Math.floor(+a);if(!(v>0)){toast('すうじを いれてね');return}}else v=+v;
-    const L=tg();L.forEach(m=>{m.lv=Math.max(m.lv,v);m.xp=0});save();toast(`🐾 ${L.length}たいを Lv${v}に！`);monLvCheat()})}
+    const L=tg();L.forEach(m=>{m.lv=Math.max(Number.isFinite(m.lv)?m.lv:1,v);m.xp=0});save();toast(`🐾 ${L.length}たいを Lv${v}に！`);monLvCheat()})}
 function repairPick(){showModal(`<div class="mt">🩹 どの アカウントを なおす？</div><div class="chg">${G.profiles.map((p,i)=>`<button class="btn" data-rp="${i}">${esc(p.name)}　🪙${Number.isFinite(p.gold)?fmtS(p.gold):'<b style="color:#ff8a7a">こわれている</b>'}</button>`).join('')}</div><button class="btn gray" id="bk">もどる</button>`,{bk:cheatOpen});
   document.querySelectorAll('[data-rp]').forEach(b=>b.onclick=()=>repairOpen(G.profiles[+b.dataset.rp],repairPick))}
 /* fix gold / equipment + of any profile on this device without making it a cheat account */
@@ -2656,7 +2656,7 @@ function cheatOpen(){if(!P||!P.cheat)return;try{cheatSyncCats();save()}catch(e){
     mall:()=>{SPECIES.filter(x=>x[3]<5).forEach(x=>{P.dex.owned[x[0]]=1;P.dex.seen[x[0]]=1;if(!P.mons.some(m=>m.sp===x[0]))P.mons.push({id:uid(),sp:x[0],lv:1,xp:0,bond:0})});done('151しゅ')},
     mult:()=>{ULTS.forEach(u=>{P.dex.owned[u.k]=1;P.dex.seen[u.k]=1;if(!P.mons.some(m=>m.sp===u.k))P.mons.push({id:uid(),sp:u.k,lv:1,xp:0,bond:0})});done('きゅうきょく')},
     mspe:()=>{Object.keys(SP).filter(k=>SP[k].special&&(SP[k].special==='gacha'||SP[k].special==='gift'||/0$/.test(k))).forEach(k=>{P.dex.owned[k]=1;if(!P.mons.some(m=>m.sp===k))P.mons.push({id:uid(),sp:k,lv:1,xp:0,bond:0})});done('とくべつ なかま')},
-    mevo:()=>{P.mons.forEach(m=>{const n=evoNeed(m);if(n){m.lv=Math.max(m.lv,n.lv);m.bond=Math.max(m.bond||0,n.bond)}});done('しんか OK')},
+    mevo:()=>{P.mons.forEach(m=>{const n=evoOf(m.sp)&&evoNeed(m);if(n&&Number.isFinite(n.lv)){m.lv=Math.max(m.lv,n.lv);m.bond=Math.max(m.bond||0,n.bond)}});done('しんか OK')},
     mlv:()=>monLvCheat(),
     egg:()=>{P.eggs.forEach(e=>{e.inc=true;e.prog=e.need});save();closeModal();processHatch(()=>{renderHome();cheatOpen()})},
     cos:()=>{const C=cosOf(P);Object.entries(COSCAT).forEach(([c,o])=>Object.keys(o).forEach(k=>C.owned[c+':'+k]=1));done('きせかえ ぜんぶ')},
@@ -2989,7 +2989,8 @@ const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
 const EGGNEED=[15,30,50,80,120,200],EGGCH=[.15,.2,.28,.4,.5,.15],MBASE=[4,7,12,20,32,60],MGROW=[1,2,3,4,6,10],MAXLV=Infinity,MONMAX=Infinity;
 const monPow=m=>{const s=SP[m.sp];return s?Math.round((MBASE[s.rar]+(m.lv-1)*MGROW[s.rar])*(s.boss?1.2:1)*(s.pmul||1)):0};
 const monXpNeed=m=>5+m.lv*2;
-function ensureP(p){if(!p.weakV4){try{weakTrim(p)}catch(e){}p.weakV4=1}setTimeout(()=>autoFav(p),0);if(p.weak&&!p.weakV2){p.weak.forEach(w=>w.n=Math.min((w.n||1)+2,WEAKMAX));p.weakV2=1}if(p.weak&&!p.weakV3){p.weak.forEach(w=>w.n=Math.max(1,Math.min(w.n||1,WEAKN)));p.weakV3=1}if(!Number.isFinite(p.gold))p.gold=0;if(!p.mixOn){p.mixOn=1;p.subj='mix';p.best=p.best||{};p.best.mix=Math.max(p.best.mix||0,p.best.math||0,p.best.eng||0,p.best.kanji||0)}p.frag=p.frag||{};p.ultMiss=p.ultMiss||0;p.box=p.box||[];p.mons=p.mons||[];p.party=p.party||[];p.eggs=p.eggs||[];p.dex=p.dex||{};p.dex.seen=p.dex.seen||{};p.dex.owned=p.dex.owned||{};p.dex.items=p.dex.items||{};return p}
+function fixMonLv(p){const ms=p.mons||[],ok=ms.map(m=>m.lv).filter(v=>Number.isFinite(v)&&v>=1),fb=ok.length?Math.max(...ok):Math.max(1,Number.isFinite(p.lv)?p.lv:1);let n=0;ms.forEach(m=>{if(!(Number.isFinite(m.lv)&&m.lv>=1)){m.lv=fb;n++}if(!Number.isFinite(m.xp))m.xp=0;if(!Number.isFinite(m.bond))m.bond=0});return n}
+function ensureP(p){try{fixMonLv(p)}catch(e){}if(!p.weakV4){try{weakTrim(p)}catch(e){}p.weakV4=1}setTimeout(()=>autoFav(p),0);if(p.weak&&!p.weakV2){p.weak.forEach(w=>w.n=Math.min((w.n||1)+2,WEAKMAX));p.weakV2=1}if(p.weak&&!p.weakV3){p.weak.forEach(w=>w.n=Math.max(1,Math.min(w.n||1,WEAKN)));p.weakV3=1}if(!Number.isFinite(p.gold))p.gold=0;if(!p.mixOn){p.mixOn=1;p.subj='mix';p.best=p.best||{};p.best.mix=Math.max(p.best.mix||0,p.best.math||0,p.best.eng||0,p.best.kanji||0)}p.frag=p.frag||{};p.ultMiss=p.ultMiss||0;p.box=p.box||[];p.mons=p.mons||[];p.party=p.party||[];p.eggs=p.eggs||[];p.dex=p.dex||{};p.dex.seen=p.dex.seen||{};p.dex.owned=p.dex.owned||{};p.dex.items=p.dex.items||{};return p}
 const partyMons=(p=P)=>(p.party||[]).map(id=>(p.mons||[]).find(m=>m.id===id)).filter(Boolean);
 const partyPow=(p=P,eq=p.eq)=>Math.round(partyMons(p).reduce((s,m)=>s+monPow(m),0)*(1+(fxSum('party',eq||{})+((p&&p.room)?roomBonus(p).party:0))/100));
 const ownedStd=(p=P)=>SPECIES.filter(s=>s[3]<5&&p.dex.owned[s[0]]).length;
@@ -3207,7 +3208,7 @@ function evoOf(k){if(k in EVOC)return EVOC[k];const s=SP[k];let r=null;
   if(s&&s.rar<4){const c=SPECIES.filter(t=>t[1]===s.art&&!!t[4]===s.boss&&t[3]>s.rar&&t[3]<5);
     if(c.length){const mr=Math.min(...c.map(t=>t[3])),cc=c.filter(t=>t[3]===mr),same=cc.find(t=>elOf(t[0])===elOf(k));r=(same||cc[0])[0]}}
   return EVOC[k]=r}
-const evoNeed=m=>{const r=SP[m.sp].rar;return{lv:EVOLV[r],bond:EVOBOND[r]}};
+const evoNeed=m=>{const r=SP[m.sp].rar;return{lv:EVOLV[r]??EVOLV[EVOLV.length-1],bond:EVOBOND[r]??EVOBOND[EVOBOND.length-1]}};
 const evoReady=m=>{const n=evoOf(m.sp);if(!n)return false;const q=evoNeed(m);return m.lv>=q.lv&&(m.bond||0)>=q.bond};
 function evoBlock(m){const n=evoOf(m.sp);if(!n)return SP[m.sp].rar>=5?'':'<small style="color:var(--sub)">これいじょう しんか しない すがただよ</small>';
   const q=evoNeed(m),b=m.bond||0,ok=evoReady(m),known=P.dex.owned[n]||P.dex.seen[n];
