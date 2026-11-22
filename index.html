@@ -1856,15 +1856,27 @@ function explainQ(w){const k=w.key||'',a=w.a,L=[];let m;
   else if(m=k.match(/^k1p(.+)$/)){const ww=K1.find(x=>x[0]===m[1]);if(ww)L.push(`${ww[2]||''} 「${ww[1]}」は かんじで ${B_(ww[0])}`)}
   else if(m=k.match(/^k(\d)(.+)$/))L.push(`「${m[2]}」は ${B_(a)} と よむよ`,`<small>ことばを こえに だして よんでみよう</small>`);
   return L.filter(Boolean)}
+/* にたもんだい：おなじ しゅるいで かずや ことばが ちがう もんだい */
+function qSig(k){let m;
+  if(m=k.match(/^(\d+)([+−×÷])(\d+)$/))return m[2]+m[1].length+m[3].length;
+  if(m=k.match(/^(10c|n|c|g\d[a-z]|e6p|e6s|e\d|e[a-z]|k1p|k\d|h)/))return m[1];return k.slice(0,2)}
+function simQ(w){const sb=SUBJ[w.subj]?w.subj:'math',sg=qSig(w.key||''),cur=P.diff[sb]||0;
+  const lvs=[cur,...[...Array(LVN).keys()].filter(l=>l!==cur)];
+  for(const lv of lvs)for(let t=0;t<150;t++){const q=genQ(sb,lv,3);if(q.key!==w.key&&!(SD&&SD.prevSim===q.key)&&qSig(q.key)===sg&&!P.weak.some(x=>x.key===q.key)){q.subj=sb;if(SD)SD.prevSim=q.key;return q}}
+  const q=genQ(sb,cur,3);q.subj=sb;return q}
 let SD=null;
 function startWeak(){if(!P.weak.length){toast('📕 にがては ないよ！');return}try{speechSynthesis.cancel()}catch(e){}
   SD={q:shuffle(P.weak.map(w=>w.key)),start:P.weak.length,ok:0,ng:0};show('study');studyNext()}
 function studyNext(){if(!SD)return;if(!P.weak.length){studyEnd();return}
-  let w=null;while(SD.q.length&&!w){const kk=SD.q.shift();w=P.weak.find(x=>x.key===kk)}
-  if(!w){SD.q=shuffle(P.weak.map(x=>x.key));return studyNext()}
-  SD.w=w;SD.lock=false;const sb=SUBJ[w.subj]?w.subj:'math';
+  let w=null;
+  if(SD.sim>0){SD.sim--;w=simQ(SD.simOf);w.isSim=1}
+  else{while(SD.q.length&&!w){const kk=SD.q.shift();w=P.weak.find(x=>x.key===kk)}
+    if(!w){SD.q=shuffle(P.weak.map(x=>x.key));return studyNext()}
+    /* おなじ もんだいが つづく ときは にたもんだいを 2もん はさむ */
+    if(w.key===SD.last){SD.q.unshift(w.key);SD.simOf=w;SD.sim=1;SD.last=null;w=simQ(w);w.isSim=1}}
+  SD.w=w;SD.lock=false;if(!w.isSim)SD.last=w.key;const sb=SUBJ[w.subj]?w.subj:'math';
   $('sdLeft').textContent=`のこり ${P.weak.length}もん`;
-  $('sdQ').innerHTML=`<span class="qsub qs-${sb}">${SUBJ[sb].n}　あと ${w.n||1}かい せいかいで こくふく</span>`+w.html;
+  $('sdQ').innerHTML=(w.isSim?`<span class="qsub qs-${sb}">${SUBJ[sb].n}　🔁 にたもんだい</span>`:`<span class="qsub qs-${sb}">${SUBJ[sb].n}　あと ${w.n||1}かい せいかいで こくふく</span>`)+w.html;
   $('sdSpk').style.display=w.speak?'':'none';$('sdEx').className='panel sdex';$('sdEx').innerHTML='';
   const box=$('sdC');box.innerHTML='';box.className='choices'+(w.choices.length===3?' c3':'');
   shuffle(w.choices).forEach(v=>{const b=document.createElement('button');b.className='ch'+(w.cs&&!(w.cs==='small'&&v.length<=4)?' '+w.cs:'');b.textContent=v;b.onclick=()=>studyAns(b,v);box.appendChild(b)});
@@ -1872,7 +1884,8 @@ function studyNext(){if(!SD)return;if(!P.weak.length){studyEnd();return}
 function studyAns(btn,v){if(!SD||SD.lock)return;SD.lock=true;const w=SD.w,ok=v===w.a;if(w.sayChoice)say(v,w.sayChoice);
   document.querySelectorAll('#sdC .ch').forEach(b=>{if(b.textContent===w.a)b.classList.add('ok')});
   let head;
-  if(ok){SD.ok++;w.n=(w.n||1)-1;snd(880,.1,'square',.05);snd(1320,.12,'square',.05,0,.08);
+  if(w.isSim){if(ok){snd(880,.1,'square',.05);head='⭕ せいかい！ その ちょうし！'}else{btn.classList.add('ng');snd(180,.3,'square',.07,-80);addWeak(w);head=`❌ ざんねん… せいかいは「${esc(w.a)}」<br><small>にがてノートに いれたよ</small>`}}
+  else if(ok){SD.ok++;w.n=(w.n||1)-1;snd(880,.1,'square',.05);snd(1320,.12,'square',.05,0,.08);
     if(w.n<=0){P.weak=P.weak.filter(x=>x!==w);head='⭕ せいかい！ にがてを ひとつ こくふく 🎉'}else{SD.q.push(w.key);head=`⭕ せいかい！ あと ${w.n}かいで こくふく`}}
   else{SD.ng++;btn.classList.add('ng');w.n=Math.min((w.n||1)+1,WEAKMAX);SD.q.splice(Math.min(2,SD.q.length),0,w.key);snd(180,.3,'square',.07,-80);head=`❌ ざんねん… せいかいは「${esc(w.a)}」`}
   save();const ex=explainQ(w);
@@ -1889,7 +1902,7 @@ $('sdSpk').onclick=()=>{if(SD&&SD.w&&SD.w.speak)say(...SD.w.speak)};
 
 function labelOf(q){const t=document.createElement('div');t.innerHTML=q.html;return (t.textContent||'').replace(/🔊/,'🔊 ').slice(0,14)}
 function addWeak(q){const w=P.weak.find(w=>w.key===q.key);
-  if(w)w.n=Math.min(w.n+1,WEAKMAX);else{const c=Object.assign({},q);delete c.review;c.n=WEAKN;c.label=labelOf(q);P.weak.push(c);if(P.weak.length>40)P.weak.shift()}save()}
+  if(w)w.n=Math.min(w.n+1,WEAKMAX);else{const c=Object.assign({},q);delete c.review;delete c.isSim;c.n=WEAKN;c.label=labelOf(q);P.weak.push(c);if(P.weak.length>40)P.weak.shift()}save()}
 function reduceWeak(q){const w=P.weak.find(w=>w.key===q.key);if(!w)return;w.n--;if(w.n<=0){P.weak=P.weak.filter(v=>v!==w);toast('📕 にがてを ひとつ こくふく！')}}
 
 
