@@ -1614,13 +1614,22 @@ function stageForPower(){const pw=power(),std={},keep=Math.random;let seed=7;Mat
 function cheatWeekAdd(d){const S=P.stats||(P.stats={cats:{},days:{},items:{}});d=Math.round(d);if(!d)return;
   if(d>0){const dd=S.days[dkey(new Date())]||(S.days[dkey(new Date())]={});SUBK.forEach((k,i)=>{const a=Math.floor(d/3)+(i<d%3?1:0),e=dd[k]||(dd[k]={n:0,ok:0});e.n+=a;e.ok+=a});return}
   let r=-d;for(let i=0;i<7&&r>0;i++){const dt=new Date();dt.setDate(dt.getDate()-i);const dd=S.days[dkey(dt)];if(!dd)continue;for(const k in dd){const t=Math.min(r,dd[k].ok);dd[k].ok-=t;dd[k].n=Math.max(dd[k].ok,dd[k].n-t);r-=t;if(r<=0)break}}}
+let mlvScope='party';
+function monLvCheat(){const tg=()=>mlvScope==='party'?partyMons():P.mons,mx=Math.max(0,...P.mons.map(m=>m.lv));
+  showModal(`<div class="mt">🐾 なかまの レベル</div><div class="swr">${[['party','⚔️ パーティだけ'],['all','📦 ぜんぶの なかま']].map(([k,n])=>`<button class="fchip${mlvScope===k?' sel':''}" data-sc="${k}">${n}</button>`).join('')}</div>
+    <p style="font-size:13px">たいしょう：${tg().length}たい（いまの さいこう Lv${mx}）<br><small style="color:var(--sub)">いまより ひくい Lvには さがらないよ</small></p>
+    <div class="chg">${[[100,'Lv100'],[500,'Lv500'],[1000,'Lv1000'],[P.lv,'じぶんと おなじ Lv'+P.lv],[mx,'いちばん たかい なかまに そろえる（Lv'+mx+'）'],['ask','じゆうに']].map(([v,n])=>`<button class="btn" data-mv="${v}">${n}</button>`).join('')}</div>
+    <button class="btn gray" id="bk">もどる</button>`,{bk:cheatOpen});
+  document.querySelectorAll('[data-sc]').forEach(b=>b.onclick=()=>{mlvScope=b.dataset.sc;monLvCheat()});
+  document.querySelectorAll('[data-mv]').forEach(b=>b.onclick=()=>{let v=b.dataset.mv;if(v==='ask'){const a=prompt('なかまの レベル',P.lv);if(a===null)return;v=Math.floor(+a);if(!(v>0)){toast('すうじを いれてね');return}}else v=+v;
+    const L=tg();L.forEach(m=>{m.lv=Math.max(m.lv,v);m.xp=0});save();toast(`🐾 ${L.length}たいを Lv${v}に！`);monLvCheat()})}
 function cheatOpen(){if(!P||!P.cheat)return;
   const btn=(id,t,c='')=>`<button class="btn ${c}" data-ch="${id}">${t}</button>`;
   showModal(`<div class="mt">🛠️ チート</div><small style="color:var(--sub)">${esc(P.name)} せんよう</small><div class="chbox">
     <div class="chh">💰 おかね・どうぐ</div><div class="chg">${btn('g1','🪙 +10万')}${btn('g2','🪙 +1000万')}${btn('tk','🎟️ +100')}${btn('gset','🪙 じゆうに')}</div>
     <div class="chh">⭐ レベル・すすみ</div><div class="chg">${btn('lv','Lv を きめる')}${btn('stg','ステージを ひらく')}${btn('pstg','パワーに あわせる（ステージ＋せいかいすう）','toggle')}${btn('tot','せいかいすうを きめる')}${btn('week','この7にち を きめる')}${btn('twr','とう きろく')}${btn('mst','ぜんぶ 🎓マスター')}</div>
     <div class="chh">⚔️ そうび</div><div class="chg">${btn('eq','さいきょう そうび を つくる')}${btn('plus','そうび +を きめる')}${btn('box','ボックスを からに')}</div>
-    <div class="chh">🐾 なかま</div><div class="chg">${btn('mall','151しゅ ぜんぶ')}${btn('mult','きゅうきょく 3たい')}${btn('mspe','とくべつ なかま ぜんぶ')}${btn('mevo','すぐ しんか できる')}${btn('mlv','なかま Lv100')}${btn('egg','たまご すぐ かえる')}</div>
+    <div class="chh">🐾 なかま</div><div class="chg">${btn('mall','151しゅ ぜんぶ')}${btn('mult','きゅうきょく 3たい')}${btn('mspe','とくべつ なかま ぜんぶ')}${btn('mevo','すぐ しんか できる')}${btn('mlv','🐾 なかまの レベル…','toggle')}${btn('egg','たまご すぐ かえる')}</div>
     <div class="chh">👗 きせかえ・へや</div><div class="chg">${btn('cos','きせかえ ぜんぶ')}${btn('furn','かぐ ぜんぶ')}</div>
     <div class="chh">🎮 バトル</div><div class="chg">${btn('god',(P.chGod?'✅':'⬜')+' むてき','toggle')}${btn('ohk',(P.chOhk?'✅':'⬜')+' いちげき','toggle')}</div>
     <div class="chh">⚠️ その他</div><div class="chg">${btn('pin','あんしょうばんごうを かえる')}${btn('off','チートを やめる（ふつうの アカウントに）','gray')}</div>
@@ -1643,7 +1652,7 @@ function cheatOpen(){if(!P||!P.cheat)return;
     mult:()=>{ULTS.forEach(u=>{P.dex.owned[u.k]=1;P.dex.seen[u.k]=1;if(!P.mons.some(m=>m.sp===u.k))P.mons.push({id:uid(),sp:u.k,lv:1,xp:0,bond:0})});done('きゅうきょく')},
     mspe:()=>{Object.keys(SP).filter(k=>SP[k].special&&(SP[k].special==='gacha'||/0$/.test(k))).forEach(k=>{P.dex.owned[k]=1;if(!P.mons.some(m=>m.sp===k))P.mons.push({id:uid(),sp:k,lv:1,xp:0,bond:0})});done('とくべつ なかま')},
     mevo:()=>{P.mons.forEach(m=>{const n=evoNeed(m);if(n){m.lv=Math.max(m.lv,n.lv);m.bond=Math.max(m.bond||0,n.bond)}});done('しんか OK')},
-    mlv:()=>{P.mons.forEach(m=>{m.lv=Math.max(m.lv,100)});done('なかま Lv100')},
+    mlv:()=>monLvCheat(),
     egg:()=>{P.eggs.forEach(e=>{e.inc=true;e.prog=e.need});save();closeModal();processHatch(()=>{renderHome();cheatOpen()})},
     cos:()=>{const C=cosOf(P);Object.entries(COSCAT).forEach(([c,o])=>Object.keys(o).forEach(k=>C.owned[c+':'+k]=1));done('きせかえ ぜんぶ')},
     furn:()=>{const r=roomOf();Object.entries(FURN).forEach(([t,f])=>f.v.forEach(v=>r.own[t+':'+v[0]]=1));WALLS.forEach(w=>r.own['wall:'+w[0]]=1);FLOORS.forEach(f=>r.own['floor:'+f[0]]=1);done('かぐ ぜんぶ')},
