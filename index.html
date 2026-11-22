@@ -701,6 +701,7 @@ input{font:inherit}
 .wrstep{position:absolute;top:6px;left:8px;font-size:12px;padding:2px 8px;border-radius:8px;color:#fff}.wrstep.s0{background:#3a7ad9}.wrstep.s1{background:#e8413c}
 .wrbtns{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;width:min(92vw,340px)}.wrbtns .btn{font-size:14px;padding:8px 2px}#wrOk{width:min(92vw,340px)}.wrmsg{min-height:44px;text-align:center;font-size:16px}
 .wrsets{display:flex;flex-direction:column;gap:8px;margin:8px 0}.wrsets .btn{font-size:18px}.wrsets small{display:block;font-size:12px;opacity:.85}
+.sets{display:flex;flex-direction:column;gap:3px;margin-top:4px;text-align:left}.sets.none{font-size:11px;color:var(--sub);text-align:center}.setb{font-size:12px;background:rgba(255,210,63,.12);border:1px solid rgba(255,210,63,.4);border-radius:6px;padding:3px 6px;color:#fff}.setb b{color:#ffd23f}.setn{color:#7af07a;font-weight:700}.setb small{display:block;font-size:10px;color:var(--sub)}.fx.setl{color:#ffd23f}
 </style>
 </head>
 <body>
@@ -1110,6 +1111,16 @@ function statText(it){const p=ip(it);return{w:`⚔️ こうげき +${p}`,s:`�
 /* ---- item level / bonus effects / enhancement ---- */
 const FX={atkp:['こうげき','%',3,6],hpp:['たいりょく','%',3,6],crit:['クリティカル','%',2,4],critd:['クリティカルダメージ','%',10,20],gold:['ゴールド','%',5,10],xp:['けいけんち','%',5,10],
   combo:['コンボ ボーナス','%',1,3],fast:['はやわざ','%',5,10],dodge:['よける','%',1,3],party:['なかまパワー','%',5,10],heal:['たおすと HP かいふく','%',2,4]};
+/* 🔗 そうび セット：おなじ シリーズ（なまえの あたま）の よろい・かぶと など を そろえると ボーナス */
+const SETK={かわ:['hpp'],てつ:['hpp'],どう:['atkp'],たびびと:['xp'],もり:['heal'],きし:['atkp'],うみ:['hpp'],すな:['dodge'],ダイヤ:['crit'],まほう:['xp'],ほのお:['atkp'],こおり:['dodge'],おうごん:['gold'],ほしぞら:['crit'],りゅう:['atkp','hpp'],てんし:['heal','hpp'],にじ:['party','atkp'],ぎんが:['xp','gold'],しんわ:['atkp','crit'],ひかり:['hpp','party']};
+const SETSTEP=[[2,4],[4,10],[6,18],[7,30]],SETMUL={heal:.35,crit:.45,dodge:.45};
+const setOf=it=>{if(!it||!TSUF[it.slot]||!it.name)return null;const t=it.name.split('の ')[0];return SETK[t]?t:null};
+const setTier=t=>THEMES.findIndex(g=>g.some(x=>x[0]===t));
+function setCounts(eq=P.eq){const c={};for(const k of Object.keys(TSUF)){const t=setOf(eq&&eq[k]);if(t)c[t]=(c[t]||0)+1}return c}
+function setBonus(t,n){const st=SETSTEP.filter(x=>n>=x[0]).pop();if(!st)return[];const r=Math.max(0,setTier(t));return SETK[t].map((k,i)=>({k,v:Math.round(st[1]*(1+r*.5)*(SETMUL[k]||1)*(i?.6:1))}))}
+function setFx(k,eq){if(!eq)return 0;const c=setCounts(eq);let v=0;for(const t in c)for(const b of setBonus(t,c[t]))if(b.k===k)v+=b.v;return v}
+function setHTML(eq=P.eq,compact){const c=setCounts(eq),ks=Object.keys(c).filter(t=>c[t]>=2).sort((a,b)=>c[b]-c[a]);if(!ks.length)return compact?'':'<div class="sets none">🔗 おなじ シリーズの そうびを 2つ いじょう そろえると セット ボーナス！</div>';
+  return `<div class="sets">${ks.map(t=>{const n=c[t],nx=SETSTEP.find(x=>x[0]>n);return `<div class="setb"><b>🔗 ${t}</b> <span class="setn">${n}/7</span> ${setBonus(t,n).map(b=>FX[b.k][0]+'+'+b.v+'%').join('・')}${nx?`<small>あと${nx[0]-n}こで アップ</small>`:'<small>コンプリート！</small>'}</div>`}).join('')}</div>`}
 const UFX={double:['ダブルアタック','%',15,25],revive:['やられても 1かい ふっかつ','',0,0]};
 function rollFx(rar){const ks=shuffle(Object.keys(FX)).slice(0,RAR[rar].fx),out=ks.map(k=>{const f=FX[k];return{k,v:Math.round(R(f[2],f[3])*(1+.5*rar))}});
   if(rar>=4){const u=pick(Object.keys(UFX));out.push({k:u,v:UFX[u][2]?R(UFX[u][2],UFX[u][3]):1,u:1})}return out}
@@ -1139,7 +1150,7 @@ function skillOf(m){const s=SP[m.sp],e=elOf(m.sp),sk=ULTSK[m.sp]||SKILL[e],f=[1,
 const pskill=k=>partyMons().reduce((a,m)=>a+skillsOf(m).reduce((t,sk)=>t+(sk.k===k?sk.v:0),0),0);
 const elTag=k=>{const e=elOf(k);return `<span class="elt" style="--ec:${ELS[e].c}">${ELS[e].i}${e}</span>`};
 const elIcon=k=>ELS[elOf(k)].i;
-const fxSum=(k,eq=P.eq)=>SLOTS.reduce((s,sl)=>s+((eq[sl]&&eq[sl].fx)||[]).reduce((a,f)=>a+(f.k===k?f.v:0),0),0)+(P&&eq===P.eq&&typeof SP!=='undefined'?pskill(k):0);
+const fxSum=(k,eq=P.eq)=>setFx(k,eq)+SLOTS.reduce((s,sl)=>s+((eq[sl]&&eq[sl].fx)||[]).reduce((a,f)=>a+(f.k===k?f.v:0),0),0)+(P&&eq===P.eq&&typeof SP!=='undefined'?pskill(k):0);
 const enhCost=it=>Math.round((10+(it.lv||Math.round(it.p/RAR[it.rar].m))*3)*(it.rar+1)*Math.pow(1.25,it.plus||0)*(1-((typeof P!=='undefined'&&P&&P.bld&&P.bld.smith)||0)*.005));
 const iname=it=>it.name+(it.plus?` +${it.plus}`:'');
 const itPrice=it=>{const v=it&&+it.price;return Number.isFinite(v)&&v>0?v:Math.max(1,Math.round(((it&&+it.p)||1)*2*(((it&&it.rar)||0)+1)))};
@@ -1160,7 +1171,7 @@ function makeItem(st,d,boss,min=0){
 /* =============== save data =============== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-const APPV='v119';
+const APPV='v120';
 try{const c=document.createElement('canvas');c.width=9;c.height=9;const g=c.getContext('2d'),F=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};F(1,0,7,1,'#120d09');F(1,8,7,1,'#120d09');F(0,1,1,7,'#120d09');F(8,1,1,7,'#120d09');F(1,1,7,1,'#120d09');F(1,7,7,1,'#120d09');F(1,1,1,7,'#120d09');F(7,1,1,7,'#120d09');F(2,2,5,1,'#7a6a52');F(2,2,1,5,'#7a6a52');F(2,6,5,1,'#2a2018');F(6,2,1,5,'#2a2018');document.documentElement.style.setProperty('--pxf',`url(${c.toDataURL()})`)}catch(e){}
 const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));if(G.bgmOn===undefined)G.bgmOn=true;
 let P=null;
@@ -1178,7 +1189,7 @@ function newProfile(name,age,color){
     best:{math:0,eng:0,kanji:0,mix:0},diff:{math:d,eng:d,kanji:d},subj:'mix',mixOn:1,
     streak:0,lastDay:'',todayCorrect:0,claimed:false,weak:[],total:0,voice:age<=6};
 }
-const power=(eq=P.eq,lv=P.lv,p=P)=>lv*2+SLOTS.reduce((s,k)=>s+iscore(eq[k]),0)+partyPow(p,eq);
+const power=(eq=P.eq,lv=P.lv,p=P)=>{const g=SLOTS.reduce((s,k)=>s+iscore(eq[k]),0);return lv*2+g+Math.round(g*(setFx('atkp',eq)+setFx('hpp',eq))/200)+partyPow(p,eq)};
 const ep=k=>ip(P.eq[k]);
 const atk=()=>Math.round((4+P.lv*2+ep('w'))*(1+fxSum('atkp')/100));
 const maxHp=()=>Math.round((30+P.lv*6+ep('a')*2+ep('h'))*(1+fxSum('hpp')/100));
@@ -1498,7 +1509,7 @@ function itemCard(it0,rev,cur){
   const it=cur?withPlus(it0,cur):it0,tr=it!==it0,r=RAR[it.rar],st=statText(it);
   return `<div class="item${rev?' rev':''}" style="--rc:${r.c}"><div class="ie">${itemIcon(it)}</div><div>
     <div class="rr">${r.n}・${SLOTN[it.slot]}${it.lv?`・Lv${it.lv}`:''}</div><div class="inm">${iname(it)}</div><div class="is">${st}</div>
-    ${(it.fx||[]).map(f=>`<div class="fx${f.u?' u':''}">${f.u?'★':'＋'} ${fxText(f)}</div>`).join('')}</div>
+    ${(it.fx||[]).map(f=>`<div class="fx${f.u?' u':''}">${f.u?'★':'＋'} ${fxText(f)}</div>`).join('')}${(t=>t?`<div class="fx setl">🔗 ${t}シリーズ（いま ${setCounts()[t]||0}/7）</div>`:'')(setOf(it))}</div>
     <div class="ip">パワー<b>${iscore(it)}</b>${tr?`<small class="trn">⚒️+${cur.plus}こみ<br><s>+0: ${iscore(it0)}</s></small>`:''}</div></div>`;
 }
 
@@ -2901,7 +2912,7 @@ function renderHome(){
   $('hHero').innerHTML=heroSVG(P.eq,P);try{renderBase()}catch(e){}try{renderLaneCard()}catch(e){}try{renderQuestBar()}catch(e){}try{renderRaidBanner()}catch(e){}try{renderRoomCard()}catch(e){}try{renderXmasBanner()}catch(e){}{const hb=document.querySelector('.herobox');if(hb){const sa=AREA(selStage||1);hb.style.setProperty('--scn',`url(${sceneURL(sa,96,120,{night:isNight()})})`)}}$('hPow').textContent=fmtBig(power());$('hTitle').textContent=titleOf(P)?'「'+titleOf(P)+'」':'';
   $('hSlotsL').innerHTML=SLOT_L.map(k=>slotHTML(k,P.eq[k])).join('');
   $('hSlotsR').innerHTML=SLOT_R.map(k=>slotHTML(k,P.eq[k])).join('');
-  $('hCount').textContent=`そうび ${SLOTS.filter(k=>P.eq[k]).length} / ${SLOTS.length}`;
+  $('hCount').innerHTML=`そうび ${SLOTS.filter(k=>P.eq[k]).length} / ${SLOTS.length}`+setHTML(P.eq);
   const SI=o=>itemIcon(Object.assign({rar:0},o));
   $('hStats').innerHTML=`<span>${SI({slot:'w',icon:'🗡️'})}<b>${fmtS(atk())}</b></span><span>${SI({slot:'c',eff:'heal'})}<b>${fmtS(maxHp())}</b></span><span>${SI({slot:'s',rar:1})}<b>${fmtS(def())}</b></span><span>${SI({slot:'b',color:'#5fbf6a'})}<b>${dodge()}%</b></span><span>${SI({slot:'c',eff:'crit'})}<b>${crit()}%</b></span><span>${SI({slot:'pet',icon:'🐶'})}<b>${fmtS(petAtk())}</b></span>`;
   document.querySelectorAll('.show .slot').forEach(b=>b.onclick=()=>{const it=P.eq[b.dataset.s];
