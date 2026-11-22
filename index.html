@@ -604,6 +604,7 @@ input{font:inherit}
 .btn:not(.dk){border-radius:0!important;clip-path:polygon(3px 0,calc(100% - 3px) 0,100% 3px,100% calc(100% - 3px),calc(100% - 3px) 100%,3px 100%,0 calc(100% - 3px),0 3px)}
 .panel{border-radius:3px}
 .mbox.mhatch{animation:hatchflip .7s cubic-bezier(.3,1.3,.5,1)!important}@keyframes hatchflip{0%{transform:perspective(600px) rotateY(90deg) scale(.6);opacity:0}100%{transform:none;opacity:1}}
+.invcode{font-family:'DotGothic16',monospace;font-size:28px;letter-spacing:3px;color:#ffd23f;background:#000a;padding:8px;border:3px solid #000;text-align:center;user-select:text;-webkit-user-select:text}.invurl{font-size:12px!important;user-select:text;-webkit-user-select:text}
 .maptier{font-size:14px;color:var(--gold);margin:8px 0 2px;text-align:left;display:flex;align-items:center;justify-content:space-between;gap:6px}.maptier small{color:var(--sub);font-size:12px}.maptier .mwok{color:#ffd23f}.mwbtn{width:auto!important;margin:0!important;padding:4px 8px!important;font-size:13px!important;background:#d9771e;animation:pulse 1s infinite}.mwrew{font-size:11px;color:var(--sub);text-align:left;margin:0 0 4px}.mgift{font-size:22px;animation:pulse 1s infinite;padding:0 4px;white-space:nowrap}.mbadge{background:#e8413c;color:#fff;font-size:12px;padding:2px 5px;margin-right:4px;border-radius:4px}.mrew{display:flex;flex-direction:column;gap:6px;align-items:center;margin:6px 0}.mrit{display:flex;flex-wrap:wrap;gap:4px;justify-content:center}.mri{border:2px solid;padding:2px;display:inline-flex}.mri img{width:28px;height:28px}.mrsp{color:#ffd23f;font-size:14px}.limb.mapl{background:#1f5a3a}.mapa .mclr{color:#5be05b;font-size:18px}
 </style>
 </head>
@@ -2878,7 +2879,7 @@ const FB_V='10.12.2';
 let FB=null,FBP=null,remoteProfiles=[];
 const famFmt=c=>c?c.replace(/(.{4})(?=.)/g,'$1-'):'';
 const famNorm=c=>String(c||'').toUpperCase().replace(/[^A-Z0-9]/g,'');
-function newFam(){const A='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let c='';for(let i=0;i<12;i++)c+=A[Math.floor(Math.random()*A.length)];return c}
+function newFam(){const A='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let c='';const r=new Uint32Array(12);try{crypto.getRandomValues(r)}catch(e){for(let i=0;i<12;i++)r[i]=Math.random()*4294967296}for(let i=0;i<12;i++)c+=A[r[i]%A.length];return c}
 function fbInit(){
   if(FB)return Promise.resolve(FB);if(!FB_CONFIG)return Promise.resolve(null);if(FBP)return FBP;
   const base=`https://www.gstatic.com/firebasejs/${FB_V}/`;
@@ -2903,6 +2904,27 @@ async function syncDown(){
       ps.forEach(p=>{p._remote=v.name||'たんまつ';p._upd=v.updated;p.box=[];out.push(ensureP(p))})})}catch(e){console.warn('down',e);return null}
   return out;
 }
+/* ---- 📨 しょうたい コード／URL ---- */
+const inviteURL=c=>location.origin+location.pathname.replace(/index\.html$/,'')+'?join='+c;
+function inviteShow(){if(!G.devId){G.devId=uid();store.set('mq1',G)}
+  if(!G.fam){G.fam=newFam();G.devName=G.devName||'おうちの たんまつ';store.set('mq1',G);try{syncUp()}catch(e){}}
+  const c=G.fam,url=inviteURL(c),txt=`まなびクエストの かぞく しょうたいです。\nこのURLを ひらくか、アプリの「かぞくで きょうゆう」に コードを いれてね。\nコード：${famFmt(c)}\n${url}`;
+  showModal(`<div class="mt">📨 しょうたい コード</div><p style="font-size:13px">かぞくの たんまつで ひらくと、おなじ かぞくとして つながるよ</p>
+    <div class="invcode">${famFmt(c)}</div><button class="btn" id="ivC">📋 コードを コピー</button>
+    <input class="field invurl" id="ivU" readonly value="${esc(url)}"><button class="btn" id="ivL">🔗 URLを コピー</button>
+    ${navigator.share?'<button class="btn green big" id="ivS">📤 LINEなどで おくる</button>':''}
+    <small style="color:#ffb020">⚠ このコードを しっている ひとは かぞくの きろくが みられます。かぞく いがいには おしえないでね</small>
+    <button class="btn gray" id="cl">とじる</button>`,
+    {ivC:()=>copyTxt(famFmt(c),'コードを コピーしたよ'),ivL:()=>copyTxt(url,'URLを コピーしたよ'),ivS:()=>navigator.share({title:'まなびクエスト かぞく しょうたい',text:txt,url}).catch(()=>{}),cl:closeModal})}
+function copyTxt(t,msg){const ok=()=>toast('📋 '+msg);try{navigator.clipboard.writeText(t).then(ok,()=>{fallback()})}catch(e){fallback()}
+  function fallback(){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy');ok()}catch(e){toast('コピー できなかったよ')}a.remove()}}
+function joinInvite(c){if(G.fam===c){toast('もう この かぞくに つながっているよ');return}
+  showModal(`<div class="mt">📨 かぞくの しょうたい</div><p>しょうたい コード<br><b class="invcode" style="font-size:22px">${famFmt(c)}</b><br>の かぞくに つながりますか？</p>
+    ${G.fam?'<small style="color:#ffb020">いまの かぞくコードから きりかわるよ</small>':''}
+    <div class="lbl">この たんまつの なまえ</div><input class="field" id="jnName" maxlength="12" value="${esc(G.devName||'')}" placeholder="れい：はなこの タブレット">
+    <button class="btn green big" id="jnOk">つながる！</button><button class="btn gray" id="cl">やめる</button>`,
+    {jnOk:async()=>{if(!G.devId)G.devId=uid();G.fam=c;G.devName=$('jnName').value.trim()||'たんまつ';store.set('mq1',G);closeModal();
+      if(!FB_CONFIG){toast('ほぞんしたよ');return}toast('どうき ちゅう…');const ok=await syncUp();toast(ok?'☁️ かぞくに つながったよ！':'ほぞんしたよ（ネットに つながったら どうき するよ）');fxConfetti(50)},cl:closeModal})}
 function cloudSetup(){
   if(!G.devId){G.devId=uid();store.set('mq1',G)}
   const on=!!G.fam;
@@ -2913,6 +2935,7 @@ function cloudSetup(){
     <div class="lbl">かぞくコード</div><input class="field" id="cdFam" maxlength="14" value="${famFmt(G.fam||'')}" placeholder="XXXX-XXXX-XXXX" style="letter-spacing:2px">
     <button class="btn purple" id="cdNew">🔑 あたらしい コードを つくる（さいしょの 1だいだけ）</button>
     <button class="btn green big" id="cdOk">${on?'ほぞんして どうき':'きょうゆうを はじめる'}</button>
+    <button class="btn" id="cdInv" style="background:#2a6a9a">📨 しょうたい コード・URLを はっこう</button>
     ${on?'<button class="btn gray" id="cdOff">きょうゆうを やめる</button>':''}
     <small style="color:var(--sub)">${G.lastSync?'さいごの どうき：'+new Date(G.lastSync).toLocaleString('ja-JP'):'まだ どうき していないよ'}</small>
     <button class="btn gray" id="cl">とじる</button>`,
@@ -2921,6 +2944,7 @@ function cloudSetup(){
        G.fam=c;G.devName=$('cdName').value.trim()||'たんまつ';store.set('mq1',G);
        if(!FB_CONFIG){closeModal();toast('ほぞんしたよ（じゅんびが できたら どうき するよ）');return}
        toast('どうき ちゅう…');const ok=await syncUp();closeModal();toast(ok?'☁️ どうき できたよ！':'どうき できなかった… ネットを たしかめてね');if($('admin').classList.contains('on'))showAdmin()},
+     cdInv:()=>inviteShow(),
      cdOff:()=>{delete G.fam;store.set('mq1',G);closeModal();toast('きょうゆうを やめたよ')},
      cl:closeModal});
 }
@@ -3249,6 +3273,7 @@ $('quit').onclick=()=>{if(!B||B.lock)return;B.lock=true;
 setTimeout(()=>{try{if(FB_CONFIG&&G.fam)syncUp()}catch(e){}},3000);
 if(G.profiles.some(p=>p.master)){G.profiles=G.profiles.filter(p=>!p.master);if(!G.profiles.some(p=>p.id===G.cur))G.cur=null;save()}
 if(G.cur&&G.profiles.find(p=>p.id===G.cur))selectProfile(G.cur);else{show('players');renderPlayers()}
+{try{const jc=new URLSearchParams(location.search).get('join');if(jc){history.replaceState(null,'',location.pathname);const c=famNorm(jc);if(c.length===12)setTimeout(()=>joinInvite(c),900);else toast('しょうたい コードが ただしくないよ')}}catch(e){}}
 /* ===== タブレット たいおう：がめんの おおきさに あわせて ぜんたいを かくだい ===== */
 function fitScale(){const w=innerWidth,h=innerHeight,z=Math.max(1,Math.min(w/440,h/800,2.2));document.body.style.zoom=z>1.02?z:'';
   $('app').style.height=z>1.02?(h/z)+'px':'';document.documentElement.style.setProperty('--z',z);document.documentElement.style.setProperty('--zf',z>1.02?z:1)}
