@@ -655,6 +655,7 @@ input{font:inherit}
   </nav>
   <div class="homebody">
     <div class="hbase" id="hBase"><div class="bwalk"></div><div class="binfo"></div></div>
+    <button class="lanecard" id="hLane"></button>
     <div class="panel show">
       <div class="slots" id="hSlotsL"></div>
       <div class="herobox"><div class="ttl" id="hTitle"></div>
@@ -679,7 +680,6 @@ input{font:inherit}
     <button class="btn mapcard" id="hMap"></button>
     <div class="stagepick"><button class="btn" id="sPrev">◀</button><span>ステージ <b id="sNum">1</b></span><button class="btn" id="sNext">▶</button></div>
     <button class="btn orange big" id="goBtn" style="font-size:26px">⚔️ しゅつげき！</button>
-    <button class="lanecard" id="hLane"></button>
     <div class="row hgrid">
       <button class="btn" id="weakBtn">📕 にがて <span id="weakN">0</span></button>
       <button class="btn" id="statBtn">📊 きろく</button>
@@ -1647,7 +1647,7 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden){if(AC&&AC.
 const isNight=()=>{const h=new Date().getHours();return h>=18||h<6};
 let baseTimer=null;
 function renderLaneCard(){const el=$('hLane');if(!el||!P)return;P.lane=P.lane||{best:0};const lt=P.ltDay===dkey(new Date())?(P.lt??0):Math.max(P.lt??3,2),st=Math.min(P.lane.best+1,P.lane.sel||P.lane.best+1),a=AREA(Math.max(1,st*3));
-  const ms=laneDeck().slice(0,3);el.style.setProperty('--lsc',`url(${sceneURL(a,160,60)})`);
+  const ms=laneDeck().slice(0,3);el.style.setProperty('--lsc',`url(${sceneURL(a,160,60,{night:isNight()})})`);
   el.innerHTML=`<span class="lcbg"></span><img class="lcc e" src="${castleURL('e',0)}"><img class="lcc p" src="${castleURL('p',0)}">
     <span class="lcm">${[`<i class="lcu" style="animation-delay:0s">${heroSVG(P.eq,P)}</i>`,...ms.map((m,i)=>`<i class="lcu" style="animation-delay:${-(i+1)*1.6}s">${monsterSVG(m.sp)}</i>`)].join('')}<i class="lcu en" style="animation-delay:-1s">${monsterSVG('slime')}</i><i class="lcu en" style="animation-delay:-4s">${monsterSVG('bat')}</i></span>
     <span class="lct"><b>🏯 ぐんだん バトル</b><small>ステージ ${st}・さいこう ${P.lane.best}</small></span><span class="lctk${lt?'':' none'}">🎫 ${lt}<small>まい</small></span>`;
