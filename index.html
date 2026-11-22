@@ -1600,7 +1600,7 @@ let lvTaps=[];
 function cheatGate(){const now=Date.now();lvTaps=lvTaps.filter(t=>now-t<2500).concat(now);if(lvTaps.length<7)return;lvTaps=[];
   if(!G.chPin){showModal(`<div class="mt">🛠️ チートモードの せってい</div><p style="font-size:13px">この アカウント（<b>${esc(P.name)}</b>）を<br>チートできる アカウントに するよ。<br>あんしょうばんごう（4けた いじょう）を きめてね</p>
       <input class="field" id="cp1" type="password" inputmode="numeric" placeholder="あんしょうばんごう"><input class="field" id="cp2" type="password" inputmode="numeric" placeholder="もういちど"><div id="cpm" style="color:#ff8a7a;font-size:13px;min-height:18px"></div>
-      <small style="color:var(--sub)">チート アカウントは かぞくの ランキングに でなくなるよ</small><button class="btn orange big" id="ok">せってい する</button><button class="btn gray" id="cl">やめる</button>`,
+      <button class="btn orange big" id="ok">せってい する</button><button class="btn gray" id="cl">やめる</button>`,
       {cl:closeModal,ok:()=>{const a=$('cp1').value,b=$('cp2').value;if(a.length<4){$('cpm').textContent='4けた いじょうに してね';return}if(a!==b){$('cpm').textContent='おなじ ばんごうを いれてね';return}
         G.chPin=pinHash(a);P.cheat=true;save();closeModal();toast('🛠️ チート アカウントに したよ');cheatOpen()}});return}
   if(!P.cheat){toast('…');return}
@@ -2314,8 +2314,8 @@ function renderRank(){
   $('rkTabs').innerHTML=RKS.map(([k,n])=>`<button class="btn db${rkTab===k?' sel':''}" data-k="${k}">${n}</button>`).join('');
   document.querySelectorAll('#rkTabs .db').forEach(b=>b.onclick=()=>{rkTab=b.dataset.k;renderRank()});
   const map=new Map();
-  G.profiles.filter(p=>!p.master&&!p.cheat).forEach(p=>map.set(p.id,{p,dev:G.devName||'この たんまつ',local:true}));
-  (rkRemote||[]).filter(p=>!p.master&&!p.cheat).forEach(p=>{if(!map.has(p.id))map.set(p.id,{p,dev:p._remote,upd:p._upd})});
+  G.profiles.filter(p=>!p.master).forEach(p=>map.set(p.id,{p,dev:G.devName||'この たんまつ',local:true}));
+  (rkRemote||[]).filter(p=>!p.master).forEach(p=>{if(!map.has(p.id))map.set(p.id,{p,dev:p._remote,upd:p._upd})});
   const def=RKS.find(r=>r[0]===rkTab),rows=[...map.values()].map(o=>Object.assign(o,{v:rkVal(o.p,rkTab)})).sort((a,b)=>b.v-a.v||b.p.lv-a.p.lv);
   const me=P&&!P.master?P.id:null;
   $('rkInfo').innerHTML=!FB_CONFIG?'<small style="color:var(--sub)">この たんまつの ぼうけんしゃだけの ランキングだよ</small>'
