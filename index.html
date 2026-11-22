@@ -2688,7 +2688,7 @@ function renderParty(){
   for(let i=0;i<partyMax();i++){const m=pm[i];h+=m?`<button class="pslot${evoReady(m)?' evok':''}" data-t="mons" data-id="${m.id}" style="--rc:${RAR[SP[m.sp].rar].c}"><div class="pms flip">${monsterSVG(m.sp)}</div><small>${evoReady(m)?'✨':elIcon(m.sp)}Lv${m.lv}</small>${evoReady(m)?'<i class="evtag">しんか!</i>':''}</button>`
     :`<button class="pslot empty" data-t="mons"><div class="pms">＋</div><small>あき</small></button>`}
   h+=`</div></div><div><div class="pph">ふかき <small>せいかいで かえる</small></div><div class="prow">`;
-  for(let i=0;i<3;i++){const e=inc[i];h+=e?`<button class="pslot" data-t="eggs" style="--rc:${RAR[e.rar].c}"><div class="pms">${eggIcon(e)}</div><div class="ebar"><i style="width:${Math.min(100,e.prog/e.need*100)}%"></i></div></button>`
+  for(let i=0;i<Math.max(3,incMax());i++){const e=inc[i];h+=e?`<button class="pslot" data-t="eggs" style="--rc:${RAR[e.rar].c}"><div class="pms">${eggIcon(e)}</div><div class="ebar"><i style="width:${Math.min(100,e.prog/e.need*100)}%"></i></div></button>`
     :`<button class="pslot empty" data-t="eggs"><div class="pms" style="opacity:.4">${eggIcon({rar:0,prog:0,need:1})}</div><small>あき</small></button>`}
   h+='</div></div>';$('hParty').innerHTML=h;
   document.querySelectorAll('#hParty .pslot').forEach(b=>b.onclick=()=>{openBox(b.dataset.t);if(b.classList.contains('evok'))monModal(b.dataset.id)});
