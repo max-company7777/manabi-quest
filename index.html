@@ -478,6 +478,8 @@ input{font:inherit}
 .dock .dk .pi{width:26px;height:26px;margin:0}.dock .dk i{font-style:normal;font-size:10px;white-space:nowrap;letter-spacing:-.5px}
 .dock .dkb{position:absolute;top:-5px;right:-3px;background:#e8413c;color:#fff;font-size:10px;font-weight:400;padding:1px 4px;border:1px solid #000;line-height:1.2}
 .fixg{display:flex;gap:8px;align-items:center;margin:8px 0}.fixg label{white-space:nowrap;font-weight:bold}.fixh{display:flex;justify-content:space-between;align-items:center;margin:6px 0}.fixh .btn{width:auto;padding:6px 10px;margin:0}.fixl{max-height:44vh;overflow:auto;text-align:left}.fixr{display:grid;grid-template-columns:34px 1fr 80px;gap:6px;align-items:center;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.1)}.fixr img{width:30px;height:30px}.fixr small{display:block;color:var(--sub);font-size:11px}.fixr .field,.fixg .field{margin:0;padding:6px}.fixr .field{width:56px;display:inline-block}
+#goBtn.wkgo{background:#7a4ab8;font-size:20px!important;line-height:1.2}#goBtn .gosub{display:block;font-size:12px;opacity:.9}.wkmsg{color:#ffd23f;font-size:14px;margin:6px 0}
+.sdex{display:none;text-align:left;font-size:16px;line-height:1.7;padding:10px 12px}.sdex.on{display:block}.sdex .exh{font-size:17px;font-weight:bold;margin-bottom:6px}.sdex .exh.ok{color:#7bea5a}.sdex .exh.ng{color:#ff8a7a}.sdex .exl{color:#ffd23f;margin:4px 0}.sdex .exr{margin:2px 0 4px 6px}.sdex .exr b{color:#7bea5a;font-size:1.1em}.sdex .btn{margin-top:10px}.exd{color:#ffd23f;letter-spacing:1px;word-break:break-all}.exx{color:#ff8a7a}.exen{font-family:'M PLUS Rounded 1c',sans-serif;font-size:1.1em}
 .maptier{font-size:14px;color:var(--gold);margin:8px 0 2px;text-align:left}.mapa .mclr{color:#5be05b;font-size:18px}
 </style>
 </head>
@@ -608,6 +610,14 @@ input{font:inherit}
   <div class="qpanel">
     <div class="panel qwrap hasq"><div class="q" id="ghQ"></div></div>
     <div class="choices" id="ghC"></div>
+  </div>
+</section>
+<section id="study" class="screen">
+  <header class="hud"><button class="btn x" id="sdBack">✕</button><div style="font-size:17px">📕 にがて とっくん</div><div class="pill" id="sdLeft"></div></header>
+  <div class="homebody" id="sdBody">
+    <div class="panel qwrap hasq"><div class="q" id="sdQ"></div><button class="btn spk" id="sdSpk">🔊</button></div>
+    <div class="choices" id="sdC"></div>
+    <div class="panel sdex" id="sdEx"></div>
   </div>
 </section>
 <section id="battle" class="screen">
@@ -1709,7 +1719,7 @@ const HELP=[
  ['room','🏠 マイルーム',`ゴールドで かぐ・かべ・ゆかを かって、じぶんの へやを かざれるよ。パーティと おきにいりの なかまが へやの なかを あるきまわる（タップすると はねるよ）。トロフィーには じっせきの かずが でる。`],
  ['mini','🎣 ミニゲーム',`ステージを クリアすると ときどき ボーナスゲーム！<br>🎣 <b>つり</b>：ウキが みどりの ところで「つる！」。まんなかの きいろだと でっかい さかな！<br>🗝️ <b>たからさがし</b>：9まいの すなから 3かい ほって たからを さがそう。`],
  ['mission','📜 きょうの ミッション',`まいにち きょうかごとに きめられた かず せいかいすると クリア。ぜんぶ クリアすると ほうしゅうが もらえるよ。`],
- ['weak','📕 にがてノート',`まちがえた もんだいが はいるよ。バトルの なかで ときどき ふくしゅうに でて、2かい せいかいすると そつぎょう！<br>ホームの「にがて」から にがてだけの バトルも できる。`],
+ ['weak','📕 にがてノート',`まちがえた もんだいが はいるよ。バトルの なかで ときどき ふくしゅうに でて、2かい せいかいすると そつぎょう！<br><b>にがてが のこっていると あたらしい ステージには すすめないよ。</b>「にがて とっくん」で かいせつを よみながら 1もんずつ ゆっくり といて、ゼロに しよう！（クリアずみの ステージは あそべるよ）`],
  ['etc','📊 そのほか',`<b>きろく</b>：きょうかや しゅるいごとの せいかいりつ<br><b>ランキング</b>：かぞくの なかの ランキング<br><b>☁️ かぞくで きょうゆう</b>：かぞくコードで ほかの たんまつと つながる（せってい から）<br><b>🎁 プレゼントコード</b>：とくべつな なかまが もらえる（せってい から）<br><b>👨‍👩‍👧 おうちの ひと</b>：ぼうけんしゃを えらぶ がめんから、みんなの ようすが みられる`]];
 function helpOpen(open){
   showModal(`<div class="mt">${pi('help')}ヘルプ</div><div class="helpbox">${HELP.map(([k,t,b])=>`<details${k===open?' open':''} id="hp-${k}"><summary>${t}</summary><div>${b}</div></details>`).join('')}</div><button class="btn gray" id="cl">とじる</button>`,{cl:closeModal});
@@ -1757,6 +1767,7 @@ function renderHome(){
   const mx=P.best[P.subj]+1;selStage=Math.min(Math.max(1,selStage),mx);
   $('sNum').textContent=selStage;$('sPrev').disabled=selStage<=1;$('sNext').disabled=selStage>=mx;
   $('weakN').textContent=P.weak.length;
+  {const b=$('goBtn'),wb=weakBlock(selStage);b.innerHTML=wb?pi('book')+`にがて ゼロで すすめる<small class="gosub">のこり ${P.weak.length}もん・あと ${weakLeft()}かい せいかい</small>`:pi('swords')+'しゅつげき！';b.classList.toggle('wkgo',wb)}
 }
 $('who').onclick=()=>profileForm(P);
 $('setBtn').onclick=()=>profileForm(P);
@@ -1784,16 +1795,97 @@ $('bxBack').onclick=()=>{show('home');renderHome()};
 $('stBack').onclick=()=>{if(statP){statP=null;showAdmin()}else{show('home');renderHome()}};
 $('sPrev').onclick=()=>{selStage--;renderHome()};
 $('sNext').onclick=()=>{selStage++;renderHome()};
-$('goBtn').onclick=()=>{snd(440,.1);startBattle(P.subj,P.diff[P.subj],selStage,false)};
+/* にがてが のこっていると あたらしい ステージには すすめない */
+const weakBlock=st=>P.weak.length>0&&st>(P.best[P.subj]||0);
+const weakLeft=()=>P.weak.reduce((a,w)=>a+(w.n||1),0);
+$('goBtn').onclick=()=>{snd(440,.1);if(weakBlock(selStage)){startWeak();return}startBattle(P.subj,P.diff[P.subj],selStage,false)};
 $('weakBtn').onclick=()=>{
   if(!P.weak.length){showModal(`<div class="mt">📕 にがてノート</div><p>まだ ないよ！<br>まちがえた もんだいは ここに たまって<br>バトルで また でてくるよ。</p><button class="btn green big" id="cl">とじる</button>`,{cl:closeModal});return}
   showModal(`<div class="mt">📕 にがてノート</div><p>${P.weak.length}もん。2かい せいかいすると きえるよ！</p>
     <div class="chips">${P.weak.map(w=>`<span class="chip">${w.label}</span>`).join('')}</div>
     <button class="btn orange big" id="wk">にがてを やっつけろ！</button><button class="btn gray" id="cl">とじる</button>`,
-    {wk:()=>{closeModal();startBattle(P.subj,P.diff[P.subj],1,true)},cl:closeModal});
+    {wk:()=>{closeModal();startWeak()},cl:closeModal});
 };
 
 /* =============== weak list =============== */
+/* ===================== 📕 にがて とっくん（かいせつつき・1もんずつ） ===================== */
+function explainQ(w){const k=w.key||'',a=w.a,L=[];let m;
+  const dots=(n,c='●')=>{let s='';for(let i=0;i<n;i++){s+=c;if(i%5===4&&i<n-1)s+=' '}return `<span class="exd">${s}</span>`};
+  const B_=v=>`<b>${v}</b>`,lcm=(x,y)=>x*y/gcd(x,y),dp=s=>(String(s).split('.')[1]||'').length;
+  const enW=e=>EN.concat(PHRASES,EN4).find(x=>x[1]===e);
+  if(m=k.match(/^(\d+)([+−×÷])(\d+)$/)){const x=+m[1],y=+m[3],op=m[2],yo=y%10,yt=y-yo;
+    if(op==='+'){if(x+y<=20){L.push(`${dots(x)} と ${dots(y,'○')}`);if(x<10&&y<10&&x+y>10){const t=10-x;L.push(`🍒 ${y} を ${t} と ${y-t} に わけるよ`);L.push(`${x} + ${t} = 10　→　10 + ${y-t} = ${B_(x+y)}`)}else L.push(`ぜんぶ かぞえると ${B_(x+y)}`)}
+      else if(yt&&yo){L.push(`${y} を ${yt} と ${yo} に わけて じゅんばんに たすよ`);L.push(`${x} + ${yt} = ${x+yt}`);L.push(`${x+yt} + ${yo} = ${B_(x+y)}`)}else L.push(`${x} + ${y} = ${B_(x+y)}`)}
+    else if(op==='−'){if(x<=20&&y<10&&x>10&&y>x-10){L.push(`${x} を 10 と ${x-10} に わけるよ`);L.push(`10 − ${y} = ${10-y}　→　${10-y} + ${x-10} = ${B_(x-y)}`)}
+      else if(x<=20)L.push(`${dots(x-y)}<span class="exx">${'✖'.repeat(y)}</span>`,`${x}こ から ${y}こ とると のこりは ${B_(x-y)}`);
+      else if(yt&&yo){L.push(`${y} を ${yt} と ${yo} に わけて じゅんばんに ひくよ`);L.push(`${x} − ${yt} = ${x-yt}`);L.push(`${x-yt} − ${yo} = ${B_(x-y)}`)}else L.push(`${x} − ${y} = ${B_(x-y)}`);
+      L.push(`<small>たしかめ：${x-y} + ${y} = ${x} ✓</small>`)}
+    else if(op==='×'){if(x<10&&y<10){L.push(`${x} が ${y}こ ぶん。${x}の だんを いってみよう`);L.push([...Array(y).keys()].map(i=>i+1===y?B_(`${x}×${y}=${x*y}`):`${x}×${i+1}=${x*(i+1)}`).join('　'))}
+      else{const xo=x%10,xt=x-xo;L.push(`${x} を ${xt} と ${xo} に わけて かけるよ`);L.push(`${xt} × ${y} = ${xt*y}`);L.push(`${xo} × ${y} = ${xo*y}`);L.push(`あわせて ${xt*y} + ${xo*y} = ${B_(x*y)}`)}}
+    else{const q=x/y;L.push(`「${y} × ？ = ${x}」の ？を さがそう`);L.push(`${y}の だん：`+[...Array(q).keys()].map(i=>i+1===q?B_(`${y}×${q}=${x}`):`${y}×${i+1}=${y*(i+1)}`).join('　'));L.push(`だから こたえは ${B_(q)}`)}}
+  else if(m=k.match(/^n(\d+)$/)){const x=+m[1];L.push(`${dots(x)} の つぎは ${dots(x+1)}`,`${x} の つぎは ${B_(x+1)}`)}
+  else if(m=k.match(/^c(\d+)/)){const x=+m[1];L.push(`ひとつずつ ゆびで さして かぞえよう`,[...Array(x).keys()].map(i=>i+1).join('、')+` → ${B_(x+'こ')}`)}
+  else if(m=k.match(/^10c(\d+)$/)){const x=+m[1];L.push(`${dots(x)}${dots(10-x,'○')}`,`○ を かぞえると ${B_(10-x)}。${x} と ${10-x} で 10`)}
+  else if(m=k.match(/^g4m(\d+)x(\d+)$/)){const x=+m[1],y=+m[2],yo=y%10,yt=y-yo;L.push(`${y} を ${yt} と ${yo} に わけて かけるよ`,`${x} × ${yt} = ${x*yt}`,`${x} × ${yo} = ${x*yo}`,`あわせて ${x*yt} + ${x*yo} = ${B_(x*y)}`)}
+  else if(m=k.match(/^g4d(\d+)\/(\d+)$/)){const x=+m[1],y=+m[2],q=x/y,qt=Math.floor(q/10)*10;L.push(`「${y} × ？ = ${x}」を かんがえるよ`);if(qt&&q-qt)L.push(`${y} × ${qt} = ${y*qt}、のこり ${x-y*qt}`,`${y} × ${q-qt} = ${x-y*qt}`,`${qt} + ${q-qt} = ${B_(q)}`);else L.push(`${y} × ${q} = ${x} だから ${B_(q)}`)}
+  else if(m=k.match(/^g4r(\d+)\/(\d+)$/)){const x=+m[1],y=+m[2],q=Math.floor(x/y),r=x%y;L.push(`${y}の だんで ${x}を こえない いちばん おおきい かずを さがす`,`${y} × ${q} = ${y*q}`,`${x} − ${y*q} = ${r} が あまり`,`こたえ ${B_(`${q} あまり ${r}`)}`,`<small>あまりは かならず ${y} より ちいさく なるよ</small>`)}
+  else if(m=k.match(/^g4f([\d.]+)([+−])([\d.]+)$/)){const x=+m[1],y=+m[3],X=Math.round(x*10),Y=Math.round(y*10),V=m[2]==='+'?X+Y:X-Y;L.push(`しょうすうてんの いちを そろえて けいさんするよ`,`0.1 が いくつ ぶんかで かんがえると　${X} ${m[2]} ${Y} = ${V}`,`0.1 が ${V}こ だから ${B_(a)}`)}
+  else if(m=k.match(/^g4q(\d+)\/(\d+)\+(\d+)\/(\d+)$/)){const x=+m[1],d=+m[2],y=+m[3];L.push(`ぶんぼ（した）が おなじ ときは、ぶんし（うえ）だけ たすよ`,`${x} + ${y} = ${x+y}、ぶんぼは ${d} の まま`,`こたえ ${B_(a)}`)}
+  else if(m=k.match(/^g4a(\d+)x(\d+)$/)){L.push(`ながしかくの めんせき ＝ たて × よこ`,`${m[1]} × ${m[2]} = ${B_(a)}（cm²）`)}
+  else if(m=k.match(/^g5[mn]([\d.]+)x([\d.]+)$/)){const n=dp(m[1])+dp(m[2]),X=m[1].replace('.','').replace(/^0+/,''),Y=m[2].replace('.','').replace(/^0+/,'');L.push(`しょうすうてんを とって せいすうで かけるよ`,`${X} × ${Y} = ${+X*+Y}`,`しょうすうてんの みぎの かずは ぜんぶで ${n}こ → ひだりへ ${n}けた ずらす`,`こたえ ${B_(a)}`)}
+  else if(m=k.match(/^g5q(\d+)\/(\d+)\+(\d+)\/(\d+)$/)){const x=+m[1],d1=+m[2],y=+m[3],d2=+m[4],l=lcm(d1,d2),X=x*l/d1,Y=y*l/d2;L.push(`ぶんぼが ちがう ときは ぶんぼを ${l} に そろえる（つうぶん）`,`${x}/${d1} = ${X}/${l}、${y}/${d2} = ${Y}/${l}`,`${X}/${l} + ${Y}/${l} = ${X+Y}/${l}`+(fr(X+Y,l)!==`${X+Y}/${l}`?`　→ やくぶんして ${B_(a)}`:''),fr(X+Y,l)===`${X+Y}/${l}`?`こたえ ${B_(a)}`:'')}
+  else if(m=k.match(/^g5v(.+)$/)){const v=m[1].split(',').map(Number),s=v.reduce((p,c)=>p+c,0);L.push(`へいきん ＝ ぜんぶ たして ÷ こすう`,`${v.join(' + ')} = ${s}`,`${s} ÷ ${v.length} = ${B_(a)}`)}
+  else if(m=k.match(/^g5t(\d+)x(\d+)$/)){L.push(`さんかくけいの めんせき ＝ ていへん × たかさ ÷ 2`,`${m[1]} × ${m[2]} = ${m[1]*m[2]}`,`${m[1]*m[2]} ÷ 2 = ${B_(a)}（cm²）`)}
+  else if(m=k.match(/^g5p(\d+)x(\d+)$/)){L.push(`${m[2]}％ は 100 に たいして ${m[2]} という いみ`,`${m[1]} × ${m[2]} ÷ 100 = ${B_(a)}`)}
+  else if(m=k.match(/^g5l(\d+),(\d+)$/)){const x=+m[1],y=+m[2],l=lcm(x,y),big=Math.max(x,y),sm=Math.min(x,y);L.push(`おおきい ほうの ${big} の ばいすうを ならべて、${sm} で わりきれる かずを さがす`,[...Array(l/big).keys()].map(i=>(i+1)*big).map(v=>v===l?B_(v):v).join('、'))}
+  else if(m=k.match(/^g6m(\d+)\/(\d+)x(\d+)\/(\d+)$/)){const[x,b,c,d]=m.slice(1).map(Number);L.push(`ぶんすうの かけざんは ぶんしどうし・ぶんぼどうしを かけるよ`,`ぶんし ${x}×${c}=${x*c}、ぶんぼ ${b}×${d}=${b*d}`,`${x*c}/${b*d}`+(a!==`${x*c}/${b*d}`?` → やくぶんして ${B_(a)}`:`　こたえ ${B_(a)}`))}
+  else if(m=k.match(/^g6d(\d+)\/(\d+)\/(\d+)\/(\d+)$/)){const[x,b,c,d]=m.slice(1).map(Number);L.push(`わる ぶんすうは うえと したを ひっくりかえして かけるよ`,`${x}/${b} ÷ ${c}/${d} = ${x}/${b} × ${d}/${c}`,`= ${x*d}/${b*c}`+(a!==`${x*d}/${b*c}`?` → やくぶんして ${B_(a)}`:`　こたえ ${B_(a)}`))}
+  else if(m=k.match(/^g6r(\d+):(\d+)x(\d+)([LR])$/)){const x=+m[1],y=+m[2],kk=+m[3];if(m[4]==='L')L.push(`${x} → ${x*kk} は ${kk}ばい`,`${y} も ${kk}ばいして ${y} × ${kk} = ${B_(a)}`);else L.push(`${y} → ${y*kk} は ${kk}ばい`,`${x} も ${kk}ばいして ${x} × ${kk} = ${B_(a)}`)}
+  else if(m=k.match(/^g6c(\d+)$/)){L.push(`えんの めんせき ＝ はんけい × はんけい × 3.14`,`${m[1]} × ${m[1]} × 3.14 = ${B_(a)}（cm²）`)}
+  else if(m=k.match(/^g6s(\d+)\/(\d+)$/))L.push(`はやさ ＝ みちのり ÷ じかん`,`${m[1]} ÷ ${m[2]} = ${B_(a)}（じそく ${a}km）`);
+  else if(m=k.match(/^g6t(\d+)x(\d+)$/))L.push(`みちのり ＝ はやさ × じかん`,`${m[1]} × ${m[2]} = ${B_(a)}（km）`);
+  else if(m=k.match(/^g6u(\d+)\/(\d+)$/))L.push(`じかん ＝ みちのり ÷ はやさ`,`${m[1]} ÷ ${m[2]} = ${B_(a)}（じかん）`);
+  else if(m=k.match(/^g6x(\d+)([ma])(\d+)$/)){const x=+m[1],kk=+m[3];if(m[2]==='m')L.push(`x × ${kk} = ${x*kk} の とき`,`x は ぎゃくの けいさんで ${x*kk} ÷ ${kk} = ${B_(x)}`);else L.push(`x + ${kk} = ${x+kk} の とき`,`x は ぎゃくの けいさんで ${x+kk} − ${kk} = ${B_(x)}`)}
+  else if(m=k.match(/^e[lpje]([^]+)$/)){const ww=enW(m[1]);if(ww)L.push(`<span class="exen">${ww[0]} ${ww[1]}</span> ＝ ${ww[2]}`,k[1]==='l'?'もういちど 🔊で きいてみよう':'')}
+  else if(m=k.match(/^es([a-z]+)(\d+)$/)){const wd=m[1],i=+m[2],ww=enW(wd);L.push(`<span class="exen">${wd.slice(0,i)}<b>${wd[i]}</b>${wd.slice(i+1)}</span>`+(ww?` ＝ ${ww[2]} ${ww[0]}`:''),`つづりを こえに だして おぼえよう`)}
+  else if(m=k.match(/^e4(.+)$/)){const ww=EN4.find(x=>x[1]===m[1]);if(ww)L.push(`${ww[0]} ${ww[2]} ＝ <span class="exen">${B_(ww[1])}</span>`)}
+  else if(m=k.match(/^e(5|6s)(.+?)(\d+)$/)){const ww=(m[1]==='5'?EN5:EN6S).find(x=>x[1]===m[2]&&x[0].length===+m[3]);if(ww)L.push(`<span class="exen">${ww[0].replace('___',B_(ww[1]))}</span>`,`いみ：${ww[2]}`)}
+  else if(m=k.match(/^e6p(.+)$/)){const ww=EN6P.find(x=>x[0]===m[1]);if(ww)L.push(`<span class="exen">${ww[0]} → ${B_(ww[1])}</span>`,ww[1]===ww[0]+'ed'||ww[1]===ww[0]+'d'?'うしろに ed を つけると「〜した」に なるよ':'かたちが ぜんぶ かわる とくべつな ことば。こえに だして おぼえよう')}
+  else if(m=k.match(/^h(.+)$/)){const ww=HIRA.find(x=>x[1]===m[1]);L.push(`${ww?ww[0]:''} 「${m[1]}」の さいしょの もじは ${B_(a)}`)}
+  else if(m=k.match(/^k1p(.+)$/)){const ww=K1.find(x=>x[0]===m[1]);if(ww)L.push(`${ww[2]||''} 「${ww[1]}」は かんじで ${B_(ww[0])}`)}
+  else if(m=k.match(/^k(\d)(.+)$/))L.push(`「${m[2]}」は ${B_(a)} と よむよ`,`<small>ことばを こえに だして よんでみよう</small>`);
+  return L.filter(Boolean)}
+let SD=null;
+function startWeak(){if(!P.weak.length){toast('📕 にがては ないよ！');return}try{speechSynthesis.cancel()}catch(e){}
+  SD={q:shuffle(P.weak.map(w=>w.key)),start:P.weak.length,ok:0,ng:0};show('study');studyNext()}
+function studyNext(){if(!SD)return;if(!P.weak.length){studyEnd();return}
+  let w=null;while(SD.q.length&&!w){const kk=SD.q.shift();w=P.weak.find(x=>x.key===kk)}
+  if(!w){SD.q=shuffle(P.weak.map(x=>x.key));return studyNext()}
+  SD.w=w;SD.lock=false;const sb=SUBJ[w.subj]?w.subj:'math';
+  $('sdLeft').textContent=`のこり ${P.weak.length}もん`;
+  $('sdQ').innerHTML=`<span class="qsub qs-${sb}">${SUBJ[sb].n}　あと ${w.n||1}かい せいかいで こくふく</span>`+w.html;
+  $('sdSpk').style.display=w.speak?'':'none';$('sdEx').className='panel sdex';$('sdEx').innerHTML='';
+  const box=$('sdC');box.innerHTML='';box.className='choices'+(w.choices.length===3?' c3':'');
+  shuffle(w.choices).forEach(v=>{const b=document.createElement('button');b.className='ch'+(w.cs&&!(w.cs==='small'&&v.length<=4)?' '+w.cs:'');b.textContent=v;b.onclick=()=>studyAns(b,v);box.appendChild(b)});
+  if(w.speak&&(w.auto||P.voice))setTimeout(()=>say(...w.speak),200);$('sdBody').scrollTop=0}
+function studyAns(btn,v){if(!SD||SD.lock)return;SD.lock=true;const w=SD.w,ok=v===w.a;if(w.sayChoice)say(v,w.sayChoice);
+  document.querySelectorAll('#sdC .ch').forEach(b=>{if(b.textContent===w.a)b.classList.add('ok')});
+  let head;
+  if(ok){SD.ok++;w.n=(w.n||1)-1;snd(880,.1,'square',.05);snd(1320,.12,'square',.05,0,.08);
+    if(w.n<=0){P.weak=P.weak.filter(x=>x!==w);head='⭕ せいかい！ にがてを ひとつ こくふく 🎉'}else{SD.q.push(w.key);head=`⭕ せいかい！ あと ${w.n}かいで こくふく`}}
+  else{SD.ng++;btn.classList.add('ng');w.n=Math.min((w.n||1)+1,4);SD.q.splice(Math.min(2,SD.q.length),0,w.key);snd(180,.3,'square',.07,-80);head=`❌ ざんねん… せいかいは「${esc(w.a)}」`}
+  save();const ex=explainQ(w);
+  $('sdEx').innerHTML=`<div class="exh ${ok?'ok':'ng'}">${head}</div>${ex.length?`<div class="exl">💡 かいせつ</div>`+ex.map(t=>`<div class="exr">${t}</div>`).join(''):`<div class="exr">こたえは <b>${esc(w.a)}</b></div>`}
+    <button class="btn ${P.weak.length?'orange':'green'} big" id="sdNx">${P.weak.length?'つぎの もんだい ▶':'🎉 おわり！'}</button>`;
+  $('sdEx').classList.add('on');$('sdNx').onclick=()=>{snd(660,.05);studyNext()};
+  setTimeout(()=>$('sdEx').scrollIntoView({block:'nearest',behavior:'smooth'}),50);$('sdLeft').textContent=`のこり ${P.weak.length}もん`}
+function studyEnd(){const n=SD?SD.start:0,g=Math.round(Math.max(1,n)*20*DMULT[mixLv()]);P.gold+=g;save();fanfare();SD=null;
+  showModal(`<div class="chest">📕</div><div class="mt">にがて ゼロ！</div><p>${n}もんの にがてを こくふく したよ！<br>ごほうび <b class="goldt">🪙+${g}</b></p><p class="wkmsg">つぎの ステージへ すすめるように なったよ</p>
+    <button class="btn orange big" id="nx">つぎの ステージへ ▶</button><button class="btn gray big" id="hm">ホームへ</button>`,
+    {nx:()=>{closeModal();const ns=(P.best[P.subj]||0)+1;selStage=ns;startBattle(P.subj,P.diff[P.subj],ns,false)},hm:()=>{closeModal();goHome()}})}
+$('sdBack').onclick=()=>{SD=null;goHome()};
+$('sdSpk').onclick=()=>{if(SD&&SD.w&&SD.w.speak)say(...SD.w.speak)};
+
 function labelOf(q){const t=document.createElement('div');t.innerHTML=q.html;return (t.textContent||'').replace(/🔊/,'🔊 ').slice(0,14)}
 function addWeak(q){const w=P.weak.find(w=>w.key===q.key);
   if(w)w.n=Math.min(w.n+1,4);else{const c=Object.assign({},q);delete c.review;c.n=2;c.label=labelOf(q);P.weak.push(c);if(P.weak.length>40)P.weak.shift()}save()}
@@ -2453,6 +2545,7 @@ function scaleMon(mo){const L=Math.min(B.blv,4),[hn,hb,hmin]=HITS[L],[dn,db]=DIE
   mo.maxHp=Math.min(Math.max(mo.maxHp,Math.round(E*h)),Math.round(E*(mo.boss?hb:hn)*1.6*(mo.ult?1.8:1)));
   mo.dmg=Math.max(mo.dmg,Math.round(maxHp()/(mo.ult?db*.7:mo.boss?db:dn)*(1+.05*mo.rar)))}
 function spawn(){
+  if(B.weakOnly&&!P.weak.length&&B.wave>0){stageClear();return}
   B.wave++;const wb=B.tower?B.wave%10===0:B.wave===B.waves,st=B.stage,uu=B.weakOnly||B.tower?[]:ultUnlocked();
   const ult=uu.length&&Math.random()<ultRate(wb)?pick(uu).k:null,boss=wb||!!ult;
   const sp=ult||pickSpecies(boss?BOSSES:NORMALS,B.blv),S_=SP[sp],rar=S_.rar,m=[sp,S_.name];P.dex.seen[sp]=1;
@@ -2584,8 +2677,10 @@ function stageClear(){
   showModal(`<div class="mt">🏆 ${B.weakOnly?'にがて とっくん':'ステージ'+st} クリア！</div>
     <div class="stars">${'★'.repeat(stars)}<span class="off">${'★'.repeat(3-stars)}</span></div>
     <p>まちがい ${B.wrong}かい<br>ボーナス <b class="goldt">🪙+${bonus}</b></p>${stars<3?'<small>ノーミスで ★3つ！</small>':''}
-    ${B.weakOnly?'':'<button class="btn orange big" id="nx">つぎの ステージへ ▶</button>'}<button class="btn gray big" id="hm">ホームへ</button>`,
-    {nx:()=>{closeModal();const lv=B.blv;processHatch(()=>startBattle(subj,lv,st+1,false))},hm:()=>{closeModal();goHome()}});
+    ${P.weak.length?`<p class="wkmsg">📕 にがてが あと ${P.weak.length}もん。<br>ゼロに すると つぎの ステージへ すすめるよ！</p><button class="btn purple big" id="wk">📕 にがてを やっつける</button>`:B.weakOnly?'<p class="wkmsg">🎉 にがて ゼロ！ すすめるように なったよ</p><button class="btn orange big" id="nx2">つぎの ステージへ ▶</button>':'<button class="btn orange big" id="nx">つぎの ステージへ ▶</button>'}<button class="btn gray big" id="hm">ホームへ</button>`,
+    {nx:()=>{closeModal();const lv=B.blv;processHatch(()=>startBattle(subj,lv,st+1,false))},
+     nx2:()=>{closeModal();const ns=(P.best[P.subj]||0)+1;selStage=ns;processHatch(()=>startBattle(P.subj,P.diff[P.subj],ns,false))},
+     wk:()=>{closeModal();processHatch(()=>startWeak())},hm:()=>{closeModal();goHome()}});
 }
 function gameOver(){
   if(!B)return;if(B.tower){towerEnd();return}B.lock=true;if(!B.sawUlt&&!B.weakOnly&&ultUnlocked().length)P.ultMiss=(P.ultMiss||0)+1;save();const {bsubj:subj,blv:lv,stage,weakOnly}=B;snd(300,.6,'triangle',.07,-220);
