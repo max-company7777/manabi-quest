@@ -423,7 +423,7 @@ input{font:inherit}
 #hStats b,#home .slot .sn b,#hPow,#home .top .pill b,#home .top .lv{font-family:'DotGothic16',monospace;-webkit-font-smoothing:none;font-smoothing:none}
 
 .modes{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}.modes .mode{font-size:16px;padding:10px 0;color:#fff}
-.hgrid{display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:6px}.hgrid .btn{font-size:14px;padding:10px 2px}
+.hgrid{display:grid!important;grid-template-columns:repeat(4,1fr)!important;gap:6px}.hgrid .btn{font-size:14px;padding:10px 2px}
 .tkn{font-size:12px;background:#0006;padding:0 4px}.achn{background:#e8413c;color:#fff;font-size:12px;padding:0 5px;margin-left:2px}
 .pi.big{width:110px;height:110px;margin:0}.gmach{margin:6px auto}
 @keyframes gshake{0%,100%{transform:rotate(0)}20%{transform:rotate(-8deg)}40%{transform:rotate(8deg)}60%{transform:rotate(-6deg)}80%{transform:rotate(6deg)}}.gshake{animation:gshake .9s}
@@ -687,6 +687,11 @@ input{font:inherit}
 .lnmsl{position:absolute;bottom:45%;width:0;height:0;animation:lnmsl .62s cubic-bezier(.3,.1,.6,1) forwards;z-index:30}.lnmsl i{position:absolute;font-style:normal;font-size:22px;transform:translate(-50%,-50%) scaleX(-1) rotate(-30deg);filter:drop-shadow(6px 2px 4px #ff6a2a);animation:lnmslarc .62s ease-in-out forwards}@keyframes lnmsl{to{transform:translateX(var(--dx))}}@keyframes lnmslarc{0%{margin-top:0}50%{margin-top:-60px}100%{margin-top:40px}}
 .lnboom{position:absolute;bottom:18%;width:70px;height:70px;margin-left:-35px;border-radius:50%;background:radial-gradient(circle,#fff,#ffd23f 30%,#ff6a2a 55%,rgba(255,60,0,0) 72%);animation:lnboom .5s forwards;z-index:29}.lnboom.big{width:360px;height:360px;margin-left:-180px;bottom:-60px;animation-duration:1s;background:radial-gradient(circle,#fff,#fff6a0 18%,#ff8a3a 40%,#c0204a 58%,rgba(120,0,40,0) 72%)}@keyframes lnboom{0%{transform:scale(.2);opacity:1}60%{opacity:1}100%{transform:scale(1.2);opacity:0}}
 .lnmeteor{position:absolute;top:-120px;width:90px;height:90px;margin-left:-45px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#ffe0a0,#ff6a2a 40%,#7a1a1a 75%);box-shadow:0 0 40px 12px #ff5a2a,40px -40px 60px 10px rgba(255,120,40,.6);animation:lnmeteor .95s cubic-bezier(.5,0,1,1) forwards;z-index:30}@keyframes lnmeteor{0%{transform:translate(260px,-60px) scale(.6)}100%{transform:translate(0,calc(100% + 160px)) scale(1.3)}}
+.ntabs{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin:4px 0}.ntabs.sm{grid-template-columns:repeat(3,1fr)}.ntab{background:rgba(0,0,0,.35);border:2px solid #555;color:#bbb;border-radius:8px;padding:6px 2px;font-size:13px;font-family:inherit}.ntab.on{border-color:#ffd23f;color:#ffd23f;background:rgba(255,210,63,.1)}
+.nlist{max-height:50vh;overflow-y:auto;display:flex;flex-direction:column;gap:8px;margin:6px 0;text-align:left}.ncard{background:#f3ead6;color:#2a1a10;border-radius:10px;padding:10px;border-left:6px solid #e8413c}.ncard.done{border-left-color:#45b83a;opacity:.85}
+.nq{font-size:18px;line-height:1.4;word-break:break-word}.nq img,.nq svg{max-width:100%;height:auto}.nq .tag,.nq .qsub{display:none}
+.nans{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0;font-size:14px}.nng{color:#c0302a;text-decoration:line-through}.nok{color:#1a7a2a;font-weight:700}.nct{color:#8a6a3a;font-size:12px}.ndn{color:#1a7a2a;font-size:12px}
+.nexb{background:#2a6a9a;color:#fff;border:0;border-radius:6px;padding:5px 10px;font-size:12px;font-family:inherit}.nex .exr{background:#fff;border-radius:6px;padding:4px 8px;margin-top:4px;font-size:14px}
 </style>
 </head>
 <body>
@@ -756,6 +761,7 @@ input{font:inherit}
     <button class="btn orange big" id="goBtn" style="font-size:26px">⚔️ しゅつげき！</button>
     <div class="row hgrid">
       <button class="btn" id="weakBtn">📕 にがて <span id="weakN">0</span></button>
+      <button class="btn" id="noteBtn">📒 ノート</button>
       <button class="btn" id="statBtn">📊 きろく</button>
       <button class="btn" id="rankBtn">🏆 ランキング</button>
       <button class="btn" id="famBtn" style="background:#2a6a9a">👀 みんなの ようす</button>
@@ -1095,7 +1101,7 @@ function makeItem(st,d,boss,min=0){
 /* =============== save data =============== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-const APPV='v116';
+const APPV='v117';
 try{const c=document.createElement('canvas');c.width=9;c.height=9;const g=c.getContext('2d'),F=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};F(1,0,7,1,'#120d09');F(1,8,7,1,'#120d09');F(0,1,1,7,'#120d09');F(8,1,1,7,'#120d09');F(1,1,7,1,'#120d09');F(1,7,7,1,'#120d09');F(1,1,1,7,'#120d09');F(7,1,1,7,'#120d09');F(2,2,5,1,'#7a6a52');F(2,2,1,5,'#7a6a52');F(2,6,5,1,'#2a2018');F(6,2,1,5,'#2a2018');document.documentElement.style.setProperty('--pxf',`url(${c.toDataURL()})`)}catch(e){}
 const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));if(G.bgmOn===undefined)G.bgmOn=true;
 let P=null;
@@ -1601,6 +1607,36 @@ function profileForm(p){
 $('addP').onclick=()=>profileForm(null);
 $('addM').onclick=()=>{snd(660,.05);showAdmin()};
 $('famBtn').onclick=()=>{snd(660,.05);showAdmin()};
+$('noteBtn').onclick=()=>{snd(660,.05);noteOpen()};
+/* ---- 📒 まちがいノート ---- */
+function noteRec(q,ok,chosen){if(!P||!q||!q.key)return;const N=P.note||(P.note=[]);let e=N.find(x=>x.k===q.key);
+  if(!ok&&chosen!=null&&e&&Date.now()-e.t<3000){e.c=chosen;return}
+  if(!ok){const html=String(q.html||'');if(!e){e={k:q.key,s:q.subj||(B&&B.subj)||'math',h:html.length<6000?html:'',lb:labelOf(q),a:q.a,c:'',n:0,ok:0,t:0};N.unshift(e)}else{N.splice(N.indexOf(e),1);N.unshift(e)}
+    e.n++;e.ok=0;e.t=Date.now();if(chosen!=null)e.c=chosen;if(N.length>150)N.length=150}
+  else if(e){e.ok=(e.ok||0)+1}}
+let noteF={s:'all',d:'todo'};
+function noteOpen(){const N=P.note||[],f=noteF,SUBN={all:'ぜんぶ',math:'さんすう',eng:'えいご',kanji:'こくご'};
+  const L=N.filter(e=>(f.s==='all'||e.s===f.s)&&(f.d==='all'||(f.d==='todo'?(e.ok||0)<2:(e.ok||0)>=2)));
+  const todo=N.filter(e=>(e.ok||0)<2).length;
+  showModal(`<div class="mt">📒 まちがい ノート</div><p style="font-size:13px">まちがえた もんだいを ここで みなおそう。<br><small style="color:var(--sub)">あとで 2かい せいかい すると「できた！」に なるよ</small></p>
+    <div class="ntabs">${Object.entries(SUBN).map(([k,n])=>`<button class="ntab${f.s===k?' on':''}" data-ns="${k}">${n}</button>`).join('')}</div>
+    <div class="ntabs sm">${[['todo','まだ（'+todo+'）'],['done','できた！（'+(N.length-todo)+'）'],['all','ぜんぶ']].map(([k,n])=>`<button class="ntab${f.d===k?' on':''}" data-nd="${k}">${n}</button>`).join('')}</div>
+    <div class="nlist">${L.length?L.slice(0,60).map((e,i)=>`<div class="ncard${(e.ok||0)>=2?' done':''}"><div class="nq">${e.h||esc(e.lb||e.k)}</div>
+      <div class="nans">${e.c?`<span class="nng">✖ ${esc(e.c)}</span>`:''}<span class="nok">○ ${esc(e.a)}</span>${e.n>1?`<span class="nct">${e.n}かい まちがい</span>`:''}${(e.ok||0)>=2?'<span class="ndn">✅ できた！</span>':''}</div>
+      <button class="nexb" data-nx="${N.indexOf(e)}">💡 かいせつを みる</button><div class="nex" id="nx${N.indexOf(e)}"></div></div>`).join(''):`<div style="color:var(--sub);margin:20px 0">${N.length?'この じょうけんの もんだいは ないよ':'まだ まちがえた もんだいは ないよ 👍'}</div>`}</div>
+    ${L.length?`<button class="btn orange big" id="nrv">✏️ この ${Math.min(L.length,10)}もんを もういちど とく</button>`:''}<button class="btn gray" id="cl">とじる</button>`,
+    {cl:closeModal,nrv:()=>noteRetry(L.slice(0,10))});
+  document.querySelectorAll('[data-ns]').forEach(b=>b.onclick=()=>{f.s=b.dataset.ns;noteOpen()});
+  document.querySelectorAll('[data-nd]').forEach(b=>b.onclick=()=>{f.d=b.dataset.nd;noteOpen()});
+  document.querySelectorAll('[data-nx]').forEach(b=>b.onclick=()=>{const e=N[+b.dataset.nx],box=$('nx'+b.dataset.nx);if(box.innerHTML){box.innerHTML='';return}let ex=[];try{ex=explainQ({key:e.k,a:e.a,html:e.h})}catch(er){}
+    box.innerHTML=(ex.length?ex:[`こたえは <b>${esc(e.a)}</b>`]).map(t=>`<div class="exr">${t}</div>`).join('')})}
+/* re-solve: put them back as にがて questions and start the slow explained training */
+function noteRetry(list){let n=0;list.forEach(e=>{if(P.weak.some(w=>w.key===e.k))return;const w={key:e.k,a:e.a,html:e.h||esc(e.lb),subj:e.s,choices:noteChoices(e),n:2,label:e.lb,fromNote:1};P.weak.push(w);n++});
+  save();closeModal();if(n)toast(`📒 ${n}もんを とっくんに いれたよ`);startWeak()}
+function noteChoices(e){const c=new Set([e.a]);if(e.c)c.add(e.c);
+  for(let t=0;t<60&&c.size<4;t++){let q;try{q=genQ(e.s,P.diff[e.s]||0,1)}catch(er){break}(q.choices||[]).forEach(v=>{if(c.size<4&&v!==e.a&&typeof v===typeof e.a)c.add(v)})}
+  if(/^-?\d+$/.test(String(e.a))){const v=+e.a;[v+1,v-1,v+10,v+2].forEach(x=>{if(c.size<4&&x>=0)c.add(String(x))})}
+  return shuffle([...c].slice(0,4))}
 function dataMove(){
   showModal(`<div class="mt">💾 データの ひっこし</div><p style="font-size:14px">べつの ばしょ（PWAや べつの たんまつ）に<br>ぜんぶの ぼうけんしゃの データを うつせます。</p>
     <button class="btn green big" id="dx">📤 データを かきだす</button><button class="btn orange big" id="di">📥 データを よみこむ</button><button class="btn gray" id="cl">とじる</button>`,
@@ -1676,7 +1712,7 @@ function piURL(n){const [pal,rows]=PIX[n],cells=[],set=new Set(),m=new Map();row
 const pi=(n,c='')=>{const k='pi|'+n;if(!IMGC[k])IMGC[k]=piURL(n);return `<img class="pi ${c}" src="${IMGC[k]}" alt="">`};
 function pixHome(){
   const set=(id,ic,txt)=>{const e=$(id);if(e)e.innerHTML=pi(ic)+txt};
-  set('weakBtn','book',`にがて <span id="weakN">${P?P.weak.length:0}</span>`);set('statBtn','chart','きろく');set('famBtn','person','みんな');
+  set('weakBtn','book',`にがて <span id="weakN">${P?P.weak.length:0}</span>`);set('statBtn','chart','きろく');set('noteBtn','book','ノート');set('famBtn','person','みんな');
   set('rankBtn','trophy','ランキング');
   const dk=(id,ic,t,badge)=>{const e=$(id);if(e)e.innerHTML=pi(ic)+`<i>${t}</i>`+(badge?`<b class="dkb">${badge}</b>`:'')};
   dk('towerBtn','tower','とう',P&&P.tower&&P.tower.best?P.tower.best+'F':'');dk('gachaBtn','gacha','ふくびき',P&&P.tk?P.tk:'');dk('roomBtn','house','へや');dk('achBtn','medal','じっせき',P&&achClaimable()?achClaimable():'');dk('boxBtn','box','ボックス',P&&P.mons.some(evoReady)?'✨':'');dk('shopBtn','bag','ショップ');dk('laneBtn','swords','ぐんだん',P?('🎫'+ltDaily()):'');dk('giftBtn','gift','コード');{const t=$('hdTop');if(t)t.innerHTML=pi('door')+'<i>トップ</i>'}set('setBtn','gear','せってい');set('helpBtn','help','ヘルプ');
@@ -3338,7 +3374,7 @@ function catOf(subj,key){
   if(key.startsWith('h'))return 'ひらがな';if(key.startsWith('k1p'))return 'かんじ1年（え→かんじ）';
   const k=key.match(/^k([2-7])/);return k?{2:'かんじ1年（よみ）',3:'かんじ2年（よみ）',4:'かんじ3年（じゅくご）',5:'かんじ4年（よみ）',6:'かんじ5年（よみ）',7:'かんじ6年（よみ）'}[k[1]]:'こくご';
 }
-function record(q,ok,t){
+function record(q,ok,t){try{noteRec(q,ok)}catch(e){}
   P.lastPlay=Date.now();if(B&&!B.weakOnly&&!q.review)trackMastery(B.subj,B.lv,ok);
   const S=P.stats||(P.stats={cats:{},days:{},items:{}});const subj=q.subj||'math';
   const ck=subj+'|'+catOf(subj,q.key),c=S.cats[ck]||(S.cats[ck]={n:0,ok:0,t:0});c.n++;if(ok)c.ok++;c.t+=Math.min(t,30);
@@ -3759,7 +3795,7 @@ function answer(btn,v){
   if(q.sayChoice)say(v,q.sayChoice);
   record(q,v===q.a,t);
   if(v===q.a){btn.classList.add('ok');correct(t)}
-  else{btn.classList.add('ng');markCorrect();B.wrong++;B.combo=0;updCombo();addWeak(q);snd(180,.3,'square',.07,-80);vib(80);
+  else{try{noteRec(q,false,v)}catch(e){}btn.classList.add('ng');markCorrect();B.wrong++;B.combo=0;updCombo();addWeak(q);snd(180,.3,'square',.07,-80);vib(80);
     setTimeout(()=>{if(B&&B.mon){B.mon.cd=B.mon.cdMax;updCd()}monAttack(nextQ)},1300)}
 }
 function correct(t){
