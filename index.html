@@ -464,6 +464,12 @@ input{font:inherit}
 .rmimg{width:48px;height:36px;object-fit:contain;image-rendering:pixelated}.rmsw{width:40px;height:30px;border:2px solid #000}.rmn{flex:1;font-size:15px}.rmn small{display:block;font-size:11px;color:var(--sub)}.rmon{color:#5be05b;font-size:13px}
 .ghpop{width:110px;margin:0 auto;filter:drop-shadow(0 0 8px #9ad8ff) opacity(.85) saturate(.6);animation:ghin .8s}.ghpop .hs{width:100%}@keyframes ghin{0%{opacity:0;transform:scale(.3) translateY(20px)}60%{opacity:1;transform:scale(1.15)}100%{transform:scale(1)}}
 .swr{display:flex;flex-wrap:wrap;gap:4px;justify-content:center;margin:4px 0}.swp{display:block;font-size:13px;margin:6px 0}.swp input{transform:scale(1.3);margin-right:6px}.swg{max-height:30vh;overflow:auto;margin:6px 0}
+
+.limb{font-size:11px;color:#ffd23f;background:#5a2a8a;border:2px solid #ffd23f;padding:4px 6px;text-align:center;line-height:1.3}
+.limh{margin-top:8px;font-size:14px;color:#ffd23f}.limg{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;max-height:30vh;overflow:auto;margin:4px 0}
+.limc{background:#0006;border:2px solid #5a2a8a;padding:3px;filter:grayscale(.85) brightness(.6)}.limc.own{filter:none;border-color:#ffd23f}
+.limc span{display:block;width:100%;aspect-ratio:1}.limc span svg,.limc span .hs{width:100%;height:100%}.limc small{display:block;font-size:9px;line-height:1.2}
+.gz.c5{background:linear-gradient(90deg,#3a1a5a,#0005)}
 </style>
 </head>
 <body>
@@ -993,13 +999,14 @@ const PANTS='#3a3f55';
 function r1(x,y,c){return `<rect x="${x}" y="${y}" width="1.04" height="1.04" fill="${c}"/>`}
 
 /* ---- cosmetics ---- */
-const HATS={ribbon:['リボン',300],catears:['ネコみみ',600],flower:['はなかざり',800],horns:['つの',1500],headph:['ヘッドホン',2000],wizard:['まほうの ぼうし',3000],crown:['おうかん',6000]};
-const AURAS={blue:['あおい オーラ',1000,'#4aa0ff'],green:['みどりの オーラ',1000,'#58d14a'],pink:['ピンクの オーラ',1500,'#ff6fa8'],gold:['きんいろ オーラ',5000,'#ffd23f'],rainbow:['にじいろ オーラ',20000,'']};
+const HATS={ribbon:['リボン',300],catears:['ネコみみ',600],flower:['はなかざり',800],horns:['つの',1500],headph:['ヘッドホン',2000],wizard:['まほうの ぼうし',3000],crown:['おうかん',6000],halo:['てんしの わっか',-1],dhorn:['りゅうの つの',-1],bunny:['うさみみ',-1],starcrown:['ほしの かんむり',-1]};
+const AURAS={blue:['あおい オーラ',1000,'#4aa0ff'],green:['みどりの オーラ',1000,'#58d14a'],pink:['ピンクの オーラ',1500,'#ff6fa8'],gold:['きんいろ オーラ',5000,'#ffd23f'],rainbow:['にじいろ オーラ',20000,''],sakura:['さくら オーラ',-1,'#ff9ac8'],flame:['ほのお オーラ',-1,'#ff6a1a'],galaxy:['ぎんが オーラ',-1,'#8a6aff'],ice:['こおり オーラ',-1,'#7af0ff']};
 const TITLES={gambari:['がんばりや',200],keisan:['けいさん はかせ',1500],kanji:['かんじ マスター',1500],eigo:['えいご めいじん',1500],monster:['モンスター はかせ',3000],dragon:['ドラゴン つかい',5000],legend:['でんせつの ゆうしゃ',10000]};
 const BGS={forest:['もり',500,'linear-gradient(#5aa04a,#1f4a1a)'],sea:['うみ',800,'linear-gradient(#5ab8e8,#0a3a6a)'],night:['よぞら',1500,'radial-gradient(circle at 70% 20%,#fff6c0 0 3%,transparent 4%),linear-gradient(#1a1a4a,#05051a)'],
   snow:['ゆきやま',1500,'linear-gradient(#cfe8ff,#6a8ab0)'],castle:['おしろ',3000,'linear-gradient(#6a4a8a,#2a1a3a)'],space:['うちゅう',5000,'radial-gradient(circle at 20% 30%,#ff6fa8 0 2%,transparent 3%),radial-gradient(circle at 80% 60%,#7ad0ff 0 2%,transparent 3%),linear-gradient(#0a0520,#2a0a4a)']};
 const OUTFITS={princess:['プリンセスの ドレス',3000,'ピンクの ふんわり ドレス・きらきら ティアラ・ながい かみ。ぼうしや かぶとの みためは かくれるよ',{D:'#ff7ab8',Lt:'#ffc2de',Dk:'#d94a8f',T:'#ffd23f',A:'#4ad0ff',G:'#ff8fc8'}],
   princess2:['よぞらの プリンセス',8000,'ほしが かがやく よぞらいろの ドレス。ティアラには ピンクの ほうせき',{D:'#3a3aa8',Lt:'#8a8aff',Dk:'#22226a',T:'#ffd23f',A:'#ff6fa8',G:'#9a9aff',star:1}],
+  holy:['せいきしの よろい',-1,'★ふくびき げんてい。しろと きんの よろい・あおく ひかる め・きんの つの。ぼうしや かぶとの みためは かくれるよ'],
   maou:['まおうの すがた',30000,'くろい よろい・おおきな つの・あかく ひかる め・トゲの かたあて・やみの マント。ぼうしや かぶとの みためは かくれるよ']};
 const COSCAT={outfit:OUTFITS,hat:HATS,aura:AURAS,title:TITLES,bg:BGS};
 const cosOf=p=>{p.cos=p.cos||{owned:{}};p.cos.owned=p.cos.owned||{};return p.cos};
@@ -1011,6 +1018,10 @@ function drawHat(P1,hat){const G='#ffd23f',pk='#ff6fa8',W='#f4f4f4';
   if(hat==='horns'){[[4,-1],[4,-2],[3,-3],[11,-1],[11,-2],[12,-3]].forEach(([x,y])=>P1(x,y,'#f0e0c0'))}
   if(hat==='headph'){for(let x=4;x<=11;x++)P1(x,-1,'#2a2a3a');[[3,2],[3,3],[3,4],[12,2],[12,3],[12,4]].forEach(([x,y])=>P1(x,y,'#e8413c'));P1(3,0,'#2a2a3a');P1(12,0,'#2a2a3a');P1(3,1,'#2a2a3a');P1(12,1,'#2a2a3a')}
   if(hat==='wizard'){const V='#6a3ab0';for(let x=3;x<=12;x++)P1(x,-1,V);for(let x=5;x<=10;x++)P1(x,-2,V);for(let x=6;x<=9;x++)P1(x,-3,V);P1(7,-4,V);P1(8,-4,V);P1(8,-5,V);P1(7,-3,G);P1(6,-2,G)}
+  if(hat==='halo'){for(let x=5;x<=10;x++){P1(x,-4,G);P1(x,-2,G)}P1(4,-3,G);P1(11,-3,G);P1(6,-3,'#fff6c0',false);P1(9,-3,'#fff6c0',false)}
+  if(hat==='dhorn'){[[4,-1],[3,-2],[3,-3],[2,-4],[2,-5],[11,-1],[12,-2],[12,-3],[13,-4],[13,-5]].forEach(([x,y],i)=>P1(x,y,i%5>2?'#ffd23f':'#e8502a'));P1(3,-1,'#e8502a');P1(12,-1,'#e8502a')}
+  if(hat==='bunny'){[[5,-1],[5,-2],[5,-3],[5,-4],[5,-5],[4,-2],[4,-3],[4,-4],[10,-1],[10,-2],[10,-3],[10,-4],[10,-5],[11,-2],[11,-3],[11,-4]].forEach(([x,y])=>P1(x,y,W));[[5,-3],[5,-4],[10,-3],[10,-4]].forEach(([x,y])=>P1(x,y,pk,false))}
+  if(hat==='starcrown'){const S='#ffe680';for(let x=4;x<=11;x++)P1(x,-1,S);[[7,-2],[8,-2],[7,-3],[8,-3],[6,-2],[9,-2],[7,-4],[8,-4],[5,-2],[10,-2]].forEach(([x,y])=>P1(x,y,S));P1(7,-2,'#7a6aff',false);P1(8,-2,'#7a6aff',false);P1(4,-2,S);P1(11,-2,S)}
   if(hat==='crown'){for(let x=4;x<=11;x++)P1(x,-1,G);[[4,-2],[6,-2],[7,-3],[8,-3],[9,-2],[11,-2],[7,-2],[8,-2]].forEach(([x,y])=>P1(x,y,G));P1(7,-1,'#e8413c',false);P1(10,-1,'#4aa0ff',false);P1(5,-1,'#58d14a',false)}
 }
 const HDROP=[12,13,22,23,24,25],HSC=2;
@@ -1057,7 +1068,7 @@ function heroSVG(eq,look){
   P1(7,5,shade(skin,-.14));P1(8,5,shade(skin,-.14));P1(5,5,'#ff9a8a');P1(10,5,'#ff9a8a');
   P1(7,6,'#8a4a3a',false);P1(8,6,'#8a4a3a',false);
   // helmet
-  const MAOU=L.cos&&L.cos.outfit==='maou';
+  const HOLY=L.cos&&L.cos.outfit==='holy',MAOU=L.cos&&(L.cos.outfit==='maou'||HOLY);
   if(MAOU){const D1='#2a1a3a',D2='#1a1a1a',RD='#ff2a3a',ST='#c0c0d0';
     for(let y=8;y<28;y++)for(let x=2;x<14;x++)if(!m.has(x+','+y))P1(x,y,(x===2||x===13)?'#a01a2a':'#1a0a14');
     for(let x=1;x<15;x++)if(!m.has(x+','+28))P1(x,28,'#1a0a14');
@@ -1100,7 +1111,7 @@ function heroSVG(eq,look){
   const maxR=Math.max(...SLOTS.map(k=>eq[k]?eq[k].rar:0));
   const fx=PR?`<rect x="-3" y="3" width="1" height="1" fill="#fff"><animate attributeName="opacity" values="0;1;0" dur="1.2s" repeatCount="indefinite"/></rect><rect x="19" y="10" width="1" height="1" fill="${PR.T}"><animate attributeName="opacity" values="0;1;0" dur="1.2s" begin=".4s" repeatCount="indefinite"/></rect><rect x="-2" y="20" width="1" height="1" fill="#fff"><animate attributeName="opacity" values="0;1;0" dur="1.2s" begin=".8s" repeatCount="indefinite"/></rect>`:maxR>=3?`<rect x="-3" y="2" width="1" height="1" fill="#fff"><animate attributeName="opacity" values="0;1;0" dur="1.4s" repeatCount="indefinite"/></rect><rect x="20" y="4" width="1" height="1" fill="#fff"><animate attributeName="opacity" values="0;1;0" dur="1.4s" begin=".7s" repeatCount="indefinite"/></rect>`:'';
   const AU=L.cos&&L.cos.aura&&AURAS[L.cos.aura],auc=AU&&AU[2];
-  const glow=PR&&!AU?`filter:drop-shadow(0 0 2px ${PR.G}) drop-shadow(0 0 6px ${PR.G})`:MAOU&&!AU?'filter:drop-shadow(0 0 2px #ff1a4a) drop-shadow(0 0 7px #8a0a2a)':AU?(auc?`filter:drop-shadow(0 0 2px ${auc}) drop-shadow(0 0 6px ${auc})`:''):maxR>=2?`filter:drop-shadow(0 0 1px ${RAR[maxR].h}) drop-shadow(0 0 4px ${RAR[maxR].h})`:'';
+  const glow=HOLY&&!AU?'filter:drop-shadow(0 0 2px #fff6c0) drop-shadow(0 0 7px #ffd23f)':PR&&!AU?`filter:drop-shadow(0 0 2px ${PR.G}) drop-shadow(0 0 6px ${PR.G})`:MAOU&&!AU?'filter:drop-shadow(0 0 2px #ff1a4a) drop-shadow(0 0 7px #8a0a2a)':AU?(auc?`filter:drop-shadow(0 0 2px ${auc}) drop-shadow(0 0 6px ${auc})`:''):maxR>=2?`filter:drop-shadow(0 0 1px ${RAR[maxR].h}) drop-shadow(0 0 4px ${RAR[maxR].h})`:'';
 
   // ---- big-dot body, painted natively on the coarse grid (cols 0-7, rows 4-12) ----
   const bm=new Map(),Q=(x,y,col,n=true)=>px(bm,x,y,col,n),QF=(x,y,w2,h2,col,n=true)=>fill(bm,x,y,w2,h2,col,n),hbm=new Map();
@@ -1144,6 +1155,12 @@ function heroSVG(eq,look){
   // chunky (vinyl-figure) proportions: big head, short body
   const hd=new Map(),bd=new Map(),fy=y=>y-HDROP.filter(d=>d<y).length,mv=(src,dst)=>{for(const[x,y,c]of src.values())if(!HDROP.includes(y))dst.set(x+','+fy(y),[x,fy(y),c])};
   for(const[k,v]of m)(v[1]<8&&(v[1]<0||(v[0]>=3&&v[0]<=12))?hd.set(k,v):0);for(const k of hd.keys())m.delete(k);mv(m,bd);const hb=new Map();mv(hm,hb);
+  if(HOLY){const hx=(r,g,b)=>'#'+[r,g,b].map(x=>Math.max(0,Math.min(255,Math.round(x))).toString(16).padStart(2,'0')).join('');
+    const rc=c=>{if(typeof c!=='string'||c[0]!=='#')return c;const n=parseInt(c.slice(1,7),16),r=n>>16,g=n>>8&255,b=n&255;
+      if(r>180&&g>130&&b<90)return c;if(r>150&&g<90)return r>220?'#7af0ff':'#3a9ad9';const L=(r*.3+g*.59+b*.11)/255;
+      if(L<.035)return '#1a2a5a';if(L<.085){const t=(L-.035)/.05;return hx(190+t*40,140+t*35,40+t*20)}
+      if(L<.2){const t=(L-.085)/.115;return hx(205+t*35,212+t*33,232+t*20)}return '#ffffff'};
+    for(const M of [hd,bm,hbm])for(const [k,v] of M)M.set(k,[v[0],v[1],rc(v[2])])}
   return `<svg class="hs${AU&&!auc?' aura-rb':''}" viewBox="-8 ${-18+2*HB.dup.length} 37 46" shape-rendering="crispEdges" style="${glow};overflow:visible"><g transform="scale(2)">${rects(stretchRows(bm,HB.dup))}</g>${shS}<g transform="translate(8 8) scale(${HSC}) translate(-8 -8)">${rects(hd)}${eyes}</g>${wS}<g transform="scale(2)">${rects(stretchRows(hbm,HB.dup))}</g>${petS}${fx}</svg>`;
 }
 function slotHTML(slot,it,mini){
@@ -1396,10 +1413,16 @@ function towerEnd(quit){if(!B)return;B.lock=true;const f=quit?B.wave-1:B.wave,be
     <button class="btn orange big" id="rt">もういちど</button><button class="btn gray big" id="hm">ホームへ</button>`,{rt:()=>{closeModal();startTower()},hm:()=>{closeModal();goHome()}})}
 
 /* ===================== 🎰 gacha ===================== */
+const LIMITED=()=>[...Object.entries(HATS).filter(([k,v])=>v[1]<0).map(([k,v])=>({t:'cos',key:'hat:'+k,n:v[0],ic:'🎩'})),...Object.entries(AURAS).filter(([k,v])=>v[1]<0).map(([k,v])=>({t:'cos',key:'aura:'+k,n:v[0],ic:'✨'})),
+  ...Object.entries(OUTFITS).filter(([k,v])=>v[1]<0).map(([k,v])=>({t:'cos',key:'outfit:'+k,n:v[0],ic:'🛡️'})),...Object.keys(GMONS).map(k=>({t:'mon',sp:k,n:SP[k].name})),
+  ...Object.entries(FURN).flatMap(([t,f])=>f.v.filter(v=>v[2]<0).map(v=>({t:'furn',key:t+':'+v[0],n:v[1],tp:t,vk:v[0]})))];
+const limOwned=z=>z.t==='cos'?!!cosOf(P).owned[z.key]:z.t==='mon'?P.mons.some(m=>m.sp===z.sp):!!roomOf().own[z.key];
+const limIcon=z=>z.t==='mon'?monsterSVG(z.sp):z.t==='furn'?`<img src="${furnImg(z.tp,z.vk)}" style="width:100%;image-rendering:pixelated">`:z.key.startsWith('outfit')?previewHero({outfit:z.key.split(':')[1],hat:null}):z.key.startsWith('hat')?previewHero({hat:z.key.split(':')[1],outfit:null}):previewHero({aura:z.key.split(':')[1]});
 function gachaPrize(){const r=Math.random()*100,d=Math.max(1,mixLv()),st=Math.max(1,P.best.mix||1);
+  if(r>=94){const L=LIMITED().filter(z=>!limOwned(z));if(L.length){const z=pick(L);return{t:'lim',z,c:5,label:'★げんてい '+z.n,ic:limIcon(z)}}}
   if(r<1){const uu=ultUnlocked();if(uu.length){const k=pick(uu).k;return{t:'frag',k,c:5,label:'きゅうきょくの カケラ',ic:monsterSVG(k)}}}
   if(r<5)return{t:'tk',n:3,c:3,label:'ふくびきけん ×3',ic:pi('ticket')};
-  if(r<13){const all=[];Object.entries(COSCAT).forEach(([c,o])=>{if(c==='title')return;Object.entries(o).forEach(([k,v])=>{if(!cosOf(P).owned[c+':'+k])all.push([c,k,v[0]])})});if(all.length){const [c,k,n]=pick(all);return{t:'cos',key:c+':'+k,c:4,label:'きせかえ「'+n+'」',ic:'👗'}}}
+  if(r<13){const all=[];Object.entries(COSCAT).forEach(([c,o])=>{if(c==='title')return;Object.entries(o).forEach(([k,v])=>{if(v[1]>=0&&!cosOf(P).owned[c+':'+k])all.push([c,k,v[0]])})});if(all.length){const [c,k,n]=pick(all);return{t:'cos',key:c+':'+k,c:4,label:'きせかえ「'+n+'」',ic:'👗'}}}
   if(r<26)return{t:'egg',e:makeEgg(d),c:3,label:'たまご',ic:''};
   if(r<62){const mr=Math.random()<.05?3:Math.random()<.3?2:1,it=makeItem(st,d,false,mr);return{t:'item',it,c:it.rar,label:iname(it),ic:''}}
   const g=Math.round((50+P.lv*4)*(1+Math.random()*2));return{t:'gold',n:g,c:0,label:'🪙 '+g,ic:pi('coin')}}
@@ -1407,16 +1430,19 @@ function gachaApply(z){
   if(z.t==='frag'){const f=(P.frag[z.k]||0)+1;if(f>=10){P.frag[z.k]=f-10;addEgg({id:uid(),rar:5,sp:z.k,prog:0,need:EGGNEED[5],inc:false});z.label+='（10こ → たまご！）'}else{P.frag[z.k]=f;z.label+=`（${f}/10）`}}
   else if(z.t==='tk')P.tk=(P.tk||0)+z.n;else if(z.t==='cos')cosOf(P).owned[z.key]=1;else if(z.t==='egg'){addEgg(z.e);z.ic=eggIcon(z.e);z.label=RAR[z.e.rar].n+'の たまご'}
   else if(z.t==='item'){P.dex.items[ikey(z.it)]=1;z.ic=itemIcon(z.it);if(P.box.length<boxCap())P.box.push(z.it);else{P.gold+=z.it.price;z.label+='（ボックスが いっぱいで うった）'}}
-  else if(z.t==='gold')P.gold+=z.n}
+  else if(z.t==='gold')P.gold+=z.n;
+  else if(z.t==='lim'){const L=z.z;if(L.t==='cos')cosOf(P).owned[L.key]=1;else if(L.t==='furn')roomOf().own[L.key]=1;else{P.mons.push({id:uid(),sp:L.sp,lv:1,xp:0,bond:0});P.dex.owned[L.sp]=1;P.dex.seen[L.sp]=1}}}
 function gachaOpen(){P.tk=P.tk||0;
   showModal(`<div class="mt">${pi('gacha')}ふくびき</div><div class="gmach" id="gm">${pi('gacha','big')}</div>
     <p>${pi('ticket')}<b style="font-size:20px;color:var(--gold)">${P.tk}</b> まい<br><small style="color:var(--sub)">もんだいに 10かい せいかいするごとに 1まい（きんようびは 2ばい）</small></p>
     <div class="row"><button class="btn orange big" id="g1" ${P.tk<1?'disabled':''}>1かい ${pi('ticket')}1</button><button class="btn purple big" id="g10" ${P.tk<10?'disabled':''}>10かい ${pi('ticket')}10</button></div>
-    <small style="color:var(--sub)">そうび・たまご・きせかえ・ゴールド・カケラ が でるよ</small><button class="btn gray" id="cl">とじる</button>`,
+    <small style="color:var(--sub)">そうび・たまご・きせかえ・ゴールド・カケラ が でるよ</small>
+    <div class="limh">★ ふくびき げんてい（${LIMITED().filter(limOwned).length}/${LIMITED().length}）</div><div class="limg">${LIMITED().map(z=>`<div class="limc${limOwned(z)?' own':''}" title="${esc(z.n)}"><span>${limIcon(z)}</span><small>${limOwned(z)?'✓ ':''}${esc(z.n)}</small></div>`).join('')}</div>
+    <button class="btn gray" id="cl">とじる</button>`,
     {cl:()=>{closeModal();renderHome()},g1:()=>gachaRun(1),g10:()=>gachaRun(10)})}
 function gachaRun(n){if((P.tk||0)<n)return;P.tk-=n;P.gachaN=(P.gachaN||0)+n;const zs=[];for(let i=0;i<n;i++){const z=gachaPrize();gachaApply(z);zs.push(z)}save();
   const gm=$('gm');document.querySelectorAll('#modal .btn').forEach(b=>b.disabled=true);if(gm)anim(gm,'gshake',900);[523,659,784,1047].forEach((f,i)=>snd(f,.12,'square',.05,0,i*.15));
-  setTimeout(()=>{const top=Math.max(...zs.map(z=>z.c));top>=3?fanfare():coin();
+  setTimeout(()=>{const top=Math.max(...zs.map(z=>z.c));top>=3?fanfare():coin();if(zs.some(z=>z.t==='lim'))setTimeout(()=>{[784,988,1175,1568,1976].forEach((f,i)=>snd(f,.2,'square',.05,0,i*.1));vib(300)},300);
     showModal(`<div class="mt">🎉 ${n}かい ひいたよ！</div><div class="gres${n>1?' many':''}">${zs.map(z=>`<div class="gz c${z.c}"><span class="gi">${z.ic||''}</span><small>${esc(z.label)}</small></div>`).join('')}</div>
       <button class="btn orange big" id="ag">もういちど</button><button class="btn gray" id="cl">とじる</button>`,{ag:()=>gachaOpen(),cl:()=>{closeModal();renderHome()}})},1000)}
 
@@ -1512,7 +1538,9 @@ const FSHAPE={
  tv:['bbbbbbbbbbbb','bssssssssssb','bswsssssssb'+'b','bsssssssssb'+'b','bssssssssssb','bbbbbbbbbbbb','....bbbb....','..bbbbbbbb..'],
  sofa:['.aaaaaaaaaa.','aAAAAAAAAAAa','aAAAAAAAAAAa','aaaaaaaaaaaa','aaaaaaaaaaaa','b..........b'],
  tank:['bbbbbbbbbbbb','bwwwwwwwwwwb','bwwfwwwwwwwb','bwfffwwwgwwb','bwwfwwwwgwwb','bwwwwwwgggwb','byyyyyyyyyyb','bbbbbbbbbbbb'],
- trophy:['yyyyyy','yYyyYy','.yyyy.','..yy..','..yy..','.bbbb.']};
+ trophy:['yyyyyy','yYyyYy','.yyyy.','..yy..','..yy..','.bbbb.'],
+ gmach:['.rrrrrr.','rwwwwwwr','rwybwgwr','rwgwywwr','rwwwwwwr','rrrrrrrr','rRRyRRRr','rRRRRRRr','rrrrrrrr','.R....R.'],
+ gchest:['.aaaaaaaaaa.','aAAAAAAAAAAa','aaaaaccaaaaa','bbbbbbbbbbbb','aaaaacca'+'aaaa','aAAAAAAAAAAa','aaaaaaaaaaaa']};
 const FBASE={k:'#1b1410',w:'#ffffff',r:'#e8413c',y:'#ffd23f',Y:'#d99a1a',g:'#5cc05c',G:'#2e8a2b',s:'#8ad8ff',f:'#ff8a2a'};
 const FURN={
  bed:{n:'ベッド',pos:[3,null,30,6],v:[['red','あかい ベッド',400,{a:'#e8413c',A:'#a02a20',b:'#8a5a30'}],['blue','あおい ベッド',400,{a:'#4a7ad9',A:'#2a4a9a',b:'#8a5a30'}],['star','ほしの ベッド',2500,{a:'#ffd23f',A:'#7a4bd1',b:'#3a2a6a'}]]},
@@ -1526,7 +1554,9 @@ const FURN={
  tv:{n:'テレビ',pos:[45,null,15,28],v:[['black','テレビ',1500,{b:'#2a2a2a'}],['retro','レトロ テレビ',2000,{b:'#c8884a',s:'#7ae0a0'}]]},
  sofa:{n:'ソファ',pos:[40,null,22,14],v:[['brown','ソファ',1200,{a:'#a06a3a',A:'#8a5a30',b:'#3a2a1a'}],['pink','ピンクの ソファ',1500,{a:'#ff8fb8',A:'#d96a9a',b:'#3a2a1a'}]]},
  tank:{n:'すいそう',pos:[71,null,14,29],v:[['fish','すいそう',2000,{b:'#5a6a7a',w:'#8ad8ff'}]]},
- trophy:{n:'トロフィー',pos:[25,16,8,null],v:[['gold','じっせき トロフィー',1000,{b:'#8a5a30'}]]}};
+ trophy:{n:'トロフィー',pos:[25,16,8,null],v:[['gold','じっせき トロフィー',1000,{b:'#8a5a30'}]]},
+ gmach:{n:'ふくびきマシン',pos:[57,null,10,29],v:[['std','ふくびきマシン',-1,{r:'#e8413c',R:'#a02a20',w:'#e8f4ff',b:'#4aa0e0',g:'#5be05b'}]]},
+ gchest:{n:'きんの たからばこ',pos:[84,null,13,4],v:[['gold','きんの たからばこ',-1,{a:'#ffd23f',A:'#d99a1a',b:'#8a5a30',c:'#e8413c'}]]}};
 const WALLS=[['cream','クリーム',0,'#f4e2c0','#e8d0a8'],['blue','そらいろ',300,'#bfe4f8','#a8d0e8'],['pink','ピンク',300,'#ffd8e8','#f0c0d8'],['green','わかば',300,'#d8f0c0','#c0e0a8'],['night','よぞら',800,'#2a2a5a','#1e1e48'],['brick','レンガ',600,'#b86a4a','#9a5038']];
 const FLOORS=[['wood','フローリング',0,'#c8884a','#b07440'],['tatami','たたみ',400,'#c8c070','#b0a858'],['tile','タイル',400,'#e8e8f0','#c8c8d8'],['carpet','カーペット',600,'#7a4bd1','#6a3bc1'],['grass','しばふ',800,'#5cb05c','#4a9a4a']];
 function sprURL(rows,pal){const cells=[],set=new Set(),m=new Map();rows.forEach((r,y)=>[...r].forEach((c,x)=>{const col=pal[c]||FBASE[c];if(c!=='.'&&col){cells.push([x,y,col]);set.add(x+','+y)}}));
@@ -1539,7 +1569,7 @@ function roomOpen(){show('room');roomRender();clearInterval(rmTimer);rmTimer=set
 function roomRender(){const r=roomOf(),W=WALLS.find(w=>w[0]===r.wall)||WALLS[0],F=FLOORS.find(f=>f[0]===r.floor)||FLOORS[0];
   $('rmTitle').textContent=`🏠 ${P.name}の へや`;$('rmGold').innerHTML=pi('coin')+fmtBig(P.gold);
   $('rmWall').style.background=`repeating-linear-gradient(90deg,${W[3]} 0 18px,${W[4]} 18px 20px)`;$('rmFloor').style.background=`repeating-linear-gradient(90deg,${F[3]} 0 30px,${F[4]} 30px 32px)`;
-  const order=['rug','window','poster','shelf','trophy','tank','tv','bed','desk','sofa','lamp','plant'];
+  const order=['rug','window','poster','shelf','trophy','tank','tv','gmach','bed','desk','sofa','lamp','plant','gchest'];
   $('rmItems').innerHTML=order.filter(t=>r.place[t]).map(t=>{const [x,top,w,bot]=FURN[t].pos;return `<img class="rmf rm-${t}" src="${furnImg(t,r.place[t])}" style="left:${x}%;width:${w}%;${top!=null?'top:'+top+'%':'bottom:'+bot+'%'}">${t==='trophy'?`<span class="rmtc" style="left:${x}%;top:${top+12}%">🏅${Object.keys(P.ach||{}).length}</span>`:''}`}).join('')
     +`<div class="rmhero" style="left:8%;bottom:20%">${heroSVG(P.eq,P)}</div>`;
   const ms=partyMons().concat(P.mons.filter(m=>m.fav&&!P.party.includes(m.id))).slice(0,6);
@@ -1552,7 +1582,7 @@ function roomRender(){const r=roomOf(),W=WALLS.find(w=>w[0]===r.wall)||WALLS[0],
   if(rmTab==='wall'||rmTab==='floor'){const L=rmTab==='wall'?WALLS:FLOORS;h=L.map(([k,n,pr,c1])=>{const own=!pr||r.own[rmTab+':'+k],on=r[rmTab]===k;
       return `<div class="rmrow"><span class="rmsw" style="background:${c1}"></span><span class="rmn">${n}</span>${on?'<b class="rmon">つかってる</b>':own?`<button class="btn green" data-use="${rmTab}:${k}">つかう</button>`:`<button class="btn orange" data-buy="${rmTab}:${k}:${pr}">🪙${pr}</button>`}</div>`}).join('')}
   else{for(const [t,f] of Object.entries(FURN))for(const [vk,n,pr] of f.v){const own=r.own[t+':'+vk],on=r.place[t]===vk;if(rmTab==='mine'&&!own)continue;
-      h+=`<div class="rmrow"><img class="rmimg" src="${furnImg(t,vk)}"><span class="rmn">${n}<small>${f.n}</small></span>${on?`<button class="btn gray" data-off="${t}">しまう</button>`:own?`<button class="btn green" data-put="${t}:${vk}">おく</button>`:`<button class="btn orange" data-buy="${t}:${vk}:${pr}">🪙${pr}</button>`}</div>`}
+      h+=`<div class="rmrow"><img class="rmimg" src="${furnImg(t,vk)}"><span class="rmn">${n}<small>${f.n}</small></span>${on?`<button class="btn gray" data-off="${t}">しまう</button>`:own?`<button class="btn green" data-put="${t}:${vk}">おく</button>`:pr<0?'<span class="limb">🎰 げんてい</span>':`<button class="btn orange" data-buy="${t}:${vk}:${pr}">🪙${pr}</button>`}</div>`}
     if(!h)h='<p style="color:var(--sub);text-align:center">まだ かぐを もっていないよ</p>'}
   $('rmList').innerHTML=h;
   document.querySelectorAll('#rmList [data-buy]').forEach(b=>b.onclick=()=>{const [t,vk,pr]=b.dataset.buy.split(':');if(P.gold<+pr){toast('ゴールドが たりないよ');return}
@@ -1577,7 +1607,7 @@ const HELP=[
  ['map','🗺️ ワールドマップ',`10ステージごとに あたらしい ばしょに すすむよ。ばしょごとに けしきと でてくる モンスターの ぞくせいが かわる。<br>ホームの マップから、いったことの ある ばしょを えらべるよ。`],
  ['tower','🗼 むげんの とう',`1かいに 1たいずつ たおして、どこまで のぼれるか ちょうせん！ 10かいごとに ボスが いて、たおすと ゴールドと ふくびきけん。<br>HPは すこししか かいふく しないので、そうびを つよくして いこう。さいこう きろくは ランキングにも のるよ。`],
  ['ghost','👻 ゴーストバトル',`ぼうけんの とちゅうで、とつぜん かぞくの ぼうけんしゃの「ゴースト」が あらわれる ことが あるよ！ 5もんの はやおし しょうぶ！ ゴーストは その ひとの せいかいりつと こたえる はやさを まねするよ。<br>かつと ゴールドと ふくびきけん 2まい。☁️ かぞくで きょうゆう していると、ほかの たんまつの かぞくの ゴーストも でてくるよ。`],
- ['gacha','🎰 ふくびき',`もんだいに 10かい せいかいするごとに ふくびきけんが 1まい（きんようびは 2まい）。とう・ゴースト・じっせき・ミニゲームでも もらえるよ。<br>そうび・たまご・きせかえ・ゴールド、たまに きゅうきょくの カケラも でる！ 10かい まとめて ひくことも できる。`],
+ ['gacha','🎰 ふくびき',`もんだいに 10かい せいかいするごとに ふくびきけんが 1まい（きんようびは 2まい）。とう・ゴースト・じっせき・ミニゲームでも もらえるよ。<br>そうび・たまご・きせかえ・ゴールド、たまに きゅうきょくの カケラも でる！ 10かい まとめて ひくことも できる。<br>★<b>ふくびき げんてい</b>：ここでしか もらえない きせかえ（せいきしの よろい・ぼうし・オーラ）、なかま（ラッキーキャット・ほしうさぎ・オーロラドラゴン）、かぐ が あるよ。`],
  ['ach','🏅 じっせき',`「せいかい 1000もん」「なかま 50しゅ」などの もくひょう。たっせいしたら「うけとる」で ゴールドと ふくびきけんが もらえるよ。ホームの ボタンの あかい かずは うけとれる じっせきの かず。`],
  ['room','🏠 マイルーム',`ゴールドで かぐ・かべ・ゆかを かって、じぶんの へやを かざれるよ。パーティと おきにいりの なかまが へやの なかを あるきまわる（タップすると はねるよ）。トロフィーには じっせきの かずが でる。`],
  ['mini','🎣 ミニゲーム',`ステージを クリアすると ときどき ボーナスゲーム！<br>🎣 <b>つり</b>：ウキが みどりの ところで「つる！」。まんなかの きいろだと でっかい さかな！<br>🗝️ <b>たからさがし</b>：9まいの すなから 3かい ほって たからを さがそう。`],
@@ -1750,6 +1780,7 @@ Object.assign(MONART,{
  '.....bbllllllbbbbbb.bbb.','......bbllllbbbbbb...bb.','......bbbbbbbbbbb.....bo','.......bb..bb........oo.','.......bb..bb...........','......bbb.bbb...........','.....ww..ww.............']}
 });
 Object.assign(MONART,{"riol0":{"size":18,"p":{"s":"#f6d0a8","k":"#1b1410","w":"#fff8e8","n":"#d8c8a0","Y":"#ffd23f","f":"#ffa040","W":"#6a4a2a","h":"#c0322a","g":"#e86a3a","G":"#b8402a","b":"#d9442f","B":"#a02a20","d":"#3a4a7a","t":"#d9442f","T":"#a02a20"},"m":["..................","....w........w....",".....nhhhhhhn.....","....hhhhhhhhhh....","...hhhhhhhhhhhh...",".f.hhhhhhhhhhhh.f.","..fhhshshsshshhf..","..fhssYkssYksshf..","....gsYkssYksg....","....GgssssssgG....","....sssskkwsss....",".....ssssssss.....","....BBBBBBBBBB....","....sbbbgbbbbs..w.","...wwbbbbgbbbww.t.",".....WWWWWWWW.wt..","......dddddd.tt...",".....wWWWWWWwTT..."]},"sana0":{"size":18,"p":{"b":"#ffa8c8","l":"#ffd0e0","d":"#e86aa0","h":"#8a4a2a","s":"#f6d0a8"},"m":["..................",".....hhhhhhhhr....","....hhhhhhhhrhr...","...hhhhhhhhhhrh...","..hhhhhhhhhhhhhh..","..hhhsshsshsshhh..","..hhsseksseksshh..","..hhsskksskksshh..","..hhspsssssspshh..","..hhssssrrsssshh..","..hh.ssssssss.hh..","..hh.sbbbbbbs.hh..","...h.sbbbbbbs.h...",".....sddrrdds.....",".....lbblbblb.....",".....lbblbblb.....",".....lbblbblb.....","....lllWllWlll...."]},"riol1":{"size":22,"p":{"s":"#f6d0a8","k":"#1b1410","w":"#fff8e8","n":"#d8c8a0","Y":"#ffd23f","f":"#ffa040","W":"#6a4a2a","h":"#c0322a","g":"#e86a3a","G":"#b8402a","b":"#d9442f","B":"#a02a20","d":"#3a4a7a","t":"#d9442f","T":"#a02a20","m":"#ffb060","v":"#a02a20"},"m":["......................","......................","......w........w......","......n........n......",".......nhhhhhhn.......","......hhhhhhhhhh......",".....hhhhhhhhhhhh.....","...f.hhhhhhhhhhhh.f...","....fhhshshsshshhf....","w...fhssYkssYksshf...w","vvvvvvgsYkssYksgvvvvvv",".vmmvmGgssssssgGmvmmv.","..vmmvsssskkwsssvmmv..","....vmvssssssssvmv....",".....vgBBBBBBBBgv.....","......GbbbgbbbbG..w...",".....wwbbbbgbbbww.t...",".......WWWWWWWW.w.t...","........dddddd.ttt....","........dddddd.TTT....","........dddddd........",".......wWWWWWWw......."]},"sana1":{"size":18,"p":{"b":"#ff8fb8","l":"#ffd0e0","d":"#e05a90","h":"#8a4a2a","s":"#f6d0a8"},"m":["..................","....gpgygpgygp....","....hhhhhhhhhh....","...hhhhhhhhhhhh...","..hhhhhhhhhhhhhh..","..hhhsshsshsshhh..","..hhsseksseksshh..","..hhsskksskksshh..","..hhspsssssspshh..","..hhssssrrsssshh..","..hh.ssssssss.hh..","..hh.sbbwwbbs.hh..","...h.sbbbbbbs.h...",".....sddrrdds.....",".....lbblbblb.....",".....lbblbblb.....",".....lbblbblb.....","....lllWllWlll...."]},"riol2":{"size":22,"p":{"s":"#f6d0a8","k":"#1b1410","w":"#fff8e8","n":"#d8c8a0","Y":"#ffd23f","f":"#ffa040","W":"#6a4a2a","h":"#b02a20","g":"#d9442f","G":"#8a2018","l":"#ffd8a0","L":"#e8b878","t":"#d9442f","T":"#8a2018","m":"#ffa040","v":"#6a1a10","b":"#d9442f"},"m":["......................",".....w..........w.....","......n........n......","......n........n......",".......nhhhhhhn.......","......hhhhhhhhhh......",".....hhhhhhhhhhhh.....","...f.hhhhhhhhhhhh.f...","....fhhshsggshshhf....","vvvvfhssYkssYksshfvvvv","vmmmvmgGYkssYkGgmvmmmv",".vmmvmGgssssssgGmvmmv.","..vmmvsssskkwsssvmmv..","....vmvssssssssvmv....",".....ggggLlllgggg.....",".....GgggLllLgggG...w.",".....ggggLlllgggg...t.",".....ggggLllLgggg..wt.","....wwWWWWWWWWWWww.t..",".......ggg..ggg.tttT..",".......gGg..gGg.TTT...","......wGGG..GGGw......"]},"sana2":{"size":20,"p":{"b":"#ff7ab8","l":"#ffd0ea","d":"#d94a8f","h":"#7a3a20","s":"#f6d0a8"},"m":[".........yy.........",".......yyllyy.......","......hhhhhhhh......",".....hhhhhhhhhh.....","....hhhhhhhhhhhh....","...hhhhhhhhhhhhhh...","...hhhsshsshsshhh...","...hhsseksseksshh...","...hhsskksskksshh...","...hhspsssssspshh...","...hhssssrrsssshh...","...hh.ssssssss.hh...","...hhlbbbwwbbblhh...","....hsbbbbbbbbsh....",".....sdddyyddds.....",".....lbblbblbbl.....",".....lbblbblbbl.....","....lbblbblbblbb....","....lbblbblbblbb....","...lllllWllWlllll..."]},"riol3":{"size":24,"p":{"s":"#f6d0a8","k":"#1b1410","w":"#fff8e8","n":"#c8d0e0","Y":"#ffd23f","f":"#ffa040","W":"#6a4a2a","h":"#a02a20","g":"#d9442f","G":"#8a2018","a":"#7a8098","c":"#8a1a1a","t":"#d9442f","T":"#8a2018","m":"#ff8a3a","v":"#4a1010","M":"#e0e8f0","b":"#d9442f"},"m":["........................","......w..........w......","......n..........n......",".......n........n.......",".......nn......nn.......","........nnhhhhnn........",".......hhhhhhhhhh.......","...f..hhhhhhhhhhhh..f...","....f.hhhhhhhhhhhh.f....","vvvvfvhhshsggshshhvfvvvv","vmmmvfhssYkssYksshfvmmmv",".vmmMfmgGYkssYkGgmfmmmv.","..vmMvmGgssssssgGmvmmv..","....Mmvsssskkwsssvmv....","....Mvmvssssssssvmv.....","....M.gnnnnnnnnnng......","...yMyGaaaarraaaaG....w.","....W.gaaaaggaaaag....t.","......gaaaaaaaaaag....t.",".....wwnnnnnnnnnnww.wt..","........gggccggg.ttttT..","........gGgccgGg.TTTT...","........gggccggg........",".......wGGG..GGGw......."]},"sana3":{"size":22,"p":{"b":"#ff6fb0","l":"#ffd0ea","d":"#c83a80","h":"#e8b040","s":"#f6d0a8","g":"#4ad0ff"},"m":[".......y.yyyy.y.......",".......yyyggyyy.......",".......hhhhhhhh.......","......hhhhhhhhhh......",".....hhhhhhhhhhhh.....","....hhhhhhhhhhhhhh....","....hhhsshsshsshhh....","....hhsseksseksshh....","....hhsskksskksshh....","....hhspsssssspshh....","....hhssssrrsssshh....","....hh.ssssssss.hh....","....hhlbbbwwbbblhh....",".....hsbbbbbbbbsh.....","......sdddyyddds......","......lbblbblbbl......","......lbblbblbbl......",".....lbblbblbblbb.....",".....lbblbblbblbb.....","....lbblbblbblbblb....","....lbblbblbblbblb....","...ywywywywyyywywyw..."]},"riol4":{"size":24,"p":{"s":"#f6d0a8","k":"#1b1410","w":"#fff8e8","n":"#d8c8a0","Y":"#ffd23f","f":"#ff7a3a","W":"#6a4a2a","h":"#8a1a1a","g":"#c0202a","G":"#7a1018","l":"#ffd8a0","L":"#e8b878","y":"#f0c020","t":"#c0202a","T":"#7a1018","m":"#ff6a2a","v":"#4a0a10","o":"#ff9a2a","b":"#c0202a"},"m":["........................",".....w............w.....","......n..........n......","......n..........n......",".......n.y.yy.y.n.......","........nyyrryyn........","........nnhhhhnn........",".......hhhhhhhhhh.......","vvvfvvhhhhhhhhhhhhvvfvvv","mmmvfmhhhhhhhhhhhhmfvmmm","mmmvfmhhshsggshshhmfvmmm","vmmmvfhssYkssYksshfvmmmv",".vmmmfmgGYkssYkGgmfmmmv.","..vmmvmGgssssssgGmvmmv..","...vmmvsssskkwsssvmmv...",".....vmvssssosssvmv....y","......gyyyyyyyyyyg.....o","......GyggLllLggyG.....t","......ggggLlllgggg....wt","......ggggLllLgggg....t.",".....wwyyyyyyyyyyww.wtT.","........ggg..ggg.ttttT..","........gGg..gGg.TTTT...",".......wGGG..GGGw......."]},"sana4":{"size":24,"p":{"b":"#c060e0","l":"#f0c0ff","d":"#7a2aa0","h":"#e8b040","s":"#f6d0a8","c":"#5a2a8a"},"m":["........................","...........yy...........","........y.yyyy.y........","........yyyrryyy........","........hhhhhhhh........",".......hhhhhhhhhh.......","......hhhhhhhhhhhh......",".....hhhhhhhhhhhhhh.....",".....hhhsshsshsshhh.....",".....hhsseksseksshh.....",".....hhsskksskksshl.....",".....hhspsssssspslyl....",".....hhssssrrsssshy.....","....chhcsssssssschyc....","....chhlbbbwwbbblhyc....","....cchsbbbbbbbbshyc....","....cccsdddyydddscyc....","....ccclbblbblbblccc....","....ccclbblbblbblccc....","....cclbblbblbblbbcc....","....cclbblbblbblbbcc....","....clbblbblbblbblbc....","....clbblbblbblbblbc....","....wywywyyywywywywy...."]},"riol5":{"size":24,"p":{"s":"#f6d0a8","k":"#1b1410","w":"#ffffff","n":"#d8c8a0","Y":"#ffd23f","f":"#7af0ff","W":"#6a4a2a","h":"#ff5a2a","g":"#f0b020","G":"#c08010","l":"#fff6c0","L":"#f0d890","t":"#f0b020","T":"#c08010","m":"#7af0ff","v":"#3aa0d0","o":"#ff9a2a","b":"#f0b020"},"m":[".....w......o.....w.....",".....n............n.....","......n..........n......",".o....n..........n......",".......n.y.yy.y.n.....o.","........nyyllyyn........","........nnhhhhnn........","vvvvvvvhhhhhhhhhhvvvvvvv","mmvfmmhhhhhhhhhhhhmmfvmm","mmmvfmhhhhhhhhhhhhmfvmmm","mmmvfmhhshsggshshhmfvmmm","vmmmvfhssYkssYksshfvmmmv",".vmmmfmgGYkssYkGgmfmmmv.","..vmmvmGgssssssgGmvmmv..","...vmmvsssskkwsssvmmv...",".....vmvssssssssvmv...oy","......gwwwwwwwwwwg.....o",".o....GYYYLooLYYYG.....t","......gYYYLlllYYYg....wt","......gYYYLllLYYYg....t.",".....wwyyyyyyyyyyww.wtT.","........ggg..ggg.ttttT..","........gGg..gGg.TTTT...",".......wGGG..GGGw......."]},"sana5":{"size":24,"p":{"b":"#fff0f8","l":"#ffd0ea","d":"#ffb0d0","h":"#ffe070","s":"#f6d0a8"},"m":[".........y....y.........","...........yy...........","........y.yyyy.y......y.",".y......yyyrryyy........","........hhhhhhhh........",".......hhhhhhhhhh.......","......hhhhhhhhhhhh......",".....hhhhhhhhhhhhhh.....",".....hhhsshsshsshhh.....",".....hhsseksseksshh.....",".....hhsskksskksshl.....",".....hhspsssssspslyl....",".....hhssssrrsssshy.....","...wwhh.ssssssss.hyww...",".wwwwhhlbbbwwbbblhywwww.","wwwwwwhsbbbbbbbbshywwyww","wwwwww.sdddyyddds.ywwwww","wwww...lbblbblbbl...wwww","ww.....lbblbblbbl.....ww","..y...lbblbblbblbb......","......lbblbblbblbb......",".....lbblbblbblbblb.....",".....lbblbblbblbblb.....","....wywywyyywywywywy...."]}});
+Object.assign(MONART,{"luckycat":{"size":16,"p":{"b":"#fff8f0","p":"#ff9ab8","r":"#e8413c","y":"#ffd23f","Y":"#d99a1a"},"m":["................","..bb........bb..","..bpb......bpb..","..bbbbbbbbbbbb..",".bbbbbbbbbbbbbb.",".bkkbbbbbbbbkkb.",".bbbbbbbbbbbbbb.",".bpbbbbkkbbbbpb.","..bbbbbbbbbbbb..","...rrrryyrrrr...","..bbbbbyybbbbbb.",".bbbbbbbbbbbbbb.",".bbbbbyyyybbbbb.",".bbbbyyYyybbbbb.","..bbbbyyyybbbb..","..bbb......bbb.."]},"starbun":{"size":16,"p":{"b":"#c8b0ff","p":"#ff9ad8","y":"#ffe680","Y":"#ffb020"},"m":["...bb....bb.....","...bpb..bpb.....","...bpb..bpb...y.","...bpb..bpb..yyy","...bbbbbbbb...y.","..bbbbbbbbbb....",".bbkbbbbbbkbb...",".bbbbbbbbbbbb...",".bpbbbbkbbbpb...","..bbbbbbbbbb....","..bbbyyyybbb....",".bbbbyYYybbbb...",".bbbbbyybbbbbb..",".bbbbbbbbbbbbbb.","..bbbbbbbbbbbb..","...bb......bb..."]},"aurodra":{"size":16,"p":{"b":"#5ad8e8","d":"#2a7ab8","l":"#d8fff8","p":"#ff9ad8","y":"#ffd23f","w":"#f0f0ff"},"m":["................","......bb........",".....bbbb...ww..","....bkbbbb.wwww.","....bbbbbbwwwww.","...yybbbbbwwww..","....bbbblbbww...","...bbbbllbbb....","..bbbbbllbbbb...",".bbpbbbllbbbbb..",".bbbbbbllbbbbbb.","..bbbbbbbbbbbbb.","..bdd.bbbb.ddbbb","..dd...bb...dd.b","..............bb","................"]}});
 const ULTS=[{k:'raijin',need:50},{k:'abyss',need:100},{k:'omega',need:151}];
 SPECIES.push(['raijin','raijin','らいじん ドラゴン',5,1,{}],['abyss','abyss','アビス・リヴァイアサン',5,1,{}],['omega','omega','オメガ・ギャラクシア',5,1,{}]);
 const STD_N=151;
@@ -1758,6 +1789,9 @@ const SP={};SPECIES.forEach(([k,art,name,rar,boss,p])=>SP[k]={k,art,name,rar,bos
 const SPECIALS={riol:{el:'ほのお',names:['リオル','ドラゴン リオル','つばさの リオル','りゅうきし リオル','りゅうおう リオル','しんりゅう リオル']},
   sana:{el:'ひかり',names:['サナ','おはなの サナ','ドレスの サナ','プリンセス サナ','ロイヤル プリンセス サナ','てんしの プリンセス サナ']}};
 for(const c in SPECIALS)SPECIALS[c].names.forEach((n,r)=>{const k=c+r;SP[k]={k,art:k,name:n,rar:r,boss:false,p:{},el:SPECIALS[c].el,special:c}});
+const GMONS={luckycat:['ラッキーキャット',3,'ひかり'],starbun:['ほしうさぎ',3,'やみ'],aurodra:['オーロラドラゴン',4,'こおり']};
+for(const [k,[n,r,el]] of Object.entries(GMONS))SP[k]={k,art:k,name:n,rar:r,boss:false,p:{},el,special:'gacha'};
+ULTSK.luckycat=['まねきの ちから','gold','ゴールド',4,'%'];ULTSK.starbun=['ほしの ねがい','xp','けいけんち',4,'%'];ULTSK.aurodra=['オーロラの いき','atkp','こうげき',3,'%'];
 const GIFTS={RIOL2026:{sp:'riol0',msg:'ドラゴンの ちからを もつ おとこのこ。そだてると りゅうの おうさまに…！'},SANA2026:{sp:'sana0',msg:'やさしい おんなのこ。そだてると プリンセスに…！'}};
 const NORMALS=SPECIES.filter(s=>!s[4]).map(s=>s[0]),BOSSES=SPECIES.filter(s=>s[4]).map(s=>s[0]);
 function pickSpecies(pool,d){const rar=rollRar(d,false);let c=pool.filter(k=>SP[k].rar===rar);if(B&&!B.weakOnly&&Math.random()<.6){const ae=AREA(B.stage).el;if(ae){const c2=c.filter(k=>elOf(k)===ae);if(c2.length)c=c2}}if(!c.length)c=pool.filter(k=>SP[k].rar<=rar);return pick(c.length?c:pool)}
@@ -2201,7 +2235,7 @@ function renderShop(){
       const pv=shTab==='hat'?previewHero({hat:k,outfit:null}):shTab==='aura'?previewHero({aura:k}):shTab==='outfit'?previewHero({outfit:k,hat:null}):
         shTab==='bg'?`<div class="bgsw" style="background:${v[2]}"></div>`:`<div class="ttlpv">「${v[0]}」</div>`;
       h+=`<div class="panel shcard${on?' on':''}${shTab==='outfit'?' big':''}"><div class="shpv">${pv}</div><div class="shinfo"><b>${v[0]}</b>${shTab==='outfit'&&v[2]?`<small>${v[2]}</small>`:''}${on?'<small style="color:#7bea5a">つけている</small>':''}</div>
-        ${own?(on?'<span class="own">✓</span>':`<button class="btn green" data-use="${k}">つける</button>`):`<button class="btn orange" data-buy="${k}"${P.gold<price?' disabled style="opacity:.5"':''}>🪙${price}</button>`}</div>`});
+        ${own?(on?'<span class="own">✓</span>':`<button class="btn green" data-use="${k}">つける</button>`):price<0?'<span class="limb">🎰 ふくびき<br>げんてい</span>':`<button class="btn orange" data-buy="${k}"${P.gold<price?' disabled style="opacity:.5"':''}>🪙${price}</button>`}</div>`});
   }
   $('shBody').innerHTML=h;
   document.querySelectorAll('[data-buy]').forEach(b=>b.onclick=()=>{const k=b.dataset.buy,v=COSCAT[shTab][k];
