@@ -1181,7 +1181,7 @@ function makeItem(st,d,boss,min=0){
 /* =============== save data =============== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-const APPV='v123';
+const APPV='v124';
 try{const c=document.createElement('canvas');c.width=9;c.height=9;const g=c.getContext('2d'),F=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};F(1,0,7,1,'#120d09');F(1,8,7,1,'#120d09');F(0,1,1,7,'#120d09');F(8,1,1,7,'#120d09');F(1,1,7,1,'#120d09');F(1,7,7,1,'#120d09');F(1,1,1,7,'#120d09');F(7,1,1,7,'#120d09');F(2,2,5,1,'#7a6a52');F(2,2,1,5,'#7a6a52');F(2,6,5,1,'#2a2018');F(6,2,1,5,'#2a2018');document.documentElement.style.setProperty('--pxf',`url(${c.toDataURL()})`)}catch(e){}
 const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));if(G.bgmOn===undefined)G.bgmOn=true;
 let P=null;
@@ -2880,7 +2880,7 @@ function cheatOpen(){if(!P||!P.cheat)return;try{cheatSyncCats();save()}catch(e){
     <div class="chh">💰 おかね・どうぐ</div><div class="chg">${btn('g1','🪙 +10万')}${btn('g2','🪙 +1000万')}${btn('tk','🎟️ +100')}${btn('gset','🪙 じゆうに')}${btn('xmt',P.xmasTest?'🎄 イベント ためし OFF':'🎄 イベントを ためす')}</div>
     <div class="chh">⭐ レベル・すすみ</div><div class="chg">${btn('lv','Lv を きめる')}${btn('stg','ステージを ひらく')}${btn('pstg','パワーに あわせる（ステージ＋せいかいすう）','toggle')}${btn('tot','せいかいすうを きめる')}${btn('week','この7にち を きめる')}${btn('twr','とう きろく')}${btn('mst','ぜんぶ 🎓マスター')}</div>
     <div class="chh">⚔️ そうび</div><div class="chg">${btn('eq','さいきょう そうび を つくる')}${btn('plus','そうび +を きめる')}${btn('box','ボックスを からに')}</div>
-    <div class="chh">🐾 なかま</div><div class="chg">${btn('mall','151しゅ ぜんぶ')}${btn('mult','きゅうきょく 3たい')}${btn('mspe','とくべつ なかま ぜんぶ')}${btn('mevo','すぐ しんか できる')}${btn('mlv','🐾 なかまの レベル…','toggle')}${btn('egg','たまご すぐ かえる')}</div>
+    <div class="chh">🐾 なかま</div><div class="chg">${btn('mall','151しゅ ぜんぶ')}${btn('mult','きゅうきょく 3たい')}${btn('mspe','とくべつ なかま ぜんぶ')}${btn('mevo','すぐ しんか できる')}${btn('mlv','🐾 なかまの レベル…','toggle')}${btn('mshy','✨ ぜんぶ いろちがい')}${btn('mshy0','いろちがいを もとに もどす')}${btn('egg','たまご すぐ かえる')}</div>
     <div class="chh">👗 きせかえ・へや</div><div class="chg">${btn('cos','きせかえ ぜんぶ')}${btn('furn','かぐ ぜんぶ')}</div>
     <div class="chh">🎮 バトル</div><div class="chg">${btn('god',(P.chGod?'✅':'⬜')+' むてき','toggle')}${btn('ohk',(P.chOhk?'✅':'⬜')+' いちげき','toggle')}</div>
     <div class="chh">⚠️ その他</div><div class="chg">${btn('fix','🩹 アカウントを なおす（ゴールド・そうびの +）')}${btn('pin','あんしょうばんごうを かえる')}${btn('off','チートを やめる（ふつうの アカウントに）','gray')}</div>
@@ -2903,7 +2903,7 @@ function cheatOpen(){if(!P||!P.cheat)return;try{cheatSyncCats();save()}catch(e){
     mult:()=>{ULTS.forEach(u=>{P.dex.owned[u.k]=1;P.dex.seen[u.k]=1;if(!P.mons.some(m=>m.sp===u.k))P.mons.push({id:uid(),sp:u.k,lv:1,xp:0,bond:0})});done('きゅうきょく')},
     mspe:()=>{Object.keys(SP).filter(k=>SP[k].special&&(SP[k].special==='gacha'||SP[k].special==='gift'||/0$/.test(k))).forEach(k=>{P.dex.owned[k]=1;if(!P.mons.some(m=>m.sp===k))P.mons.push({id:uid(),sp:k,lv:1,xp:0,bond:0})});done('とくべつ なかま')},
     mevo:()=>{P.mons.forEach(m=>{const n=evoOf(m.sp)&&evoNeed(m);if(n&&Number.isFinite(n.lv)){m.lv=Math.max(m.lv,n.lv);m.bond=Math.max(m.bond||0,n.bond)}});done('しんか OK')},
-    mlv:()=>monLvCheat(),
+    mlv:()=>monLvCheat(),mshy:()=>{P.mons.forEach(m=>m.shiny=1);done('✨ '+P.mons.length+'たい いろちがい')},mshy0:()=>{P.mons.forEach(m=>{delete m.shiny});done('いろちがい OFF')},
     egg:()=>{P.eggs.forEach(e=>{e.inc=true;e.prog=e.need});save();closeModal();processHatch(()=>{renderHome();cheatOpen()})},
     cos:()=>{const C=cosOf(P);Object.entries(COSCAT).forEach(([c,o])=>Object.keys(o).forEach(k=>C.owned[c+':'+k]=1));done('きせかえ ぜんぶ')},
     furn:()=>{const r=roomOf();Object.entries(FURN).forEach(([t,f])=>f.v.forEach(v=>r.own[t+':'+v[0]]=1));WALLS.forEach(w=>r.own['wall:'+w[0]]=1);FLOORS.forEach(f=>r.own['floor:'+f[0]]=1);done('かぐ ぜんぶ')},
