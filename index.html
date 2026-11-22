@@ -473,13 +473,25 @@ input{font:inherit}
 .chbox{text-align:left;max-height:62vh;overflow:auto}.chh{color:var(--gold);font-size:14px;margin:8px 0 4px}.chg{display:grid;grid-template-columns:1fr 1fr;gap:5px}.chg .btn{font-size:13px;padding:9px 4px}.chg .toggle{background:#2a5a8a}
 .snk{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin:6px 0}.snk .btn{padding:8px 0;font-size:13px;line-height:1.3}.snk small{font-size:11px;color:#ffd23f}
 
-.dock{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;padding:2px 8px 6px;flex:none}
+.dock{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;padding:2px 8px 6px;flex:none}
 .dock .dk{position:relative;display:flex;flex-direction:column;align-items:center;gap:1px;padding:5px 0 4px!important;background:var(--dc)!important;font-size:22px;line-height:1;min-width:0}
 .dock .dk .pi{width:26px;height:26px;margin:0}.dock .dk i{font-style:normal;font-size:10px;white-space:nowrap;letter-spacing:-.5px}
 .dock .dkb{position:absolute;top:-5px;right:-3px;background:#e8413c;color:#fff;font-size:10px;font-weight:400;padding:1px 4px;border:1px solid #000;line-height:1.2}
 .fixg{display:flex;gap:8px;align-items:center;margin:8px 0}.fixg label{white-space:nowrap;font-weight:bold}.fixh{display:flex;justify-content:space-between;align-items:center;margin:6px 0}.fixh .btn{width:auto;padding:6px 10px;margin:0}.fixl{max-height:44vh;overflow:auto;text-align:left}.fixr{display:grid;grid-template-columns:34px 1fr 80px;gap:6px;align-items:center;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.1)}.fixr img{width:30px;height:30px}.fixr small{display:block;color:var(--sub);font-size:11px}.fixr .field,.fixg .field{margin:0;padding:6px}.fixr .field{width:56px;display:inline-block}
 #goBtn.wkgo{background:#7a4ab8;font-size:20px!important;line-height:1.2}#goBtn .gosub{display:block;font-size:12px;opacity:.9}.wkmsg{color:#ffd23f;font-size:14px;margin:6px 0}
 .sdex{display:none;text-align:left;font-size:16px;line-height:1.7;padding:10px 12px}.sdex.on{display:block}.sdex .exh{font-size:17px;font-weight:bold;margin-bottom:6px}.sdex .exh.ok{color:#7bea5a}.sdex .exh.ng{color:#ff8a7a}.sdex .exl{color:#ffd23f;margin:4px 0}.sdex .exr{margin:2px 0 4px 6px}.sdex .exr b{color:#7bea5a;font-size:1.1em}.sdex .btn{margin-top:10px}.exd{color:#ffd23f;letter-spacing:1px;word-break:break-all}.exx{color:#ff8a7a}.exen{font-family:'M PLUS Rounded 1c',sans-serif;font-size:1.1em}
+.lnbars{flex:1;display:flex;flex-direction:column;gap:3px;font-size:11px}.lnbars div{display:flex;align-items:center;gap:4px}.lnbars span{width:36px}.lnbar{flex:1;height:9px;background:#222;border:2px solid #000;display:block}.lnbar>i{display:block;height:100%;background:#e8413c;transition:width .2s}.lnbar.p>i{background:#58d14a}
+.lnfield{position:relative;flex:1;min-height:150px;max-height:340px;margin:0 8px;border:3px solid #000;overflow:hidden;flex:none;image-rendering:pixelated}.lnground{position:absolute;left:0;right:0;bottom:0;height:22%;background:repeating-linear-gradient(90deg,#6a4a2a 0 16px,#5a3a1a 16px 32px);border-top:3px solid #3a2a1a}
+.lncas{position:absolute;bottom:18%;font-size:48px;z-index:2;filter:drop-shadow(2px 2px 0 #000)}.lncas.e{left:-4px}.lncas.p{right:-4px}
+#lnUnits{position:absolute;inset:0;z-index:3}.lnu{position:absolute;left:-22px;bottom:20%;width:44px;transition:none}.lnu .lnsp{display:block;width:44px;height:44px}.lnu .lnsp img,.lnu .lnsp svg{width:44px;height:44px}.lnu.e .lnsp{transform:scaleX(-1)}.lnu.boss{left:-32px;width:64px}.lnu.boss .lnsp,.lnu.boss .lnsp img{width:64px;height:64px}
+.lnu .lnhp{display:block;height:4px;background:#222;margin-top:1px}.lnu .lnhp i{display:block;height:100%;background:#58d14a}.lnu.e .lnhp i{background:#e8413c}.lnu.dead{opacity:0;transition:opacity .4s}
+.lnhit{animation:lnhit .25s}@keyframes lnhit{50%{margin-top:-6px;filter:brightness(1.6)}}.lnshake{animation:lnshake .2s}@keyframes lnshake{25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}
+.lnenw{position:relative;display:flex;gap:6px;align-items:center;padding:6px 8px 2px;flex:none}.lnen{flex:1;height:22px;background:#111;border:2px solid #000;position:relative}.lnen i{display:block;height:100%;background:linear-gradient(#7af0ff,#2a9ad9);transition:width .1s}.lnen span{position:absolute;inset:0;font-size:12px;display:flex;align-items:center;justify-content:center;text-shadow:1px 1px 0 #000}
+.lnwl,.lnult{width:auto!important;margin:0!important;padding:3px 8px!important;font-size:12px!important;line-height:1.1}.lnwl small,.lnult small{display:block;font-size:10px}.lnult.rdy{background:#e8413c;animation:pulse .6s infinite}.lnwl:disabled,.lnult:disabled{opacity:.5}
+.lnfl{position:absolute;left:50%;top:-8px;transform:translateX(-50%);color:#7af0ff;font-weight:bold;text-shadow:2px 2px 0 #000;animation:lnfl .9s forwards;pointer-events:none}@keyframes lnfl{to{top:-34px;opacity:0}}
+.lncards{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;padding:4px 8px;flex:none}.lncard{position:relative;background:#3a2e22;border:2px solid #000;padding:2px 0 0;display:flex;flex-direction:column;align-items:center;overflow:hidden;color:#fff}.lncard img,.lncard svg{width:36px;height:36px}.lncard b{font-size:11px;color:#7af0ff}.lncard.no{filter:grayscale(1) brightness(.6)}.lncd{position:absolute;left:0;right:0;bottom:0;background:rgba(0,0,0,.6);pointer-events:none}
+.lnqp{flex:none}.lnqp .qwrap{min-height:64px}.lnqp .ch{height:clamp(48px,7.5vh,70px)}
+.lnit img{width:40px;height:40px;vertical-align:middle}.lndeck{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin:6px 0}.lndeck span{display:flex;flex-direction:column;align-items:center;font-size:11px}.lndeck img{width:40px;height:40px}
 .maptier{font-size:14px;color:var(--gold);margin:8px 0 2px;text-align:left;display:flex;align-items:center;justify-content:space-between;gap:6px}.maptier small{color:var(--sub);font-size:12px}.maptier .mwok{color:#ffd23f}.mwbtn{width:auto!important;margin:0!important;padding:4px 8px!important;font-size:13px!important;background:#d9771e;animation:pulse 1s infinite}.mwrew{font-size:11px;color:var(--sub);text-align:left;margin:0 0 4px}.mgift{font-size:22px;animation:pulse 1s infinite;padding:0 4px;white-space:nowrap}.mbadge{background:#e8413c;color:#fff;font-size:12px;padding:2px 5px;margin-right:4px;border-radius:4px}.mrew{display:flex;flex-direction:column;gap:6px;align-items:center;margin:6px 0}.mrit{display:flex;flex-wrap:wrap;gap:4px;justify-content:center}.mri{border:2px solid;padding:2px;display:inline-flex}.mri img{width:28px;height:28px}.mrsp{color:#ffd23f;font-size:14px}.limb.mapl{background:#1f5a3a}.mapa .mclr{color:#5be05b;font-size:18px}
 </style>
 </head>
@@ -512,6 +524,7 @@ input{font:inherit}
     <button class="btn dk" id="achBtn" style="--dc:#8a6a1a">🏅<i>じっせき</i></button>
     <button class="btn dk" id="boxBtn" style="--dc:#5a4a3a">📦<i>ボックス</i></button>
     <button class="btn dk" id="shopBtn" style="--dc:#a03a7a">🛍️<i>ショップ</i></button>
+    <button class="btn dk" id="laneBtn" style="--dc:#2a6a9a">🏯<i>ぐんだん</i></button>
   </nav>
   <div class="homebody">
     <div class="panel show">
@@ -610,6 +623,16 @@ input{font:inherit}
   <div class="qpanel">
     <div class="panel qwrap hasq"><div class="q" id="ghQ"></div></div>
     <div class="choices" id="ghC"></div>
+  </div>
+</section>
+<section id="lane" class="screen">
+  <header class="hud"><button class="btn x" id="lnBack">✕</button><div class="lnbars"><div><span>てき</span><i class="lnbar e"><i id="lnEHp"></i></i></div><div><span>じぶん</span><i class="lnbar p"><i id="lnPHp"></i></i></div></div><div class="bst" id="lnStage"></div></header>
+  <div class="lnfield" id="lnField"><div class="lncas e" id="lnCE">🏯</div><div class="lncas p" id="lnCP">🏰</div><div id="lnUnits"></div><div class="lnground"></div></div>
+  <div class="lnenw" id="lnEnW"><button class="btn lnwl" id="lnWl"></button><div class="lnen"><i id="lnEn"></i><span id="lnEnT"></span></div><button class="btn lnult" id="lnUlt"></button></div>
+  <div class="lncards" id="lnCards"></div>
+  <div class="qpanel lnqp">
+    <div class="panel qwrap hasq"><div class="q" id="lnQ"></div><button class="btn spk" id="lnSpk">🔊</button></div>
+    <div class="choices" id="lnC"></div>
   </div>
 </section>
 <section id="study" class="screen">
@@ -1401,7 +1424,7 @@ function pixHome(){
   set('weakBtn','book',`にがて <span id="weakN">${P?P.weak.length:0}</span>`);set('statBtn','chart','きろく');set('mapBtn','star','マップ');
   set('rankBtn','trophy','ランキング');
   const dk=(id,ic,t,badge)=>{const e=$(id);if(e)e.innerHTML=pi(ic)+`<i>${t}</i>`+(badge?`<b class="dkb">${badge}</b>`:'')};
-  dk('towerBtn','tower','とう',P&&P.tower&&P.tower.best?P.tower.best+'F':'');dk('gachaBtn','gacha','ふくびき',P&&P.tk?P.tk:'');dk('roomBtn','house','へや');dk('achBtn','medal','じっせき',P&&achClaimable()?achClaimable():'');dk('boxBtn','box','ボックス',P&&P.mons.some(evoReady)?'✨':'');dk('shopBtn','bag','ショップ');set('setBtn','gear','せってい');set('helpBtn','help','ヘルプ');
+  dk('towerBtn','tower','とう',P&&P.tower&&P.tower.best?P.tower.best+'F':'');dk('gachaBtn','gacha','ふくびき',P&&P.tk?P.tk:'');dk('roomBtn','house','へや');dk('achBtn','medal','じっせき',P&&achClaimable()?achClaimable():'');dk('boxBtn','box','ボックス',P&&P.mons.some(evoReady)?'✨':'');dk('shopBtn','bag','ショップ');dk('laneBtn','swords','ぐんだん',P&&P.lane&&P.lane.best?P.lane.best:'');set('setBtn','gear','せってい');set('helpBtn','help','ヘルプ');
   set('goBtn','swords','しゅつげき！');set('hBest','star','さいきょう そうび');set('hEnhAll','hammer','まとめて きょうか');
   const g=$('hGold').parentNode,st=$('hStreak').parentNode;if(!g.querySelector('.pi')){g.innerHTML=pi('coin')+'<b id="hGold">0</b>';st.innerHTML=pi('flame')+'<b id="hStreak">1</b><small>にち</small>';st.id='hStreakPill';st.onclick=()=>helpOpen('streak');g.onclick=()=>toast('🪙 '+P.gold.toLocaleString()+' ゴールド')}}
 
@@ -1459,6 +1482,101 @@ function mapOpen(){const top=(P.best[P.subj]||0)+1,cur=areaOf(selStage),last=are
   document.querySelectorAll('[data-cw]').forEach(e=>e.onclick=()=>mapClaim([{k:'w',t:+e.dataset.cw}],mapOpen));
   document.querySelectorAll('.mapa:not(.lock)').forEach(b=>b.onclick=()=>{selStage=+b.dataset.st;closeModal();renderHome()});
   setTimeout(()=>{const e=document.querySelector('.mapa.sel');if(e)e.scrollIntoView({block:'center'})},60)}
+
+/* ===================== 🏰 ぐんだん バトル（よこスクロール たいせん） ===================== */
+const LW=1000,LCE=60,LCP=940;/* てきの しろ / じぶんの しろ */
+const LROLE={いわ:{n:'かべ',hp:2.2,atk:.55,sp:.7,rg:28},かみなり:{n:'とおく',hp:.6,atk:1,sp:.9,rg:150},ひかり:{n:'とおく',hp:.65,atk:.9,sp:.9,rg:130},ほのお:{n:'こうげき',hp:.85,atk:1.5,sp:1,rg:30},
+  こおり:{n:'とめる',hp:1,atk:.8,sp:.9,rg:34,slow:1},やみ:{n:'はやい',hp:.75,atk:1.1,sp:1.7,rg:28},みず:{n:'バランス',hp:1.1,atk:1,sp:1,rg:32},もり:{n:'いやし',hp:1.2,atk:.8,sp:.95,rg:32,heal:1},にじ:{n:'オール',hp:1.3,atk:1.3,sp:1.1,rg:60}};
+const lRole=sp=>LROLE[elOf(sp)]||LROLE.みず;
+let LN=null;
+function laneDeck(){const ms=partyMons().concat(P.mons.filter(m=>!P.party.includes(m.id)).sort((a,b)=>monPow(b)-monPow(a))).slice(0,5);
+  const seen=new Set();return ms.filter(m=>!seen.has(m.id)&&seen.add(m.id))}
+function laneOpen(){P.lane=P.lane||{best:0};const st=Math.min(P.lane.best+1,P.lane.sel||P.lane.best+1);
+  const deck=laneDeck();
+  showModal(`<div class="mt">🏰 ぐんだん バトル</div><p style="font-size:14px">なかまを くりだして てきの しろを こわそう！<br>もんだいに せいかいすると <b style="color:#7af0ff">⚡エナジー</b>が たまるよ</p>
+    <div class="lndeck">${deck.length?deck.map(m=>`<span>${monsterSVG(m.sp)}<small>${lRole(m.sp).n}</small></span>`).join(''):'<small>なかまが いないと ゆうしゃ だけで たたかうよ</small>'}</div>
+    <div class="stagepick" style="margin:6px 0"><button class="btn" id="lp">◀</button><span>ステージ <b id="lsn">${st}</b></span><button class="btn" id="lnx">▶</button></div>
+    <small style="color:var(--sub)">さいこう：ステージ ${P.lane.best}</small>
+    <button class="btn orange big" id="go">⚔️ たたかう！</button><button class="btn gray" id="cl">とじる</button>`,
+    {cl:closeModal,go:()=>{closeModal();laneStart(+$('lsn').textContent)},
+     lp:()=>{$('lsn').textContent=Math.max(1,+$('lsn').textContent-1)},lnx:()=>{$('lsn').textContent=Math.min(P.lane.best+1,+$('lsn').textContent+1)}})}
+function laneStart(st){P.lane=P.lane||{best:0};P.lane.sel=st;save();
+  const deck=laneDeck(),R=Math.max(4,deck.length?deck.reduce((a,m)=>a+monPow(m),0)/deck.length:4+P.lv*.5);
+  const E=Math.max(3*Math.pow(1.16,st-1),R*(.45+.035*Math.min(st,30)));
+  const hero={hero:1,sp:null,cost:60,cd:3,pow:R*.9,n:'ゆうしゃ'};
+  const cards=[hero,...deck.map(m=>{const r=SP[m.sp].rar;return{m,sp:m.sp,cost:80+r*55,cd:4+r*2,pow:monPow(m),n:SP[m.sp].name}})].map(c=>Object.assign(c,{ready:0}));
+  const a=AREA(Math.max(1,st*3));
+  LN={st,R,E,cards,units:[],en:150,enMax:600,wl:1,eHp:Math.round(E*160*(1+st*.06)),pHp:Math.round(R*140),t:0,nextSp:2.5,last:0,ult:0,combo:0,run:true,bossOut:false,correct:0,area:a,bag:[]};
+  LN.eMax=LN.eHp;LN.pMax=LN.pHp;
+  show('lane');$('lnStage').innerHTML=`🏰 ぐんだん<br><b style="color:var(--gold)">ステージ ${st}</b>`;$('lnField').style.background=a.sky;
+  $('lnCards').innerHTML=cards.map((c,i)=>`<button class="lncard" data-i="${i}">${c.hero?heroSVG(P.eq,P):monsterSVG(c.sp)}<b>⚡${c.cost}</b><i class="lncd"></i></button>`).join('');
+  document.querySelectorAll('.lncard').forEach(b=>b.onclick=()=>laneDeploy(+b.dataset.i));
+  $('lnUnits').innerHTML='';laneQ();LN.last=performance.now();requestAnimationFrame(laneTick)}
+function laneMk(side,o){const el=document.createElement('div');el.className='lnu '+side+(o.boss?' boss':'');
+  el.innerHTML=`<span class="lnsp">${o.hero?heroSVG(P.eq,P):monsterSVG(o.sp)}</span><i class="lnhp"><i></i></i>`;$('lnUnits').appendChild(el);
+  const u=Object.assign({side,el,x:side==='p'?LCP-20:LCE+20,cool:.3,slowT:0},o);u.maxHp=u.hp;LN.units.push(u);return u}
+function laneDeploy(i){if(!LN||!LN.run)return;const c=LN.cards[i];if(LN.en<c.cost||c.ready>0){snd(200,.08,'square',.04);return}
+  LN.en-=c.cost;c.ready=c.cd;const ro=c.hero?{hp:1.2,atk:1,sp:1,rg:32}:lRole(c.sp);
+  laneMk('p',{hero:c.hero,sp:c.sp,hp:Math.round(c.pow*9*ro.hp),atk:Math.max(1,Math.round(c.pow*ro.atk)),spd:72*ro.sp,rg:ro.rg,slow:ro.slow,heal:ro.heal});snd(520,.06,'square',.04)}
+function laneEnemy(boss){const pool=NORMALS.filter(k=>SP[k].rar<=Math.min(4,Math.floor(LN.st/6)));
+  let c=pool;const ae=LN.area.el;if(ae&&Math.random()<.6){const c2=pool.filter(k=>elOf(k)===ae);if(c2.length)c=c2}
+  const sp=boss?pick(BOSSES.filter(k=>SP[k].rar<=Math.min(4,1+Math.floor(LN.st/8)))||BOSSES):pick(c),ro=lRole(sp),m=boss?4:1+SP[sp].rar*.25;P.dex.seen[sp]=1;
+  laneMk('e',{sp,boss,hp:Math.round(LN.E*9*ro.hp*m*(boss?1.6:1)),atk:Math.max(1,Math.round(LN.E*ro.atk*(boss?1.8:1)*(1+SP[sp].rar*.15))),spd:62*ro.sp*(boss?.7:1),rg:ro.rg,slow:ro.slow})}
+function laneTick(now){if(!LN||!LN.run)return;const dt=Math.min(.05,(now-LN.last)/1000);LN.last=now;LN.t+=dt;
+  LN.en=Math.min(LN.enMax,LN.en+(10+LN.wl*4)*dt);LN.cards.forEach(c=>{if(c.ready>0)c.ready=Math.max(0,c.ready-dt)});
+  LN.nextSp-=dt;if(LN.nextSp<=0){laneEnemy(false);if(Math.random()<Math.min(.5,LN.st*.03))setTimeout(()=>LN&&LN.run&&laneEnemy(false),600);LN.nextSp=Math.max(2.2,6.5-LN.st*.12)*(.7+Math.random()*.6)}
+  if(!LN.bossOut&&LN.eHp<LN.eMax*.6){LN.bossOut=true;laneEnemy(true);toast('👑 ボスが でてきた！');snd(110,.4,'sawtooth',.07)}
+  for(const u of LN.units){if(u.dead)continue;const dir=u.side==='p'?-1:1;let tgt=null,best=1e9;
+    for(const v of LN.units){if(v.dead||v.side===u.side)continue;const d=(v.x-u.x)*dir;if(d>=-6&&d<=u.rg&&d<best){best=d;tgt=v}}
+    const cx=u.side==='p'?LCE:LCP,cd=(cx-u.x)*dir;
+    if(!tgt&&cd<=u.rg)tgt='castle';
+    u.cool-=dt;if(u.slowT>0)u.slowT-=dt;
+    if(tgt){if(u.cool<=0){u.cool=1.1;anim(u.el,'lnhit',250);
+        if(tgt==='castle'){if(u.side==='p'){LN.eHp-=u.atk;anim($('lnCE'),'lnshake',200)}else{LN.pHp-=u.atk;anim($('lnCP'),'lnshake',200)}}
+        else{tgt.hp-=u.atk;if(u.slow)tgt.slowT=1.5;if(tgt.hp<=0)laneKill(tgt)}
+        if(u.heal){for(const v of LN.units)if(!v.dead&&v.side===u.side&&Math.abs(v.x-u.x)<90)v.hp=Math.min(v.maxHp,v.hp+u.atk*.25)}}}
+    else u.x+=dir*u.spd*(u.slowT>0?.4:1)*dt}
+  LN.units=LN.units.filter(u=>!u.dead||u.el.isConnected);
+  laneDraw();
+  if(LN.eHp<=0)return laneEnd(true);if(LN.pHp<=0)return laneEnd(false);
+  requestAnimationFrame(laneTick)}
+function laneKill(u){u.dead=true;u.el.classList.add('dead');setTimeout(()=>u.el.remove(),400);if(u.side==='e'){const g=Math.max(1,Math.round(LN.E*.6));LN.en=Math.min(LN.enMax,LN.en+15);LN.gold=(LN.gold||0)+g}}
+function laneDraw(){const W=$('lnField').clientWidth;
+  for(const u of LN.units){if(u.dead)continue;u.el.style.transform=`translateX(${u.x/LW*W}px)`;u.el.querySelector('.lnhp i').style.width=Math.max(0,u.hp/u.maxHp*100)+'%'}
+  $('lnEHp').style.width=Math.max(0,LN.eHp/LN.eMax*100)+'%';$('lnPHp').style.width=Math.max(0,LN.pHp/LN.pMax*100)+'%';
+  $('lnEn').style.width=LN.en/LN.enMax*100+'%';$('lnEnT').textContent=`⚡ ${Math.floor(LN.en)} / ${LN.enMax}`;
+  $('lnWl').innerHTML=LN.wl<8?`⬆️ Lv${LN.wl}<small>⚡${LN.wl*80}</small>`:'MAX';$('lnWl').disabled=LN.wl>=8||LN.en<LN.wl*80;
+  $('lnUlt').innerHTML=`💥 ひっさつ<small>${Math.min(5,LN.ult)}/5</small>`;$('lnUlt').disabled=LN.ult<5;$('lnUlt').classList.toggle('rdy',LN.ult>=5);
+  document.querySelectorAll('.lncard').forEach((b,i)=>{const c=LN.cards[i];b.classList.toggle('no',LN.en<c.cost);b.querySelector('.lncd').style.height=(c.ready/c.cd*100)+'%'})}
+function laneQ(){if(!LN)return;if(!LN.bag.length)LN.bag=shuffle(SUBK.slice());const sb=LN.bag.pop(),lv=P.diff[sb]||0;
+  P.recent=P.recent||{};const rk='L'+sb+lv,rec=P.recent[rk]=P.recent[rk]||[];let q;
+  for(let t=0;t<30;t++){q=genQ(sb,lv,1);if(!rec.includes(q.key))break}rec.push(q.key);if(rec.length>40)rec.shift();q.subj=sb;LN.q=q;LN.lock=false;LN.qt=performance.now();
+  $('lnQ').innerHTML=`<span class="qsub qs-${sb}">${SUBJ[sb].n} ★${lv+1}</span>`+q.html;$('lnSpk').style.display=q.speak?'':'none';
+  const box=$('lnC');box.innerHTML='';box.className='choices'+(q.choices.length===3?' c3':'');
+  q.choices.forEach(v=>{const b=document.createElement('button');b.className='ch'+(q.cs&&!(q.cs==='small'&&v.length<=4)?' '+q.cs:'');b.textContent=v;b.onclick=()=>laneAns(b,v);box.appendChild(b)});
+  if(q.speak&&(q.auto||P.voice))setTimeout(()=>say(...q.speak),150)}
+function laneAns(b,v){if(!LN||LN.lock||!LN.run)return;LN.lock=true;const q=LN.q,ok=v===q.a;if(q.sayChoice)say(v,q.sayChoice);
+  document.querySelectorAll('#lnC .ch').forEach(x=>{if(x.textContent===q.a)x.classList.add('ok')});
+  record(q,ok,(performance.now()-LN.qt)/1000);
+  if(ok){LN.combo++;LN.correct++;LN.ult++;P.todayCorrect=(P.todayCorrect||0)+1;if(counts(q.subj,P.diff[q.subj]||0)){progressEggs();P.todaySubj=P.todaySubj||{};P.todaySubj[q.subj]=(P.todaySubj[q.subj]||0)+1;P.tkProg=(P.tkProg||0)+1;if(P.tkProg>=10){P.tkProg=0;P.tk=(P.tk||0)+EV().tk;toast('🎟️ ふくびきけん ゲット！')}}const g=100+Math.min(5,LN.combo)*20;LN.en=Math.min(LN.enMax,LN.en+g);snd(880,.08,'square',.05);
+    floatLn(`⚡+${g}`);P.total=(P.total||0)+1;save();setTimeout(laneQ,350)}
+  else{b.classList.add('ng');LN.combo=0;snd(180,.25,'square',.06,-60);addWeak(q);floatLn('ざんねん…');setTimeout(laneQ,1400)}}
+function floatLn(t){const e=document.createElement('div');e.className='lnfl';e.textContent=t;$('lnEnW').appendChild(e);setTimeout(()=>e.remove(),900)}
+$('lnWl').onclick=()=>{if(!LN||LN.wl>=8||LN.en<LN.wl*80)return;LN.en-=LN.wl*80;LN.wl++;LN.enMax=600+(LN.wl-1)*200;snd(990,.1,'square',.05);toast(`⚡ エナジーが たまる はやさ アップ！`)};
+$('lnUlt').onclick=()=>{if(!LN||LN.ult<5)return;LN.ult=0;anim($('lnField'),'ultfx',700);[262,196,147].forEach((f,i)=>snd(f,.3,'sawtooth',.07,0,i*.1));
+  const dmg=Math.round(LN.R*12);for(const u of LN.units)if(!u.dead&&u.side==='e'){u.hp-=u.boss?dmg*.5:dmg;u.x=Math.max(LCE+10,u.x-60);if(u.hp<=0)laneKill(u)}};
+$('lnSpk').onclick=()=>{if(LN&&LN.q&&LN.q.speak)say(...LN.q.speak)};
+$('lnBack').onclick=()=>{if(!LN)return goHome();if(confirm('バトルを やめる？')){LN.run=false;LN=null;goHome()}};
+function laneEnd(win){LN.run=false;const st=LN.st,first=win&&st>P.lane.best;
+  let g=(LN.gold||0)+(win?Math.round(st*60*DMULT[mixLv()]):0),tk=win&&(first||st%5===0)?1+Math.floor(st/10):0,it=null;
+  if(win){if(first){P.lane.best=st;it=makeItem(Math.max(1,st*3),Math.max(1,mixLv()),true,Math.min(4,Math.floor(st/5)));if(P.box.length<boxCap())P.box.push(it);else{g+=itPrice(it);it=null}}
+    P.lane.sel=Math.min(P.lane.best+1,st+1);fanfare()}else snd(150,.5,'sawtooth',.06,-60);
+  P.gold+=g;P.tk=(P.tk||0)+tk;save();
+  showModal(`<div class="chest">${win?'🏆':'💥'}</div><div class="mt">${win?'しょうり！':'しろが こわされた…'}</div>
+    <p>せいかい ${LN.correct}もん<br><b class="goldt">🪙+${fmtS(g)}</b>${tk?`　${pi('ticket')}+${tk}`:''}</p>${it?`<p>はじめての クリア ごほうび<br><span class="lnit">${itemIcon(it)}</span> <b style="color:${RAR[it.rar].h}">${esc(it.name)}</b></p>`:''}
+    ${win?'':'<small>なかまを レベルアップ したり、もんだいに れんぞく せいかいして エナジーを ためよう！</small>'}
+    <button class="btn orange big" id="nx">${win?'つぎの ステージへ ▶':'もういちど'}</button><button class="btn gray big" id="hm">ホームへ</button>`,
+    {nx:()=>{closeModal();laneStart(win?st+1:st)},hm:()=>{closeModal();LN=null;goHome()}})}
 
 /* ===================== 🗼 tower ===================== */
 function startTower(){P.tower=P.tower||{best:0,runs:0};P.tower.runs++;save();startBattle('mix',0,Math.max(1,P.best.mix||1),false,{tower:true});
@@ -1752,6 +1870,7 @@ const HELP=[
  ['event','📅 きょうの イベント',`まいにち ちがう ボーナスが あるよ！<br>${EVENTS.map(e=>`${e.i} <b>${e.d}</b>：${e.t}`).join('<br>')}`],
  ['map','🗺️ ワールドマップ',`10ステージごとに あたらしい ばしょに すすむよ。ばしょごとに けしきと でてくる モンスターの ぞくせいが かわる。<br>ホームの マップから、いったことの ある ばしょを えらべるよ。<br>🎁 ばしょの さいごの ステージを クリアすると ゴールド・ふくびきけん・つよい そうびが もらえる。せかいの ばしょを ぜんぶ クリアすると「せいは ほうしゅう」で げんていの しょうごう・オーラ・かぐ（まかい・かみがみは たまごも）！ ♾️ はてしない せかいでは 50ステージごとに もらえるよ。`],
  ['tower','🗼 むげんの とう',`1かいに 1たいずつ たおして、どこまで のぼれるか ちょうせん！ 10かいごとに ボスが いて、たおすと ゴールドと ふくびきけん。<br>HPは すこししか かいふく しないので、そうびを つよくして いこう。さいこう きろくは ランキングにも のるよ。`],
+ ['lane','🏯 ぐんだん バトル',`なかまを くりだして てきの しろを こわす たいせん モード。<br>もんだいに せいかいすると ⚡エナジーが たまり（れんぞく せいかいで もっと）、エナジーで なかまを だせるよ。<br>なかまの ぞくせいで とくちょうが かわる：🪨かべ（かたい）・⚡✨とおくから こうげき・🔥こうげき つよい・❄️てきを おそくする・🌙はやい・🌿まわりを かいふく。<br>5もん せいかいで 💥ひっさつ！ ⬆️で エナジーの たまる はやさを アップ。はじめて クリアした ステージは そうびが もらえる。`],
  ['ghost','👻 ゴーストバトル',`ぼうけんの とちゅうで、とつぜん かぞくの ぼうけんしゃの「ゴースト」が あらわれる ことが あるよ！ 5もんの はやおし しょうぶ！ ゴーストは その ひとの せいかいりつと こたえる はやさを まねするよ。<br>かつと ゴールドと ふくびきけん 2まい。☁️ かぞくで きょうゆう していると、ほかの たんまつの かぞくの ゴーストも でてくるよ。`],
  ['gacha','🎰 ふくびき',`もんだいに 10かい せいかいするごとに ふくびきけんが 1まい（きんようびは 2まい）。とう・ゴースト・じっせき・ミニゲームでも もらえるよ。<br>そうび・たまご・きせかえ・ゴールド、たまに きゅうきょくの カケラも でる！ 10かい まとめて ひくことも できる。<br>★<b>ふくびき げんてい</b>：ここでしか もらえない きせかえ（せいきしの よろい・ぼうし・オーラ）、なかま（ラッキーキャット・ほしうさぎ・オーロラドラゴン）、かぐ が あるよ。`],
  ['ach','🏅 じっせき',`「せいかい 1000もん」「なかま 50しゅ」などの もくひょう。たっせいしたら「うけとる」で ゴールドと ふくびきけんが もらえるよ。ホームの ボタンの あかい かずは うけとれる じっせきの かず。`],
@@ -1816,6 +1935,7 @@ $('mapBtn').onclick=()=>{snd(660,.05);mapOpen()};
 document.querySelector('#home .top .lv').onclick=cheatGate;
 document.querySelector('#home .powbig').onclick=()=>{const lv=P.lv*2,eq=SLOTS.reduce((t,k)=>t+iscore(P.eq[k]),0),pt=partyPow();
   showModal(`<div class="mt">⚔️ パワーの うちわけ</div><div class="enhlist"><div><span>⭐ レベル（Lv${P.lv}×2）</span><b>${lv.toLocaleString()}</b></div><div><span>🛡️ そうび 10かしょ</span><b>${eq.toLocaleString()}</b></div><div><span>🐾 なかま（パーティ）</span><b>${pt.toLocaleString()}</b></div></div><p>ごうけい <b style="font-size:22px;color:var(--gold)">${power().toLocaleString()}</b></p><button class="btn gray" id="cl">とじる</button>`,{cl:closeModal})};
+$('laneBtn').onclick=()=>{snd(660,.05);laneOpen()};
 $('towerBtn').onclick=()=>{snd(660,.05);showModal(`<div class="mt">🗼 むげんの とう</div><p>1かいに 1たい。どこまで のぼれるかな？<br>10かいごとに ボスと ボーナス！<br><small style="color:var(--sub)">HPは すこししか かいふく しないよ・もんだいは ミックス</small></p><p>じぶんの さいこう：<b style="color:var(--gold)">${(P.tower&&P.tower.best)||0}かい</b></p><button class="btn orange big" id="go">のぼる！</button><button class="btn gray" id="cl">やめる</button>`,{go:()=>{closeModal();startTower()},cl:closeModal})};
 $('gachaBtn').onclick=()=>{snd(660,.05);gachaOpen()};
 $('achBtn').onclick=()=>{snd(660,.05);achOpen()};
