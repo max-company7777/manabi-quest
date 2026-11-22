@@ -463,6 +463,7 @@ input{font:inherit}
 .rmrow{display:flex;align-items:center;gap:8px;background:#0005;border:2px solid var(--edge);padding:6px}.rmrow .btn{min-width:84px;padding:8px 6px}
 .rmimg{width:48px;height:36px;object-fit:contain;image-rendering:pixelated}.rmsw{width:40px;height:30px;border:2px solid #000}.rmn{flex:1;font-size:15px}.rmn small{display:block;font-size:11px;color:var(--sub)}.rmon{color:#5be05b;font-size:13px}
 .ghpop{width:110px;margin:0 auto;filter:drop-shadow(0 0 8px #9ad8ff) opacity(.85) saturate(.6);animation:ghin .8s}.ghpop .hs{width:100%}@keyframes ghin{0%{opacity:0;transform:scale(.3) translateY(20px)}60%{opacity:1;transform:scale(1.15)}100%{transform:scale(1)}}
+.swr{display:flex;flex-wrap:wrap;gap:4px;justify-content:center;margin:4px 0}.swp{display:block;font-size:13px;margin:6px 0}.swp input{transform:scale(1.3);margin-right:6px}.swg{max-height:30vh;overflow:auto;margin:6px 0}
 </style>
 </head>
 <body>
@@ -1859,6 +1860,7 @@ function renderBox(){
   if(boxTab==='items'){
     $('bxCount').textContent=`${P.box.length} / ${P.master?'∞':boxCap()}`;
     h+=`<div class="fchips">${['all',...SLOTS].map(k=>`<button class="fchip${boxF===k?' sel':''}" data-f="${k}">${k==='all'?'ぜんぶ':SLOTN[k]}</button>`).join('')}</div>`;
+    if(P.box.length)h+=`<button class="btn orange" id="bxSellWeak" style="width:100%;margin:4px 0">🪙 よわい そうびを まとめて うる</button>`;
     const list=P.box.map((it,i)=>({it,i})).filter(o=>boxF==='all'||o.it.slot===boxF).sort((a,b)=>b.it.rar-a.it.rar||iscore(b.it)-iscore(a.it));
     h+=`<div class="bgrid">${list.map(o=>`<button class="bcell" data-i="${o.i}" style="--rc:${RAR[o.it.rar].c}">${itemIcon(o.it)}<b>${o.it.plus?'+'+o.it.plus+' ':''}${iscore(o.it)}</b></button>`).join('')||'<small style="color:var(--sub)">まだ なにも ないよ。たからばこで「ボックスへ」を えらぶと ここに はいるよ</small>'}</div>`;
   }else if(boxTab==='mons'){
@@ -1889,6 +1891,7 @@ function renderBox(){
   $('bxBody').innerHTML=h;
   document.querySelectorAll('.fchip').forEach(b=>b.onclick=()=>{boxF=b.dataset.f;renderBox()});
   document.querySelectorAll('.bcell[data-i]').forEach(b=>b.onclick=()=>boxItemModal(+b.dataset.i));
+  if($('bxSellWeak'))$('bxSellWeak').onclick=sellWeakFlow;
   document.querySelectorAll('.mc').forEach(b=>b.onclick=()=>monModal(b.dataset.id));
   document.querySelectorAll('.ec').forEach(b=>b.onclick=()=>eggModal(b.dataset.id));
   if($('dupBye'))$('dupBye').onclick=dupModal;
@@ -1929,6 +1932,21 @@ function equipFlow(it,cur,apply){
   if(cur&&cur.plus>0){const n=cur.plus;it.plus=(it.plus||0)+n;cur.plus=0;snd(880,.08,'square',.05);snd(1320,.15,'square',.05,0,.08);apply();setTimeout(()=>toast(`⚒️ +${n} を ひきついだよ！`),300);return}
   apply();
 }
+/* ---- bulk sell weak gear: items that would NOT raise power if equipped (+transfer counted) ---- */
+let swRar=null,swPlus=false;
+function weakItems(){const now=power();return P.box.filter(it=>{if(it.plus&&!swPlus)return false;if(swRar&&!swRar[it.rar])return false;
+  const cur=P.eq[it.slot];return power(Object.assign({},P.eq,{[it.slot]:withPlus(it,cur)}))<=now})}
+function sellWeakFlow(){if(!swRar){swRar={};for(let r=0;r<5;r++)swRar[r]=r<=2}
+  const L=weakItems(),total=L.reduce((a,it)=>a+it.price,0),rs=[...new Set(P.box.map(it=>it.rar))].sort();
+  showModal(`<div class="mt">🪙 よわい そうびを うる</div><p style="font-size:13px">つけても パワーが あがらない そうびを まとめて うるよ<br><small style="color:var(--sub)">（いま つけている そうびより よわい もの）</small></p>
+    <div class="lbl">うる レアど</div><div class="swr">${rs.map(r=>`<button class="fchip${swRar[r]?' sel':''}" data-r="${r}" style="--rc:${RAR[r].c};color:${RAR[r].h}">${swRar[r]?'✓ ':''}${RAR[r].n}</button>`).join('')}</div>
+    <label class="swp"><input type="checkbox" id="swPlus" ${swPlus?'checked':''}> きょうか（+）してある そうびも うる</label>
+    <div class="bgrid swg">${L.slice(0,40).map(it=>`<div class="bcell" style="--rc:${RAR[it.rar].c}">${itemIcon(it)}<b>${it.plus?'+'+it.plus+' ':''}${fmtS(iscore(it))}</b></div>`).join('')||'<small style="color:var(--sub)">うれる そうびは ないよ</small>'}${L.length>40?`<small>…ほか ${L.length-40}こ</small>`:''}</div>
+    <p><b>${L.length}こ</b> → <b class="goldt">🪙+${total.toLocaleString()}</b></p>
+    <button class="btn orange big" id="go" ${L.length?'':'disabled'}>まとめて うる！</button><button class="btn gray" id="cl">やめる</button>`,
+    {cl:closeModal,go:()=>{const set=new Set(weakItems());const n=set.size,g=[...set].reduce((a,it)=>a+it.price,0);P.box=P.box.filter(it=>!set.has(it));P.gold+=g;save();coin();closeModal();renderBox();toast(`🪙 ${n}こ うって +${g.toLocaleString()}！`)}});
+  document.querySelectorAll('.swr [data-r]').forEach(b=>b.onclick=()=>{const r=+b.dataset.r;swRar[r]=!swRar[r];sellWeakFlow()});
+  $('swPlus').onchange=e=>{swPlus=e.target.checked;sellWeakFlow()}}
 function boxItemModal(idx){
   const it=P.box[idx];if(!it)return;const cur=P.eq[it.slot],now=power(),neq=Object.assign({},P.eq,{[it.slot]:withPlus(it,cur)}),nxt=power(neq),diff=nxt-now;
   showModal(`<div class="mt">${SLOTN[it.slot]}</div>${itemCard(it,false,cur)}
