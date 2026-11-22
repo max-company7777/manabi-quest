@@ -1055,7 +1055,7 @@ function makeItem(st,d,boss,min=0){
 /* =============== save data =============== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-const APPV='v90';
+const APPV='v91';
 try{const c=document.createElement('canvas');c.width=9;c.height=9;const g=c.getContext('2d'),F=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};F(1,0,7,1,'#120d09');F(1,8,7,1,'#120d09');F(0,1,1,7,'#120d09');F(8,1,1,7,'#120d09');F(1,1,7,1,'#120d09');F(1,7,7,1,'#120d09');F(1,1,1,7,'#120d09');F(7,1,1,7,'#120d09');F(2,2,5,1,'#7a6a52');F(2,2,1,5,'#7a6a52');F(2,6,5,1,'#2a2018');F(6,2,1,5,'#2a2018');document.documentElement.style.setProperty('--pxf',`url(${c.toDataURL()})`)}catch(e){}
 const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));if(G.bgmOn===undefined)G.bgmOn=true;
 let P=null;
@@ -2570,6 +2570,11 @@ function stageForPower(){const pw=power(),std={},keep=Math.random;let seed=7;Mat
   const stdPow=L=>{for(const k of SLOTS){let it,g=0;do{it=makeItem(Math.max(1,Math.round(L/2)),2,false,2)}while(it.slot!==k&&g++<400);it.plus=5;it.lv=L;std[k]=it}return power(std,L,Object.assign({},P,{party:[]}))};
   let lo=1,hi=200000;try{while(hi-lo>2){const m=Math.floor((lo+hi)/2);if(stdPow(m)<pw)lo=m;else hi=m}}finally{Math.random=keep}return Math.max(1,Math.ceil(lo/2))}
 /* adjust daily records so 'この7にち' moves by d (spread over subjects; negative removes from the last 7 days) */
+/* チートで ふえた ぶんは きろく（ぶんや べつ）にも 100% せいかいで いれる */
+function cheatCatAdd(d){const S=P.stats||(P.stats={cats:{},days:{},items:{}});S.cats=S.cats||{};d=Math.round(d);if(!d)return;
+  if(d>0){SUBK.forEach((k,i)=>{const a=Math.floor(d/3)+(i<d%3?1:0);if(!a)return;const c=S.cats[k+'|いろいろ']||(S.cats[k+'|いろいろ']={n:0,ok:0,t:0});c.n+=a;c.ok+=a;c.t+=a*4});return}
+  let r=-d;const ks=Object.keys(S.cats).sort((a,b)=>(b.endsWith('いろいろ')?1:0)-(a.endsWith('いろいろ')?1:0));for(const k of ks){if(r<=0)break;const c=S.cats[k],t=Math.min(r,c.ok);const avg=c.n?c.t/c.n:0;c.ok-=t;c.n-=t;c.t=Math.max(0,c.t-avg*t);r-=t;if(c.n<=0)delete S.cats[k]}}
+function cheatSyncCats(){const S=P.stats||(P.stats={cats:{},days:{},items:{}});let ok=0;for(const c of Object.values(S.cats||{}))ok+=c.ok;cheatCatAdd((P.total||0)-ok)}
 function cheatWeekAdd(d){const S=P.stats||(P.stats={cats:{},days:{},items:{}});d=Math.round(d);if(!d)return;
   if(d>0){const dd=S.days[dkey(new Date())]||(S.days[dkey(new Date())]={});SUBK.forEach((k,i)=>{const a=Math.floor(d/3)+(i<d%3?1:0),e=dd[k]||(dd[k]={n:0,ok:0});e.n+=a;e.ok+=a});return}
   let r=-d;for(let i=0;i<7&&r>0;i++){const dt=new Date();dt.setDate(dt.getDate()-i);const dd=S.days[dkey(dt)];if(!dd)continue;for(const k in dd){const t=Math.min(r,dd[k].ok);dd[k].ok-=t;dd[k].n=Math.max(dd[k].ok,dd[k].n-t);r-=t;if(r<=0)break}}}
@@ -2615,9 +2620,9 @@ function cheatOpen(){if(!P||!P.cheat)return;
     lv:()=>ask('レベル',P.lv,n=>{P.lv=Math.max(1,n);P.xp=0;done('Lv'+P.lv)}),stg:()=>ask('ひらく ステージ',(P.best.mix||0)+10,n=>{for(const k in P.best)P.best[k]=Math.max(P.best[k]||0,n);selStage=n;done('ステージ '+n+' まで')}),
     pstg:()=>{const st=stageForPower(),cur=Math.max(...Object.values(P.best));
       const tot=st*13;if(!confirm(`いまの パワー ${power().toLocaleString()} に みあうのは…\n・クリアずみ ステージ：${cur} → ${st}\n・せいかいすう：${(P.total||0).toLocaleString()} → ${tot.toLocaleString()}\nに かえる？`))return;
-      for(const k in P.best)P.best[k]=st;selStage=st+1;cheatWeekAdd(tot-(P.total||0));P.total=tot;done(`ステージ ${st}・せいかい ${tot.toLocaleString()}もん`)},
-    week:()=>ask('この7にちの せいかいすう',weekOk(P),n=>{cheatWeekAdd(n-weekOk(P));done('この7にち '+weekOk(P).toLocaleString()+'もん')}),
-    tot:()=>ask('せいかいすう（ぜんぶで）',P.total||0,n=>{cheatWeekAdd(n-(P.total||0));P.total=n;done('せいかい '+n.toLocaleString()+'もん')}),
+      for(const k in P.best)P.best[k]=st;selStage=st+1;cheatWeekAdd(tot-(P.total||0));P.total=tot;cheatSyncCats();done(`ステージ ${st}・せいかい ${tot.toLocaleString()}もん`)},
+    week:()=>ask('この7にちの せいかいすう',weekOk(P),n=>{const df=n-weekOk(P);cheatWeekAdd(df);P.total=Math.max(0,(P.total||0)+df);cheatSyncCats();done('この7にち '+weekOk(P).toLocaleString()+'もん')}),
+    tot:()=>ask('せいかいすう（ぜんぶで）',P.total||0,n=>{cheatWeekAdd(n-(P.total||0));P.total=n;cheatSyncCats();done('せいかい '+n.toLocaleString()+'もん')}),
     twr:()=>ask('とうの さいこう きろく',(P.tower&&P.tower.best)||0,n=>{P.tower=P.tower||{best:0,runs:0};P.tower.best=n;done('とう '+n+'かい')}),
     mst:()=>{P.mast=P.mast||{};SUBK.forEach(k=>{for(let i=0;i<LVN;i++)P.mast[k+i]=1});done('ぜんぶ マスター')},
     eq:()=>{const st=Math.max(10,Math.round(P.lv/2));for(const k of SLOTS){let it,g=0;do{it=makeItem(st,7,true,4)}while((it.slot!==k||it.rar<4)&&g++<6000);if(it.slot===k){it.plus=(P.eq[k]&&P.eq[k].plus)||0;P.eq[k]=it;P.dex.items[ikey(it)]=1}}done('しんわ そうび')},
