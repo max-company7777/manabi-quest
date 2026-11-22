@@ -1072,7 +1072,7 @@ function makeItem(st,d,boss,min=0){
 /* =============== save data =============== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-const APPV='v105';
+const APPV='v106';
 try{const c=document.createElement('canvas');c.width=9;c.height=9;const g=c.getContext('2d'),F=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};F(1,0,7,1,'#120d09');F(1,8,7,1,'#120d09');F(0,1,1,7,'#120d09');F(8,1,1,7,'#120d09');F(1,1,7,1,'#120d09');F(1,7,7,1,'#120d09');F(1,1,1,7,'#120d09');F(7,1,1,7,'#120d09');F(2,2,5,1,'#7a6a52');F(2,2,1,5,'#7a6a52');F(2,6,5,1,'#2a2018');F(6,2,1,5,'#2a2018');document.documentElement.style.setProperty('--pxf',`url(${c.toDataURL()})`)}catch(e){}
 const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));if(G.bgmOn===undefined)G.bgmOn=true;
 let P=null;
@@ -1503,6 +1503,10 @@ function closeModal(){$('modal').classList.remove('on')}
 const dayStr=d=>d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
 
 /* =============== players =============== */
+/* auto update: on resume, if a newer build is online, reload when not in battle */
+let updAsk=0;function checkUpdate(){if(!/^https?:/.test(location.protocol)||Date.now()-updAsk<60000)return;updAsk=Date.now();
+  fetch('./?u='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{const m=t.match(/const APPV='(v\d+)'/);if(m&&m[1]!==APPV){if(typeof B!=='undefined'&&B){toast('🆕 あたらしい バージョンが あるよ（バトルの あとで こうしん）');return}toast('🆕 さいしんばんに こうしん するね');setTimeout(()=>location.reload(),900)}}).catch(()=>{})}
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')checkUpdate()});setTimeout(checkUpdate,3000);
 function renderPlayers(){if($('verT'))$('verT').textContent=APPV;try{const ts=$('tScene');if(ts){ts.style.background=`url(${sceneURL(AREAS[(new Date().getDate())%10],160,90,{night:isNight()})}) center/cover`;const p0=G.profiles[0];ts.querySelector('.trun').innerHTML=`<span class="tr h">${heroSVG(p0?p0.eq:{w:{slot:'w',icon:'🗡️',rar:0}},p0||{lv:1,eq:{}})}</span><span class="tr m1">${monsterSVG('slime')}</span><span class="tr m2">${monsterSVG('bat')}</span><span class="tr m3">${monsterSVG('golem')}</span>`}}catch(e){}
   $('plist').innerHTML=G.profiles.map(p=>`<button class="panel pcard" data-id="${p.id}"><div class="av">${heroSVG(p.eq,p)}</div>
     <div><div class="nm">${p.master?'👑 ':''}${esc(p.name)}</div>${titleOf(p)?`<small style="color:var(--gold)">「${titleOf(p)}」</small><br>`:''}<small>Lv${p.lv}・${p.age}さい</small></div><div class="pw"><small>パワー</small><b>${power(p.eq,p.lv,ensureP(p))}</b></div></button>`).join('')
@@ -1516,8 +1520,8 @@ function giftCode(){
     <input class="field" id="gcIn" maxlength="20" placeholder="コード" autocapitalize="characters" style="text-transform:uppercase;text-align:center;letter-spacing:2px">
     <div id="gcMsg" style="min-height:20px;color:#ff8a7a;font-size:13px"></div>
     <button class="btn orange big" id="gcOk">うけとる</button><button class="btn gray" id="cl">とじる</button>`,
-    {cl:closeModal,gcOk:()=>{const c=$('gcIn').value.toUpperCase().replace(/[^A-Z0-9]/g,''),g=GIFTS[c];P.codes=P.codes||{};
-      if(!g){$('gcMsg').textContent='コードが ちがうみたい…';snd(200,.2,'square',.05);return}
+    {cl:closeModal,gcOk:()=>{const raw=$('gcIn').value.normalize('NFKC'),kn=raw.replace(/[\u30a1-\u30f6]/g,ch=>String.fromCharCode(ch.charCodeAt(0)-96)).replace(/\s/g,''),KA={'ぷりぷり':'PURIPURI','ぷりぷりけっつー':'PURIPURI','くそるる':'KUSORURU','くそったれるる':'KUSORURU'},c=KA[kn]||raw.toUpperCase().replace(/[^A-Z0-9]/g,''),g=GIFTS[c];P.codes=P.codes||{};
+      if(!g){$('gcMsg').textContent='コードが ちがうみたい…（アプリを ひらきなおすと なおることも あるよ）';snd(200,.2,'square',.05);return}
       if(P.codes[c]){$('gcMsg').textContent='この コードは もう つかったよ';return}
       P.codes[c]=1;const m={id:uid(),sp:g.sp,lv:1,xp:0,bond:0};P.mons.push(m);P.dex.owned[g.sp]=1;P.dex.seen[g.sp]=1;
       const inP=P.party.length<partyMax();if(inP)P.party.push(m.id);save();
