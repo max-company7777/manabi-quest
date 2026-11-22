@@ -714,6 +714,7 @@ img.shy{filter:hue-rotate(150deg) saturate(1.35) brightness(1.08) drop-shadow(0 
 .fpairs{display:grid;grid-template-columns:repeat(2,1fr);gap:4px;max-height:28vh;overflow-y:auto;margin:6px 0}.fpr{display:flex;align-items:center;justify-content:center;gap:2px;background:rgba(0,0,0,.3);border-radius:6px;padding:2px;color:#ffd23f}.fpr img{width:34px;height:34px;image-rendering:pixelated}
 .wrq{font-size:clamp(22px,6vw,32px);display:block}.wrq b{color:#ffd23f}.wrq .wrem{font-size:1.2em;margin-right:4px}
 .choices.bwrite{display:flex!important;flex-direction:row;align-items:center;justify-content:center;gap:8px}.bwpad canvas{display:block;border-radius:10px;border:4px solid #c0302a;background:#fffaf0;touch-action:none}.bwbtns{display:flex;flex-direction:column;gap:6px}.bwbtns .btn{font-size:14px;padding:10px 8px;white-space:nowrap}
+.spdex .spdg{margin:6px 0}.spdt{font-size:13px;color:#fff;margin:2px 4px}.spdt small{margin-left:6px;color:var(--sub);font-size:11px}.spdr{display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:4px}.spdr .bcell b{font-size:9px;line-height:1.1}.spdr .bt{font-size:8px!important}
 </style>
 </head>
 <body>
@@ -1202,7 +1203,7 @@ function makeItem(st,d,boss,min=0){
 /* =============== save data =============== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-const APPV='v125';
+const APPV='v126';
 try{const c=document.createElement('canvas');c.width=9;c.height=9;const g=c.getContext('2d'),F=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};F(1,0,7,1,'#120d09');F(1,8,7,1,'#120d09');F(0,1,1,7,'#120d09');F(8,1,1,7,'#120d09');F(1,1,7,1,'#120d09');F(1,7,7,1,'#120d09');F(1,1,1,7,'#120d09');F(7,1,1,7,'#120d09');F(2,2,5,1,'#7a6a52');F(2,2,1,5,'#7a6a52');F(2,6,5,1,'#2a2018');F(6,2,1,5,'#2a2018');document.documentElement.style.setProperty('--pxf',`url(${c.toDataURL()})`)}catch(e){}
 const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));if(G.bgmOn===undefined)G.bgmOn=true;
 let P=null;
@@ -3298,7 +3299,7 @@ function spBlock(k){const t=spStat(k),g=spGrade(k),bar=(v,mx)=>{const n=Math.max
 const spGrade=k=>{if(k==='darulu')return 'SS';const v=spStat(k).m;return v>=1.25?'S':v>=1.1?'A':v>=.95?'B':v>=.85?'C':'D'};
 const monXpNeed=m=>5+m.lv*2;
 function fixMonLv(p){const ms=p.mons||[],ok=ms.map(m=>m.lv).filter(v=>Number.isFinite(v)&&v>=1),fb=ok.length?Math.max(...ok):Math.max(1,Number.isFinite(p.lv)?p.lv:1);let n=0;ms.forEach(m=>{if(!(Number.isFinite(m.lv)&&m.lv>=1)){m.lv=fb;n++}if(!Number.isFinite(m.xp))m.xp=0;if(!Number.isFinite(m.bond))m.bond=0});return n}
-function ensureP(p){if(p.diff&&p.diff.life==null)p.diff.life=p.diff.math!=null?p.diff.math:ageOf(p.age||7);if(p.best&&p.best.life==null)p.best.life=0;try{fixMonLv(p)}catch(e){}if(!p.weakV4){try{weakTrim(p)}catch(e){}p.weakV4=1}setTimeout(()=>autoFav(p),0);if(p.weak&&!p.weakV2){p.weak.forEach(w=>w.n=Math.min((w.n||1)+2,WEAKMAX));p.weakV2=1}if(p.weak&&!p.weakV3){p.weak.forEach(w=>w.n=Math.max(1,Math.min(w.n||1,WEAKN)));p.weakV3=1}if(!Number.isFinite(p.gold))p.gold=0;if(!p.mixOn){p.mixOn=1;p.subj='mix';p.best=p.best||{};p.best.mix=Math.max(p.best.mix||0,p.best.math||0,p.best.eng||0,p.best.kanji||0)}p.frag=p.frag||{};p.ultMiss=p.ultMiss||0;p.box=p.box||[];p.mons=p.mons||[];p.party=p.party||[];p.eggs=p.eggs||[];p.dex=p.dex||{};p.dex.seen=p.dex.seen||{};p.dex.owned=p.dex.owned||{};p.dex.items=p.dex.items||{};return p}
+function ensureP(p){try{if(p.dex&&p.mons)p.mons.forEach(m=>{if(m&&m.sp){p.dex.owned[m.sp]=1;p.dex.seen[m.sp]=1}})}catch(e){}if(p.diff&&p.diff.life==null)p.diff.life=p.diff.math!=null?p.diff.math:ageOf(p.age||7);if(p.best&&p.best.life==null)p.best.life=0;try{fixMonLv(p)}catch(e){}if(!p.weakV4){try{weakTrim(p)}catch(e){}p.weakV4=1}setTimeout(()=>autoFav(p),0);if(p.weak&&!p.weakV2){p.weak.forEach(w=>w.n=Math.min((w.n||1)+2,WEAKMAX));p.weakV2=1}if(p.weak&&!p.weakV3){p.weak.forEach(w=>w.n=Math.max(1,Math.min(w.n||1,WEAKN)));p.weakV3=1}if(!Number.isFinite(p.gold))p.gold=0;if(!p.mixOn){p.mixOn=1;p.subj='mix';p.best=p.best||{};p.best.mix=Math.max(p.best.mix||0,p.best.math||0,p.best.eng||0,p.best.kanji||0)}p.frag=p.frag||{};p.ultMiss=p.ultMiss||0;p.box=p.box||[];p.mons=p.mons||[];p.party=p.party||[];p.eggs=p.eggs||[];p.dex=p.dex||{};p.dex.seen=p.dex.seen||{};p.dex.owned=p.dex.owned||{};p.dex.items=p.dex.items||{};return p}
 const partyMons=(p=P)=>(p.party||[]).map(id=>(p.mons||[]).find(m=>m.id===id)).filter(Boolean);
 const partyPow=(p=P,eq=p.eq)=>Math.round(partyMons(p).reduce((s,m)=>s+monPow(m),0)*(1+(fxSum('party',eq||{})+((p&&p.room)?roomBonus(p).party:0))/100));
 const ownedStd=(p=P)=>SPECIES.filter(s=>s[3]<5&&p.dex.owned[s[0]]).length;
@@ -3420,6 +3421,7 @@ function renderBox(){
     h+=dexRewardHTML();h+=`<div class="panel stsum"><div><small>なかまにした</small><b>${owned}/${STD_N}</b></div><div><small>であった</small><b>${seen}/${STD_N}</b></div><div><small>そうび</small><b>${items}/${CAT_N}</b></div></div>`;
     h+=`<div class="panel stbox ultbox"><div class="sth" style="color:var(--r5)">🌟 きゅうきょく <small>${ULTS.filter(u=>P.dex.owned[u.k]).length}/3${ultUnlocked().length&&P.ultMiss>=10?`　🔺であいやすさ アップちゅう！（×${Math.round(ultRate(false)/.005)}）`:''}</small></div><div class="ultrow">${ULTS.map(u=>{const s=SP[u.k],o=P.dex.owned[u.k],se=P.dex.seen[u.k],op=ownedStd()>=u.need;
       return `<div class="ultc${o?'':' sil'}${o?' ultglow':''}"><div class="flip">${monsterSVG(u.k)}</div><b>${o||se?s.name:op?'？？？':'🔒'}</b><small>${op?`💠 カケラ ${P.frag[u.k]||0}/10<br>`:''}${o?elTag(u.k):op?(se?'であった！':'どこかに いる…'):`なかま ${u.need}しゅ で かいほう（あと ${u.need-ownedStd()}）`}</small></div>`}).join('')}</div></div>`;
+    h+=specDexHTML();
     [4,3,2,1,0].forEach(r=>{h+=`<div class="sth" style="color:${RAR[r].h};padding:0 4px">${RAR[r].n}</div><div class="bgrid">`+SPECIES.filter(s=>s[3]===r).map(s=>{const k=s[0],o=P.dex.owned[k],se=P.dex.seen[k];
       return `<div class="bcell dexc${o?'':' sil'}" style="--rc:${o?RAR[r].c:'#444'}"><div class="flip">${monsterSVG(k)}</div><b>${se||o?s[2]:'？？？'}</b>${se||o?`<i class="eb">${elIcon(k)}</i>`:''}${s[4]?'<i class="bt">ボス</i>':''}</div>`}).join('')+'</div>'});
   }
@@ -3607,6 +3609,16 @@ function fuseBulk(){const o=FBU,pairs=fusePairs(),cost=pairs.reduce((s,[a,b])=>s
          <div class="evagrid">${res.map(x=>`<div><div class="flip">${monImg(x.m)}</div><small style="color:${RAR[x.r].h}">${x.shy?'✨':''}${x.up?'⬆️':''}${SP[x.sp].name}</small></div>`).join('')}</div>
          <button class="btn green big" id="ok">OK</button>`,{ok:()=>{closeModal();renderBox()}},'r'+Math.max(...res.map(x=>x.r)))}});
   document.querySelectorAll('[data-fr]').forEach(b=>b.onclick=()=>{const i=+b.dataset.fr;o.r[i]=o.r[i]?0:1;fuseBulk()})}
+/* 📖 とくべつな なかまの ずかん */
+function specDexGroups(){return[
+  ...Object.keys(SPECIALS).map(c=>({t:SPECIALS[c].names[0]+' けい',how:'🎁 プレゼントコード',ks:SPECIALS[c].names.map((n,r)=>c+r)})),
+  {t:'まおう',how:'🎁 プレゼントコード',ks:['darulu']},
+  {t:'ふくびき',how:'🎰 ふくびき',ks:Object.keys(GMONS)},
+  {t:'クリスマス',how:'🎄 イベント',ks:XMON.concat(['xsanta']).filter(k=>SP[k])}]}
+function specDexHTML(){const G2=specDexGroups(),all=G2.flatMap(g=>g.ks),own=all.filter(k=>P.dex.owned[k]).length;
+  return `<div class="panel stbox spdex"><div class="sth" style="color:#ffd23f">🌟 とくべつな なかま <small>${own}/${all.length}</small></div>${G2.map(g=>{const any=g.ks.some(k=>P.dex.owned[k]||P.dex.seen[k]);
+    return `<div class="spdg"><div class="spdt">${g.t}<small>${g.how}</small></div><div class="spdr">${g.ks.map(k=>{const o=P.dex.owned[k],se=P.dex.seen[k],s=SP[k];
+      return `<div class="bcell dexc${o?'':' sil'}" style="--rc:${o?RAR[s.rar].c:'#444'}"><div class="flip">${monsterSVG(k)}</div><b>${o||se||any?s.name:'？？？'}</b>${o?`<i class="eb">${elIcon(k)}</i>`:''}<i class="bt" style="background:${RAR[s.rar].h};color:#000">${RAR[s.rar].n}</i></div>`}).join('')}</div></div>`}).join('')}</div>`}
 function bondUp(){const bn=EV().bond;partyMons().forEach(m=>{const was=evoReady(m);m.bond=(m.bond||0)+bn;if(!was&&evoReady(m))setTimeout(()=>toast(`✨ ${SP[m.sp].name}が しんか できるよ！`),900)})}
 function monModal(id){autoFav(P);
   const m=P.mons.find(x=>x.id===id);if(!m)return;const s=SP[m.sp],inP=P.party.includes(id);
