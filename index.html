@@ -715,6 +715,7 @@ img.shy{filter:hue-rotate(150deg) saturate(1.35) brightness(1.08) drop-shadow(0 
 .wrq{font-size:clamp(22px,6vw,32px);display:block}.wrq b{color:#ffd23f}.wrq .wrem{font-size:1.2em;margin-right:4px}
 .choices.bwrite{display:flex!important;flex-direction:row;align-items:center;justify-content:center;gap:8px}.bwpad canvas{display:block;border-radius:10px;border:4px solid #c0302a;background:#fffaf0;touch-action:none}.bwbtns{display:flex;flex-direction:column;gap:6px}.bwbtns .btn{font-size:14px;padding:10px 8px;white-space:nowrap}
 .spdex .spdg{margin:6px 0}.spdt{font-size:13px;color:#fff;margin:2px 4px}.spdt small{margin-left:6px;color:var(--sub);font-size:11px}.spdr{display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:4px}.spdr .bcell b{font-size:9px;line-height:1.1}.spdr .bt{font-size:8px!important}
+.rphs{display:flex;align-items:center;justify-content:center;gap:4px;margin:6px 0}.rphs>i{color:#888;font-style:normal}.rph{width:70px;text-align:center;background:rgba(0,0,0,.35);border:2px solid #444;border-radius:8px;padding:3px}.rph img{width:44px;height:44px;image-rendering:pixelated}.rph b{display:block;font-size:28px;line-height:44px;color:#666}.rph small{display:block;font-size:9px}.rph.clr{border-color:#58d14a;opacity:.75}.rph.clr img{filter:grayscale(.8)}.rph.cur{border-color:#ffd23f;box-shadow:0 0 8px #ffd23f}
 </style>
 </head>
 <body>
@@ -1203,7 +1204,7 @@ function makeItem(st,d,boss,min=0){
 /* =============== save data =============== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-const APPV='v127';
+const APPV='v128';
 try{const c=document.createElement('canvas');c.width=9;c.height=9;const g=c.getContext('2d'),F=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};F(1,0,7,1,'#120d09');F(1,8,7,1,'#120d09');F(0,1,1,7,'#120d09');F(8,1,1,7,'#120d09');F(1,1,7,1,'#120d09');F(1,7,7,1,'#120d09');F(1,1,1,7,'#120d09');F(7,1,1,7,'#120d09');F(2,2,5,1,'#7a6a52');F(2,2,1,5,'#7a6a52');F(2,6,5,1,'#2a2018');F(6,2,1,5,'#2a2018');document.documentElement.style.setProperty('--pxf',`url(${c.toDataURL()})`)}catch(e){}
 const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));if(G.bgmOn===undefined)G.bgmOn=true;
 let P=null;
@@ -2037,17 +2038,24 @@ const raidOn=()=>offDay(new Date());
 const raidStart=()=>{const s=new Date();s.setHours(12,0,0,0);if(!offDay(s))return s;for(let i=0;i<10;i++){const q=new Date(s);q.setDate(s.getDate()-1);if(!offDay(q))break;s.setDate(s.getDate()-1)}return s};
 const raidWk=()=>dkey(raidStart());/* やすみが つづく さいしょの ひ */
 const RAIDBOSS=()=>{const L=BOSSES.filter(k=>SP[k].rar>=2);return L[strHash(raidWk())%L.length]||BOSSES[0]};
-function raidDmg(p){const S=p.stats||{days:{}},st=raidStart(),today=dkey(new Date());let t=0;for(let i=0;i<10;i++){const d=new Date(st);d.setDate(st.getDate()+i);if(!offDay(d))break;const dd=S.days&&S.days[dkey(d)];if(dd)for(const k in dd)t+=dd[k].ok||0;if(dkey(d)===today)break}return t}
+/* ダメージ ＝ せいかい − まちがい×0.5（まちがえると ボスが すこし かいふく） */
+function raidDmg(p){const S=p.stats||{days:{}},st=raidStart(),today=dkey(new Date());let ok=0,n=0;for(let i=0;i<10;i++){const d=new Date(st);d.setDate(st.getDate()+i);if(!offDay(d))break;const dd=S.days&&S.days[dkey(d)];if(dd)for(const k in dd){ok+=dd[k].ok||0;n+=dd[k].n||0}if(dkey(d)===today)break}return Math.max(0,Math.round(ok-(n-ok)*.5))}
 async function raidMembers(){let rem=[];if(FB_CONFIG&&G.fam){try{rem=(await syncDown()||[]).map(p=>ensureP(p))}catch(e){}}const all=G.profiles.filter(p=>!p.master).concat(rem.filter(r=>!r.master&&!G.profiles.some(l=>l.id===r.id)));return all}
-const RAIDTIER=[[25,{g:500,lt:1}],[50,{g:1500,tk:2}],[75,{g:3000,lt:2,tk:2}],[100,{egg:3,lt:3,tk:3}]];
-async function raidOpen(){const on=raidOn(),wk=raidWk();showModal('<div class="mt">👹 かぞく レイド</div><p>よみこみちゅう…</p>');const mem=await raidMembers(),hpMax=Math.max(1,mem.length)*120,dm=mem.map(p=>({p,d:raidDmg(p)})).sort((a,b)=>b.d-a.d),tot=dm.reduce((a,x)=>a+x.d,0),pct=Math.min(100,Math.floor(tot/hpMax*100)),boss=RAIDBOSS();
-  P.raid=P.raid&&P.raid.wk===wk?P.raid:{wk,c:{}};
-  showModal(`<div class="mt">👹 かぞく レイド</div><p style="font-size:13px">${on?'どようび・にちようび・しゅくじつに かぞく みんなで もんだいに せいかいして、きょだいボスを たおそう！ 1もん せいかい = 1ダメージ（れんきゅうは つづけて たたかえるよ）':'レイドは どようび・にちようび・しゅくじつに ひらかれるよ！'}</p>
-    <div class="raidb${pct>=100?' dead':''}"><div class="rbspr">${monsterSVG(boss)}</div><b>👑 きょだい ${SP[boss].name}</b><div class="rbhp"><i style="width:${100-pct}%"></i><span>のこり ${Math.max(0,hpMax-tot)} / ${hpMax}</span></div></div>
-    <div class="sth">⚔️ みんなの ダメージ</div><div class="rdlist">${dm.map(x=>`<div class="rdr${x.p.id===P.id?' me':''}"><span class="rdav">${heroSVG(x.p.eq,x.p)}</span><span>${esc(x.p.name)}</span><b>${x.d}</b></div>`).join('')||'<small>まだ だれも こうげき していないよ</small>'}</div>
-    <div class="sth">🎁 ほうしゅう（ひとりずつ もらえる）</div>${RAIDTIER.map(([t,r])=>{const got=P.raid.c[t];return `<div class="qrow${got?' done':''}"><div class="qt">ボスの HPを ${t}% けずる<small>${dexRwTxt(r)}</small></div>${got?'<b class="own">✓</b>':pct>=t?`<button class="btn orange" data-rt="${t}">うけとる</button>`:''}</div>`}).join('')}
+/* 3れんせん：たおすと つぎの ボスが あらわれる */
+const RAIDPH=[{n:'',per:200,col:'#e8413c'},{n:'つよい ',per:400,col:'#a070ff'},{n:'しんの すがた ',per:700,col:'#ffd23f'}];
+function raidBosses(){const h=strHash(raidWk()),b1=RAIDBOSS(),L2=BOSSES.filter(k=>SP[k].rar>=3&&k!==b1),L3=ULTS.map(u=>u.k);return[b1,L2.length?L2[h%L2.length]:b1,L3[h%L3.length]]}
+const RAIDTIER=[[0,25,{g:500,lt:1}],[0,50,{g:1500,tk:2}],[0,100,{g:3000,lt:2,tk:2,egg:2}],[1,50,{g:5000,lt:2,tk:3}],[1,100,{g:10000,lt:3,tk:5,egg:3}],[2,50,{g:20000,lt:4,tk:6}],[2,100,{g:50000,lt:6,tk:10,egg:4}]];
+function raidState(nMem,tot){const n=Math.max(1,nMem),hp=RAIDPH.map(x=>x.per*n);let left=tot,ph=0;while(ph<hp.length&&left>=hp[ph]){left-=hp[ph];ph++}
+  const pctOf=i=>i<ph?100:i===ph?Math.floor(left/hp[i]*100):0;return{hp,ph,left,pctOf,done:ph>=hp.length}}
+async function raidOpen(){const on=raidOn(),wk=raidWk();showModal('<div class="mt">👹 かぞく レイド</div><p>よみこみちゅう…</p>');const mem=await raidMembers(),dm=mem.map(p=>({p,d:raidDmg(p)})).sort((a,b)=>b.d-a.d),tot=dm.reduce((a,x)=>a+x.d,0),R=raidState(mem.length,tot),bs=raidBosses();
+  P.raid=P.raid&&P.raid.wk===wk?P.raid:{wk,c:{}};{const c=P.raid.c;if(c[25])c['0_25']=1;if(c[50])c['0_50']=1;if(c[100]||c[75])c['0_100']=1}const cur=Math.min(R.ph,2),boss=bs[cur],pc=R.pctOf(cur);
+  showModal(`<div class="mt">👹 かぞく レイド</div><p style="font-size:13px">${on?'どようび・にちようび・しゅくじつに かぞく みんなで ボスに いどもう！ <b>せいかい＝1ダメージ</b>、<b style="color:#ff8a7a">まちがい＝ボスが 0.5 かいふく</b>。ボスは 3たい つづけて あらわれるよ！':'レイドは どようび・にちようび・しゅくじつに ひらかれるよ！'}</p>
+    <div class="rphs">${bs.map((k,i)=>`<div class="rph${i<R.ph?' clr':i===cur?' cur':''}"><span class="flip">${i<=R.ph||i===0?monsterSVG(k):'<b>？</b>'}</span><small>${i<R.ph?'✅ げきは':i===cur?'たたかい ちゅう':'🔒'}</small></div>`).join('<i>▶</i>')}</div>
+    <div class="raidb${R.done?' dead':''}" style="border-color:${RAIDPH[cur].col}"><div class="rbspr">${monsterSVG(boss)}</div><b style="color:${RAIDPH[cur].col}">${['1','2','3'][cur]}たいめ 👑 ${RAIDPH[cur].n}きょだい ${SP[boss].name}</b><div class="rbhp"><i style="width:${R.done?0:100-pc}%"></i><span>${R.done?'🎉 ぜんぶ たおした！':`のこり ${Math.max(0,R.hp[cur]-R.left)} / ${R.hp[cur]}`}</span></div></div>
+    <div class="sth">⚔️ みんなの ダメージ（ぜんぶで ${tot}）</div><div class="rdlist">${dm.map(x=>`<div class="rdr${x.p.id===P.id?' me':''}"><span class="rdav">${heroSVG(x.p.eq,x.p)}</span><span>${esc(x.p.name)}</span><b>${x.d}</b></div>`).join('')||'<small>まだ だれも こうげき していないよ</small>'}</div>
+    <div class="sth">🎁 ほうしゅう（ひとりずつ もらえる）</div>${RAIDTIER.map(([b,t,r])=>{const key=b+'_'+t,got=P.raid.c[key],ok=R.pctOf(b)>=t;return `<div class="qrow${got?' done':''}"><div class="qt">${b+1}たいめを ${t>=100?'たおす':t+'% けずる'}<small>${dexRwTxt(r)}</small></div>${got?'<b class="own">✓</b>':ok?`<button class="btn orange" data-rt="${key}">うけとる</button>`:b>R.ph?'<small>🔒</small>':''}</div>`}).join('')}
     ${on?'<button class="btn orange big" id="rgo">⚔️ もんだいを といて こうげき！</button>':''}<button class="btn gray" id="cl">とじる</button>`,{rgo:()=>{closeModal();goHome();setTimeout(()=>$('goBtn').click(),300)},cl:closeModal});
-  document.querySelectorAll('[data-rt]').forEach(b=>b.onclick=()=>{const t=+b.dataset.rt,r=RAIDTIER.find(x=>x[0]===t)[1];if(P.raid.c[t])return;P.raid.c[t]=1;if(r.g)P.gold+=r.g;if(r.tk)P.tk=(P.tk||0)+r.tk;if(r.lt)ltAdd(r.lt);if(r.egg!=null){const pool=SPECIES.filter(s=>s[3]===r.egg);addEgg({id:uid(),rar:r.egg,sp:pick(pool)[0],prog:0,need:EGGNEED[r.egg],inc:false})}save();fanfare();fxConfetti(50);toast('👹 レイド ほうしゅう ゲット！');raidOpen()})}
+  document.querySelectorAll('[data-rt]').forEach(b=>b.onclick=()=>{const key=b.dataset.rt,[bi,t]=key.split('_').map(Number),r=RAIDTIER.find(x=>x[0]===bi&&x[1]===t)[2];if(P.raid.c[key])return;P.raid.c[key]=1;if(r.g)P.gold+=r.g;if(r.tk)P.tk=(P.tk||0)+r.tk;if(r.lt)ltAdd(r.lt);if(r.egg!=null){const pool=SPECIES.filter(s=>s[3]===r.egg);addEgg({id:uid(),rar:r.egg,sp:pick(pool)[0],prog:0,need:EGGNEED[r.egg],inc:false})}save();fanfare();fxConfetti(50);toast('👹 レイド ほうしゅう ゲット！');raidOpen()})}
 function renderRaidBanner(){const el=$('hRaid');if(!el||!P)return;const on=raidOn();el.style.display=on?'':'none';if(!on)return;const me=raidDmg(P);
   el.innerHTML=`<span class="rbi">${monsterSVG(RAIDBOSS())}</span><span><b>👹 かぞく レイド かいさいちゅう！</b><small>みんなで きょだい ${SP[RAIDBOSS()].name}を たおそう・きみの ダメージ ${me}</small></span><span class="mgo">▶</span>`;el.onclick=()=>{snd(660,.05);raidOpen()}}
 /* ===================== 🧑‍🍳 てんしゅ キャラ ===================== */
