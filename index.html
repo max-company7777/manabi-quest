@@ -1322,14 +1322,15 @@ const FX={atkp:['こうげき','%',3,6],hpp:['たいりょく','%',3,6],crit:['�
   combo:['コンボ ボーナス','%',1,3],fast:['はやわざ','%',5,10],dodge:['よける','%',1,3],party:['なかまパワー','%',5,10],heal:['たおすと HP かいふく','%',2,4]};
 /* 🔗 そうび セット：おなじ シリーズ（なまえの あたま）の よろい・かぶと など を そろえると ボーナス */
 const SETK={かわ:['hpp'],てつ:['hpp'],どう:['atkp'],たびびと:['xp'],もり:['heal'],きし:['atkp'],うみ:['hpp'],すな:['dodge'],ダイヤ:['crit'],まほう:['xp'],ほのお:['atkp'],こおり:['dodge'],おうごん:['gold'],ほしぞら:['crit'],りゅう:['atkp','hpp'],てんし:['heal','hpp'],にじ:['party','atkp'],ぎんが:['xp','gold'],しんわ:['atkp','crit'],ひかり:['hpp','party']};
-const SETSTEP=[[2,4],[4,10],[6,18],[7,30]],SETMUL={heal:.35,crit:.45,dodge:.45};
-const setOf=it=>{if(!it||!TSUF[it.slot]||!it.name)return null;const t=it.name.split('の ')[0];return SETK[t]?t:null};
+const SETSL=['w','q','s','h','a','b','g','k','r','x'],SETMAX=10,SETSTEP=[[2,4],[4,10],[6,18],[8,28],[10,40]],SETMUL={heal:.35,crit:.45,dodge:.45};
+const SETKL=Object.keys(SETK).sort((a,b)=>b.length-a.length);
+const setOf=it=>{if(!it||!it.name||!SETSL.includes(it.slot))return null;return SETKL.find(t=>it.name.startsWith(t+'の'))||null};
 const setTier=t=>THEMES.findIndex(g=>g.some(x=>x[0]===t));
-function setCounts(eq=P.eq){const c={};for(const k of Object.keys(TSUF)){const t=setOf(eq&&eq[k]);if(t)c[t]=(c[t]||0)+1}return c}
+function setCounts(eq=P.eq){const c={};for(const k of SETSL){const t=setOf(eq&&eq[k]);if(t)c[t]=(c[t]||0)+1}return c}
 function setBonus(t,n){const st=SETSTEP.filter(x=>n>=x[0]).pop();if(!st)return[];const r=Math.max(0,setTier(t));return SETK[t].map((k,i)=>({k,v:Math.round(st[1]*(1+r*.5)*(SETMUL[k]||1)*(i?.6:1))}))}
 function setFx(k,eq){if(!eq)return 0;const c=setCounts(eq);let v=0;for(const t in c)for(const b of setBonus(t,c[t]))if(b.k===k)v+=b.v;return v}
 function setHTML(eq=P.eq,compact){const c=setCounts(eq),ks=Object.keys(c).filter(t=>c[t]>=2).sort((a,b)=>c[b]-c[a]);if(!ks.length)return compact?'':'<div class="sets none">🔗 おなじ シリーズの そうびを 2つ いじょう そろえると セット ボーナス！</div>';
-  return `<div class="sets">${ks.map(t=>{const n=c[t],nx=SETSTEP.find(x=>x[0]>n);return `<div class="setb"><b>🔗 ${t}</b> <span class="setn">${n}/7</span> ${setBonus(t,n).map(b=>FX[b.k][0]+'+'+b.v+'%').join('・')}${nx?`<small>あと${nx[0]-n}こで アップ</small>`:'<small>コンプリート！</small>'}</div>`}).join('')}</div>`}
+  return `<div class="sets">${ks.map(t=>{const n=c[t],nx=SETSTEP.find(x=>x[0]>n);return `<div class="setb"><b>🔗 ${t}</b> <span class="setn">${n}/${SETMAX}</span> ${setBonus(t,n).map(b=>FX[b.k][0]+'+'+b.v+'%').join('・')}${nx?`<small>あと${nx[0]-n}こで アップ</small>`:'<small>コンプリート！</small>'}</div>`}).join('')}</div>`}
 const UFX={double:['ダブルアタック','%',15,25],revive:['やられても 1かい ふっかつ','',0,0]};
 function rollFx(rar){const ks=shuffle(Object.keys(FX)).slice(0,RAR[rar].fx),out=ks.map(k=>{const f=FX[k];return{k,v:Math.round(R(f[2],f[3])*(1+.5*rar))}});
   if(rar>=4){const u=pick(Object.keys(UFX));out.push({k:u,v:UFX[u][2]?R(UFX[u][2],UFX[u][3]):1,u:1})}return out}
@@ -1380,9 +1381,7 @@ function makeItem(st,d,boss,min=0){
   const rar=rollRar(d,boss,min),slot=rollSlot();
   const lv=Math.max(1,Math.round(st*2)),p=Math.max(1,Math.round((3+lv+d*3)*RAR[rar].m*(.85+Math.random()*.3)));
   let it,b;
-  if(slot==='w'){b=pick(WPN);it={icon:b[0],name:pick(WPRE[rar])+b[1]}}
-  else if(slot==='q'){b=pick(BOWS);it={icon:b[0],name:pick(WPRE[rar])+b[1]}}
-  else if(slot==='x'){b=pick(ARTI);it={icon:b[0],name:pick(WPRE[rar])+b[1]}}
+  if(slot==='w'||slot==='q'||slot==='x'){b=pick(slot==='w'?WPN:slot==='q'?BOWS:ARTI);const th=pick(THEMES[rar]);it={icon:b[0],name:th[0]+'の '+b[1]}}
   else if(TSUF[slot]){b=pick(THEMES[rar]);it={icon:TSUF[slot][1],name:b[0]+'の '+TSUF[slot][0],color:b[1]}}
   else if(slot==='c'){b=pick(CHARMS);it={icon:b[0],name:b[1],eff:b[2]}}
   else{b=pick(PETS[rar]);it={icon:b[0],name:b[1]}}
@@ -1392,7 +1391,7 @@ function makeItem(st,d,boss,min=0){
 /* =============== save data =============== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-/*const APPV='v151'*/const APPV='v1.0.10',APPB=161;
+/*const APPV='v151'*/const APPV='v1.0.11',APPB=162;
 try{const c=document.createElement('canvas');c.width=9;c.height=9;const g=c.getContext('2d'),F=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};F(1,0,7,1,'#120d09');F(1,8,7,1,'#120d09');F(0,1,1,7,'#120d09');F(8,1,1,7,'#120d09');F(1,1,7,1,'#120d09');F(1,7,7,1,'#120d09');F(1,1,1,7,'#120d09');F(7,1,1,7,'#120d09');F(2,2,5,1,'#7a6a52');F(2,2,1,5,'#7a6a52');F(2,6,5,1,'#2a2018');F(6,2,1,5,'#2a2018');document.documentElement.style.setProperty('--pxf',`url(${c.toDataURL()})`)}catch(e){}
 const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));
 /* ⚡ かるい モード：ふるい たんまつは じどうで ON */
@@ -1743,7 +1742,7 @@ function itemCard(it0,rev,cur){
   const it=cur?withPlus(it0,cur):it0,tr=it!==it0,r=RAR[it.rar],st=statText(it);
   return `<div class="item${rev?' rev':''}" style="--rc:${r.c}"><div class="ie">${itemIcon(it)}</div><div>
     <div class="rr">${r.n}・${SLOTN[it.slot]}${it.lv?`・Lv${it.lv}`:''}</div><div class="inm">${iname(it)}</div><div class="is">${st}</div>
-    ${(it.fx||[]).map(f=>`<div class="fx${f.u?' u':''}">${f.u?'★':'＋'} ${fxText(f)}</div>`).join('')}${(t=>t?`<div class="fx setl">🔗 ${t}シリーズ（いま ${setCounts()[t]||0}/7）</div>`:'')(setOf(it))}</div>
+    ${(it.fx||[]).map(f=>`<div class="fx${f.u?' u':''}">${f.u?'★':'＋'} ${fxText(f)}</div>`).join('')}${(t=>t?`<div class="fx setl">🔗 ${t}シリーズ（いま ${setCounts()[t]||0}/${SETMAX}）</div>`:'')(setOf(it))}</div>
     <div class="ip">パワー<b>${iscore(it)}</b>${tr?`<small class="trn">⚒️+${cur.plus}こみ<br><s>+0: ${iscore(it0)}</s></small>`:''}</div></div>`;
 }
 
@@ -3276,7 +3275,7 @@ const HELP=[
  ['note','📒 まちがい ノート',`まちがえた もんだいが きょうかごとに たまるよ。「もういちど とく」で ふくしゅうして、2かい せいかいすると「できた！」に なる。`],
  ['prac','🎯 れんしゅう',`<b>かきとり</b>：ゆびで かんじや ひらがなを かいて れんしゅう（かきじゅんは みないよ）。<br><b>えいごの はつおん</b>：マイクに むかって えいごを いうと、ちゃんと いえたか しらべるよ。`],
  ['fuse','🧬 がったい・とくぎ',`なかまを 2たい がったいさせると あたらしい なかまが うまれるよ。うまれる なかまは くみあわせで きまっていて「📖 ルート いちらん」や ずかんで みられる。おなじ レアどうしだと 1つ うえの レア、おなじ しゅるいどうしだと いろちがい（つよさ ×1.25）に なるよ。<br><b>とくぎ</b>は ゴールド・ダブり・💎とくぎの たまで Lv10まで あげられる。なかまには S〜Dの つよさランクも あるよ。`],
- ['set','🛡️ セットこうか',`おなじ シリーズの そうびを そろえると、そろえた かずに おうじて ボーナスが つくよ。ホームの そうびの したに でているよ。`],
+ ['set','🛡️ セットこうか',`なまえの あたまが おなじ（「にじの よろい」「にじの つるぎ」なら にじ）そうびを そろえると ボーナス！ ペットと おまもり いがいの 10かしょが たいしょうで、2・4・6・8・10こで つよく なるよ。ホームの そうびの したに でているよ。`],
  ['island','🏝️ なかまの しま',`パーティに いない なかまが くらす しま。タップで なでたり えさを あげたり すると なかよしどが あがって つよく なる。しまの なかまの つよさの すこしが パワーに プラスされるよ（さいだい 14たい）。`],
  ['base','🏯 きょてん',`ゴールドで たてものを たてて そだてると、ゴールドや けいけんちが ふえたり、ぐんだんの しろが かたく なったり するよ。`],
  ['family','👨‍👩‍👧 かぞくの あそび',`<b>かぞく レイド</b>：どようび・にちようび・しゅくじつに みんなで ボスに いどもう！ 3たい つづけて でてくるよ。<br><b>かぞく たいせん</b>：ぐんだん バトルで かぞくの なかまと たいせん できるよ。`],
@@ -3301,7 +3300,7 @@ function renderHome(){
   $('hHero').innerHTML=heroSVG(P.eq,P);try{renderBase()}catch(e){}try{renderLaneCard()}catch(e){}try{renderQuestBar()}catch(e){}try{renderRaidBanner()}catch(e){}try{renderRoomCard()}catch(e){}try{renderXmasBanner()}catch(e){}{const hb=$('hHero');if(hb){let sa=AREA(selStage||1);const cb=P.cos&&P.cos.bg&&BGS[P.cos.bg];if(cb){const lg=(cb[2].match(/linear-gradient\(([^)]*)\)/)||[])[1];if(lg)sa=Object.assign({},sa,{sky:'linear-gradient('+lg+')',n:sa.n+'|'+P.cos.bg})}hb.style.background=`url(${sceneURL(sa,96,96,{night:isNight(),gy:.74})}) center/100% 100%`}}$('hPow').textContent=power().toLocaleString();$('hTitle').textContent=titleOf(P)?'「'+titleOf(P)+'」':'';
   $('hSlotsL').innerHTML=SLOT_L.map(k=>slotHTML(k,P.eq[k],false,true)).join('');
   $('hSlotsR').innerHTML=SLOT_R.map(k=>slotHTML(k,P.eq[k],false,true)).join('');
-  {const c=setCounts(),ks=Object.keys(c).filter(t=>c[t]>=2).sort((a,b)=>c[b]-c[a]);$('hCount').innerHTML=`<div class="hs-chips">${ks.length?ks.map(t=>{const nx=SETSTEP.find(x=>x[0]>c[t]);return `<span class="hs-chip">🔗 ${t} <b>${c[t]}/7</b> ${setBonus(t,c[t]).map(b=>FX[b.k][0]+'+'+b.v+'%').join(' ')}${nx?`<small>（あと${nx[0]-c[t]}）</small>`:' ✨'}</span>`}).join(''):'<span class="hs-chip dim">🔗 おなじ シリーズを 2つ そろえると セット ボーナス</span>'}</div>`}
+  {const c=setCounts(),ks=Object.keys(c).filter(t=>c[t]>=2).sort((a,b)=>c[b]-c[a]);$('hCount').innerHTML=`<div class="hs-chips">${ks.length?ks.map(t=>{const nx=SETSTEP.find(x=>x[0]>c[t]);return `<span class="hs-chip">🔗 ${t} <b>${c[t]}/${SETMAX}</b> ${setBonus(t,c[t]).map(b=>FX[b.k][0]+'+'+b.v+'%').join(' ')}${nx?`<small>（あと${nx[0]-c[t]}）</small>`:' ✨'}</span>`}).join(''):'<span class="hs-chip dim">🔗 おなじ シリーズを 2つ そろえると セット ボーナス</span>'}</div>`}
   const SI=o=>itemIcon(Object.assign({rar:0},o));
   $('hStats').innerHTML=`<span>${SI({slot:'w',icon:'🗡️'})}<b>${fmtS(atk())}</b></span><span>${SI({slot:'c',eff:'heal'})}<b>${fmtS(maxHp())}</b></span><span>${SI({slot:'s',rar:1})}<b>${fmtS(def())}</b></span><span>${SI({slot:'b',color:'#5fbf6a'})}<b>${dodge()}%</b></span><span>${SI({slot:'c',eff:'crit'})}<b>${crit()}%</b></span><span>${SI({slot:'pet',icon:'🐶'})}<b>${fmtS(petAtk())}</b></span>`;
   document.querySelectorAll('.show .slot').forEach(b=>b.onclick=()=>{const it=P.eq[b.dataset.s];
@@ -3629,7 +3628,7 @@ const boxCap=()=>P.master?9999:100;
 const ikey=i=>i.slot+'|'+i.name+'|'+i.rar;
 function catalog(){const out=[],mk=(slot,rar,o)=>{const p=Math.round((3+100+4*3)*RAR[rar].m);out.push(Object.assign({slot,rar,p,lv:100,plus:0,fx:rollFx(rar),price:Math.round(p*2*(rar+1))},o))};
   for(let r=0;r<5;r++){
-    WPN.forEach(b=>WPRE[r].forEach(pre=>mk('w',r,{icon:b[0],name:pre+b[1]})));BOWS.forEach(b=>WPRE[r].forEach(pre=>mk('q',r,{icon:b[0],name:pre+b[1]})));ARTI.forEach(b=>WPRE[r].forEach(pre=>mk('x',r,{icon:b[0],name:pre+b[1]})));
+    [['w',WPN],['q',BOWS],['x',ARTI]].forEach(([sl,L])=>L.forEach(b=>THEMES[r].forEach(t=>mk(sl,r,{icon:b[0],name:t[0]+'の '+b[1]}))));
     Object.keys(TSUF).forEach(k=>THEMES[r].forEach(t=>mk(k,r,{icon:TSUF[k][1],name:t[0]+'の '+TSUF[k][0],color:t[1]})));
     CHARMS.forEach(b=>mk('c',r,{icon:b[0],name:b[1],eff:b[2]}));
     PETS[r].forEach(b=>mk('pet',r,{icon:b[0],name:b[1]}));
@@ -4647,7 +4646,15 @@ $('quit').onclick=()=>{if(!B||B.lock)return;B.lock=true;
     <button class="btn green big" id="bk">たたかう！</button><button class="btn gray big" id="rn">にげる</button>`,
     {bk:()=>{closeModal();B.gaugeStart=performance.now();B.lock=false},rn:()=>{closeModal();if(B&&B.tower)towerEnd(true);else goHome()}})};
 
-(function loop(){requestAnimationFrame(loop);
+/* 🐢 おもさ チェック：フレームが おそい ときは かるいモードを すすめる */
+const LAG={n:0,t0:0,slow:0,done:false};
+function lagTick(now){if(LAG.done||G.lite||document.hidden)return;if(!LAG.t0){LAG.t0=now;LAG.n=0;return}LAG.n++;const dt=now-LAG.t0;if(dt<4000)return;const fps=LAG.n*1000/dt;LAG.t0=now;LAG.n=0;
+  if(fps<25)LAG.slow++;else LAG.slow=Math.max(0,LAG.slow-1);
+  if(LAG.slow>=2){LAG.done=true;if(Date.now()-(G.liteAsk||0)<3*864e5)return;G.liteAsk=Date.now();store.set('mq1',G);setTimeout(liteSuggest,B?4000:300)}}
+function liteSuggest(){if(G.lite)return;if(B){setTimeout(liteSuggest,5000);return}if($('modal').classList.contains('on')){setTimeout(liteSuggest,5000);return}
+  showModal(`<div class="mt">🐢 うごきが おもい みたい</div><p>この たんまつだと がめんの うごきが すこし おもく なっているよ。<br><b>「⚡ かるい モード」</b>に すると キラキラや うごく かざりを へらして かるく なるよ。</p><small style="color:var(--sub)">あとで せってい から いつでも かえられるよ</small><button class="btn green big" id="lyes">⚡ かるい モードに する</button><button class="btn gray" id="lno">いまの ままで いい</button>`,
+    {lyes:()=>{G.lite=true;document.documentElement.classList.add('lite');try{fxSize()}catch(e){}store.set('mq1',G);closeModal();toast('⚡ かるい モード ON')},lno:closeModal})}
+(function loop(now){requestAnimationFrame(loop);try{lagTick(now||performance.now())}catch(e){}
   if(!B||B.lock||!B.gaugeDur)return;
   const f=(performance.now()-B.gaugeStart)/B.gaugeDur,g=$('gauge');g.style.width=Math.min(100,f*100)+'%';g.classList.toggle('warn',f>.7);
   if(f>=1){B.lock=true;record(B.q,false,B.gaugeDur/1000);B.combo=0;updCombo();markCorrect();setTimeout(()=>monAttack(nextQ),800)}})();
