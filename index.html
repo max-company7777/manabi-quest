@@ -770,6 +770,11 @@ header.top .pill{display:flex;align-items:center;gap:2px;padding:2px 7px!importa
 .shi .shinfo small{font-size:11px}.shi.deal{border-color:#ffd23f!important;box-shadow:0 0 10px #ffd23f55}.dealb{background:#e8413c;color:#fff;font-size:10px;padding:1px 5px;border-radius:4px;vertical-align:middle}
 .hs-side .powbig b{font-size:clamp(18px,5.6vw,34px)!important;letter-spacing:-.5px;white-space:nowrap}.hs-side .powbig{flex-direction:column;gap:0!important;line-height:1.05}.hs-side .powbig small{font-size:10px}
 #shTabs{display:grid!important;grid-template-columns:repeat(4,1fr);gap:4px}#shTabs .db{font-size:13px;padding:6px 2px;margin:0}
+.isbon{font-size:13px;background:rgba(255,210,63,.12);border:1px solid #ffd23f88;border-radius:8px;padding:6px 8px;margin:6px 0;text-align:left}.isbon b{color:#ffd23f}.isbon small{display:block;color:var(--sub);font-size:11px}.isps{font-size:12px;color:#ffe9a0;margin:4px 0}
+.tlab b .pi{width:14px;height:14px;vertical-align:-2px;margin-right:2px}
+.lanecard{clip-path:none!important;border:3px solid #000!important;border-radius:8px!important;box-shadow:0 3px 0 #0008,inset 0 0 0 2px #ffffff22!important;overflow:hidden}
+.lanecard .lcc{height:50px;bottom:2px}.lanecard .lct{top:50%!important;transform:translate(-50%,-50%)!important;padding:2px 12px!important;border-radius:6px;border-width:2px!important}.lanecard .lct b,.lanecard .lct{line-height:1.15}.lanecard .lcm{bottom:3px;height:26px}.lanecard .lcu{width:24px;height:24px}
+.lanecard .lctk{top:4px;right:4px;font-size:11px;border-radius:4px}
 </style>
 </head>
 <body>
@@ -1342,7 +1347,7 @@ function makeItem(st,d,boss,min=0){
 /* =============== save data =============== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-const APPV='v145';
+const APPV='v146';
 try{const c=document.createElement('canvas');c.width=9;c.height=9;const g=c.getContext('2d'),F=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};F(1,0,7,1,'#120d09');F(1,8,7,1,'#120d09');F(0,1,1,7,'#120d09');F(8,1,1,7,'#120d09');F(1,1,7,1,'#120d09');F(1,7,7,1,'#120d09');F(1,1,1,7,'#120d09');F(7,1,1,7,'#120d09');F(2,2,5,1,'#7a6a52');F(2,2,1,5,'#7a6a52');F(2,6,5,1,'#2a2018');F(6,2,1,5,'#2a2018');document.documentElement.style.setProperty('--pxf',`url(${c.toDataURL()})`)}catch(e){}
 const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));if(G.bgmOn===undefined)G.bgmOn=true;
 let P=null;
@@ -1360,7 +1365,7 @@ function newProfile(name,age,color){
     best:{math:0,eng:0,kanji:0,life:0,chi:0,mix:0},diff:{math:d,eng:d,kanji:d,life:d,chi:d},subj:'mix',mixOn:1,
     streak:0,lastDay:'',todayCorrect:0,claimed:false,weak:[],total:0,voice:age<=6};
 }
-const power=(eq=P.eq,lv=P.lv,p=P)=>{const g=SLOTS.reduce((s,k)=>s+iscore(eq[k]),0);return lv*2+g+Math.round(g*(setFx('atkp',eq)+setFx('hpp',eq))/200)+partyPow(p,eq)};
+const power=(eq=P.eq,lv=P.lv,p=P)=>{const g=SLOTS.reduce((s,k)=>s+iscore(eq[k]),0);return lv*2+g+Math.round(g*(setFx('atkp',eq)+setFx('hpp',eq))/200)+partyPow(p,eq)+(typeof isPow==='function'?isPow(p):0)};
 const ep=k=>ip(P.eq[k]);
 const atk=()=>Math.round((4+P.lv*2+ep('w'))*(1+fxSum('atkp')/100));
 const maxHp=()=>Math.round((30+P.lv*6+ep('a')*2+ep('h'))*(1+fxSum('hpp')/100));
@@ -2051,6 +2056,8 @@ const PIX={
  ghost:[{w:'#e8f4ff',W:'#9ab8d8',k:'#1b1410'},['..wwwww..','.wwwwwww.','wwkwwwkww','wwkwwwkww','wwwwwwwww','wwwkkkwww','wwwwwwwww','wwwwwwwww','w.ww.ww.w']],
  gacha:[{r:'#e8413c',R:'#a02a20',w:'#e8f4ff',y:'#ffd23f',b:'#4aa0e0',g:'#5be05b'},['.rrrrrrr.','rwwwwwwwr','rwybwgwwr','rwwgwywwr','rwwwwwwwr','rrrrrrrrr','rRRRyRRRr','rRRRRRRRr','.rrrrrrr.']],
  medal:[{r:'#e8413c',b:'#4a7ad9',y:'#ffd23f',Y:'#d99a1a'},['rr.....bb','.rr...bb.','..rr.bb..','...yyy...','..yyyyy..','.yyYyyyy.','.yyyyyyy.','..yyYyy..','...yyy...']],
+ castle:[{s:'#b8b8c8',S:'#7a7a8a',r:'#e8413c',d:'#5a3a1a',k:'#1b1410'},['....r....','....rr...','s.s.s.s.s','sssssssss','sSsssssSs','ssskksss.'.replace('.','s'),'sssdddsss','sssdddsss','SSSdddSSS']],
+ palm:[{g:'#3ab84a',G:'#1a7a2a',t:'#a8703e',y:'#f0d890',b:'#3aa0e0'},['.gg...gg.','gGgg.ggGg','...gGg...','..gg.gg..','....t....','....t....','...t.....','.yyyyyyy.','bbbbbbbbb']],
  door:[{w:'#a8703e',W:'#5a3a1a',f:'#d8b080',y:'#ffd23f'},['.fffffff.','.fWWWWWf.','.fWwwwWf.','.fWwwwWf.','.fWwwyWf.','.fWwwwWf.','.fWwwwWf.','.fWwwwWf.','fffffffff']],
  house:[{r:'#d9442f',R:'#a02a20',w:'#f4ead0',W:'#c8a070',b:'#4aa0e0'},['....r....','...rrr...','..rrrrr..','.rrrrrrr.','rRRRRRRRr','.wwwwwww.','.wbwwwbw.','.wwwWwww.','.wwwWwww.']],
  ticket:[{y:'#ffd23f',Y:'#d99a1a',r:'#e8413c'},['yyyyyyyyy','yYyyyyyYy','.yyryryy.','yyyrrryyy','.yyyryyy.','yYyyyyyYy','yyyyyyyyy']],
@@ -2391,7 +2398,7 @@ function renderBase(el,big){el=el||$('hBase');if(!el||!P)return;const a=AREA(sel
   el.style.background=`url(${sceneURL(a,W,H,{night:nt})}) center/100% 100%`;el.classList.toggle('night',nt);
   const ms=partyMons();el.querySelector('.bwalk').innerHTML=`<span class="bw hero" style="left:42%">${heroSVG(P.eq,P)}</span>`+ms.map((m,i)=>`<span class="bw mon" data-sp="${m.sp}" style="left:${15+i*22}%">${monImg(m)}</span>`).join('')+(nt?'<span class="bcamp">🔥</span>':'');
   const ks=Object.keys(BLD).filter(k=>bldLv(k)),tot=Object.keys(BLD).reduce((s2,k)=>s2+bldLv(k),0);
-  el.querySelector('.binfo').innerHTML=big?`${a.i} ${a.n}<small>${nt?'🌙 よる':'☀️ ひる'}・${TIERN[a.t]}</small>`:`<b>🏘️ きょてん</b><small>${ks.length?'🏠'+ks.length+'・Lv'+tot:'まだ なにも ないよ'}</small>`;el.querySelector('.binfo').classList.toggle('tlab',!big);
+  el.querySelector('.binfo').innerHTML=big?`${a.i} ${a.n}<small>${nt?'🌙 よる':'☀️ ひる'}・${TIERN[a.t]}</small>`:`<b>${pi('castle')} きょてん</b><small>${ks.length?'たてもの'+ks.length+'・Lv'+tot:'まだ なにも ないよ'}</small>`;el.querySelector('.binfo').classList.toggle('tlab',!big);
   {let bl=el.querySelector('.bblds');if(!bl){bl=document.createElement('div');bl.className='bblds';el.insertBefore(bl,el.firstChild)}bl.innerHTML=ks.map((k,i)=>`<span class="bbd" style="left:${big?1+i*(98/Math.max(ks.length,6)):2+i*(96/Math.max(ks.length,3))}%"><img src="${bldURL(k,bldLv(k))}">${k==='smith'?'<i class="bsmk"></i>':''}<b>${big?`<span class="bbn">${BLD[k].n}</span>Lv${bldLv(k)}`:bldLv(k)}</b></span>`).join('');
    let bb=el.querySelector('.bbtn');if(!bb){bb=document.createElement('button');bb.className='btn bbtn';el.appendChild(bb)}
    if(big){bb.className='btn bbtn';bb.innerHTML=`🏗️ たてものを ${ks.length?'そだてる':'たてる'}`;bb.onclick=ev=>{ev.stopPropagation();snd(660,.05);bldOpen()}}else{bb.className='tgo';bb.innerHTML='ひらく ▶';bb.onclick=null;el.onclick=()=>{snd(660,.05);baseOpen()}}}
@@ -3057,9 +3064,9 @@ const roomB=k=>{try{return roomBonus()[k]||0}catch(e){return 0}};
 function roomBonusHTML(){const b=roomBonus();return `<div class="rbon"><b>✨ へやボーナス</b>${Object.entries(REFN).map(([k,[i,n]])=>`<span class="${b[k]?'on':''}">${i}${n} +${b[k]}%</span>`).join('')}<small>${b.n>=10?'🌟 かぐ 10こ いじょうで「すてきな へや」ボーナス ぜんぶ +3%！':`かぐを 10こ おくと「すてきな へや」ボーナス（いま ${b.n}こ）`}</small></div>`}
 function renderRoomCard(){const el=$('hRoom');if(!el||!P)return;const r=roomOf(),n=Object.keys(r.place).filter(t=>r.place[t]).length,ms=partyMons().slice(0,2),im=(typeof isMons==='function'?isMons():[]).slice(0,4),love=im.length?(typeof isMons==='function'?isMons():[]).reduce((a,m)=>a+(m.love||0),0):0;
   el.innerHTML=`<span class="hrpane hrl" data-go="room"><span class="hrsc" style="background-image:url(${roomSceneURL(r,isNight(),()=>{if($('home').classList.contains('on'))renderRoomCard()})})"></span>${ms.map((m,i)=>`<i class="hrm" style="left:${40+i*22}%;width:18%;animation-delay:${-i*1.3}s">${monImg(m)}</i>`).join('')}<i class="hrhero" style="width:20%;left:14%">${heroSVG(P.eq,P)}</i>
-      <span class="tlab"><b>🏠 へや</b><small>${n?'🛋️'+n+'・ボーナス'+Object.keys(roomBonus()).filter(k=>roomBonus()[k]).length:'かぐで ボーナス'}</small></span><span class="tgo">ひらく ▶</span></span>
+      <span class="tlab"><b>${pi('house')} へや</b><small>${n?'かぐ'+n+'・ボーナス'+Object.keys(roomBonus()).filter(k=>roomBonus()[k]).length:'かぐで ボーナス'}</small></span><span class="tgo">ひらく ▶</span></span>
     <span class="hrpane hri" data-go="island"><span class="hrisbg">${islandSVG()}</span>${im.map((m,i)=>`<i class="hrim" style="left:${22+i*17}%;bottom:${18+(i%2)*14}%;animation-delay:${-i*.9}s">${monImg(m)}</i>`).join('')}
-      <span class="tlab"><b>🏝️ しま</b><small>💗${love}${P.isDay!==dkey(new Date())&&im.length?'・🎁あり':''}</small></span><span class="tgo">ひらく ▶</span></span>`;
+      <span class="tlab"><b>${pi('palm')} しま</b><small>💗${love}${P.isDay!==dkey(new Date())&&im.length?'・🎁あり':''}</small></span><span class="tgo">ひらく ▶</span></span>`;
   el.onclick=e=>{snd(660,.05);const g=e.target.closest('[data-go]');if(g&&g.dataset.go==='island')islandOpen();else roomOpen()}}
 function roomRender(){const r=roomOf(),W=WALLS.find(w=>w[0]===r.wall)||WALLS[0],F=FLOORS.find(f=>f[0]===r.floor)||FLOORS[0];
   $('rmTitle').textContent=`🏠 ${P.name}の へや`;$('rmGold').innerHTML=pi('coin')+fmtBig(P.gold);
@@ -3869,7 +3876,7 @@ function slUp(id,how){const m=P.mons.find(x=>x.id===id);if(!m||(m.sl||1)>=SLMAX|
 /* ===================== 🏝️ なかまの しま ===================== */
 let isTimer=null;
 const loveOf=m=>m.love||0,loveRank=v=>v>=100?'💖 だいすき':v>=70?'❤️ なかよし':v>=40?'🧡 なついてる':v>=15?'💛 ちょっと なれた':'🤍 はじめまして';
-function isMons(){const seen=new Set(),inP=m=>P.party.includes(m.id),L=[...P.mons.filter(m=>m.fav&&!inP(m)),...P.mons.filter(m=>!inP(m)).sort((a,b)=>b.lv-a.lv)].filter(m=>m&&!seen.has(m.id)&&seen.add(m.id));return L.slice(0,14)}
+function isMons(){const inP=m=>P.party.includes(m.id);if(P.isl&&P.isl.length){const L=P.isl.map(id=>P.mons.find(m=>m.id===id)).filter(m=>m&&!inP(m));if(L.length)return L.slice(0,14)}const seen=new Set(),L=[...P.mons.filter(m=>m.fav&&!inP(m)),...P.mons.filter(m=>!inP(m)).sort((a,b)=>b.lv-a.lv)].filter(m=>m&&!seen.has(m.id)&&seen.add(m.id));return L.slice(0,14)}
 function islandSVG(){return `<svg viewBox="0 0 200 130" preserveAspectRatio="none" class="isbg"><defs><linearGradient id="isk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7ac8ff"/><stop offset="1" stop-color="#cfefff"/></linearGradient><linearGradient id="isea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3aa0e0"/><stop offset="1" stop-color="#1a6ab0"/></linearGradient></defs>
   <rect width="200" height="40" fill="url(#isk)"/><circle cx="168" cy="16" r="8" fill="#fff6a0"/><g fill="#fff" opacity=".9"><ellipse cx="40" cy="14" rx="14" ry="4"/><ellipse cx="50" cy="11" rx="9" ry="4"/><ellipse cx="120" cy="20" rx="12" ry="3"/></g>
   <rect y="38" width="200" height="92" fill="url(#isea)"/><g stroke="#cfefff" stroke-width=".8" fill="none" opacity=".6"><path d="M8 50q4-2 8 0t8 0"/><path d="M160 56q4-2 8 0t8 0"/><path d="M20 118q4-2 8 0t8 0"/><path d="M170 112q4-2 8 0t8 0"/></g>
@@ -3887,11 +3894,21 @@ function isWander(){const F=$('isF');if(!F||!$('island').classList.contains('on'
     w.style.left=x+'%';w.style.bottom=y+'%';w.style.zIndex=Math.round(100-y);w.classList.toggle('flipx',x>cx);w.classList.add('walking');setTimeout(()=>w.classList.remove('walking'),1900)})}
 function islandPanel(){const L=isMons(),tot=L.reduce((a,m)=>a+loveOf(m),0),td=dkey(new Date()),got=P.isDay===td,g=Math.round((200+tot*12)*Math.max(1,DMULT[mixLv()]));
   $('isLove').textContent='💗 '+tot;
-  $('isPanel').innerHTML=`<div class="panel stbox"><div class="sth">🏝️ しまの なかま <small>${L.length}たい（パーティ いがいの おきにいり・つよい じゅん）</small></div><small style="color:var(--sub)">パーティで たたかっていない なかまが のんびり くらしているよ。タップして えさを あげたり なでたり しよう。なつくと なかまパワーが すこし アップ！</small>${L.length?'':'<p style="color:var(--sub)">パーティ いがいの なかまが まだ いないよ</p>'}
+  $('isPanel').innerHTML=`<div class="panel stbox"><div class="sth">🏝️ しまの なかま <small>${L.length}たい（${P.isl&&P.isl.length?'えらんだ なかま':'おまかせ：つよい じゅん'}）</small></div><small style="color:var(--sub)">パーティで たたかっていない なかまが のんびり くらしているよ。タップして えさを あげたり なでたり しよう。なつくと なかまパワーが すこし アップ！</small>${L.length?'':'<p style="color:var(--sub)">パーティ いがいの なかまが まだ いないよ</p>'}
+    <div class="isbon">⚡ しまボーナス：しまの なかまの つよさの <b>${(isBonusRate()*100).toFixed(1)}%</b> が パワーに プラス（<b>+${fmtS(isPow())}</b>）<small>なつきどが たかいほど アップ（さいだい 2%）</small></div>
+    <button class="btn purple" id="isSel">👥 しまに すむ なかまを えらぶ（${L.length}/14）</button>
     <button class="btn ${got?'gray':'orange'} big" id="isGift"${got?' disabled':''}>${got?'🎁 きょうの おみやげは もらったよ':`🎁 なかまの おみやげ（🪙${fmtS(g)}${tot>=300?'＋🎫':''}）`}</button>
     <div class="islist">${L.map(m=>`<button class="isr" data-im="${m.id}"><span class="flip">${monImg(m)}</span><span><b>${SP[m.sp].name}</b><small>${loveRank(loveOf(m))}</small><i class="islb"><i style="width:${loveOf(m)}%"></i></i></span></button>`).join('')}</div></div>`;
-  document.querySelectorAll('#isPanel [data-im]').forEach(b=>b.onclick=()=>isMonModal(b.dataset.im));
+  document.querySelectorAll('#isPanel [data-im]').forEach(b=>b.onclick=()=>isMonModal(b.dataset.im));$('isSel').onclick=isPick;
   if(!got)$('isGift').onclick=()=>{P.isDay=td;P.gold+=g;if(tot>=300)P.lt=(P.lt||0)+1;save();fanfare();fxConfetti(50);toast(`🎁 おみやげ 🪙+${fmtS(g)}${tot>=300?' 🎫+1':''}`);islandPanel()}}
+function isBonusRate(){const L=isMons();if(!L.length)return 0;const av=L.reduce((a,m)=>a+Math.min(100,m.love||0),0)/L.length;return .01+.01*av/100}
+const isPow=(p=P)=>{if(p!==P)return 0;try{return Math.round(isMons().reduce((a,m)=>a+monPow(m),0)*isBonusRate())}catch(e){return 0}};
+function isPick(){const cand=P.mons.filter(m=>!P.party.includes(m.id)).sort((a,b)=>monPow(b)-monPow(a)),cur=new Set(isMons().map(m=>m.id));
+  const draw=()=>{showModal(`<div class="mt">👥 しまに すむ なかま</div><p style="font-size:13px">さいだい 14たい。つよい なかまや なつきどが たかい なかまを えらぶと ボーナスが ふえるよ</p><div class="isps">${cur.size}/14 えらんでいるよ</div>
+    <div class="bgrid fgrid" style="max-height:46vh">${cand.map(m=>`<button class="bcell mc r${SP[m.sp].rar}${cur.has(m.id)?' fsel':''}" data-ip="${m.id}" style="--rc:${RAR[SP[m.sp].rar].c};--rh:${RAR[SP[m.sp].rar].h}"><div class="flip">${monImg(m)}</div><b>Lv${m.lv}</b>${(m.love||0)?`<i class="evb">💗${m.love}</i>`:''}</button>`).join('')||'<small>パーティ いがいの なかまが いないよ</small>'}</div>
+    <div class="row"><button class="btn gray" id="ia">つよい じゅんに おまかせ</button><button class="btn green" id="ok">けってい</button></div>`,
+    {ia:()=>{cur.clear();cand.slice(0,14).forEach(m=>cur.add(m.id));draw()},ok:()=>{P.isl=[...cur];save();closeModal();islandOpen()}});
+    document.querySelectorAll('[data-ip]').forEach(b=>b.onclick=()=>{const id=b.dataset.ip;if(cur.has(id))cur.delete(id);else{if(cur.size>=14){toast('14たいまでだよ');return}cur.add(id)}draw()})};draw()}
 const feedCost=m=>40*(SP[m.sp].rar+1);
 function isMonModal(id){const m=P.mons.find(x=>x.id===id);if(!m)return;const v=loveOf(m),now=Date.now(),canPet=now-(m.petT||0)>3600e3,fc=feedCost(m);
   showModal(`<div class="hatch flip">${monImg(m)}</div><div class="mt">${SP[m.sp].name}</div><p>${loveRank(v)}<br><i class="islb big"><i style="width:${v}%"></i></i><small>なつきど ${v}/100　なかまパワー +${(v/10).toFixed(1)}%</small></p>
