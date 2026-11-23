@@ -812,6 +812,12 @@ html.lite *,html.lite *::before,html.lite *::after{animation-iteration-count:1!i
 html.lite .hs,html.lite #hHero>svg,html.lite #hHero>img,html.lite .slot.tile .ic,html.lite .mon .mxs:not(.shy),html.lite .pm img:not(.shy),html.lite .lnu,html.lite .hbase img,html.lite .rmf,html.lite .ism img:not(.shy),html.lite .ciface,html.lite .lpg b img{filter:none!important}
 html.lite .wx{display:none!important}
 .slot.tile.empty b{white-space:nowrap;font-size:9px!important;letter-spacing:-.5px}
+/* コンテナクエリ ひたいおうの ふるい ブラウザ（iOS15 など）むけ */
+html.nocq .pm{width:calc(min(var(--qw,4px)*17,var(--qh,3px)*19) * var(--sc,1));margin-left:calc(min(var(--qw,4px)*17,var(--qh,3px)*19) * var(--sc,1) * -.5)}
+html.nocq .arena .hero .hs{width:min(var(--qw,4px)*34,var(--qh,3px)*34)!important}
+html.nocq .arena .hero{bottom:calc(min(var(--qw,4px)*34,var(--qh,3px)*34) * -.3)!important}
+html.nocq .arena .mon .mxs{width:min(var(--qw,4px)*36,var(--qh,3px)*40)}
+html.nocq .arena .mon.boss .mxs{width:min(var(--qw,4px)*44,var(--qh,3px)*48)}
 </style>
 </head>
 <body>
@@ -1385,7 +1391,7 @@ function makeItem(st,d,boss,min=0){
 /* =============== save data =============== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-/*const APPV='v151'*/const APPV='v1.0.8',APPB=159;
+/*const APPV='v151'*/const APPV='v1.0.9',APPB=160;
 try{const c=document.createElement('canvas');c.width=9;c.height=9;const g=c.getContext('2d'),F=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};F(1,0,7,1,'#120d09');F(1,8,7,1,'#120d09');F(0,1,1,7,'#120d09');F(8,1,1,7,'#120d09');F(1,1,7,1,'#120d09');F(1,7,7,1,'#120d09');F(1,1,1,7,'#120d09');F(7,1,1,7,'#120d09');F(2,2,5,1,'#7a6a52');F(2,2,1,5,'#7a6a52');F(2,6,5,1,'#2a2018');F(6,2,1,5,'#2a2018');document.documentElement.style.setProperty('--pxf',`url(${c.toDataURL()})`)}catch(e){}
 const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));
 /* ⚡ かるい モード：ふるい たんまつは じどうで ON */
@@ -4433,7 +4439,7 @@ function updHud(){const pm0=partyMons(),isF=m=>{try{return lStats(m.sp).fly}catc
 function updCombo(){const c=$('combo');c.textContent=B.combo>=2?`${B.combo} コンボ！`:'';
   c.style.color=B.combo>=10?'#ff5df0':B.combo>=5?'#ff8a3d':'var(--gold)';if(B.combo>=2)anim(c,'pop',300)}
 
-function startBattle(subj,lv,stage,weakOnly,opt={}){
+function startBattle(subj,lv,stage,weakOnly,opt={}){setTimeout(()=>{try{window.arenaUpd&&arenaUpd()}catch(e){}},30);
   if(!weakOnly&&!opt.tower&&!opt.xmas&&!opt.ny&&!opt.noStory){const ai=areaOf(stage),go=()=>startBattle(subj,lv,stage,weakOnly,Object.assign({},opt,{noStory:1}));P.story=P.story||{};if(AREAS[ai].t===5){const f=AREAS.findIndex(x=>x.t===5);if(ai!==f&&!P.story[stKey('enter',f)]){storyGate('enter',f,()=>storyGate('enter',ai,go));return}}if((stage===AREAS[ai].from||AREAS[ai].t===5)&&!P.story[stKey('enter',ai)]){storyGate('enter',ai,go);return}}
   const mix=subj==='mix';if(mix)lv=mixLv();
   B={subj:mix?'math':subj,lv,bsubj:subj,blv:lv,mix,bag:[],stage,weakOnly,wave:0,waves:opt.tower?1e9:5,tower:!!opt.tower,xmas:!!opt.xmas,ny:!!opt.ny,hp:maxHp(),combo:0,wrong:0,lock:true,php:{}};B.rec=recPow(stage,lv);{const bf=P.buf||(P.buf={});if(bf.g>0){B.bufG=1;bf.g--}if(bf.x>0){B.bufX=1;bf.x--}}B.df=(weakOnly||opt.tower||opt.xmas||opt.ny)?1:diffF(stage,lv);
@@ -4645,6 +4651,10 @@ $('quit').onclick=()=>{if(!B||B.lock)return;B.lock=true;
   const f=(performance.now()-B.gaugeStart)/B.gaugeDur,g=$('gauge');g.style.width=Math.min(100,f*100)+'%';g.classList.toggle('warn',f>.7);
   if(f>=1){B.lock=true;record(B.q,false,B.gaugeDur/1000);B.combo=0;updCombo();markCorrect();setTimeout(()=>monAttack(nextQ),800)}})();
 
+/* コンテナクエリが つかえない ときは アリーナの おおきさを CSSへんすうで わたす */
+(function(){document.documentElement.classList.add('nocq');
+  const upd=()=>{const a=document.getElementById('arena');if(!a)return;const w=a.clientWidth,h=a.clientHeight;if(!w||!h)return;a.style.setProperty('--qw',w/100+'px');a.style.setProperty('--qh',h/100+'px')};window.arenaUpd=upd;
+  try{const a=document.getElementById('arena');if(a&&window.ResizeObserver)new ResizeObserver(upd).observe(a)}catch(e){}addEventListener('resize',()=>setTimeout(upd,50));setInterval(upd,1500);setTimeout(upd,300)})();
 /* =============== boot =============== */
 setTimeout(()=>{try{if(FB_CONFIG&&G.fam)syncUp()}catch(e){}},3000);
 if(G.profiles.some(p=>p.master)){G.profiles=G.profiles.filter(p=>!p.master);if(!G.profiles.some(p=>p.id===G.cur))G.cur=null;save()}
