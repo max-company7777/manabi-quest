@@ -732,6 +732,10 @@ img.shy{filter:hue-rotate(150deg) saturate(1.35) brightness(1.08) drop-shadow(0 
 .hrpane{position:relative;flex:1;overflow:hidden;height:100%;display:block;background:#1a1010}.hri{background:#3aa0e0}.hrisbg{position:absolute;inset:0}.hrisbg svg{width:100%;height:100%}
 .hrpane .hrplate{left:4px;top:4px;padding:2px 6px;font-size:12px;border-width:2px}.hrpane .hrplate small{font-size:9px}.hrpane .hrgo{right:4px;bottom:4px;padding:2px 6px;font-size:11px;border-width:2px}.hrpane .hrgo.isgo{right:4px;left:auto;background:#2a7ab0}
 .hrim{position:absolute;width:15%;z-index:3;font-style:normal;animation:hrbob 1.8s ease-in-out infinite}.hrim img{width:100%;image-rendering:pixelated}@keyframes hrbob{50%{transform:translateY(-8%)}}
+.htri{display:flex;gap:3px;height:clamp(96px,calc((100vw - 24px)/3*.9),170px);flex-shrink:0}.htri .hbase{flex:1;height:100%!important;min-width:0}.htri .hroom{flex:2;height:100%;aspect-ratio:auto!important;min-width:0}
+.htri .binfo{left:3px;top:3px;padding:2px 5px;font-size:10px}.htri .binfo small{font-size:8px}.htri .bbtn{top:auto;bottom:3px;right:3px;left:3px;font-size:10px!important;padding:2px 4px!important;text-align:center}
+.htri .bw{width:28%!important;height:auto!important;bottom:18%!important}.htri .bw>*{width:100%}.htri .bbd img{width:26px!important}.htri .bbd b{font-size:8px}
+.lanecard{height:64px!important}
 </style>
 </head>
 <body>
@@ -770,11 +774,10 @@ img.shy{filter:hue-rotate(150deg) saturate(1.35) brightness(1.08) drop-shadow(0 
     <button class="btn dk" id="giftBtn" style="--dc:#c0306a">🎁<i>プレゼント</i></button>
   </nav>
   <div class="homebody">
-    <div class="hbase" id="hBase"><div class="bwalk"></div><div class="binfo"></div></div>
+    <div class="htri"><div class="hbase" id="hBase"><div class="bwalk"></div><div class="binfo"></div></div><button class="hroom" id="hRoom"></button></div>
     <button class="lanecard" id="hLane"></button>
     <button class="btn hraid" id="hRaid"></button>
     <div class="row hqrow"><button class="btn hqbtn" id="hQuest"></button><button class="btn hxbtn" id="hXmas"></button></div>
-    <button class="hroom" id="hRoom"></button>
     <div class="panel show">
       <div class="slots" id="hSlotsL"></div>
       <div class="herobox"><div class="ttl" id="hTitle"></div>
@@ -1307,7 +1310,7 @@ function makeItem(st,d,boss,min=0){
 /* =============== save data =============== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-const APPV='v138';
+const APPV='v139';
 try{const c=document.createElement('canvas');c.width=9;c.height=9;const g=c.getContext('2d'),F=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};F(1,0,7,1,'#120d09');F(1,8,7,1,'#120d09');F(0,1,1,7,'#120d09');F(8,1,1,7,'#120d09');F(1,1,7,1,'#120d09');F(1,7,7,1,'#120d09');F(1,1,1,7,'#120d09');F(7,1,1,7,'#120d09');F(2,2,5,1,'#7a6a52');F(2,2,1,5,'#7a6a52');F(2,6,5,1,'#2a2018');F(6,2,1,5,'#2a2018');document.documentElement.style.setProperty('--pxf',`url(${c.toDataURL()})`)}catch(e){}
 const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));if(G.bgmOn===undefined)G.bgmOn=true;
 let P=null;
