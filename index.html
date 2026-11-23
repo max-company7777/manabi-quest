@@ -807,6 +807,11 @@ header.top .pill{display:flex;align-items:center;gap:2px;padding:2px 7px!importa
 .rcr{display:flex;align-items:center;justify-content:center;gap:4px;padding:2px 0}.rcr>b{color:#ffd23f;font-size:14px}.rci{display:inline-flex;flex-direction:column;align-items:center;width:70px}.rci svg,.rci img{width:34px;height:34px}.rci small{font-size:9.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:70px}
 .fbk{display:flex;flex-direction:column;gap:5px;max-height:56vh;overflow-y:auto;margin:4px 0}.fbr{display:flex;align-items:center;gap:4px;background:rgba(0,0,0,.28);border:2px solid #444;border-radius:8px;padding:3px}.fbr.own{border-color:#6be675}.fbe{color:#ffd23f;font-size:16px}.fbrs{flex:1;min-width:0}.fbrs .rcr{justify-content:flex-start}.fbrs .rci{width:58px}.fbrs .rci svg,.fbrs .rci img{width:28px;height:28px}
 .fslot.res.sil small{color:#aaa}
+/* ⚡ かるい モード */
+html.lite *,html.lite *::before,html.lite *::after{animation-iteration-count:1!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+html.lite .hs,html.lite #hHero>svg,html.lite #hHero>img,html.lite .slot.tile .ic,html.lite .mon .mxs:not(.shy),html.lite .pm img:not(.shy),html.lite .lnu,html.lite .hbase img,html.lite .rmf,html.lite .ism img:not(.shy),html.lite .ciface,html.lite .lpg b img{filter:none!important}
+html.lite .wx{display:none!important}
+.slot.tile.empty b{white-space:nowrap;font-size:9px!important;letter-spacing:-.5px}
 </style>
 </head>
 <body>
@@ -1380,9 +1385,12 @@ function makeItem(st,d,boss,min=0){
 /* =============== save data =============== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-/*const APPV='v151'*/const APPV='v1.0.7',APPB=158;
+/*const APPV='v151'*/const APPV='v1.0.8',APPB=159;
 try{const c=document.createElement('canvas');c.width=9;c.height=9;const g=c.getContext('2d'),F=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};F(1,0,7,1,'#120d09');F(1,8,7,1,'#120d09');F(0,1,1,7,'#120d09');F(8,1,1,7,'#120d09');F(1,1,7,1,'#120d09');F(1,7,7,1,'#120d09');F(1,1,1,7,'#120d09');F(7,1,1,7,'#120d09');F(2,2,5,1,'#7a6a52');F(2,2,1,5,'#7a6a52');F(2,6,5,1,'#2a2018');F(6,2,1,5,'#2a2018');document.documentElement.style.setProperty('--pxf',`url(${c.toDataURL()})`)}catch(e){}
-const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));if(G.bgmOn===undefined)G.bgmOn=true;
+const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));
+/* ⚡ かるい モード：ふるい たんまつは じどうで ON */
+if(G.lite==null){try{const hc=navigator.hardwareConcurrency||8,dm=navigator.deviceMemory||8;G.lite=hc<=4||dm<=3}catch(e){G.lite=false}}
+document.documentElement.classList.toggle('lite',!!G.lite);if(G.bgmOn===undefined)G.bgmOn=true;
 let P=null;
 /* しゅるいごとに さいしょに ゲットした 1たいは じどうで おきにいり */
 const autoFav=p=>{if(!p||!p.mons)return;const seen=new Set();p.mons.forEach(m=>{if(!seen.has(m.sp)){seen.add(m.sp);m.fav=true}})};
@@ -1866,7 +1874,7 @@ function profileForm(p){
     <div class="lbl">はだの いろ</div><div class="colors" id="fSkin">${SKINS.map(c=>`<button class="col" data-c="${c}" style="background:${c}"></button>`).join('')}</div>
     <div class="lbl">なんさい？</div><div class="opts" id="fAge" style="grid-template-columns:repeat(5,1fr)">${ages.map(a=>`<button class="btn opt" data-a="${a}">${a}${a===12?'+':''}</button>`).join('')}</div>
     <div class="lbl">ふくの いろ</div><div class="colors" id="fCol">${COLORS.map(c=>`<button class="col" data-c="${c}" style="background:${c}"></button>`).join('')}</div>
-    ${p?`<button class="btn ${p.parent?'purple':'gray'}" id="fPar">👨‍👩 おやの アカウント ${p.parent?'ON':'OFF'}<small style="display:block;font-size:11px">ONに すると「みんなの ようす」に でない（ランキングには でる）</small></button><div class="row"><button class="btn ${p.voice?'green':'gray'}" id="fVoice">🗣️ よみあげ ${p.voice?'ON':'OFF'}</button><button class="btn ${G.snd?'green':'gray'}" id="fSnd">🔊 こうかおん ${G.snd?'ON':'OFF'}</button></div><button class="btn ${G.bgmOn?'green':'gray'}" id="fBgm">🎵 BGM ${G.bgmOn?'ON':'OFF'}</button><button class="btn" id="fUpd">🔄 さいしんばんに する <small>（いま ${APPV}）</small></button>`:''}
+    ${p?`<button class="btn ${p.parent?'purple':'gray'}" id="fPar">👨‍👩 おやの アカウント ${p.parent?'ON':'OFF'}<small style="display:block;font-size:11px">ONに すると「みんなの ようす」に でない（ランキングには でる）</small></button><div class="row"><button class="btn ${p.voice?'green':'gray'}" id="fVoice">🗣️ よみあげ ${p.voice?'ON':'OFF'}</button><button class="btn ${G.snd?'green':'gray'}" id="fSnd">🔊 こうかおん ${G.snd?'ON':'OFF'}</button></div><div class="row"><button class="btn ${G.bgmOn?'green':'gray'}" id="fBgm">🎵 BGM ${G.bgmOn?'ON':'OFF'}</button><button class="btn ${G.lite?'green':'gray'}" id="fLite">⚡ かるい モード ${G.lite?'ON':'OFF'}</button></div><small style="color:var(--sub);font-size:11px">うごきが おもい ときは「かるい モード」を ONに してね（キラキラや うごく かざりを へらすよ）</small><button class="btn" id="fUpd">🔄 さいしんばんに する <small>（いま ${APPV}）</small></button>`:''}
     <button class="btn green big" id="fOk">${p?'OK':'つくる！'}</button>
     ${p?'<button class="btn gray" id="fSwitch">👥 ぼうけんしゃを かえる</button><button class="btn gray" id="fData">💾 データの ひっこし</button><button class="btn gray" id="fCloud">👨‍👩‍👧 かぞくで つながる</button><button class="btn orange" id="fCode">🎁 プレゼント コード</button>':'<button class="btn gray" id="fCancel">やめる</button>'}`,
     {fOk:()=>{const name=$('fName').value.trim()||'ゆうしゃ';
@@ -1879,7 +1887,7 @@ function profileForm(p){
      fCloud:()=>cloudSetup(),
      fCode:()=>giftCode(),
      fVoice:()=>{p.voice=!p.voice;save();profileForm(p)},fPar:()=>{p.parent=!p.parent;save();toast(p.parent?'👨‍👩 おやの アカウントに したよ':'こどもの アカウントに したよ');profileForm(p)},
-     fSnd:()=>{G.snd=!G.snd;save();profileForm(p)},fUpd:()=>{toast('🔄 さいしんばんを よみこむよ');setTimeout(()=>location.reload(),400)},fBgm:()=>{G.bgmOn=!G.bgmOn;save();if(G.bgmOn)bgm('home');else bgmStop();profileForm(p)}});
+     fSnd:()=>{G.snd=!G.snd;save();profileForm(p)},fUpd:()=>{toast('🔄 さいしんばんを よみこむよ');setTimeout(()=>location.reload(),400)},fLite:()=>{G.lite=!G.lite;document.documentElement.classList.toggle('lite',G.lite);try{fxSize()}catch(e){}save();profileForm(p);toast(G.lite?'⚡ かるい モード ON':'かるい モード OFF')},fBgm:()=>{G.bgmOn=!G.bgmOn;save();if(G.bgmOn)bgm('home');else bgmStop();profileForm(p)}});
   const sync=()=>{document.querySelectorAll('#fAge .opt').forEach(b=>b.classList.toggle('sel',+b.dataset.a===age));
     document.querySelectorAll('#fCol .col').forEach(b=>b.classList.toggle('sel',b.dataset.c===color));
     document.querySelectorAll('#fHair .opt').forEach(b=>b.classList.toggle('sel',b.dataset.h===hair));
@@ -2534,15 +2542,15 @@ function sceneURL(a,W=128,H=80,o={}){const key='scn|'+a.n+'|'+W+'|'+H+'|'+(o.noG
 /* ---- パーティクル（ぜんたいに かさなる キャンバス） ---- */
 const PFX={ps:[],run:false,cv:null,g:null,z:1};
 function fxInit(){if(PFX.cv)return;const c=document.createElement('canvas');c.id='fxc';document.body.appendChild(c);PFX.cv=c;PFX.g=c.getContext('2d');fxSize();addEventListener('resize',fxSize)}
-function fxSize(){const z=parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--zf'))||1,d=devicePixelRatio||1;PFX.z=z;PFX.cv.width=innerWidth*d;PFX.cv.height=innerHeight*d;PFX.d=d}
+function fxSize(){const z=parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--zf'))||1,d=G.lite?1:(devicePixelRatio||1);PFX.z=z;PFX.cv.width=innerWidth*d;PFX.cv.height=innerHeight*d;PFX.d=d}
 /* x,y は がめんの ざひょう（getBoundingClientRect） */
-function fxBurst(x,y,o={}){fxInit();const n=o.n||14,cols=o.colors||['#fff','#ffd23f','#ff8a3a'];
+function fxBurst(x,y,o={}){fxInit();const n=Math.ceil((o.n||14)*(G.lite?.35:1)),cols=o.colors||['#fff','#ffd23f','#ff8a3a'];
   for(let i=0;i<n;i++){const a=o.dir!=null?o.dir+(Math.random()-.5)*(o.spread||1.2):Math.random()*Math.PI*2,s=(o.spd||4)*(.4+Math.random()*.8);
     PFX.ps.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-(o.up||0),g:o.grav??.18,life:0,max:(o.life||40)*(.6+Math.random()*.6),sz:(o.size||5)*(.6+Math.random()*.7),c:cols[i%cols.length],sh:o.shape||'sq',rot:Math.random()*6,vr:(Math.random()-.5)*.4,dr:o.drag??.97,to:o.to})}
   if(!PFX.run){PFX.run=true;requestAnimationFrame(fxTick)}}
 function fxAt(el,o){if(!el)return;const r=el.getBoundingClientRect();fxBurst(r.left+r.width/2,r.top+r.height*(o&&o.yf!=null?o.yf:.5),o)}
 function fxRing(x,y,c='#fff',max=60){fxInit();PFX.ps.push({ring:1,x,y,r:4,max:22,life:0,c,rm:max});if(!PFX.run){PFX.run=true;requestAnimationFrame(fxTick)}}
-function fxConfetti(n=80){fxInit();const cols=['#ff4f7b','#ffd23f','#58d14a','#3ec1ff','#c15cff','#ffffff'];for(let i=0;i<n;i++)PFX.ps.push({x:Math.random()*innerWidth,y:-10-Math.random()*innerHeight*.3,vx:(Math.random()-.5)*2,vy:2+Math.random()*3,g:.05,life:0,max:120+Math.random()*60,sz:6+Math.random()*4,c:cols[i%cols.length],sh:'conf',rot:Math.random()*6,vr:(Math.random()-.5)*.3,dr:.99});if(!PFX.run){PFX.run=true;requestAnimationFrame(fxTick)}}
+function fxConfetti(n=80){if(G.lite)n=Math.ceil(n*.3);fxInit();const cols=['#ff4f7b','#ffd23f','#58d14a','#3ec1ff','#c15cff','#ffffff'];for(let i=0;i<n;i++)PFX.ps.push({x:Math.random()*innerWidth,y:-10-Math.random()*innerHeight*.3,vx:(Math.random()-.5)*2,vy:2+Math.random()*3,g:.05,life:0,max:120+Math.random()*60,sz:6+Math.random()*4,c:cols[i%cols.length],sh:'conf',rot:Math.random()*6,vr:(Math.random()-.5)*.3,dr:.99});if(!PFX.run){PFX.run=true;requestAnimationFrame(fxTick)}}
 function fxCoins(el,n=10){if(!el)return;const r=el.getBoundingClientRect();fxBurst(r.left+r.width/2,r.top+r.height/2,{n,colors:['#ffd23f','#ffe680','#d99a1a'],shape:'coin',spd:5,up:3,grav:.25,life:55,size:8})}
 function fxTick(){const g=PFX.g,d=PFX.d;g.setTransform(1,0,0,1,0,0);g.clearRect(0,0,PFX.cv.width,PFX.cv.height);g.setTransform(d,0,0,d,0,0);
   PFX.ps=PFX.ps.filter(p=>{p.life++;if(p.life>p.max)return false;const t=p.life/p.max;
