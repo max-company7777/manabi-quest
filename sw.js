@@ -1,7 +1,7 @@
 // まなびクエスト service worker
 // ゲーム本体(index.html)は「ネット優先」：つながっていれば常に最新、オフラインなら保存済みの版を使う。
 // そのため更新時は index.html を上書きするだけでよく、このファイルを書き換える必要はありません。
-const CACHE = 'mq-cache-v142';
+const CACHE = 'mq-cache-v143';
 const SHELL = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
 
 self.addEventListener('install', e => {
