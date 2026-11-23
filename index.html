@@ -803,6 +803,10 @@ header.top .pill{display:flex;align-items:center;gap:2px;padding:2px 7px!importa
 .fgrid .fcell{width:auto!important;min-width:0;aspect-ratio:auto}.fgrid{max-height:46vh!important;grid-template-columns:repeat(4,1fr)!important;gap:5px!important}.fcell{position:relative;padding:4px 2px 3px!important;min-height:86px}.fcell .fnm{display:block;font-size:9.5px;line-height:1.15;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}.fcell b{font-size:10px}
 .fab{position:absolute;top:-2px;left:-2px;font-style:normal;background:#ffd23f;color:#2a1a00;font-size:11px;font-weight:700;border-radius:8px;min-width:18px;height:18px;line-height:18px;text-align:center;z-index:2;border:2px solid #000}.fab.h{background:#1d2a3a;border-color:#7af0ff;font-size:10px}
 #isF{isolation:isolate}.islb.big{height:10px!important;line-height:0;padding:0!important;box-sizing:content-box}.islb{padding:0!important}.islb{line-height:0}.islb.big .islf{height:10px}.islf{display:block;height:6px;background:linear-gradient(90deg,#ff9ac0,#ff3a7a);border-radius:3px}.isr .isrt small{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.isrt{flex:1;min-width:0;display:block}.isr .isnm{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.isr .flip{flex:0 0 auto}
+.rcp{background:rgba(0,0,0,.25);border:2px solid #3a5a7a;border-radius:8px;padding:5px;margin:6px 0;text-align:left}.rcph{font-size:12px;color:#7af0ff;margin-bottom:3px}.rcph small{color:var(--sub);font-size:10px}
+.rcr{display:flex;align-items:center;justify-content:center;gap:4px;padding:2px 0}.rcr>b{color:#ffd23f;font-size:14px}.rci{display:inline-flex;flex-direction:column;align-items:center;width:70px}.rci svg,.rci img{width:34px;height:34px}.rci small{font-size:9.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:70px}
+.fbk{display:flex;flex-direction:column;gap:5px;max-height:56vh;overflow-y:auto;margin:4px 0}.fbr{display:flex;align-items:center;gap:4px;background:rgba(0,0,0,.28);border:2px solid #444;border-radius:8px;padding:3px}.fbr.own{border-color:#6be675}.fbe{color:#ffd23f;font-size:16px}.fbrs{flex:1;min-width:0}.fbrs .rcr{justify-content:flex-start}.fbrs .rci{width:58px}.fbrs .rci svg,.fbrs .rci img{width:28px;height:28px}
+.fslot.res.sil small{color:#aaa}
 </style>
 </head>
 <body>
@@ -1374,7 +1378,7 @@ function makeItem(st,d,boss,min=0){
 /* =============== save data =============== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-/*const APPV='v151'*/const APPV='v1.0.4',APPB=155;
+/*const APPV='v151'*/const APPV='v1.0.5',APPB=156;
 try{const c=document.createElement('canvas');c.width=9;c.height=9;const g=c.getContext('2d'),F=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};F(1,0,7,1,'#120d09');F(1,8,7,1,'#120d09');F(0,1,1,7,'#120d09');F(8,1,1,7,'#120d09');F(1,1,7,1,'#120d09');F(1,7,7,1,'#120d09');F(1,1,1,7,'#120d09');F(7,1,1,7,'#120d09');F(2,2,5,1,'#7a6a52');F(2,2,1,5,'#7a6a52');F(2,6,5,1,'#2a2018');F(6,2,1,5,'#2a2018');document.documentElement.style.setProperty('--pxf',`url(${c.toDataURL()})`)}catch(e){}
 const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));if(G.bgmOn===undefined)G.bgmOn=true;
 let P=null;
@@ -3221,7 +3225,7 @@ function cheatOpen(){if(!P||!P.cheat)return;try{cheatSyncCats();save()}catch(e){
   document.querySelectorAll('[data-ch]').forEach(b=>b.onclick=()=>{snd(660,.05);A[b.dataset.ch]()})}
 /* ===================== help ===================== */
 const HELP=[
- ['play','🎮 あそびかた',`<b>しゅつげき</b>を おすと バトル！ もんだいに せいかいすると てきに こうげき。<br>1ステージは 5たい（さいごは ボス）。ぜんぶ たおすと クリアで ゴールドや そうびが もらえるよ。<br>まちがえたり じかんぎれに なると ダメージ。HPが 0に なると まけ。<br><small>はやく こたえると ダメージ アップ・れんぞく せいかいで コンボ！</small>`],
+ ['play','🎮 あそびかた',`<b>しゅつげき</b>を おすと バトル！ もんだいに せいかいすると てきに こうげき。<br>1ステージは 5たい（さいごは ボス）。ぜんぶ たおすと クリアで ゴールドや そうびが もらえるよ。<br>まちがえたり じかんぎれに なると ダメージ。HPが 0に なると まけ。<br>ながい ぶんしょうや せいかつ・ちしきの もんだいは、よむ じかんの ぶん せいげんじかんが ながく なるよ。<br><small>はやく こたえると ダメージ アップ・れんぞく せいかいで コンボ！</small>`],
  ['diff','⭐ むずかしさ（★）',`きょうかごとに ★1〜★8（4さい〜6ねんせい）を えらべるよ。★が たかいほど ごほうびが ふえる。<br>⚠️ としに あった ★より ひくいと、たまご・しんか・ミッションが すすまないよ。<br>🎓 おなじ ★で さいきん 30もん中 27もん せいかいすると <b>マスター</b>！ つぎの ★に ちょうせんしよう（マスターした ★は ごほうび 1/3。★8は そのまま）。`],
  ['mix','🎲 ミックス',`さんすう・えいご・こくご・せいかつ・ちしきの 5つが じゅんばん バラバラに でるよ。もんだいの ひだりうえに きょうかと ★が でる。<br>さいきん でた もんだいは なるべく でないように なっているよ。`],
  ['streak','🔥 れんぞく にっすう',`ホームの みぎうえの 🔥は <b>まいにち つづけて あそんだ ひにち</b>。<br>1にち 1かい あそぶと ふえて、ログインボーナスの ゴールドが もらえる（7にちめで さいだい）。<br>1にちでも あそばないと 1に もどっちゃうよ。`],
@@ -3245,7 +3249,7 @@ const HELP=[
  ['subj','📚 5つの きょうか',`<b>さんすう</b>：けいさん<br><b>えいご</b>：たんご・つづり<br><b>こくご</b>：かんじの よみ・かきとり<br><b>せいかつ</b>：とけい・おかね・ぶんしょうだい・じかん・はやさ<br><b>ちしき</b>：とどうふけん・りか`],
  ['note','📒 まちがい ノート',`まちがえた もんだいが きょうかごとに たまるよ。「もういちど とく」で ふくしゅうして、2かい せいかいすると「できた！」に なる。`],
  ['prac','🎯 れんしゅう',`<b>かきとり</b>：ゆびで かんじや ひらがなを かいて れんしゅう（かきじゅんは みないよ）。<br><b>えいごの はつおん</b>：マイクに むかって えいごを いうと、ちゃんと いえたか しらべるよ。`],
- ['fuse','🧬 がったい・とくぎ',`なかまを 2たい がったいさせると あたらしい なかまが うまれるよ。おなじ レアどだと レアアップ しやすい！ いろちがいは つよさ ×1.25。<br><b>とくぎ</b>は ゴールド・ダブり・💎とくぎの たまで Lv10まで あげられる。なかまには S〜Dの つよさランクも あるよ。`],
+ ['fuse','🧬 がったい・とくぎ',`なかまを 2たい がったいさせると あたらしい なかまが うまれるよ。うまれる なかまは くみあわせで きまっていて「📖 ルート いちらん」や ずかんで みられる。おなじ レアどうしだと 1つ うえの レア、おなじ しゅるいどうしだと いろちがい（つよさ ×1.25）に なるよ。<br><b>とくぎ</b>は ゴールド・ダブり・💎とくぎの たまで Lv10まで あげられる。なかまには S〜Dの つよさランクも あるよ。`],
  ['set','🛡️ セットこうか',`おなじ シリーズの そうびを そろえると、そろえた かずに おうじて ボーナスが つくよ。ホームの そうびの したに でているよ。`],
  ['island','🏝️ なかまの しま',`パーティに いない なかまが くらす しま。タップで なでたり えさを あげたり すると なかよしどが あがって つよく なる。しまの なかまの つよさの すこしが パワーに プラスされるよ（さいだい 14たい）。`],
  ['base','🏯 きょてん',`ゴールドで たてものを たてて そだてると、ゴールドや けいけんちが ふえたり、ぐんだんの しろが かたく なったり するよ。`],
@@ -3713,11 +3717,11 @@ function renderBox(){
       return `<div class="ultc${o?'':' sil'}${o?' ultglow':''}"><div class="flip">${monsterSVG(u.k)}</div><b>${o||se?s.name:op?'？？？':'🔒'}</b><small>${op?`💠 カケラ ${P.frag[u.k]||0}/10<br>`:''}${o?elTag(u.k):op?(se?'であった！':'どこかに いる…'):`なかま ${u.need}しゅ で かいほう（あと ${u.need-ownedStd()}）`}</small></div>`}).join('')}</div></div>`;
     h+=specDexHTML();
     [4,3,2,1,0].forEach(r=>{h+=`<div class="sth" style="color:${RAR[r].h};padding:0 4px">${RAR[r].n}</div><div class="bgrid">`+SPECIES.filter(s=>s[3]===r).map(s=>{const k=s[0],o=P.dex.owned[k],se=P.dex.seen[k];
-      return `<div class="bcell dexc${o?'':' sil'}" style="--rc:${o?RAR[r].c:'#444'}"><div class="flip">${monsterSVG(k)}</div><b>${se||o?s[2]:'？？？'}</b>${se||o?`<i class="eb">${elIcon(k)}</i>`:''}${s[4]?'<i class="bt">ボス</i>':''}</div>`}).join('')+'</div>'});
+      return `<div class="bcell dexc${o?'':' sil'}" data-dxm="${k}" style="--rc:${o?RAR[r].c:'#444'}"><div class="flip">${monsterSVG(k)}</div><b>${se||o?s[2]:'？？？'}</b>${se||o?`<i class="eb">${elIcon(k)}</i>`:''}${s[4]?'<i class="bt">ボス</i>':''}</div>`}).join('')+'</div>'});
   }
   $('bxBody').innerHTML=h;
   document.querySelectorAll('.fchip').forEach(b=>b.onclick=()=>{boxF=b.dataset.f;renderBox()});
-  document.querySelectorAll('.bcell[data-i]').forEach(b=>b.onclick=()=>boxItemModal(+b.dataset.i));document.querySelectorAll('[data-dx]').forEach(b=>b.onclick=()=>dexClaim(+b.dataset.dx));
+  document.querySelectorAll('.bcell[data-i]').forEach(b=>b.onclick=()=>boxItemModal(+b.dataset.i));document.querySelectorAll('[data-dx]').forEach(b=>b.onclick=()=>dexClaim(+b.dataset.dx));document.querySelectorAll('[data-dxm]').forEach(b=>b.onclick=()=>dexMonModal(b.dataset.dxm));
   if($('bxSellWeak'))$('bxSellWeak').onclick=sellWeakFlow;
   document.querySelectorAll('.mc').forEach(b=>b.onclick=()=>monModal(b.dataset.id));
   document.querySelectorAll('.ec').forEach(b=>b.onclick=()=>eggModal(b.dataset.id));
@@ -3845,34 +3849,59 @@ function evoAllFlow(){const L=P.mons.filter(evoReady);if(!L.length){toast('い�
 let FU={a:null,b:null};
 const fusable=m=>!P.party.includes(m.id)&&SP[m.sp]&&(SP[m.sp].special||SP[m.sp].rar<=4);
 const chainOf=k=>{const s=SP[k];return s&&s.special&&s.special!=='gacha'&&s.special!=='gift'?s.special:null};
-function fuseOdds(a,b){const ra=SP[a.sp].rar,rb=SP[b.sp].rar,r=Math.max(ra,rb),same=ra===rb,sa=SP[a.sp].special,sb=SP[b.sp].special,cost=Math.round(150*Math.pow(r+1,2.2));
-  if(sa||sb){const main=sa&&sb?(ra>=rb?a:b):sa?a:b,ch=chainOf(main.sp),other=main===a?b:a,sameCh=ch&&chainOf(other.sp)===ch;
-    return{r:SP[main.sp].rar,main,up:EVOC[main.sp]?(sameCh?.6:.3):0,shy:a.sp===b.sp?.5:.25,cost,keep:1}}
-  return{r,up:r>=4?0:same?.35:.15,shy:a.sp===b.sp?.4:.12,cost}}
-function fuseRoll(A,Bm,o){const up=Math.random()<o.up,shy=Math.random()<o.shy;let sp,r=o.r;
-  if(o.keep){sp=up?EVOC[o.main.sp]:o.main.sp;r=SP[sp].rar}
-  else if(A.sp===Bm.sp&&(!up||(evoOf(A.sp)&&SP[evoOf(A.sp)]))){sp=up?evoOf(A.sp):A.sp;r=SP[sp].rar}
-  else{if(up)r++;const els=[elOf(A.sp),elOf(Bm.sp)];let pool=Object.keys(SP).filter(k=>{const s=SP[k];return s.rar===r&&!s.special&&!s.boss&&!/^x/.test(k)});
-    const pe=pool.filter(k=>els.includes(elOf(k)));if(pe.length&&Math.random()<.6)pool=pe;if(!pool.length)pool=[A.sp];sp=pick(pool)}
-  const m={id:uid(),sp,lv:Math.max(A.lv,Bm.lv),xp:0,bond:o.keep?Math.max(o.main.bond||0,0):0};if(shy||(o.keep&&o.main.shiny))m.shiny=1;if(o.keep&&o.main.fav)m.fav=true;
+/* ---- がったい ルート（くみあわせで きまる） ---- */
+let FTAB=null,FREV=null;
+const fkey=(a,b)=>a<b?a+'|'+b:b+'|'+a,shash=t=>{let h=2166136261;for(let i=0;i<t.length;i++){h^=t.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0};
+const fuseIn=r=>Object.keys(SP).filter(k=>{const s=SP[k];return s.rar===r&&!s.special}),fuseOut=r=>Object.keys(SP).filter(k=>{const s=SP[k];return s.rar===r&&!s.special&&!s.boss&&!/^x|^ny/.test(k)});
+function fuseTab(){if(FTAB)return FTAB;FTAB={};FREV={};const I=[0,1,2,3,4].map(fuseIn),O=[0,1,2,3,4].map(fuseOut),cnt={},jobs=[];
+  for(let r=0;r<5;r++){const a=I[r];for(let i=0;i<a.length;i++)for(let j=i+1;j<a.length;j++)jobs.push([a[i],a[j],Math.min(4,r+1)]);for(let q=0;q<r;q++)for(const x of a)for(const y of I[q])jobs.push([x,y,r])}
+  jobs.forEach(j=>j[3]=shash(fkey(j[0],j[1])));jobs.sort((u,v)=>u[3]-v[3]);
+  const mn=a=>a.reduce((m,k)=>Math.min(m,cnt[k]||0),1e9);
+  for(const [x,y,t,h] of jobs){let c=O[t].filter(k=>k!==x&&k!==y);if(!c.length)continue;const els=[elOf(x),elOf(y)],ce=c.filter(k=>els.includes(elOf(k)));
+    if(ce.length&&mn(ce)<=mn(c)+1)c=ce;const m2=mn(c);c=c.filter(k=>(cnt[k]||0)===m2);const sp=c[h%c.length];cnt[sp]=(cnt[sp]||0)+1;FTAB[fkey(x,y)]=sp;(FREV[sp]=FREV[sp]||[]).push([x,y])}
+  return FTAB}
+function fuseRecipes(sp,n=3){fuseTab();const L=FREV[sp]||[],ow=k=>P.mons.some(m=>m.sp===k)?2:P.dex.owned[k]?1:0;
+  return L.map(p=>[p,ow(p[0])+ow(p[1])+(SP[p[0]].rar===SP[p[1]].rar?.5:0)-(SP[p[0]].boss||SP[p[1]].boss?1:0)]).sort((u,v)=>v[1]-u[1]||fkey(...u[0]).localeCompare(fkey(...v[0]))).slice(0,n).map(x=>x[0])}
+function recipeHTML(sp,n=3){const s=SP[sp];if(!s)return '';if(s.special)return '';if(s.boss)return `<div class="rcp"><div class="rcph">🧬 がったいでは うまれないよ（ボスを たおして なかまに しよう）</div></div>`;
+  const R=fuseRecipes(sp,n);if(!R.length)return `<div class="rcp"><div class="rcph">🧬 がったいでは うまれないよ（たまごで みつけよう）</div></div>`;
+  const ic=k=>{const kn=P.dex.owned[k]||P.dex.seen[k];return `<span class="rci${kn?'':' sil'}"><span class="flip">${monsterSVG(k)}</span><small>${kn?SP[k].name:'？？？'}</small></span>`};
+  return `<div class="rcp"><div class="rcph">🧬 がったいで つくれるよ ${(FREV[sp]||[]).length>n?`<small>（ほか ${(FREV[sp]||[]).length-n}とおり）</small>`:''}</div>${R.map(([x,y])=>`<div class="rcr">${ic(x)}<b>＋</b>${ic(y)}</div>`).join('')}</div>`}
+function fuseOdds(a,b){const ra=SP[a.sp].rar,rb=SP[b.sp].rar,r=Math.max(ra,rb),sa=SP[a.sp].special,sb=SP[b.sp].special,cost=Math.round(150*Math.pow(r+1,2.2));
+  if(sa||sb){const main=sa&&sb?(ra>=rb?a:b):sa?a:b,ch=chainOf(main.sp),other=main===a?b:a,sameCh=ch&&chainOf(other.sp)===ch,ev=sameCh&&EVOC[main.sp]?EVOC[main.sp]:null,sp=ev||main.sp;
+    return{r:SP[sp].rar,sp,main,up:ev?1:0,shy:a.sp===b.sp||!!main.shiny,cost,keep:1}}
+  if(a.sp===b.sp)return{r:ra,sp:a.sp,up:0,shy:true,cost,same:1};
+  const sp=fuseTab()[fkey(a.sp,b.sp)]||(ra>=rb?a.sp:b.sp);return{r:SP[sp].rar,sp,up:SP[sp].rar>r?1:0,shy:!!(a.shiny&&b.shiny),cost}}
+function fuseRoll(A,Bm,o){const sp=o.sp,r=SP[sp].rar,up=!!o.up,shy=!!o.shy;
+  const m={id:uid(),sp,lv:Math.max(A.lv,Bm.lv),xp:0,bond:o.keep?Math.max(o.main.bond||0,0):0};if(shy)m.shiny=1;if(o.keep&&o.main.fav)m.fav=true;
   P.mons=P.mons.filter(x=>x.id!==A.id&&x.id!==Bm.id);P.mons.push(m);const isNew=!P.dex.owned[sp];P.dex.owned[sp]=1;P.dex.seen[sp]=1;if(isNew)m.fav=true;
   return{m,sp,r,up,shy,isNew}}
 function fuseOpen(){const A=P.mons.find(m=>m.id===FU.a),Bm=P.mons.find(m=>m.id===FU.b),o=A&&Bm?fuseOdds(A,Bm):null,sc=m=>!A?0:m.id===A.id?3:m.sp===A.sp?2:SP[m.sp].rar===SP[A.sp].rar?1:0;
   const L=P.mons.filter(fusable).sort((x,y)=>sc(y)-sc(x)||SP[y.sp].rar-SP[x.sp].rar||y.lv-x.lv),fv=FU.f??'all',LV=L.filter(m=>fv==='all'||SP[m.sp].rar===+fv||m.id===FU.a||m.id===FU.b);
   const slot=(m,k)=>`<button class="fslot${m?' on':''}" data-fs="${k}" style="--rc:${m?RAR[SP[m.sp].rar].c:'#555'}">${m?`<div class="flip">${monImg(m)}</div><small>${SP[m.sp].name}<br>Lv${m.lv}</small>`:'<b>＋</b><small>えらんでね</small>'}</button>`;
   showModal(`<div class="mt">🧬 なかまを がったい</div><p style="font-size:13px">2たいを がったいさせて あたらしい なかまを うみだすよ！<br><small style="color:var(--sub)">パーティの なかまは つかえないよ・とくべつな なかまは すがたが のこるよ</small></p>
-    <div class="frow">${slot(A,'a')}<div class="fplus">＋</div>${slot(Bm,'b')}<div class="fplus">＝</div><div class="fslot res">${o&&(o.keep||A.sp===Bm.sp)?`<div class="flip">${monImg(o.keep?o.main:{sp:A.sp})}</div>`:'<b>？</b>'}<small>${o?RAR[o.r].n+(o.up&&RAR[o.r+1]?'〜'+RAR[o.r+1].n:''):''}</small></div></div>
-    ${o?`<div class="fodds">⬆️ レアアップ <b>${Math.round(o.up*100)}%</b>　✨ いろちがい <b>${Math.round(o.shy*100)}%</b><br><small>${o.keep?`🌟 とくべつな なかま「${SP[o.main.sp].name}」は すがたが のこるよ${o.up?'・レアアップで しんか！':''}<br>`:A.sp===Bm.sp?`🐾 おなじ しゅるい → 「${SP[A.sp].name}」のまま${evoOf(A.sp)?'（レアアップで しんか！）':''}<br>`:''}レベルは たかいほうを ひきつぐよ・いろちがいは パワー1.25ばい</small></div>`:'<div class="fodds"><small>おなじ レアどうしだと レアアップ しやすい！おなじ しゅるいだと いろちがいが でやすい！</small></div>'}
+    <div class="frow">${slot(A,'a')}<div class="fplus">＋</div>${slot(Bm,'b')}<div class="fplus">＝</div>${(()=>{if(!o)return '<div class="fslot res"><b>？</b><small></small></div>';const kn=P.dex.owned[o.sp]||P.dex.seen[o.sp];return `<div class="fslot res${kn?'':' sil'}" style="--rc:${RAR[o.r].c}"><div class="flip">${monImg({sp:o.sp,shiny:o.shy})}</div><small>${kn?SP[o.sp].name:'？？？'}<br><span style="color:${RAR[o.r].h}">${RAR[o.r].n}</span></small></div>`})()}</div>
+    ${o?`<div class="fodds">${(()=>{const kn=P.dex.owned[o.sp]||P.dex.seen[o.sp];return kn?`「<b>${SP[o.sp].name}</b>」が うまれるよ！`:'🌟 まだ みたことの ない なかまが うまれるよ！'})()}${o.up?'　⬆️ レアアップ！':''}${o.shy?'　✨ いろちがい！':''}<br><small>${o.keep?`🌟 とくべつな なかまは すがたが のこるよ${o.up?'・おなじ なかまどうしなので しんか！':'（おなじ なかまどうしだと しんか）'}<br>`:o.same?'🐾 おなじ しゅるいどうしは いろちがいに なるよ<br>':''}レベルは たかいほうを ひきつぐよ・いろちがいは パワー1.25ばい</small></div>`:'<div class="fodds"><small>くみあわせで うまれる なかまは きまっているよ！<br>おなじ レアどうし → 1つ うえの レア／おなじ しゅるいどうし → いろちがい</small></div>'}
     ${o?`<button class="btn purple big" id="fgo"${P.gold<o.cost?' disabled style="opacity:.5"':''}>🧬 がったい！ <small>🪙${fmtS(o.cost)}</small></button>`:''}
     <div class="fpk"><div class="fpkh">${!FU.a?'① 1たいめを えらんでね':!FU.b?'② 2たいめを えらんでね':'えらびなおす ときは もういちど タップ'}${A?'<small>✨おなじ しゅるい　⬆️おなじ レア</small>':''}</div>
     <div class="ffil">${[['all','ぜんぶ',L.length],...RAR.map((r,i)=>[i,r.n,L.filter(m=>SP[m.sp].rar===i).length]).filter(x=>x[2])].map(([k,n,c])=>`<button class="ffb${String(FU.f??'all')===String(k)?' on':''}" data-ff="${k}" style="--rh:${k==='all'?'#ffd23f':RAR[k].h}">${n}<small>${c}</small></button>`).join('')}</div>
     <div class="bgrid fgrid">${LV.map(m=>{const ss=A&&m.id!==A.id&&m.sp===A.sp,sr=A&&m.id!==A.id&&SP[m.sp].rar===SP[A.sp].rar;return `<button class="bcell mc fcell r${SP[m.sp].rar}${m.id===FU.a||m.id===FU.b?' fsel':''}" data-fm="${m.id}" style="--rc:${RAR[SP[m.sp].rar].c};--rh:${RAR[SP[m.sp].rar].h}">${m.id===FU.a?'<i class="fab">1</i>':m.id===FU.b?'<i class="fab">2</i>':ss?'<i class="fab h">✨</i>':sr?'<i class="fab h">⬆️</i>':''}<div class="flip">${monImg(m)}</div><span class="fnm">${SP[m.sp].name}</span><b>Lv${m.lv}</b>${m.fav?'<i class="fv">🔒</i>':''}${m.shiny?'<i class="evb">✨</i>':''}</button>`}).join('')||'<small style="color:var(--sub);grid-column:1/-1">がったい できる なかまが いないよ</small>'}</div></div>
-    <button class="btn orange" id="fbulk">⚡ まとめて がったい</button>
+    <div class="row"><button class="btn orange" id="fbulk">⚡ まとめて がったい</button><button class="btn" id="fbook" style="background:#2a6a9a">📖 ルート いちらん</button></div>
     <button class="btn gray" id="cl">もどる</button>`,
-    {cl:()=>{closeModal();renderBox()},fbulk:fuseBulk,fgo:()=>{if(A.fav||Bm.fav){showModal(`<div class="mt">🔒 おきにいりが いるよ</div><div class="frow"><div class="fslot on" style="--rc:${RAR[SP[A.sp].rar].c}"><div class="flip">${monImg(A)}</div></div><div class="fplus">＋</div><div class="fslot on" style="--rc:${RAR[SP[Bm.sp].rar].c}"><div class="flip">${monImg(Bm)}</div></div></div><p>がったい すると もとの 2たいは いなくなるよ。<br>ほんとうに いい？</p><button class="btn purple big" id="yes">🧬 がったい する</button><button class="btn gray" id="no">やめる</button>`,{yes:()=>fuseDo(A,Bm,o),no:fuseOpen});return}fuseDo(A,Bm,o)}});
+    {cl:()=>{closeModal();renderBox()},fbulk:fuseBulk,fbook:()=>fuseBook(),fgo:()=>{if(A.fav||Bm.fav){showModal(`<div class="mt">🔒 おきにいりが いるよ</div><div class="frow"><div class="fslot on" style="--rc:${RAR[SP[A.sp].rar].c}"><div class="flip">${monImg(A)}</div></div><div class="fplus">＋</div><div class="fslot on" style="--rc:${RAR[SP[Bm.sp].rar].c}"><div class="flip">${monImg(Bm)}</div></div></div><p>がったい すると もとの 2たいは いなくなるよ。<br>ほんとうに いい？</p><button class="btn purple big" id="yes">🧬 がったい する</button><button class="btn gray" id="no">やめる</button>`,{yes:()=>fuseDo(A,Bm,o),no:fuseOpen});return}fuseDo(A,Bm,o)}});
   document.querySelectorAll('[data-fm]').forEach(b=>b.onclick=()=>{const id=b.dataset.fm;snd(880,.05,'square',.03);if(FU.a===id)FU.a=null;else if(FU.b===id)FU.b=null;else if(!FU.a)FU.a=id;else FU.b=id;fuseOpen()});
   document.querySelectorAll('[data-fs]').forEach(b=>b.onclick=()=>{FU[b.dataset.fs]=null;fuseOpen()});
   document.querySelectorAll('[data-ff]').forEach(b=>b.onclick=()=>{FU.f=b.dataset.ff;snd(660,.04);fuseOpen()})}
+function dexMonModal(k){const s=SP[k],o=P.dex.owned[k],se=P.dex.seen[k];snd(660,.04);
+  showModal(`<div class="hatch flip${o?'':' sil'}">${monsterSVG(k)}</div><div class="mt">${o||se?s.name:'？？？'}</div><p><small style="color:${RAR[s.rar].h}">${RAR[s.rar].n}</small>　${o?'✅ なかまに した':se?'👀 であった':'まだ であって いない'}</p>${o?spBlock(k):''}${recipeHTML(k,4)}<button class="btn gray" id="cl">とじる</button>`,{cl:closeModal})}
+let FBK=1;
+function fuseBook(){fuseTab();const r=FBK,L=fuseOut(r);
+  const ic=k=>{const kn=P.dex.owned[k]||P.dex.seen[k];return `<span class="rci${kn?'':' sil'}"><span class="flip">${monsterSVG(k)}</span><small>${kn?SP[k].name:'？？？'}</small></span>`};
+  showModal(`<div class="mt">📖 がったい ルート</div><p style="font-size:12px;color:var(--sub)">この 2たいを がったいすると この なかまが うまれるよ（もっている なかまで つくれる ルートを さきに だすよ）</p>
+    <div class="ffil">${[1,2,3,4].map(i=>`<button class="ffb${i===r?' on':''}" data-bk="${i}" style="--rh:${RAR[i].h}">${RAR[i].n}</button>`).join('')}</div>
+    <div class="fbk">${L.map(k=>{const R=fuseRecipes(k,2),o=P.dex.owned[k];return `<div class="fbr${o?' own':''}">${ic(k)}<b class="fbe">⇐</b><div class="fbrs">${R.map(([x,y])=>`<div class="rcr">${ic(x)}<b>＋</b>${ic(y)}</div>`).join('')}</div></div>`}).join('')}</div>
+    <small style="color:var(--sub)">おなじ しゅるい どうし → いろちがい・ふつうの なかまは たまごで みつけよう</small>
+    <button class="btn gray" id="bk">もどる</button>`,{bk:fuseOpen});
+  document.querySelectorAll('[data-bk]').forEach(b=>b.onclick=()=>{FBK=+b.dataset.bk;fuseBook()})}
 function fuseDo(A,Bm,o){P.gold-=o.cost;const {m,sp,r,up,shy,isNew}=fuseRoll(A,Bm,o);FU={a:null,b:null};save();
   showModal(`<div class="mt">🧬 がったい ちゅう…</div><div class="fanim"><div class="fa l flip">${monImg(A)}</div><div class="fa r flip">${monImg(Bm)}</div><div class="fflash"></div></div>`,{});
   [330,440,550,660,880].forEach((f,i)=>snd(f,.15,'square',.04,0,i*.15));
@@ -3891,7 +3920,7 @@ function fusePairs(){const o=FBU,L=P.mons.filter(m=>fusable(m)&&(o.fav||!m.fav)&
 function fuseBulk(){const o=FBU,pairs=fusePairs(),cost=pairs.reduce((s,[a,b])=>s+fuseOdds(a,b).cost,0);
   showModal(`<div class="mt">⚡ まとめて がったい</div><p style="font-size:13px">じょうけんに あう なかまを 2たいずつ くみあわせて ぜんぶ がったい するよ</p>
     <div class="dlbl">レアリティ</div><div class="dchips">${RAR.slice(0,5).map((r,i)=>`<button class="dchip${o.r[i]?' on':''}" data-fr="${i}" style="--rh:${r.h}">${r.n}</button>`).join('')}</div>
-    <button class="dfav${o.dup?' on':''}" id="fdup">${o.dup?'☑':'☐'} 👯 おなじ しゅるい どうしだけ（いろちがい チャンス）</button>
+    <button class="dfav${o.dup?' on':''}" id="fdup">${o.dup?'☑':'☐'} 👯 おなじ しゅるい どうしだけ（いろちがいに なる）</button>
     <button class="dfav${o.sp?' on':''}" id="fsp">${o.sp?'☑':'☐'} 🌟 とくべつな なかまも ふくめる（おなじ しゅるい どうし）</button>
     <button class="dfav${o.fav?' on':''}" id="ffav">${o.fav?'☑':'☐'} 🔒 おきにいりも ふくめる</button>
     ${pairs.length?`<div class="fpairs">${pairs.slice(0,30).map(([a,b])=>`<div class="fpr"><span class="flip">${monImg(a)}</span>＋<span class="flip">${monImg(b)}</span></div>`).join('')}</div>${pairs.length>30?`<small>ほか ${pairs.length-30}くみ</small>`:''}
@@ -3971,7 +4000,7 @@ function monModal(id){autoFav(P);
   showModal(`<div class="hatch flip">${monImg(m)}</div><div style="color:${RAR[s.rar].h};font-size:14px">${RAR[s.rar].n}${s.boss?'・ボス':''}</div><div class="mt">${m.shiny?'✨ いろちがい ':''}${s.name}</div>
     <div>${elTag(m.sp)}</div><div class="skl"><div class="slv">とくぎ Lv <b>${m.sl||1}</b>/${SLMAX}</div>${skillHTML(m)}<br><small>パーティに いると はつどう</small>${slBlock(m)}</div>
     <small style="color:var(--sub)">${elIcon(m.sp)} は ${(STRONG[elOf(m.sp)]||[]).map(e=>ELS[e].i+e).join('・')||'ぜんぶ'}に つよい（ダメージ 1.5ばい）</small>
-    <p>Lv ${m.lv>=MONMAX?'MAX':m.lv}　なかまパワー <b style="color:var(--gold)">${monPow(m)}</b></p>${spBlock(m.sp)}
+    <p>Lv ${m.lv>=MONMAX?'MAX':m.lv}　なかまパワー <b style="color:var(--gold)">${monPow(m)}</b></p>${spBlock(m.sp)}${recipeHTML(m.sp)}
     <div class="pbar"><i style="width:${m.xp/monXpNeed(m)*100}%;background:var(--xp)"></i></div><small style="color:var(--sub)">パーティで モンスターを たおすと レベルアップ</small>
     <div class="snk">${[[1,'🍪'],[5,'🍰'],[10,'🎂'],[100,'🍱']].map(([n,e])=>`<button class="btn" id="sn${n}"${P.gold<snackCost(m,n)?' disabled style="opacity:.5"':''}>${e} +${n}Lv<br><small>🪙${fmtS(snackCost(m,n))}</small></button>`).join('')}</div>
     ${evoBlock(m)}
@@ -4409,7 +4438,7 @@ function spawn(){
   const sp=(boss&&B.stage===ZENST&&!B.tower&&!B.xmas&&!B.ny&&!B.weakOnly)?'zenon':B.ny?(boss?'nyeto':pick(NYMON)):B.xmas?(boss?'xsanta':pick(XMON)):ult||pickSpecies(boss?BOSSES:NORMALS,B.blv),S_=SP[sp],rar=S_.rar,m=[sp,S_.name];P.dex.seen[sp]=1;
   const mlv=Math.max(1,Math.max(st*2,P.lv)+(ult?10:boss?3:R(-1,1))),es=mlv/2;
   B.mon={boss,ult:!!ult,sp,rar,lv:mlv,es,n:(ult?'🌟 ':boss?'👑 ':'')+m[1],maxHp:Math.round((14+es*9)*(boss?3.2:1)*(1+.25*rar)*(ult?2.5:1)),dmg:Math.round((4+es*2.2)*(boss?1.4:1)*(1+.15*rar)*(ult?1.6:1))};scaleMon(B.mon);{const f=B.df||1;B.mon.maxHp=Math.round(B.mon.maxHp*Math.pow(f,.8));B.mon.dmg=Math.round(B.mon.dmg*Math.pow(f,1.1));B.mon.cdMax=B.weakOnly?99:boss?2:3;B.mon.cd=B.mon.cdMax;B.mon.na=0}if(B.tower){const f=B.wave;B.mon.maxHp=Math.round(B.mon.maxHp*(1+(f-1)*.07));B.mon.dmg=Math.round(B.mon.dmg*(1+(f-1)*.06));B.mon.n=(boss?'👑 ':'')+m[1]}B.mon.hp=B.mon.maxHp;
-  B.gaugeDur=GAUGE[B.blv]*(boss?.85:1);
+  B.gaugeDur=GAUGE[B.blv]*(boss?.85:1);B.gBase=B.gaugeDur;
   const el=$('mon');$('monE').innerHTML=monsterSVG(m[0]);el.className='fighter mon'+(boss?' boss':'')+(ult?' ult':'')+' r'+rar;anim(el,boss&&!ult?'bossin':'spawn',boss&&!ult?900:500);if(boss&&!ult){bossWarn($('arena'));anim($('arena'),'darken',1800);bgm('boss')}else if(BG.cur==='boss')bgm('battle');
   $('mName').innerHTML=`<small>${elIcon(sp)} Lv${mlv}</small> <span style="color:${RAR[rar].h}">${B.mon.n}</span> <small style="color:${RAR[rar].h}">${RAR[rar].n}</small>`;
   if(!boss&&rar>=2){toast(`✨ ${RAR[rar].n}モンスター！`);snd(1200,.3,'sine',.05,600)}updMonHp();updCd();
@@ -4418,10 +4447,13 @@ function spawn(){
   else if(boss){toast('⚠️ ボスが あらわれた！');snd(150,.5,'sawtooth',.07,-60)}
   setTimeout(nextQ,ult?1600:boss?900:500);
 }
+/* よむ じかんが いる もんだいは せいげんじかんを のばす */
+function qReadF(q,subj){const t=(q.html||'').replace(/<[^>]+>/g,'').replace(/\s/g,''),ch=(q.choices||[]).join('').length,sf={life:1.6,chi:1.35,eng:1.1}[subj]||1;
+  return Math.min(3,sf+Math.max(0,t.length-14)*.04+Math.max(0,ch-16)*.02)}
 function nextQ(){
   if(!B)return;
   if(B.mix){if(B.weakOnly&&P.weak.length)B.subj=pick(P.weak).subj;else{if(!B.bag.length)B.bag=shuffle(SUBK.slice());B.subj=B.bag.pop()}
-    B.lv=P.diff[B.subj]||0;B.gaugeDur=GAUGE[B.lv]*(B.mon&&B.mon.boss?.85:1);$('gaugeW').classList.toggle('off',!GAUGE[B.lv])}
+    B.lv=P.diff[B.subj]||0;B.gaugeDur=GAUGE[B.lv]*(B.mon&&B.mon.boss?.85:1);B.gBase=B.gaugeDur;$('gaugeW').classList.toggle('off',!GAUGE[B.lv])}
   const pool=P.weak.filter(w=>w.subj===B.subj);
   let q;
   const lastW=B.lastW||[],wp=pool.filter(w=>!lastW.includes(w.key));
@@ -4434,7 +4466,7 @@ function nextQ(){
   $('q').parentNode.classList.toggle('hasq',!!B.mix);$('q').innerHTML=(B.mix?`<span class="qsub qs-${B.subj}">${SUBJ[B.subj].n} ★${B.lv+1}</span>`:'')+(q.review?'<span class="tag">にがて</span>':'')+q.html;
   $('spk').style.display=q.speak?'':'none';
   if(q.write){$('spk').style.display='';B.qStart=performance.now();B.gaugeStart=B.qStart;B.gSave=B.gaugeDur;B.gaugeDur=0;$('gaugeW').classList.add('off');battleWrite(q);B.lock=false;if(q.speak)setTimeout(()=>say(...q.speak),150);return}
-  if(B.gSave!=null){B.gaugeDur=B.gSave;B.gSave=null;$('gaugeW').classList.toggle('off',!B.gaugeDur)}
+  B.gSave=null;if(B.gBase==null)B.gBase=B.gaugeDur;B.gaugeDur=B.gBase?Math.round(B.gBase*qReadF(q,B.subj)):0;$('gaugeW').classList.toggle('off',!B.gaugeDur);
   const box=$('choices');box.innerHTML='';box.className='choices'+(q.choices.length===3?' c3':'');
   q.choices.forEach(v=>{const b=document.createElement('button');b.className='ch'+(q.cs?' '+q.cs:'');b.textContent=v;
     if(q.cs==='small'&&v.length<=4)b.classList.remove('small');
