@@ -802,6 +802,7 @@ header.top .pill{display:flex;align-items:center;gap:2px;padding:2px 7px!importa
 .ffil{display:flex;gap:4px;overflow-x:auto;padding-bottom:4px;margin-bottom:4px;scrollbar-width:none}.ffb{flex:0 0 auto;background:#0006;border:2px solid #555;color:#ddd;border-radius:14px;padding:3px 9px;font-family:inherit;font-size:12px}.ffb small{margin-left:3px;opacity:.7;font-size:10px}.ffb.on{border-color:var(--rh);color:var(--rh);background:rgba(255,255,255,.08)}
 .fgrid .fcell{width:auto!important;min-width:0;aspect-ratio:auto}.fgrid{max-height:46vh!important;grid-template-columns:repeat(4,1fr)!important;gap:5px!important}.fcell{position:relative;padding:4px 2px 3px!important;min-height:86px}.fcell .fnm{display:block;font-size:9.5px;line-height:1.15;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}.fcell b{font-size:10px}
 .fab{position:absolute;top:-2px;left:-2px;font-style:normal;background:#ffd23f;color:#2a1a00;font-size:11px;font-weight:700;border-radius:8px;min-width:18px;height:18px;line-height:18px;text-align:center;z-index:2;border:2px solid #000}.fab.h{background:#1d2a3a;border-color:#7af0ff;font-size:10px}
+#isF{isolation:isolate}.islb.big{height:10px!important;line-height:0;padding:0!important;box-sizing:content-box}.islb{padding:0!important}.islb{line-height:0}.islb.big .islf{height:10px}.islf{display:block;height:6px;background:linear-gradient(90deg,#ff9ac0,#ff3a7a);border-radius:3px}.isr .isrt small{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.isrt{flex:1;min-width:0;display:block}.isr .isnm{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.isr .flip{flex:0 0 auto}
 </style>
 </head>
 <body>
@@ -1373,7 +1374,7 @@ function makeItem(st,d,boss,min=0){
 /* =============== save data =============== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-/*const APPV='v151'*/const APPV='v1.0.3',APPB=154;
+/*const APPV='v151'*/const APPV='v1.0.4',APPB=155;
 try{const c=document.createElement('canvas');c.width=9;c.height=9;const g=c.getContext('2d'),F=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};F(1,0,7,1,'#120d09');F(1,8,7,1,'#120d09');F(0,1,1,7,'#120d09');F(8,1,1,7,'#120d09');F(1,1,7,1,'#120d09');F(1,7,7,1,'#120d09');F(1,1,1,7,'#120d09');F(7,1,1,7,'#120d09');F(2,2,5,1,'#7a6a52');F(2,2,1,5,'#7a6a52');F(2,6,5,1,'#2a2018');F(6,2,1,5,'#2a2018');document.documentElement.style.setProperty('--pxf',`url(${c.toDataURL()})`)}catch(e){}
 const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));if(G.bgmOn===undefined)G.bgmOn=true;
 let P=null;
@@ -3945,8 +3946,8 @@ function islandPanel(){const L=isMons(),tot=L.reduce((a,m)=>a+loveOf(m),0),td=dk
     <div class="isbon">⚡ しまボーナス：しまの なかまの つよさの <b>${(isBonusRate()*100).toFixed(1)}%</b> が パワーに プラス（<b>+${fmtS(isPow())}</b>）<small>なつきどが たかいほど アップ（さいだい 2%）</small></div>
     <button class="btn purple" id="isSel">👥 しまに すむ なかまを えらぶ（${L.length}/14）</button>
     <button class="btn ${got?'gray':'orange'} big" id="isGift"${got?' disabled':''}>${got?'🎁 きょうの おみやげは もらったよ':`🎁 なかまの おみやげ（🪙${fmtS(g)}${tot>=300?'＋🎫':''}）`}</button>
-    <div class="islist">${L.map(m=>`<button class="isr" data-im="${m.id}"><span class="flip">${monImg(m)}</span><span><b>${SP[m.sp].name}</b><small>${loveRank(loveOf(m))}</small><i class="islb"><i style="width:${loveOf(m)}%"></i></i></span></button>`).join('')}</div></div>`;
-  document.querySelectorAll('#isPanel [data-im]').forEach(b=>b.onclick=()=>isMonModal(b.dataset.im));$('isSel').onclick=isPick;
+    <div class="islist">${L.map(m=>`<button class="isr" data-im="${m.id}"><span class="flip">${monImg(m)}</span><span class="isrt"><b class="isnm">${SP[m.sp].name}</b><small>${loveRank(loveOf(m))}　${Math.min(100,loveOf(m))}/100</small><span class="islb"><b class="islf" style="width:${Math.min(100,loveOf(m))}%"></b></span></span></button>`).join('')}</div></div>`;
+  document.querySelectorAll('#isPanel [data-im]').forEach(b=>b.onclick=()=>isMonModal(b.dataset.im));$('isSel').onclick=isPick;document.querySelectorAll('#isPanel .isnm').forEach(e=>fitText(e,8));
   if(!got)$('isGift').onclick=()=>{P.isDay=td;P.gold+=g;if(tot>=300)P.lt=(P.lt||0)+1;save();fanfare();fxConfetti(50);toast(`🎁 おみやげ 🪙+${fmtS(g)}${tot>=300?' 🎫+1':''}`);islandPanel()}}
 function isBonusRate(){const L=isMons();if(!L.length)return 0;const av=L.reduce((a,m)=>a+Math.min(100,m.love||0),0)/L.length;return .01+.01*av/100}
 const isPow=(p=P)=>{if(p!==P)return 0;try{return Math.round(isMons().reduce((a,m)=>a+monPow(m),0)*isBonusRate())}catch(e){return 0}};
@@ -3956,10 +3957,10 @@ function isPick(){const cand=P.mons.filter(m=>!P.party.includes(m.id)).sort((a,b
     <div class="row"><button class="btn gray" id="ia">つよい じゅんに おまかせ</button><button class="btn green" id="ok">けってい</button></div>`,
     {ia:()=>{cur.clear();cand.slice(0,14).forEach(m=>cur.add(m.id));draw()},ok:()=>{P.isl=[...cur];save();closeModal();islandOpen()}});
     document.querySelectorAll('[data-ip]').forEach(b=>b.onclick=()=>{const id=b.dataset.ip;if(cur.has(id))cur.delete(id);else{if(cur.size>=14){toast('14たいまでだよ');return}cur.add(id)}draw()})};draw()}
-const feedCost=m=>40*(SP[m.sp].rar+1);
+const feedCost=m=>Math.round((40+(m.lv||1)*12)*(Math.min(SP[m.sp].rar,6)+1)*Math.sqrt(shopS()));
 function isMonModal(id){const m=P.mons.find(x=>x.id===id);if(!m)return;const v=loveOf(m),now=Date.now(),canPet=now-(m.petT||0)>3600e3,fc=feedCost(m);
-  showModal(`<div class="hatch flip">${monImg(m)}</div><div class="mt">${SP[m.sp].name}</div><p>${loveRank(v)}<br><i class="islb big"><i style="width:${v}%"></i></i><small>なつきど ${v}/100　なかまパワー +${(v/10).toFixed(1)}%</small></p>
-    <div class="row"><button class="btn orange" id="fd"${v>=100||P.gold<fc?' disabled style="opacity:.5"':''}>🍎 えさ +5<small style="display:block">🪙${fc}</small></button><button class="btn ${canPet?'green':'gray'}" id="pt"${canPet&&v<100?'':' disabled style="opacity:.6"'}>🤚 なでる +2<small style="display:block">${canPet?'いつでも OK':Math.ceil((3600e3-(now-(m.petT||0)))/60000)+'ふん まって'}</small></button></div>
+  showModal(`<div class="hatch flip">${monImg(m)}</div><div class="mt">${SP[m.sp].name}</div><p>${loveRank(v)}<br><span class="islb big"><b class="islf" style="width:${Math.min(100,v)}%"></b></span><small>なつきど ${v}/100　なかまパワー +${(v/10).toFixed(1)}%</small></p>
+    <div class="row"><button class="btn orange" id="fd"${v>=100||P.gold<fc?' disabled style="opacity:.5"':''}>🍎 えさ +5<small style="display:block">🪙${fc<1e5?fc.toLocaleString():fmtBig(fc)}</small></button><button class="btn ${canPet?'green':'gray'}" id="pt"${canPet&&v<100?'':' disabled style="opacity:.6"'}>🤚 なでる +2<small style="display:block">${canPet?'いつでも OK':Math.ceil((3600e3-(now-(m.petT||0)))/60000)+'ふん まって'}</small></button></div>
     <button class="btn gray" id="cl">とじる</button>`,
     {fd:()=>{if(P.gold<fc||v>=100)return;P.gold-=fc;m.love=Math.min(100,v+5);isLoveFx(m);save();isMonModal(id);islandPanel()},
      pt:()=>{m.petT=now;m.love=Math.min(100,v+2);isLoveFx(m);save();isMonModal(id);islandPanel()},cl:closeModal})}
