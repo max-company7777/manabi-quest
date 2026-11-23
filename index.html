@@ -775,6 +775,12 @@ header.top .pill{display:flex;align-items:center;gap:2px;padding:2px 7px!importa
 .lanecard{clip-path:none!important;border:3px solid #000!important;border-radius:8px!important;box-shadow:0 3px 0 #0008,inset 0 0 0 2px #ffffff22!important;overflow:hidden}
 .lanecard .lcc{height:50px;bottom:2px}.lanecard .lct{top:50%!important;transform:translate(-50%,-50%)!important;padding:2px 12px!important;border-radius:6px;border-width:2px!important}.lanecard .lct b,.lanecard .lct{line-height:1.15}.lanecard .lcm{bottom:3px;height:26px}.lanecard .lcu{width:24px;height:24px}
 .lanecard .lctk{top:4px;right:4px;font-size:11px;border-radius:4px}
+.dcomp{display:grid;grid-template-columns:1fr;gap:3px;margin:0 0 7px!important;padding-bottom:6px;border-bottom:1px dashed #ffffff1c}.dcomp:last-child{border-bottom:0;margin-bottom:0!important}
+.dcomp .mlab{display:flex;align-items:baseline;gap:6px;margin:0;font-size:14px}.dcomp .mlab .e{color:#ffd23f;font-size:12px;min-width:22px}.dcomp .dcur{margin-left:auto;font-size:11px;color:#ffd23f;background:#0005;border-radius:10px;padding:1px 8px}
+.dcomp .mstars{grid-template-columns:repeat(8,1fr)!important;gap:3px!important}.dcomp .mstars .db{padding:5px 0!important;font-size:14px;min-height:0;position:relative;margin:0}.dcomp .mstars .db.sel{box-shadow:0 0 0 2px #ffd23f}
+.dcomp .mdesc{font-size:10.5px;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.dcomp .mdesc .ew{display:block;white-space:normal}
+.misrow{grid-template-columns:repeat(5,1fr)!important;gap:4px!important}.mis1{padding:4px 3px!important;font-size:11px!important;text-align:center;align-items:center}.mis1 .pbar{height:6px!important;width:100%}.mis1 small{font-size:9px!important;white-space:nowrap}
+.mis1{min-width:0;overflow:hidden}.mis1>span{font-size:11px;white-space:nowrap}.mis1 .mreq{color:#ffd23f!important;opacity:.8}
 </style>
 </head>
 <body>
@@ -1347,7 +1353,7 @@ function makeItem(st,d,boss,min=0){
 /* =============== save data =============== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-const APPV='v146';
+const APPV='v147';
 try{const c=document.createElement('canvas');c.width=9;c.height=9;const g=c.getContext('2d'),F=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};F(1,0,7,1,'#120d09');F(1,8,7,1,'#120d09');F(0,1,1,7,'#120d09');F(8,1,1,7,'#120d09');F(1,1,7,1,'#120d09');F(1,7,7,1,'#120d09');F(1,1,1,7,'#120d09');F(7,1,1,7,'#120d09');F(2,2,5,1,'#7a6a52');F(2,2,1,5,'#7a6a52');F(2,6,5,1,'#2a2018');F(6,2,1,5,'#2a2018');document.documentElement.style.setProperty('--pxf',`url(${c.toDataURL()})`)}catch(e){}
 const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));if(G.bgmOn===undefined)G.bgmOn=true;
 let P=null;
@@ -3251,14 +3257,14 @@ function renderHome(){
       eb.onclick=()=>{openBox('mons');if(ev.length===1)monModal(ev[0].id)}}else eb.style.display='none'}
   const TS=P.todaySubj||{},mp=misPer(),done=Object.keys(SUBJ).every(k=>(TS[k]||0)>=mp);
   $('mis').innerHTML=`<div>${pi('scroll')}きょうの ミッション <small style="color:var(--sub)">（それぞれ ${mp}もん せいかい）</small></div>
-    <div class="misrow">${Object.keys(SUBJ).map(k=>{const n=Math.min(mp,TS[k]||0);return `<div class="mis1${n>=mp?' ok':''}"><span>${SUBJ[k].n}${n>=mp?' '+pi('check'):''}</span><div class="pbar"><i style="width:${n/mp*100}%"></i></div><small>${n}/${mp}・★${recLv(k)+1}いじょう</small></div>`}).join('')}</div>
+    <div class="misrow">${SUBK.map(k=>{const n=Math.min(mp,TS[k]||0);return `<div class="mis1${n>=mp?' ok':''}"><span>${SUBJ[k].n}${n>=mp?' '+pi('check'):''}</span><div class="pbar"><i style="width:${n/mp*100}%"></i></div><small>${n}/${mp}</small><small class="mreq">★${recLv(k)+1}〜</small></div>`}).join('')}</div>
     ${P.claimed?`<small>${pi('check')}クリア！ また あした！</small>`:done?`<button class="btn orange claim" id="claimBtn">${pi('gift')}ほうしゅうを うけとる</button>`:'<small>ぜんぶ クリアで レア いじょうの そうびが もらえる！</small>'}`;
   if($('claimBtn'))$('claimBtn').onclick=()=>{P.claimed=true;ltAdd(1);setTimeout(()=>toast('🎫 ぐんだんけん +1'),1500);save();showDrop(makeItem(Math.round(Math.max(1,P.lv/2,...Object.values(P.best))),mixLv(),false,1),renderHome,'ミッション クリア！')};
   P.subj='mix';
   $('subj').innerHTML=`<div class="mixh">${pi('dice')}ミックス <small>さんすう・えいご・こくごが じゅんばんバラバラに でるよ</small></div>`;
-  $('dblocks').innerHTML=SUBK.map(k=>{const d=P.diff[k],rl=recLv(k);return `<div class="mrow"><div class="mlab"><span class="e">${SUBJ[k].e}</span>${SUBJ[k].n}</div><div class="mstars">${[...Array(LVN).keys()].map(i=>`<button class="btn db${i===d?' sel':''}${i<rl?' easy':''}" data-k="${k}" data-d="${i}">★${i+1}<small class="dg">${AGEHINT[i]}</small>${mastered(k,i)?'<i class="mst">🎓</i>':''}</button>`).join('')}</div><small class="mdesc">${SUBJ[k].lv[d]}${d<rl?` <b class="ew">⚠️★${rl+1}より かんたん：たまご・しんかが すすまない</b>`:mastered(k,d)?(d<LVN-1?' <b class="ew">🎓マスターずみ：★を あげよう</b>':' <b class="ew" style="color:#7af0ff">👑 さいこうの ★を マスター！</b>'):''}</small></div>`}).join('');
+  $('dblocks').innerHTML=SUBK.map(k=>{const d=P.diff[k],rl=recLv(k);return `<div class="mrow dcomp"><div class="mlab"><span class="e">${SUBJ[k].e}</span><b>${SUBJ[k].n}</b><span class="dcur">★${d+1}・${AGEHINT[d]}</span></div><div class="mstars">${[...Array(LVN).keys()].map(i=>`<button class="btn db${i===d?' sel':''}${i<rl?' easy':''}" data-k="${k}" data-d="${i}">${i+1}${mastered(k,i)?'<i class="mst">🎓</i>':''}</button>`).join('')}</div><small class="mdesc">${SUBJ[k].lv[d]}${d<rl?` <b class="ew">⚠️★${rl+1}より かんたん：たまご・しんかが すすまない</b>`:mastered(k,d)?(d<LVN-1?' <b class="ew">🎓マスターずみ：★を あげよう</b>':' <b class="ew" style="color:#7af0ff">👑 さいこうの ★を マスター！</b>'):''}</small></div>`}).join('');
   document.querySelectorAll('.db[data-k]').forEach(b=>b.onclick=()=>{snd(660,.05);P.diff[b.dataset.k]=+b.dataset.d;save();renderHome()});
-  {const d=mixLv();$('dinfo').innerHTML=`<small>ほうしゅう ×${DMULT[d]}（3つの ★の へいきん）・じかんせいげんは ★2から</small>`}
+  {const d=mixLv();$('dinfo').innerHTML=`<small>ほうしゅう ×${DMULT[d]}（${SUBK.length}つの ★の へいきん）・じかんせいげんは ★2から</small>`}
   const mx=P.best[P.subj]+1;selStage=Math.min(Math.max(1,selStage),mx);
   $('sNum').textContent=selStage;$('sPrev').disabled=selStage<=1;$('sNext').disabled=selStage>=mx;
   $('weakN').textContent=P.weak.length;
