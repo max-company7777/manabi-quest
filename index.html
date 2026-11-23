@@ -739,6 +739,18 @@ img.shy{filter:hue-rotate(150deg) saturate(1.35) brightness(1.08) drop-shadow(0 
 .bpbig{height:auto!important;aspect-ratio:16/10;width:100%}.bpbig .bbd{width:15.5%;max-width:none;bottom:30%}.bpbig .bw{bottom:4%!important}.bpbig .bbd b{position:static;display:block;text-align:center;font-size:9px;line-height:1.15;white-space:nowrap;margin-top:1px;padding:1px 0;border-radius:3px}.bpbig .bbd b .bbn{display:block;font-size:8px;color:#fff;overflow:hidden;text-overflow:ellipsis}.bpbig .bw{width:44px;height:44px}
 .bplist{display:flex;flex-direction:column;gap:5px;margin:6px 0}.bpr{display:flex;align-items:center;gap:8px;background:rgba(0,0,0,.3);border-radius:8px;padding:4px 8px;text-align:left}.bpr img{width:40px;height:40px;image-rendering:pixelated}.bpr.none img{filter:grayscale(1) brightness(.5)}.bpr b{display:block;font-size:14px}.bpr small{font-size:11px;color:var(--sub)}
 .htri .hbase{cursor:pointer}.htri .bbtn{background:#2a7a4a}
+.hsheet{display:block!important;padding:10px!important}
+.hs-top{display:grid;grid-template-columns:44% 1fr;gap:10px;align-items:center}.hs-hero #hHero{margin:0;padding:8% 6% 0;aspect-ratio:1;overflow:hidden;display:flex;align-items:flex-end;justify-content:center}.hs-hero #hHero>*{width:100%!important;height:auto;max-height:100%}
+.hs-side{display:flex;flex-direction:column;gap:6px;align-items:stretch;min-width:0}.hs-side .ttl{position:static!important;transform:none!important;font-size:12px;text-align:center;color:var(--gold);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hs-side .powbig{margin:0;justify-content:center;padding:4px 8px}.hs-side .powbig b{font-size:clamp(24px,7vw,36px)}
+.hs-side .statrow{grid-template-columns:repeat(3,1fr);justify-content:stretch;gap:4px 6px;margin:0}.hs-side .statrow span{display:flex;align-items:center;gap:2px;white-space:nowrap;font-size:12px;color:#fff}.hs-side .statrow img,.hs-side .statrow svg,.hs-side .statrow .pi{width:16px!important;height:16px!important;flex:none}
+.hs-slots{display:flex;flex-direction:column;gap:6px;margin-top:10px}.hs-slots .slots{display:grid!important;grid-template-columns:repeat(5,1fr);gap:6px}
+.slot.tile{position:relative;flex-direction:column;justify-content:center;align-items:center;gap:1px!important;padding:6px 2px 4px!important;border-radius:8px;background:radial-gradient(circle at 50% 35%,#ffffff1a,#0007);box-shadow:inset 0 0 8px var(--rc,#444),0 2px 0 #0008;min-width:0}
+.slot.tile .ic{width:60%;display:block}.slot.tile .ic img,.slot.tile .ic svg{width:100%;height:auto}.slot.tile b{font-size:12px;color:#ffd23f;line-height:1}.slot.tile.empty b{color:#888;font-size:10px}
+.slot.tile .plb{position:absolute;left:-3px;top:-6px;font-size:10px;font-style:normal;background:#2a8a3a;color:#fff;border:1px solid #000;border-radius:3px;padding:0 3px;z-index:2}
+.hs-chips{display:flex;flex-wrap:wrap;gap:4px;margin:8px 0 6px}.hs-chip{font-size:11px;background:rgba(255,210,63,.12);border:1px solid #ffd23f88;border-radius:20px;padding:2px 8px;color:#fff}.hs-chip b{color:#7af07a}.hs-chip small{color:var(--sub);font-size:10px}.hs-chip.dim{color:var(--sub)}
+.hs-btns{display:grid;grid-template-columns:1fr 1fr;gap:6px}.hs-btns .enhall{margin:0!important;width:100%!important;font-size:13px}
+@media(min-width:700px){.hs-top{grid-template-columns:38% 1fr}.slot.tile b{font-size:15px}.hs-side .statrow span{font-size:15px}}
 </style>
 </head>
 <body>
@@ -781,17 +793,12 @@ img.shy{filter:hue-rotate(150deg) saturate(1.35) brightness(1.08) drop-shadow(0 
     <button class="lanecard" id="hLane"></button>
     <button class="btn hraid" id="hRaid"></button>
     <div class="row hqrow"><button class="btn hqbtn" id="hQuest"></button><button class="btn hxbtn" id="hXmas"></button></div>
-    <div class="panel show">
-      <div class="slots" id="hSlotsL"></div>
-      <div class="herobox"><div class="ttl" id="hTitle"></div>
-        <div id="hHero"></div>
-        <div class="powbig"><small>パワー</small><b id="hPow">0</b></div>
-        <div class="statrow" id="hStats"></div>
-        <div id="hCount" style="font-size:13px;color:var(--gold);margin-top:4px"></div>
-        <button class="enhall bestall" id="hBest">⚡ さいきょう そうび</button>
-        <button class="enhall" id="hEnhAll">⚒️ まとめて きょうか</button>
-      </div>
-      <div class="slots" id="hSlotsR"></div>
+    <div class="panel show hsheet">
+      <div class="hs-top"><div class="hs-hero"><div id="hHero"></div></div>
+        <div class="hs-side"><div class="ttl" id="hTitle"></div><div class="powbig"><small>パワー</small><b id="hPow">0</b></div><div class="statrow" id="hStats"></div></div></div>
+      <div class="hs-slots"><div class="slots" id="hSlotsL"></div><div class="slots" id="hSlotsR"></div></div>
+      <div id="hCount"></div>
+      <div class="hs-btns"><button class="enhall bestall" id="hBest">⚡ さいきょう そうび</button><button class="enhall" id="hEnhAll">⚒️ まとめて きょうか</button></div>
     </div>
     <button class="evobanner" id="hEvo" style="display:none"></button>
     <div class="panel partyp" id="hParty"></div>
@@ -1317,7 +1324,7 @@ function makeItem(st,d,boss,min=0){
 /* =============== save data =============== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-const APPV='v141';
+const APPV='v142';
 try{const c=document.createElement('canvas');c.width=9;c.height=9;const g=c.getContext('2d'),F=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};F(1,0,7,1,'#120d09');F(1,8,7,1,'#120d09');F(0,1,1,7,'#120d09');F(8,1,1,7,'#120d09');F(1,1,7,1,'#120d09');F(1,7,7,1,'#120d09');F(1,1,1,7,'#120d09');F(7,1,1,7,'#120d09');F(2,2,5,1,'#7a6a52');F(2,2,1,5,'#7a6a52');F(2,6,5,1,'#2a2018');F(6,2,1,5,'#2a2018');document.documentElement.style.setProperty('--pxf',`url(${c.toDataURL()})`)}catch(e){}
 const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));if(G.bgmOn===undefined)G.bgmOn=true;
 let P=null;
@@ -1647,9 +1654,10 @@ function heroSVG(eq,look){
     for(const M of [hd,bm,hbm])for(const [k,v] of M)M.set(k,[v[0],v[1],rc(v[2])])}
   return `<svg class="hs${AU&&!auc?' aura-rb':''}" viewBox="-8 ${-18+2*HB.dup.length} 37 46" shape-rendering="crispEdges" style="${glow};overflow:visible"><g transform="scale(2)">${rects(stretchRows(bm,HB.dup))}</g>${shS}<g transform="translate(8 8) scale(${HSC}) translate(-8 -8)">${rects(hd)}${eyes}</g>${wS}<g transform="scale(2)">${rects(stretchRows(hbm,HB.dup))}</g>${petS}${fx}</svg>`;
 }
-function slotHTML(slot,it,mini){
+function slotHTML(slot,it,mini,tile){
   const ic=it?itemIcon(Object.assign({slot},it)):itemIcon(GHOST[slot],true);
   if(mini)return it?`<div class="ms" style="--rc:${RAR[it.rar].c}">${ic}</div>`:`<div class="ms empty">${ic}</div>`;
+  if(tile)return it?`<button class="slot tile" data-s="${slot}" style="--rc:${RAR[it.rar].c}">${it.plus?`<i class="plb">+${it.plus}</i>`:''}<span class="ic">${ic}</span><b>${fmtBig(iscore(it))}</b></button>`:`<button class="slot tile empty" data-s="${slot}"><span class="ic">${ic}</span><b>${SLOTN[slot]}</b></button>`;
   if(!it)return `<button class="slot empty" data-s="${slot}"><span class="ic">${ic}</span><span class="sn"><span class="snl">${SLOTN[slot]}</span><b>−</b></span></button>`;
   return `<button class="slot" data-s="${slot}" style="--rc:${RAR[it.rar].c}"><span class="ic">${ic}${it.plus?`<i class="plb">+${it.plus}</i>`:''}</span><span class="sn"><span class="snl">${SLOTN[slot]}</span><b>${fmtBig(iscore(it))}</b></span></button>`;
 }
@@ -3198,9 +3206,9 @@ function renderHome(){
   $('hLv').textContent=P.lv>=MAXLV?'MAX':P.lv;{const d=P.subj==='mix'?mixLv():P.diff[P.subj],wb=weakBlock(selStage);$('topGo').innerHTML=`${pi(wb?'book':'swords')}<b>${wb?'にがて とっくん':'しゅつげき！'}</b><small>★${d+1}・${AGEHINT[d]}・St.${selStage}</small><i>▶</i>`;$('topGo').classList.toggle('wk',wb)}$('hXp').style.width=(P.lv>=MAXLV?100:Math.min(100,P.xp/xpNeed()*100))+'%';
   countUp($('hGold'),P.gold);$('hStreak').textContent=P.streak;
   $('hHero').innerHTML=heroSVG(P.eq,P);try{renderBase()}catch(e){}try{renderLaneCard()}catch(e){}try{renderQuestBar()}catch(e){}try{renderRaidBanner()}catch(e){}try{renderRoomCard()}catch(e){}try{renderXmasBanner()}catch(e){}{const hb=document.querySelector('.herobox');if(hb){const sa=AREA(selStage||1);hb.style.setProperty('--scn',`url(${sceneURL(sa,96,120,{night:isNight()})})`)}}$('hPow').textContent=fmtBig(power());$('hTitle').textContent=titleOf(P)?'「'+titleOf(P)+'」':'';
-  $('hSlotsL').innerHTML=SLOT_L.map(k=>slotHTML(k,P.eq[k])).join('');
-  $('hSlotsR').innerHTML=SLOT_R.map(k=>slotHTML(k,P.eq[k])).join('');
-  $('hCount').innerHTML=`そうび ${SLOTS.filter(k=>P.eq[k]).length} / ${SLOTS.length}`+setHTML(P.eq);
+  $('hSlotsL').innerHTML=SLOT_L.map(k=>slotHTML(k,P.eq[k],false,true)).join('');
+  $('hSlotsR').innerHTML=SLOT_R.map(k=>slotHTML(k,P.eq[k],false,true)).join('');
+  {const c=setCounts(),ks=Object.keys(c).filter(t=>c[t]>=2).sort((a,b)=>c[b]-c[a]);$('hCount').innerHTML=`<div class="hs-chips">${ks.length?ks.map(t=>{const nx=SETSTEP.find(x=>x[0]>c[t]);return `<span class="hs-chip">🔗 ${t} <b>${c[t]}/7</b> ${setBonus(t,c[t]).map(b=>FX[b.k][0]+'+'+b.v+'%').join(' ')}${nx?`<small>（あと${nx[0]-c[t]}）</small>`:' ✨'}</span>`}).join(''):'<span class="hs-chip dim">🔗 おなじ シリーズを 2つ そろえると セット ボーナス</span>'}</div>`}
   const SI=o=>itemIcon(Object.assign({rar:0},o));
   $('hStats').innerHTML=`<span>${SI({slot:'w',icon:'🗡️'})}<b>${fmtS(atk())}</b></span><span>${SI({slot:'c',eff:'heal'})}<b>${fmtS(maxHp())}</b></span><span>${SI({slot:'s',rar:1})}<b>${fmtS(def())}</b></span><span>${SI({slot:'b',color:'#5fbf6a'})}<b>${dodge()}%</b></span><span>${SI({slot:'c',eff:'crit'})}<b>${crit()}%</b></span><span>${SI({slot:'pet',icon:'🐶'})}<b>${fmtS(petAtk())}</b></span>`;
   document.querySelectorAll('.show .slot').forEach(b=>b.onclick=()=>{const it=P.eq[b.dataset.s];
