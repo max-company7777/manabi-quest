@@ -736,6 +736,9 @@ img.shy{filter:hue-rotate(150deg) saturate(1.35) brightness(1.08) drop-shadow(0 
 .htri .binfo{left:3px;top:3px;padding:2px 5px;font-size:10px}.htri .binfo small{font-size:8px}.htri .bbtn{top:auto;bottom:3px;right:3px;left:3px;font-size:10px!important;padding:2px 4px!important;text-align:center}
 .htri .bw{width:28%!important;height:auto!important;bottom:18%!important}.htri .bw>*{width:100%}.htri .bbd img{width:26px!important}.htri .bbd b{font-size:8px}
 .lanecard{height:64px!important}
+.bpbig{height:auto!important;aspect-ratio:16/10;width:100%}.bpbig .bbd{width:17%;max-width:none;bottom:34%}.bpbig .bw{bottom:4%!important}.bpbig .bbd b{font-size:9px;white-space:nowrap}.bpbig .bw{width:44px;height:44px}
+.bplist{display:flex;flex-direction:column;gap:5px;margin:6px 0}.bpr{display:flex;align-items:center;gap:8px;background:rgba(0,0,0,.3);border-radius:8px;padding:4px 8px;text-align:left}.bpr img{width:40px;height:40px;image-rendering:pixelated}.bpr.none img{filter:grayscale(1) brightness(.5)}.bpr b{display:block;font-size:14px}.bpr small{font-size:11px;color:var(--sub)}
+.htri .hbase{cursor:pointer}.htri .bbtn{background:#2a7a4a}
 </style>
 </head>
 <body>
@@ -888,6 +891,10 @@ img.shy{filter:hue-rotate(150deg) saturate(1.35) brightness(1.08) drop-shadow(0 
   <div class="lnultg"><i id="lnUltG"></i></div>
   <div class="lncards" id="lnCards"></div>
   <div class="lnpzw" id="lnPzW"><div class="lnpz" id="lnPz"></div></div>
+</section>
+<section id="basep" class="screen">
+  <header class="hud"><button class="btn x" id="bpBack">◀</button><div style="font-size:17px">🏘️ きょてん</div><div class="pill" id="bpLv"></div></header>
+  <div class="homebody bpbody"><div class="hbase bpbig" id="bpF"><div class="bwalk"></div><div class="binfo"></div></div><div id="bpPanel"></div></div>
 </section>
 <section id="island" class="screen">
   <header class="hud"><button class="btn x" id="isBack">◀</button><div style="font-size:17px">🏝️ なかまの しま</div><div class="pill" id="isLove"></div></header>
@@ -1310,7 +1317,7 @@ function makeItem(st,d,boss,min=0){
 /* =============== save data =============== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-const APPV='v139';
+const APPV='v140';
 try{const c=document.createElement('canvas');c.width=9;c.height=9;const g=c.getContext('2d'),F=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};F(1,0,7,1,'#120d09');F(1,8,7,1,'#120d09');F(0,1,1,7,'#120d09');F(8,1,1,7,'#120d09');F(1,1,7,1,'#120d09');F(1,7,7,1,'#120d09');F(1,1,1,7,'#120d09');F(7,1,1,7,'#120d09');F(2,2,5,1,'#7a6a52');F(2,2,1,5,'#7a6a52');F(2,6,5,1,'#2a2018');F(6,2,1,5,'#2a2018');document.documentElement.style.setProperty('--pxf',`url(${c.toDataURL()})`)}catch(e){}
 const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));if(G.bgmOn===undefined)G.bgmOn=true;
 let P=null;
@@ -2279,7 +2286,7 @@ function bldURL(k,l){const tr=bldTier(l),key='bld2|'+k+'|'+tr;if(IMGC[key])retur
     for(let i=0;i<Math.min(tr,2);i++){win(bx+3,H-bh+3+i*6,3,3);win(bx+bw-6,H-bh+3+i*6,3,3)}door(bx+Math.floor(bw/2)-2,H-7,5,7);
     const cx=bx+Math.floor(bw/2),cy=H-bh-8;F(cx-3,cy,7,7,'#f4ead7');out(cx-3,cy,7,7);F(cx-1,cy+1,3,3,'#ffffff');F(cx,cy+2,1,1,O);F(cx,cy+1,1,2,O);roof(cx-4,cy-1,9,'#2a8a4a','#1a6a3a');if(tr>=3)F(cx,cy-7,1,2,'#ffd23f')}
   return IMGC[key]=cv.toDataURL()}
-function bldOpen(){P.bld=P.bld||{};showModal(`<div class="mt">🏘️ きょてんづくり</div><p style="font-size:13px">ゴールドで たてものを たてると、ぼうけんが らくに なるよ！ 🪙 ${fmtS(P.gold)}</p>
+function bldOpen(){P.bld=P.bld||{};if($('basep').classList.contains('on'))setTimeout(()=>{try{renderBase($('bpF'),true);basePanel()}catch(e){}},0);showModal(`<div class="mt">🏘️ きょてんづくり</div><p style="font-size:13px">ゴールドで たてものを たてると、ぼうけんが らくに なるよ！ 🪙 ${fmtS(P.gold)}</p>
   <div class="bldlist">${Object.entries(BLD).map(([k,b])=>{const l=bldLv(k),c=bldCost(k,l);return `<div class="bldr"><img src="${bldURL(k,Math.max(1,l))}" style="${l?'':'filter:grayscale(1) brightness(.5)'}"><div class="bldi"><b>${b.i} ${b.n} <small>${l?'Lv'+l+'/'+BLDMAX:'まだ ない'}</small></b><div class="qbar"><i style="width:${l/BLDMAX*100}%"></i></div><small>${l?b.d(l):'たてると：'+b.d(1)}${l&&l<BLDMAX?` ▶ <b style="color:#7bea5a;display:inline;font-size:11px">${b.d(l+1).replace(/^[^+-]*/,'')}</b>`:''}</small></div>${l<BLDMAX?`<button class="btn ${P.gold>=c?'orange':'gray'}" data-bd="${k}"${P.gold<c?' disabled':''}>${l?'⬆️':'🔨'}🪙${fmtS(c)}</button>`:'<b class="own">MAX</b>'}${l===29||l===69?'<span class="bldup">✨ つぎの レベルで みためが かわるよ！</span>':''}</div>`}).join('')}</div>
   <button class="btn gray" id="cl">とじる</button>`,{cl:()=>{closeModal();renderHome()}});
   document.querySelectorAll('[data-bd]').forEach(e=>e.onclick=()=>{const k=e.dataset.bd,l=bldLv(k),c=bldCost(k,l);if(P.gold<c||l>=BLDMAX)return;P.gold-=c;P.bld[k]=l+1;save();fanfare();fxConfetti(40);toast(`${BLD[k].i} ${BLD[k].n} ${l?'Lv'+(l+1)+'に！':'が できた！'}`);const L=document.querySelector('.bldlist'),sc=L?L.scrollTop:0,ms=$('mbox').scrollTop;bldOpen();const L2=document.querySelector('.bldlist');if(L2)L2.scrollTop=sc;$('mbox').scrollTop=ms;$('mbox').style.animation='none'})}
@@ -2354,13 +2361,22 @@ function renderLaneCard(){const el=$('hLane');if(!el||!P)return;P.lane=P.lane||{
     <span class="lcm">${[`<i class="lcu" style="animation-delay:0s">${heroSVG(P.eq,P)}</i>`,...ms.map((m,i)=>`<i class="lcu" style="animation-delay:${-(i+1)*1.6}s">${monImg(m)}</i>`)].join('')}<i class="lcu en" style="animation-delay:-1s">${monsterSVG('slime')}</i><i class="lcu en" style="animation-delay:-4s">${monsterSVG('bat')}</i></span>
     <span class="lct"><b>🏯 ぐんだん バトル</b><small>ステージ ${st}・さいこう ${P.lane.best}</small></span><span class="lctk${lt?'':' none'}">🎫 ${lt}<small>まい</small></span>`;
   el.onclick=()=>{snd(660,.05);laneOpen()}}
-function renderBase(){const el=$('hBase');if(!el||!P)return;const a=AREA(selStage||1),nt=isNight(),W=200,H=Math.max(60,Math.round(W*el.clientHeight/Math.max(1,el.clientWidth||360)));
+function renderBase(el,big){el=el||$('hBase');if(!el||!P)return;const a=AREA(selStage||1),nt=isNight(),W=big?260:120,H=Math.max(60,Math.round(W*el.clientHeight/Math.max(1,el.clientWidth||360)));
   el.style.background=`url(${sceneURL(a,W,H,{night:nt})}) center/100% 100%`;el.classList.toggle('night',nt);
   const ms=partyMons();el.querySelector('.bwalk').innerHTML=`<span class="bw hero" style="left:42%">${heroSVG(P.eq,P)}</span>`+ms.map((m,i)=>`<span class="bw mon" data-sp="${m.sp}" style="left:${15+i*22}%">${monImg(m)}</span>`).join('')+(nt?'<span class="bcamp">🔥</span>':'');
-  el.querySelector('.binfo').innerHTML=`${a.i} ${a.n}<small>${nt?'🌙 よる':'☀️ ひる'}・${TIERN[a.t]}</small>`;{let bl=el.querySelector('.bblds');if(!bl){bl=document.createElement('div');bl.className='bblds';el.insertBefore(bl,el.firstChild)}const ks=Object.keys(BLD).filter(k=>bldLv(k));bl.innerHTML=ks.map((k,i)=>`<span class="bbd" style="left:${2+i*(96/Math.max(ks.length,6))}%"><img src="${bldURL(k,bldLv(k))}">${k==='smith'?'<i class="bsmk"></i>':''}<b>${bldLv(k)}</b></span>`).join('');let bb=el.querySelector('.bbtn');if(!bb){bb=document.createElement('button');bb.className='btn bbtn';el.appendChild(bb)}bb.innerHTML=`🏘️ きょてん${ks.length?'':'を つくる'}`;bb.onclick=ev=>{ev.stopPropagation();snd(660,.05);bldOpen()}}
-  weather(el,a.el);el.querySelectorAll('.bw').forEach(w=>w.onclick=ev=>{ev.stopPropagation();anim(w,'bhop',450);snd(w.classList.contains('hero')?660:880,.08,'square',.04);fxAt(w,{n:6,colors:['#fff','#ffd23f'],shape:'star',spd:2.5,size:4,grav:.05})});
+  const ks=Object.keys(BLD).filter(k=>bldLv(k)),tot=Object.keys(BLD).reduce((s2,k)=>s2+bldLv(k),0);
+  el.querySelector('.binfo').innerHTML=big?`${a.i} ${a.n}<small>${nt?'🌙 よる':'☀️ ひる'}・${TIERN[a.t]}</small>`:`🏘️ きょてん<small>${ks.length?'たてもの '+ks.length+'・Lv'+tot:'まだ なにも ないよ'}</small>`;
+  {let bl=el.querySelector('.bblds');if(!bl){bl=document.createElement('div');bl.className='bblds';el.insertBefore(bl,el.firstChild)}bl.innerHTML=ks.map((k,i)=>`<span class="bbd" style="left:${2+i*(96/Math.max(ks.length,big?6:3))}%"><img src="${bldURL(k,bldLv(k))}">${k==='smith'?'<i class="bsmk"></i>':''}<b>${big?BLD[k].n+' ':''}${bldLv(k)}</b></span>`).join('');
+   let bb=el.querySelector('.bbtn');if(!bb){bb=document.createElement('button');bb.className='btn bbtn';el.appendChild(bb)}
+   if(big){bb.innerHTML=`🏗️ たてものを ${ks.length?'そだてる':'たてる'}`;bb.onclick=ev=>{ev.stopPropagation();snd(660,.05);bldOpen()}}else{bb.innerHTML='きょてんへ ▶';bb.onclick=null;el.onclick=()=>{snd(660,.05);baseOpen()}}}
+  weather(el,a.el);el.querySelectorAll('.bw').forEach(w=>w.onclick=ev=>{if(!big)return;ev.stopPropagation();anim(w,'bhop',450);snd(w.classList.contains('hero')?660:880,.08,'square',.04);fxAt(w,{n:6,colors:['#fff','#ffd23f'],shape:'star',spd:2.5,size:4,grav:.05})});
   clearInterval(baseTimer);baseTimer=setInterval(baseWander,2200);setTimeout(baseWander,300)}
-function baseWander(){const el=$('hBase');if(!el||!$('home').classList.contains('on')){clearInterval(baseTimer);return}
+function baseOpen(){show('basep');$('bpBack').onclick=()=>goHome();setTimeout(()=>{renderBase($('bpF'),true);basePanel()},30)}
+function basePanel(){const tot=Object.keys(BLD).reduce((a,k)=>a+bldLv(k),0);$('bpLv').textContent='🏗️ Lv'+tot;
+  $('bpPanel').innerHTML=`<div class="panel stbox"><div class="sth">🏘️ たてもの <small>ゴールドで たてると ぼうけんが らくに なるよ（さいだい Lv${BLDMAX}）</small></div>
+    <div class="bplist">${Object.entries(BLD).map(([k,b])=>{const l=bldLv(k);return `<div class="bpr${l?'':' none'}"><img src="${bldURL(k,Math.max(1,l))}"><span><b>${b.i} ${b.n}</b><small>${l?'Lv'+l+'・'+b.d(l):'まだ たてて いないよ'}</small></span></div>`}).join('')}</div>
+    <button class="btn orange big" id="bpGo">🏗️ たてる・そだてる</button></div>`;$('bpGo').onclick=()=>{snd(660,.05);bldOpen()}}
+function baseWander(){const el=$('home').classList.contains('on')?$('hBase'):$('basep').classList.contains('on')?$('bpF'):null;if(!el){clearInterval(baseTimer);return}
   el.querySelectorAll('.bw').forEach(w=>{if(Math.random()<.4)return;const cur=parseFloat(w.style.left)||40,x=Math.max(4,Math.min(86,cur+(Math.random()*44-22)));w.style.left=x+'%';w.classList.toggle('flipx',w.classList.contains('mon')?x>cur:x<cur);w.classList.add('walking');setTimeout(()=>w.classList.remove('walking'),1900)})}
 
 /* ===================== ✨ えんしゅつ パック ===================== */
