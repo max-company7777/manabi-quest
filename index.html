@@ -781,6 +781,10 @@ header.top .pill{display:flex;align-items:center;gap:2px;padding:2px 7px!importa
 .dcomp .mdesc{font-size:10.5px;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.dcomp .mdesc .ew{display:block;white-space:normal}
 .misrow{grid-template-columns:repeat(5,1fr)!important;gap:4px!important}.mis1{padding:4px 3px!important;font-size:11px!important;text-align:center;align-items:center}.mis1 .pbar{height:6px!important;width:100%}.mis1 small{font-size:9px!important;white-space:nowrap}
 .mis1{min-width:0;overflow:hidden}.mis1>span{font-size:11px;white-space:nowrap}.mis1 .mreq{color:#ffd23f!important;opacity:.8}
+.drow{display:grid!important;grid-template-columns:62px 1fr;align-items:center;gap:6px;margin:0 0 5px!important;padding:0!important;border:0!important}
+.drow .dl{display:flex;flex-direction:column;line-height:1.1}.drow .dl b{font-size:13px}.drow .dl small{font-size:9.5px;color:#ffd23f;white-space:nowrap}.drow .dl small.dw{color:#ff8a7a}.drow .dl small.dm{color:#7af0ff}
+.drow .mstars{display:grid!important;grid-template-columns:repeat(8,1fr)!important;gap:3px!important}.drow .mstars .db{padding:4px 0!important;font-size:13px;margin:0;min-height:0}.drow .mstars .db.sel{box-shadow:0 0 0 2px #ffd23f}.drow .mstars .db.msd:not(.sel){color:#7af0ff}
+.dnote{display:block;font-size:9.5px;color:var(--sub);margin-top:2px}
 </style>
 </head>
 <body>
@@ -1353,7 +1357,7 @@ function makeItem(st,d,boss,min=0){
 /* =============== save data =============== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-const APPV='v147';
+const APPV='v148';
 try{const c=document.createElement('canvas');c.width=9;c.height=9;const g=c.getContext('2d'),F=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};F(1,0,7,1,'#120d09');F(1,8,7,1,'#120d09');F(0,1,1,7,'#120d09');F(8,1,1,7,'#120d09');F(1,1,7,1,'#120d09');F(1,7,7,1,'#120d09');F(1,1,1,7,'#120d09');F(7,1,1,7,'#120d09');F(2,2,5,1,'#7a6a52');F(2,2,1,5,'#7a6a52');F(2,6,5,1,'#2a2018');F(6,2,1,5,'#2a2018');document.documentElement.style.setProperty('--pxf',`url(${c.toDataURL()})`)}catch(e){}
 const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));if(G.bgmOn===undefined)G.bgmOn=true;
 let P=null;
@@ -3261,8 +3265,8 @@ function renderHome(){
     ${P.claimed?`<small>${pi('check')}クリア！ また あした！</small>`:done?`<button class="btn orange claim" id="claimBtn">${pi('gift')}ほうしゅうを うけとる</button>`:'<small>ぜんぶ クリアで レア いじょうの そうびが もらえる！</small>'}`;
   if($('claimBtn'))$('claimBtn').onclick=()=>{P.claimed=true;ltAdd(1);setTimeout(()=>toast('🎫 ぐんだんけん +1'),1500);save();showDrop(makeItem(Math.round(Math.max(1,P.lv/2,...Object.values(P.best))),mixLv(),false,1),renderHome,'ミッション クリア！')};
   P.subj='mix';
-  $('subj').innerHTML=`<div class="mixh">${pi('dice')}ミックス <small>さんすう・えいご・こくごが じゅんばんバラバラに でるよ</small></div>`;
-  $('dblocks').innerHTML=SUBK.map(k=>{const d=P.diff[k],rl=recLv(k);return `<div class="mrow dcomp"><div class="mlab"><span class="e">${SUBJ[k].e}</span><b>${SUBJ[k].n}</b><span class="dcur">★${d+1}・${AGEHINT[d]}</span></div><div class="mstars">${[...Array(LVN).keys()].map(i=>`<button class="btn db${i===d?' sel':''}${i<rl?' easy':''}" data-k="${k}" data-d="${i}">${i+1}${mastered(k,i)?'<i class="mst">🎓</i>':''}</button>`).join('')}</div><small class="mdesc">${SUBJ[k].lv[d]}${d<rl?` <b class="ew">⚠️★${rl+1}より かんたん：たまご・しんかが すすまない</b>`:mastered(k,d)?(d<LVN-1?' <b class="ew">🎓マスターずみ：★を あげよう</b>':' <b class="ew" style="color:#7af0ff">👑 さいこうの ★を マスター！</b>'):''}</small></div>`}).join('');
+  $('subj').innerHTML=`<div class="mixh">${pi('dice')}ミックス <small>5つの きょうかが バラバラに でるよ・★は きょうかごとに えらべる</small></div>`;
+  $('dblocks').innerHTML=SUBK.map(k=>{const d=P.diff[k],rl=recLv(k),ms=mastered(k,d),ez=d<rl;return `<div class="mrow drow"><div class="dl"><b>${SUBJ[k].n}</b><small class="${ez?'dw':ms?'dm':''}">${ez?'⚠️かんたん':ms?(d<LVN-1?'🎓あげよう':'👑マスター'):AGEHINT[d]}</small></div><div class="mstars">${[...Array(LVN).keys()].map(i=>`<button class="btn db${i===d?' sel':''}${i<rl?' easy':''}${mastered(k,i)?' msd':''}" data-k="${k}" data-d="${i}" title="${SUBJ[k].lv[i]}">${i+1}</button>`).join('')}</div></div>`}).join('')+`<small class="dnote">⚠️かんたんすぎ（たまご・しんか すすまない）　🎓マスターずみ</small>`;
   document.querySelectorAll('.db[data-k]').forEach(b=>b.onclick=()=>{snd(660,.05);P.diff[b.dataset.k]=+b.dataset.d;save();renderHome()});
   {const d=mixLv();$('dinfo').innerHTML=`<small>ほうしゅう ×${DMULT[d]}（${SUBK.length}つの ★の へいきん）・じかんせいげんは ★2から</small>`}
   const mx=P.best[P.subj]+1;selStage=Math.min(Math.max(1,selStage),mx);
