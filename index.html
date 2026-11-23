@@ -636,7 +636,7 @@ input{font:inherit}
 .fighter.flourish>.in{animation:flourish .9s}@keyframes flourish{20%{transform:rotate(-8deg) translateY(-4px)}45%{transform:rotate(10deg) scale(1.05)}70%{transform:rotate(-4deg)}}.fighter.lookaround>.in{animation:lookaround .9s}@keyframes lookaround{25%,40%{transform:scaleX(-1)}60%,100%{transform:none}}.fighter.hopsm>.in{animation:hopsm .6s}@keyframes hopsm{30%{transform:translateY(-14px)}60%{transform:translateY(0) scale(1.05,.95)}}
 .fighter.victory>.in{animation:victory 1.2s}@keyframes victory{15%{transform:translateY(-30px) rotate(-10deg)}35%{transform:translateY(-40px) rotate(360deg)}55%{transform:translateY(0) scale(1.1,.9)}70%{transform:translateY(-12px)}85%{transform:none}}
 .lnfield.lnnight::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 85% 60%,transparent 18%,rgba(5,5,30,.72) 55%);pointer-events:none;z-index:24}.lgim{background:#2a1a3a;border:2px solid #000;padding:4px 8px;color:#ffd23f}.lgim small{display:block;color:var(--sub);font-size:11px}
-.hroom{position:relative;display:block;width:100%;aspect-ratio:16/5.2;padding:0!important;border:3px solid #000;box-shadow:0 4px 0 #0008,inset 0 0 0 2px #ffffff22;cursor:pointer;flex-shrink:0;overflow:hidden;background:#2a1a10;clip-path:polygon(3px 0,calc(100% - 3px) 0,100% 3px,100% calc(100% - 3px),calc(100% - 3px) 100%,3px 100%,0 calc(100% - 3px),0 3px)}.hroom:active{transform:translateY(3px)}
+.hroom{position:relative;display:flex;gap:3px;width:100%;aspect-ratio:16/6;padding:0!important;border:3px solid #000;box-shadow:0 4px 0 #0008,inset 0 0 0 2px #ffffff22;cursor:pointer;flex-shrink:0;overflow:hidden;background:#2a1a10;clip-path:polygon(3px 0,calc(100% - 3px) 0,100% 3px,100% calc(100% - 3px),calc(100% - 3px) 100%,3px 100%,0 calc(100% - 3px),0 3px)}.hroom:active{transform:translateY(3px)}
 .hrsc{position:absolute;inset:0;background-size:100% auto;background-position:center 75%;image-rendering:pixelated}.hroom::after{content:'';position:absolute;inset:0;box-shadow:inset 0 0 30px rgba(0,0,0,.45);pointer-events:none}
 .hrm{position:absolute;bottom:7%;width:9%;z-index:3;font-style:normal;animation:hrwalk 7s steps(28) infinite}.hrm img{width:100%;display:block}.hrhero{position:absolute;left:20%;bottom:7%;width:10%;z-index:3;font-style:normal;animation:breathe 2.6s ease-in-out infinite;transform-origin:50% 100%}.hrhero svg,.hrhero img{width:100%;height:auto;display:block}
 @keyframes hrwalk{0%,100%{transform:translateX(0)}45%{transform:translateX(60%)}50%{transform:translateX(60%) scaleX(-1)}95%{transform:translateX(0) scaleX(-1)}}
@@ -729,6 +729,9 @@ img.shy{filter:hue-rotate(150deg) saturate(1.35) brightness(1.08) drop-shadow(0 
 .hrgo.isgo{right:auto;left:auto;right:96px;background:#2a7ab0}
 .nyrow{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:6px 0}.nyrow .btn{font-size:13px;padding:8px 2px}.nyrow small{display:block;font-size:10px}
 .omibox{font-size:80px;animation:omis .3s ease-in-out infinite alternate}@keyframes omis{to{transform:rotate(12deg)}}.omipaper{background:#fffaf0;color:#c0302a;border:4px double #c0302a;border-radius:6px;width:140px;margin:8px auto;padding:14px 8px;writing-mode:vertical-rl;text-orientation:upright;min-height:180px;display:flex;align-items:center;gap:10px}.omipaper b{font-size:34px}.omipaper small{font-size:12px;color:#5a2a1a}
+.hrpane{position:relative;flex:1;overflow:hidden;height:100%;display:block;background:#1a1010}.hri{background:#3aa0e0}.hrisbg{position:absolute;inset:0}.hrisbg svg{width:100%;height:100%}
+.hrpane .hrplate{left:4px;top:4px;padding:2px 6px;font-size:12px;border-width:2px}.hrpane .hrplate small{font-size:9px}.hrpane .hrgo{right:4px;bottom:4px;padding:2px 6px;font-size:11px;border-width:2px}.hrpane .hrgo.isgo{right:4px;left:auto;background:#2a7ab0}
+.hrim{position:absolute;width:15%;z-index:3;font-style:normal;animation:hrbob 1.8s ease-in-out infinite}.hrim img{width:100%;image-rendering:pixelated}@keyframes hrbob{50%{transform:translateY(-8%)}}
 </style>
 </head>
 <body>
@@ -1304,7 +1307,7 @@ function makeItem(st,d,boss,min=0){
 /* =============== save data =============== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-const APPV='v137';
+const APPV='v138';
 try{const c=document.createElement('canvas');c.width=9;c.height=9;const g=c.getContext('2d'),F=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};F(1,0,7,1,'#120d09');F(1,8,7,1,'#120d09');F(0,1,1,7,'#120d09');F(8,1,1,7,'#120d09');F(1,1,7,1,'#120d09');F(1,7,7,1,'#120d09');F(1,1,1,7,'#120d09');F(7,1,1,7,'#120d09');F(2,2,5,1,'#7a6a52');F(2,2,1,5,'#7a6a52');F(2,6,5,1,'#2a2018');F(6,2,1,5,'#2a2018');document.documentElement.style.setProperty('--pxf',`url(${c.toDataURL()})`)}catch(e){}
 const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));if(G.bgmOn===undefined)G.bgmOn=true;
 let P=null;
@@ -3007,10 +3010,12 @@ function roomBonus(p=P){const r=p&&p.room;const o={gold:0,xp:0,party:0,egg:0,lan
   if(r.wall&&r.wall!=='cream')o.party+=1;if(r.floor&&r.floor!=='wood')o.party+=1;if(n>=10)for(const k in o)o[k]+=3;o.n=n;return o}
 const roomB=k=>{try{return roomBonus()[k]||0}catch(e){return 0}};
 function roomBonusHTML(){const b=roomBonus();return `<div class="rbon"><b>✨ へやボーナス</b>${Object.entries(REFN).map(([k,[i,n]])=>`<span class="${b[k]?'on':''}">${i}${n} +${b[k]}%</span>`).join('')}<small>${b.n>=10?'🌟 かぐ 10こ いじょうで「すてきな へや」ボーナス ぜんぶ +3%！':`かぐを 10こ おくと「すてきな へや」ボーナス（いま ${b.n}こ）`}</small></div>`}
-function renderRoomCard(){const el=$('hRoom');if(!el||!P)return;const r=roomOf(),n=Object.keys(r.place).filter(t=>r.place[t]).length,ms=partyMons().slice(0,3);
-  el.innerHTML=`<span class="hrsc" style="background-image:url(${roomSceneURL(r,isNight(),()=>{if($('home').classList.contains('on'))renderRoomCard()})})"></span>${ms.map((m,i)=>`<i class="hrm" style="left:${30+i*14}%;animation-delay:${-i*1.3}s">${monImg(m)}</i>`).join('')}<i class="hrhero">${heroSVG(P.eq,P)}</i>
-    <span class="hrplate">🏠 ${esc(P.name)}の へや<small>${n?(b=>Object.entries(REFN).filter(([k])=>b[k]).map(([k,[i]])=>i+'+'+b[k]+'%').join(' ')||'🛋️ かぐ '+n+'こ')(roomBonus()):'かぐを おくと ボーナス！'}</small></span><span class="hrgo">へやへ ▶</span><span class="hrgo isgo" id="isGo">🏝️ しま</span>`;
-  el.onclick=e=>{snd(660,.05);if(e.target.closest('#isGo')){islandOpen();return}roomOpen()}}
+function renderRoomCard(){const el=$('hRoom');if(!el||!P)return;const r=roomOf(),n=Object.keys(r.place).filter(t=>r.place[t]).length,ms=partyMons().slice(0,2),im=(typeof isMons==='function'?isMons():[]).slice(0,4),love=im.length?(typeof isMons==='function'?isMons():[]).reduce((a,m)=>a+(m.love||0),0):0;
+  el.innerHTML=`<span class="hrpane hrl" data-go="room"><span class="hrsc" style="background-image:url(${roomSceneURL(r,isNight(),()=>{if($('home').classList.contains('on'))renderRoomCard()})})"></span>${ms.map((m,i)=>`<i class="hrm" style="left:${40+i*22}%;width:18%;animation-delay:${-i*1.3}s">${monImg(m)}</i>`).join('')}<i class="hrhero" style="width:20%;left:14%">${heroSVG(P.eq,P)}</i>
+      <span class="hrplate">🏠 へや<small>${n?(b=>Object.entries(REFN).filter(([k])=>b[k]).map(([k,[ic]])=>ic+'+'+b[k]+'%').join(' ')||'🛋️ '+n+'こ')(roomBonus()):'かぐで ボーナス'}</small></span><span class="hrgo">へやへ ▶</span></span>
+    <span class="hrpane hri" data-go="island"><span class="hrisbg">${islandSVG()}</span>${im.map((m,i)=>`<i class="hrim" style="left:${22+i*17}%;bottom:${18+(i%2)*14}%;animation-delay:${-i*.9}s">${monImg(m)}</i>`).join('')}
+      <span class="hrplate">🏝️ しま<small>💗 ${love}${P.isDay!==dkey(new Date())&&im.length?'・🎁 おみやげ あり':''}</small></span><span class="hrgo isgo">しまへ ▶</span></span>`;
+  el.onclick=e=>{snd(660,.05);const g=e.target.closest('[data-go]');if(g&&g.dataset.go==='island')islandOpen();else roomOpen()}}
 function roomRender(){const r=roomOf(),W=WALLS.find(w=>w[0]===r.wall)||WALLS[0],F=FLOORS.find(f=>f[0]===r.floor)||FLOORS[0];
   $('rmTitle').textContent=`🏠 ${P.name}の へや`;$('rmGold').innerHTML=pi('coin')+fmtBig(P.gold);
   $('rmBox').style.background=`url(${roomSceneURL(r,isNight(),()=>{if($('room').classList.contains('on'))roomRender()})}) center/100% 100%`;$('rmWall').style.background='none';$('rmFloor').style.background='none';$('rmBox').classList.remove('lit','night');
