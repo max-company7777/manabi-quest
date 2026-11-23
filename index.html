@@ -798,6 +798,10 @@ header.top .pill{display:flex;align-items:center;gap:2px;padding:2px 7px!importa
 .dst{grid-area:s;font-size:11px;text-align:center;white-space:nowrap;padding:3px 2px;border-radius:6px;background:rgba(255,255,255,.08)}.dsr.dz-ez .dst{color:#ff9a8a}.dsr.dz-ms .dst{color:#7af0ff}.dsr.dz-ok .dst{color:#8af59a}.dsr.dz-ch .dst{color:#ffd23f}
 .dsd{grid-area:d;font-size:11px;color:var(--sub);line-height:1.3}
 #toast{white-space:normal!important;width:max-content;max-width:calc(92vw / var(--zf,1));text-align:center;font-size:15px;line-height:1.35}
+.fpk{background:rgba(0,0,0,.25);border:2px solid #4a3a2a;border-radius:10px;padding:6px;margin:4px 0}.fpkh{font-size:14px;color:#ffd23f;text-align:center;margin-bottom:4px}.fpkh small{display:block;font-size:10.5px;color:var(--sub);margin-top:2px}
+.ffil{display:flex;gap:4px;overflow-x:auto;padding-bottom:4px;margin-bottom:4px;scrollbar-width:none}.ffb{flex:0 0 auto;background:#0006;border:2px solid #555;color:#ddd;border-radius:14px;padding:3px 9px;font-family:inherit;font-size:12px}.ffb small{margin-left:3px;opacity:.7;font-size:10px}.ffb.on{border-color:var(--rh);color:var(--rh);background:rgba(255,255,255,.08)}
+.fgrid .fcell{width:auto!important;min-width:0;aspect-ratio:auto}.fgrid{max-height:46vh!important;grid-template-columns:repeat(4,1fr)!important;gap:5px!important}.fcell{position:relative;padding:4px 2px 3px!important;min-height:86px}.fcell .fnm{display:block;font-size:9.5px;line-height:1.15;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}.fcell b{font-size:10px}
+.fab{position:absolute;top:-2px;left:-2px;font-style:normal;background:#ffd23f;color:#2a1a00;font-size:11px;font-weight:700;border-radius:8px;min-width:18px;height:18px;line-height:18px;text-align:center;z-index:2;border:2px solid #000}.fab.h{background:#1d2a3a;border-color:#7af0ff;font-size:10px}
 </style>
 </head>
 <body>
@@ -1369,7 +1373,7 @@ function makeItem(st,d,boss,min=0){
 /* =============== save data =============== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-/*const APPV='v151'*/const APPV='v1.0.1',APPB=152;
+/*const APPV='v151'*/const APPV='v1.0.2',APPB=153;
 try{const c=document.createElement('canvas');c.width=9;c.height=9;const g=c.getContext('2d'),F=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};F(1,0,7,1,'#120d09');F(1,8,7,1,'#120d09');F(0,1,1,7,'#120d09');F(8,1,1,7,'#120d09');F(1,1,7,1,'#120d09');F(1,7,7,1,'#120d09');F(1,1,1,7,'#120d09');F(7,1,1,7,'#120d09');F(2,2,5,1,'#7a6a52');F(2,2,1,5,'#7a6a52');F(2,6,5,1,'#2a2018');F(6,2,1,5,'#2a2018');document.documentElement.style.setProperty('--pxf',`url(${c.toDataURL()})`)}catch(e){}
 const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));if(G.bgmOn===undefined)G.bgmOn=true;
 let P=null;
@@ -3846,22 +3850,28 @@ function fuseOdds(a,b){const ra=SP[a.sp].rar,rb=SP[b.sp].rar,r=Math.max(ra,rb),s
   return{r,up:r>=4?0:same?.35:.15,shy:a.sp===b.sp?.4:.12,cost}}
 function fuseRoll(A,Bm,o){const up=Math.random()<o.up,shy=Math.random()<o.shy;let sp,r=o.r;
   if(o.keep){sp=up?EVOC[o.main.sp]:o.main.sp;r=SP[sp].rar}
+  else if(A.sp===Bm.sp&&(!up||(evoOf(A.sp)&&SP[evoOf(A.sp)]))){sp=up?evoOf(A.sp):A.sp;r=SP[sp].rar}
   else{if(up)r++;const els=[elOf(A.sp),elOf(Bm.sp)];let pool=Object.keys(SP).filter(k=>{const s=SP[k];return s.rar===r&&!s.special&&!s.boss&&!/^x/.test(k)});
     const pe=pool.filter(k=>els.includes(elOf(k)));if(pe.length&&Math.random()<.6)pool=pe;if(!pool.length)pool=[A.sp];sp=pick(pool)}
   const m={id:uid(),sp,lv:Math.max(A.lv,Bm.lv),xp:0,bond:o.keep?Math.max(o.main.bond||0,0):0};if(shy||(o.keep&&o.main.shiny))m.shiny=1;if(o.keep&&o.main.fav)m.fav=true;
   P.mons=P.mons.filter(x=>x.id!==A.id&&x.id!==Bm.id);P.mons.push(m);const isNew=!P.dex.owned[sp];P.dex.owned[sp]=1;P.dex.seen[sp]=1;if(isNew)m.fav=true;
   return{m,sp,r,up,shy,isNew}}
-function fuseOpen(){const L=P.mons.filter(fusable).sort((x,y)=>SP[y.sp].rar-SP[x.sp].rar||y.lv-x.lv),A=P.mons.find(m=>m.id===FU.a),Bm=P.mons.find(m=>m.id===FU.b),o=A&&Bm?fuseOdds(A,Bm):null;
+function fuseOpen(){const A=P.mons.find(m=>m.id===FU.a),Bm=P.mons.find(m=>m.id===FU.b),o=A&&Bm?fuseOdds(A,Bm):null,sc=m=>!A?0:m.id===A.id?3:m.sp===A.sp?2:SP[m.sp].rar===SP[A.sp].rar?1:0;
+  const L=P.mons.filter(fusable).sort((x,y)=>sc(y)-sc(x)||SP[y.sp].rar-SP[x.sp].rar||y.lv-x.lv),fv=FU.f??'all',LV=L.filter(m=>fv==='all'||SP[m.sp].rar===+fv||m.id===FU.a||m.id===FU.b);
   const slot=(m,k)=>`<button class="fslot${m?' on':''}" data-fs="${k}" style="--rc:${m?RAR[SP[m.sp].rar].c:'#555'}">${m?`<div class="flip">${monImg(m)}</div><small>${SP[m.sp].name}<br>Lv${m.lv}</small>`:'<b>＋</b><small>えらんでね</small>'}</button>`;
   showModal(`<div class="mt">🧬 なかまを がったい</div><p style="font-size:13px">2たいを がったいさせて あたらしい なかまを うみだすよ！<br><small style="color:var(--sub)">パーティの なかまは つかえないよ・とくべつな なかまは すがたが のこるよ</small></p>
-    <div class="frow">${slot(A,'a')}<div class="fplus">＋</div>${slot(Bm,'b')}<div class="fplus">＝</div><div class="fslot res">${o&&o.keep?`<div class="flip">${monImg(o.main)}</div>`:'<b>？</b>'}<small>${o?RAR[o.r].n+(o.up&&RAR[o.r+1]?'〜'+RAR[o.r+1].n:''):''}</small></div></div>
-    ${o?`<div class="fodds">⬆️ レアアップ <b>${Math.round(o.up*100)}%</b>　✨ いろちがい <b>${Math.round(o.shy*100)}%</b><br><small>${o.keep?`🌟 とくべつな なかま「${SP[o.main.sp].name}」は すがたが のこるよ${o.up?'・レアアップで しんか！':''}<br>`:''}レベルは たかいほうを ひきつぐよ・いろちがいは パワー1.25ばい</small></div>`:'<div class="fodds"><small>おなじ レアどうしだと レアアップ しやすい！おなじ しゅるいだと いろちがいが でやすい！</small></div>'}
-    <div class="bgrid fgrid">${L.map(m=>`<button class="bcell mc r${SP[m.sp].rar}${m.id===FU.a||m.id===FU.b?' fsel':''}" data-fm="${m.id}" style="--rc:${RAR[SP[m.sp].rar].c};--rh:${RAR[SP[m.sp].rar].h}"><div class="flip">${monImg(m)}</div><b>Lv${m.lv}</b>${m.fav?'<i class="fv">🔒</i>':''}${m.shiny?'<i class="evb">✨</i>':''}</button>`).join('')||'<small style="color:var(--sub)">がったい できる なかまが いないよ</small>'}</div>
+    <div class="frow">${slot(A,'a')}<div class="fplus">＋</div>${slot(Bm,'b')}<div class="fplus">＝</div><div class="fslot res">${o&&(o.keep||A.sp===Bm.sp)?`<div class="flip">${monImg(o.keep?o.main:{sp:A.sp})}</div>`:'<b>？</b>'}<small>${o?RAR[o.r].n+(o.up&&RAR[o.r+1]?'〜'+RAR[o.r+1].n:''):''}</small></div></div>
+    ${o?`<div class="fodds">⬆️ レアアップ <b>${Math.round(o.up*100)}%</b>　✨ いろちがい <b>${Math.round(o.shy*100)}%</b><br><small>${o.keep?`🌟 とくべつな なかま「${SP[o.main.sp].name}」は すがたが のこるよ${o.up?'・レアアップで しんか！':''}<br>`:A.sp===Bm.sp?`🐾 おなじ しゅるい → 「${SP[A.sp].name}」のまま${evoOf(A.sp)?'（レアアップで しんか！）':''}<br>`:''}レベルは たかいほうを ひきつぐよ・いろちがいは パワー1.25ばい</small></div>`:'<div class="fodds"><small>おなじ レアどうしだと レアアップ しやすい！おなじ しゅるいだと いろちがいが でやすい！</small></div>'}
+    ${o?`<button class="btn purple big" id="fgo"${P.gold<o.cost?' disabled style="opacity:.5"':''}>🧬 がったい！ <small>🪙${fmtS(o.cost)}</small></button>`:''}
+    <div class="fpk"><div class="fpkh">${!FU.a?'① 1たいめを えらんでね':!FU.b?'② 2たいめを えらんでね':'えらびなおす ときは もういちど タップ'}${A?'<small>✨おなじ しゅるい　⬆️おなじ レア</small>':''}</div>
+    <div class="ffil">${[['all','ぜんぶ',L.length],...RAR.map((r,i)=>[i,r.n,L.filter(m=>SP[m.sp].rar===i).length]).filter(x=>x[2])].map(([k,n,c])=>`<button class="ffb${String(FU.f??'all')===String(k)?' on':''}" data-ff="${k}" style="--rh:${k==='all'?'#ffd23f':RAR[k].h}">${n}<small>${c}</small></button>`).join('')}</div>
+    <div class="bgrid fgrid">${LV.map(m=>{const ss=A&&m.id!==A.id&&m.sp===A.sp,sr=A&&m.id!==A.id&&SP[m.sp].rar===SP[A.sp].rar;return `<button class="bcell mc fcell r${SP[m.sp].rar}${m.id===FU.a||m.id===FU.b?' fsel':''}" data-fm="${m.id}" style="--rc:${RAR[SP[m.sp].rar].c};--rh:${RAR[SP[m.sp].rar].h}">${m.id===FU.a?'<i class="fab">1</i>':m.id===FU.b?'<i class="fab">2</i>':ss?'<i class="fab h">✨</i>':sr?'<i class="fab h">⬆️</i>':''}<div class="flip">${monImg(m)}</div><span class="fnm">${SP[m.sp].name}</span><b>Lv${m.lv}</b>${m.fav?'<i class="fv">🔒</i>':''}${m.shiny?'<i class="evb">✨</i>':''}</button>`}).join('')||'<small style="color:var(--sub);grid-column:1/-1">がったい できる なかまが いないよ</small>'}</div></div>
     <button class="btn orange" id="fbulk">⚡ まとめて がったい</button>
-    ${o?`<button class="btn purple big" id="fgo"${P.gold<o.cost?' disabled style="opacity:.5"':''}>🧬 がったい！ <small>🪙${fmtS(o.cost)}</small></button>`:''}<button class="btn gray" id="cl">もどる</button>`,
+    <button class="btn gray" id="cl">もどる</button>`,
     {cl:()=>{closeModal();renderBox()},fbulk:fuseBulk,fgo:()=>{if(A.fav||Bm.fav){showModal(`<div class="mt">🔒 おきにいりが いるよ</div><div class="frow"><div class="fslot on" style="--rc:${RAR[SP[A.sp].rar].c}"><div class="flip">${monImg(A)}</div></div><div class="fplus">＋</div><div class="fslot on" style="--rc:${RAR[SP[Bm.sp].rar].c}"><div class="flip">${monImg(Bm)}</div></div></div><p>がったい すると もとの 2たいは いなくなるよ。<br>ほんとうに いい？</p><button class="btn purple big" id="yes">🧬 がったい する</button><button class="btn gray" id="no">やめる</button>`,{yes:()=>fuseDo(A,Bm,o),no:fuseOpen});return}fuseDo(A,Bm,o)}});
   document.querySelectorAll('[data-fm]').forEach(b=>b.onclick=()=>{const id=b.dataset.fm;snd(880,.05,'square',.03);if(FU.a===id)FU.a=null;else if(FU.b===id)FU.b=null;else if(!FU.a)FU.a=id;else FU.b=id;fuseOpen()});
-  document.querySelectorAll('[data-fs]').forEach(b=>b.onclick=()=>{FU[b.dataset.fs]=null;fuseOpen()})}
+  document.querySelectorAll('[data-fs]').forEach(b=>b.onclick=()=>{FU[b.dataset.fs]=null;fuseOpen()});
+  document.querySelectorAll('[data-ff]').forEach(b=>b.onclick=()=>{FU.f=b.dataset.ff;snd(660,.04);fuseOpen()})}
 function fuseDo(A,Bm,o){P.gold-=o.cost;const {m,sp,r,up,shy,isNew}=fuseRoll(A,Bm,o);FU={a:null,b:null};save();
   showModal(`<div class="mt">🧬 がったい ちゅう…</div><div class="fanim"><div class="fa l flip">${monImg(A)}</div><div class="fa r flip">${monImg(Bm)}</div><div class="fflash"></div></div>`,{});
   [330,440,550,660,880].forEach((f,i)=>snd(f,.15,'square',.04,0,i*.15));
