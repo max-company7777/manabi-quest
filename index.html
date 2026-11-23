@@ -1380,7 +1380,7 @@ function makeItem(st,d,boss,min=0){
 /* =============== save data =============== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-/*const APPV='v151'*/const APPV='v1.0.6',APPB=157;
+/*const APPV='v151'*/const APPV='v1.0.7',APPB=158;
 try{const c=document.createElement('canvas');c.width=9;c.height=9;const g=c.getContext('2d'),F=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};F(1,0,7,1,'#120d09');F(1,8,7,1,'#120d09');F(0,1,1,7,'#120d09');F(8,1,1,7,'#120d09');F(1,1,7,1,'#120d09');F(1,7,7,1,'#120d09');F(1,1,1,7,'#120d09');F(7,1,1,7,'#120d09');F(2,2,5,1,'#7a6a52');F(2,2,1,5,'#7a6a52');F(2,6,5,1,'#2a2018');F(6,2,1,5,'#2a2018');document.documentElement.style.setProperty('--pxf',`url(${c.toDataURL()})`)}catch(e){}
 const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));if(G.bgmOn===undefined)G.bgmOn=true;
 let P=null;
@@ -1436,6 +1436,7 @@ const BLADE=['#c8cdd2','#6fe3ff','#c78bff','#ffd23f','#ff6fa8'];
 const WTYPE={'🪵':'club','🗡️':'sword','🪓':'axe','🔨':'hammer','🏹':'bow','🔱':'spear','🪄':'wand','🔪':'dagger','⚔️':'great','🪃':'boom'};
 const HANDLE=['......oWwo......','.....oWwo.......','....oWwo........','...oWwo.........','..oWwo..........','.oWwo...........'];
 const ICONS={
+knives:['................', '.......oo.......', '......ohbo......', '......ohbo......', '..oo..ohbo..oo..', '.ohbo.ohdo.ohbo.', '.ohbo.oooo.ohbo.', '.ohbo.ogGo.ohbo.', '.ohdo..ow..ohdo.', '.oooo..oW..oooo.', '.ogGo..oo..ogGo.', '..ow........ow..', '..oW........oW..', '..oo........oo..', '................', '................'],
 orb:['................','.....oooooo.....','....oSEeeeeo....','...oEEeeeeeeo...','...oEeeeeeeeo...','...oeeeeeeeeo...','...oeeeeeeeEo...','....oeeeeeeo....','.....oeeeeo.....','....oooooooo....','...ohggggggGo...','..ogggggggggGo..','..oGGGGGGGGGGo..','...oooooooooo...','................','................'],
 crown:['................','................','..o.....oo....o.','.ogo...ogGo..ogo','.oggo..oggo.oggo','.ogggooggggogggo','.ogggggggggggggo','.ogeggggEggggego','.ogEggggeggggEgo','.oggggggggggggGo','.oGGGGGGGGGGGGGo','..ooooooooooooo.','................','................','................','................'],
 cup:['................','..oooooooooooo..','..ohggggggggGo..','..oggggggggGGo..','...oggeEeggGo...','...oggeeeggGo...','....oggggGGo....','.....oggGGo.....','......ogGo......','......ogGo......','.....oggGGo.....','....ohgggGGo....','...oGGGGGGGGo...','...oooooooooo...','................','................'],
@@ -1530,7 +1531,7 @@ function itemPixels(it,m,ox,oy,ghost){
   if(t==='pet'){petTo(m,PETT[it.icon]||'puppy',ox,oy,ghost);return}
   const pal=itemPal(it);if(ghost)for(const k in pal)pal[k]=k==='o'?'#2a2a2a':'#5a5a5a';
   if((t==='w'||t==='q')&&WTYPE[it.icon]==='bow'){bowTo(m,pal,ox,oy);return}
-  const key=t==='w'||t==='q'?(WTYPE[it.icon]||'sword'):t==='x'?({'🔮':'orb','👑':'crown','🏆':'cup','📖':'book'}[it.icon]||'orb'):t==='c'?(it.eff||'crit'):{s:'shield',h:'helm',a:'chest',b:'boots',g:'glove',r:'ring',k:'cape'}[t];
+  const key=t==='q'&&it.icon==='🔪'?'knives':t==='w'||t==='q'?(WTYPE[it.icon]||'sword'):t==='x'?({'🔮':'orb','👑':'crown','🏆':'cup','📖':'book'}[it.icon]||'orb'):t==='c'?(it.eff||'crit'):{s:'shield',h:'helm',a:'chest',b:'boots',g:'glove',r:'ring',k:'cape'}[t];
   mapTo(m,ICONS[key],pal,ox,oy);
   if(key==='wand'&&!ghost){px(m,ox+15,oy+1,'#ffffff',false);px(m,ox+13,oy+6,'#ffffff',false)}
 }
