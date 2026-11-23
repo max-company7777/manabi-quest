@@ -788,6 +788,7 @@ header.top .pill{display:flex;align-items:center;gap:2px;padding:2px 7px!importa
 .dhead{font-size:13px;color:#ffd23f;margin-bottom:6px}.dhead small{color:var(--sub);font-size:10px}
 .drow{grid-template-columns:70px 1fr!important}.drow .mstars .db{display:flex!important;flex-direction:column;align-items:center;padding:3px 0 2px!important;line-height:1.05}.drow .mstars .db b{font-size:12px;font-weight:700}.drow .mstars .db small{font-size:7.5px;opacity:.8;white-space:nowrap;letter-spacing:-.3px}
 .drow .mstars .db{position:relative;overflow:visible}.dmst{position:absolute;top:-6px;right:-4px;font-style:normal;font-size:11px;line-height:1;filter:drop-shadow(0 1px 0 #000);z-index:2}
+#shTabs .db{white-space:nowrap;font-size:12px}.ntabs:not(.sm){display:grid!important;grid-template-columns:repeat(3,1fr);gap:4px}.ntabs:not(.sm) .ntab{margin:0}
 </style>
 </head>
 <body>
@@ -864,7 +865,7 @@ header.top .pill{display:flex;align-items:center;gap:2px;padding:2px 7px!importa
 <!-- shop -->
 <section id="shop" class="screen"><div class="awning"></div>
   <header class="hud"><button class="btn x" id="shBack">◀</button><div style="font-size:18px">🛍️ ショップ</div><div class="bst pill" id="shGold"></div></header><div id="shKeep"></div>
-  <div class="homebody"><div class="rktabs" id="shTabs" style="grid-template-columns:repeat(6,1fr)"></div><div id="shBody" style="display:flex;flex-direction:column;gap:10px"></div></div>
+  <div class="homebody"><div class="rktabs" id="shTabs"></div><div id="shBody" style="display:flex;flex-direction:column;gap:10px"></div></div>
 </section>
 
 <!-- rank -->
@@ -1360,7 +1361,7 @@ function makeItem(st,d,boss,min=0){
 /* =============== save data =============== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-const APPV='v150';
+/*const APPV='v151'*/const APPV='v1.0',APPB=151;
 try{const c=document.createElement('canvas');c.width=9;c.height=9;const g=c.getContext('2d'),F=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};F(1,0,7,1,'#120d09');F(1,8,7,1,'#120d09');F(0,1,1,7,'#120d09');F(8,1,1,7,'#120d09');F(1,1,7,1,'#120d09');F(1,7,7,1,'#120d09');F(1,1,1,7,'#120d09');F(7,1,1,7,'#120d09');F(2,2,5,1,'#7a6a52');F(2,2,1,5,'#7a6a52');F(2,6,5,1,'#2a2018');F(6,2,1,5,'#2a2018');document.documentElement.style.setProperty('--pxf',`url(${c.toDataURL()})`)}catch(e){}
 const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));if(G.bgmOn===undefined)G.bgmOn=true;
 let P=null;
@@ -1797,7 +1798,7 @@ const dayStr=d=>d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
 /* =============== players =============== */
 /* auto update: on resume, if a newer build is online, reload when not in battle */
 let updAsk=0;function checkUpdate(){if(!/^https?:/.test(location.protocol)||Date.now()-updAsk<60000)return;updAsk=Date.now();
-  fetch('./?u='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{const m=t.match(/const APPV='(v\d+)'/);if(m&&m[1]!==APPV){if(typeof B!=='undefined'&&B){toast('🆕 あたらしい バージョンが あるよ（バトルの あとで こうしん）');return}toast('🆕 さいしんばんに こうしん するね');setTimeout(()=>location.reload(),900)}}).catch(()=>{})}
+  fetch('./?u='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{const m=t.match(/APPB=(\d+)/);if(m&&+m[1]!==APPB){if(typeof B!=='undefined'&&B){toast('🆕 あたらしい バージョンが あるよ（バトルの あとで こうしん）');return}toast('🆕 さいしんばんに こうしん するね');setTimeout(()=>location.reload(),900)}}).catch(()=>{})}
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')checkUpdate()});setTimeout(checkUpdate,3000);
 function renderPlayers(){if($('verT'))$('verT').textContent=APPV;try{const ts=$('tScene');if(ts){ts.style.background=`url(${sceneURL(AREAS[(new Date().getDate())%10],160,90,{night:isNight()})}) center/cover`;const p0=G.profiles[0];ts.querySelector('.trun').innerHTML=`<span class="tr h">${heroSVG(p0?p0.eq:{w:{slot:'w',icon:'🗡️',rar:0}},p0||{lv:1,eq:{}})}</span><span class="tr m1">${monsterSVG('slime')}</span><span class="tr m2">${monsterSVG('bat')}</span><span class="tr m3">${monsterSVG('golem')}</span>`}}catch(e){}
   $('plist').innerHTML=G.profiles.map(p=>`<button class="panel pcard" data-id="${p.id}"><div class="av">${heroSVG(p.eq,p)}</div>
@@ -1984,7 +1985,7 @@ function noteRec(q,ok,chosen){if(!P||!q||!q.key)return;const N=P.note||(P.note=[
     e.n++;e.ok=0;e.t=Date.now();if(chosen!=null)e.c=chosen;if(N.length>150)N.length=150}
   else if(e){e.ok=(e.ok||0)+1}}
 let noteF={s:'all',d:'todo'};
-function noteOpen(){const N=P.note||[],f=noteF,SUBN={all:'ぜんぶ',math:'さんすう',eng:'えいご',kanji:'こくご'};
+function noteOpen(){const N=P.note||[],f=noteF,SUBN={all:'ぜんぶ',math:'さんすう',eng:'えいご',kanji:'こくご',life:'せいかつ',chi:'ちしき'};
   const L=N.filter(e=>(f.s==='all'||e.s===f.s)&&(f.d==='all'||(f.d==='todo'?(e.ok||0)<2:(e.ok||0)>=2)));
   const todo=N.filter(e=>(e.ok||0)<2).length;
   showModal(`<div class="mt">📒 まちがい ノート</div><p style="font-size:13px">まちがえた もんだいを ここで みなおそう。<br><small style="color:var(--sub)">あとで 2かい せいかい すると「できた！」に なるよ</small></p>
@@ -3209,13 +3210,13 @@ function cheatOpen(){if(!P||!P.cheat)return;try{cheatSyncCats();save()}catch(e){
 const HELP=[
  ['play','🎮 あそびかた',`<b>しゅつげき</b>を おすと バトル！ もんだいに せいかいすると てきに こうげき。<br>1ステージは 5たい（さいごは ボス）。ぜんぶ たおすと クリアで ゴールドや そうびが もらえるよ。<br>まちがえたり じかんぎれに なると ダメージ。HPが 0に なると まけ。<br><small>はやく こたえると ダメージ アップ・れんぞく せいかいで コンボ！</small>`],
  ['diff','⭐ むずかしさ（★）',`きょうかごとに ★1〜★8（4さい〜6ねんせい）を えらべるよ。★が たかいほど ごほうびが ふえる。<br>⚠️ としに あった ★より ひくいと、たまご・しんか・ミッションが すすまないよ。<br>🎓 おなじ ★で さいきん 30もん中 27もん せいかいすると <b>マスター</b>！ つぎの ★に ちょうせんしよう（マスターした ★は ごほうび 1/3。★8は そのまま）。`],
- ['mix','🎲 ミックス',`さんすう・えいご・こくごが じゅんばん バラバラに でるよ。もんだいの ひだりうえに きょうかと ★が でる。<br>さいきん でた もんだいは なるべく でないように なっているよ。`],
+ ['mix','🎲 ミックス',`さんすう・えいご・こくご・せいかつ・ちしきの 5つが じゅんばん バラバラに でるよ。もんだいの ひだりうえに きょうかと ★が でる。<br>さいきん でた もんだいは なるべく でないように なっているよ。`],
  ['streak','🔥 れんぞく にっすう',`ホームの みぎうえの 🔥は <b>まいにち つづけて あそんだ ひにち</b>。<br>1にち 1かい あそぶと ふえて、ログインボーナスの ゴールドが もらえる（7にちめで さいだい）。<br>1にちでも あそばないと 1に もどっちゃうよ。`],
  ['stat','📈 つよさ（ステータス）',`<b>パワー</b>：つよさの めやす。そうび・レベル・なかまで あがる。<br>⚔️ <b>こうげき</b>：1もん せいかいで あたえる ダメージ<br>❤️ <b>HP</b>：たいりょく。0で まけ<br>🛡️ <b>ぼうぎょ</b>：うける ダメージを へらす<br>👟 <b>かいひ</b>：てきの こうげきを よける かくりつ<br>⚡ <b>かいしん</b>：ダメージが 2ばいに なる かくりつ<br>🐶 <b>ペット</b>：せいかいの たびに ペットも こうげき`],
  ['gear','⚔️ そうび',`10かしょに つけられるよ。てきを たおすと おとす ことが ある。<br>レアど：ふつう → レア → エピック → でんせつ → しんわ。たかいほど つよくて とくべつな こうかが つく。<br>⚡<b>さいきょう そうび</b>：ボックスから いちばん つよく なる くみあわせに いっきに かえる。<br>⚒️<b>きょうか</b>：ゴールドで +1 ごとに パワー +10%。つけかえても + は あたらしい そうびに ひきつぐよ（むりょう）。<b>まとめて きょうか</b> で いっきに あげられる。<br>📦 ボックスに 100こまで。いらない そうびは うって ゴールドに。`],
  ['mons','🐾 なかま',`ボスが <b>たまご</b>を おとすことが あるよ。ふかきに いれて せいかいすると かえって なかまに！<br>パーティに いれた なかまは いっしょに たたかって、スキル（とくべつな ちから）で たすけて くれる。ぞくせいの あいしょうも あるよ。<br>いっしょに せいかいすると <b>きずな</b>が ふえる。レベルと きずなが たまると <b>しんか</b>！（ホームに おしらせが でるよ）<br>🔒おきにいり・👋おわかれ（ゴールドに なる）も できる。`],
  ['ult','🌟 きゅうきょくの モンスター',`なかまの しゅるいが 50・100・151に なると、それぞれ とても つよい きゅうきょくモンスターに であえるように なるよ。<br>であえる かくりつは ひくいけど、であえない ステージが つづくと だんだん あがる。たおすと カケラが もらえて、10こで たまごに！`],
- ['shop','🛍️ ショップ',`ゴールドで きせかえ（ぼうし・オーラ・すがた）や、ふかきの わく・なかまを つれていける かずを ふやせるよ。`],
+ ['shop','🛍️ ショップ',`<b>どうぐ</b>：ふくびきけん・ぐんだんけん・ゴールドや けいけんちが 2ばいに なる アイテム・とくぎの たま。まいにち かわる「きょうの おすすめ」は 30% OFF！<br><b>きせかえ</b>：すがた・ぼうし・オーラ・しょうごう・はいけい。<br><b>そだて</b>：ふかきの わく・なかまを つれていける かずを ふやせるよ。`],
  ['event','📅 きょうの イベント',`まいにち ちがう ボーナスが あるよ！<br>${EVENTS.map(e=>`${e.i} <b>${e.d}</b>：${e.t}`).join('<br>')}`],
  ['map','🗺️ ワールドマップ',`10ステージごとに あたらしい ばしょに すすむよ。ばしょごとに けしきと でてくる モンスターの ぞくせいが かわる。<br>ホームの マップから、いったことの ある ばしょを えらべるよ。<br>🎁 ばしょの さいごの ステージを クリアすると ゴールド・ふくびきけん・つよい そうびが もらえる。せかいの ばしょを ぜんぶ クリアすると「せいは ほうしゅう」で げんていの しょうごう・オーラ・かぐ（まかい・かみがみは たまごも）！ ♾️ はてしない せかいでは 50ステージごとに もらえるよ。`],
  ['tower','🗼 むげんの とう',`1かいに 1たいずつ たおして、どこまで のぼれるか ちょうせん！ 10かいごとに ボスが いて、たおすと ゴールドと ふくびきけん。<br>HPは すこししか かいふく しないので、そうびを つよくして いこう。さいこう きろくは ランキングにも のるよ。`],
@@ -3228,6 +3229,17 @@ const HELP=[
  ['mini','🎣 ミニゲーム',`ステージを クリアすると ときどき ボーナスゲーム！<br>🎣 <b>つり</b>：ウキが みどりの ところで「つる！」。まんなかの きいろだと でっかい さかな！<br>🗝️ <b>たからさがし</b>：9まいの すなから 3かい ほって たからを さがそう。`],
  ['mission','📜 きょうの ミッション',`まいにち きょうかごとに きめられた かず せいかいすると クリア。ぜんぶ クリアすると ほうしゅうが もらえるよ。`],
  ['weak','📕 にがてノート',`まちがえた もんだいが はいるよ。バトルの なかで ときどき ふくしゅうに でて、2かい せいかいすると そつぎょう！<br><b>にがてが のこっていると あたらしい ステージには すすめないよ。</b>「にがて とっくん」で かいせつを よみながら 1もんずつ ゆっくり といて、ゼロに しよう！（クリアずみの ステージは あそべるよ）`],
+ ['subj','📚 5つの きょうか',`<b>さんすう</b>：けいさん<br><b>えいご</b>：たんご・つづり<br><b>こくご</b>：かんじの よみ・かきとり<br><b>せいかつ</b>：とけい・おかね・ぶんしょうだい・じかん・はやさ<br><b>ちしき</b>：とどうふけん・りか`],
+ ['note','📒 まちがい ノート',`まちがえた もんだいが きょうかごとに たまるよ。「もういちど とく」で ふくしゅうして、2かい せいかいすると「できた！」に なる。`],
+ ['prac','🎯 れんしゅう',`<b>かきとり</b>：ゆびで かんじや ひらがなを かいて れんしゅう（かきじゅんは みないよ）。<br><b>えいごの はつおん</b>：マイクに むかって えいごを いうと、ちゃんと いえたか しらべるよ。`],
+ ['fuse','🧬 がったい・とくぎ',`なかまを 2たい がったいさせると あたらしい なかまが うまれるよ。おなじ レアどだと レアアップ しやすい！ いろちがいは つよさ ×1.25。<br><b>とくぎ</b>は ゴールド・ダブり・💎とくぎの たまで Lv10まで あげられる。なかまには S〜Dの つよさランクも あるよ。`],
+ ['set','🛡️ セットこうか',`おなじ シリーズの そうびを そろえると、そろえた かずに おうじて ボーナスが つくよ。ホームの そうびの したに でているよ。`],
+ ['island','🏝️ なかまの しま',`パーティに いない なかまが くらす しま。タップで なでたり えさを あげたり すると なかよしどが あがって つよく なる。しまの なかまの つよさの すこしが パワーに プラスされるよ（さいだい 14たい）。`],
+ ['base','🏯 きょてん',`ゴールドで たてものを たてて そだてると、ゴールドや けいけんちが ふえたり、ぐんだんの しろが かたく なったり するよ。`],
+ ['family','👨‍👩‍👧 かぞくの あそび',`<b>かぞく レイド</b>：どようび・にちようび・しゅくじつに みんなで ボスに いどもう！ 3たい つづけて でてくるよ。<br><b>かぞく たいせん</b>：ぐんだん バトルで かぞくの なかまと たいせん できるよ。`],
+ ['story2','🌌 ストーリー だい2しょう',`さいしょの せかいを クリアすると「ほしぞらの せかい」へ！ さいごの ボスを たおすと、はてしない せかいが つづくよ。`],
+ ['season','🎍 きせつの イベント',`クリスマスや おしょうがつには とくべつな イベントが あるよ。げんてい の なかまや ぼうしを ゲットしよう！`],
+ ['gift','🎁 プレゼント コード',`ホームの 🎁コード から、おうちの ひとに もらった コードを いれると とくべつな なかまが もらえるよ。`],
  ['etc','📊 そのほか',`<b>きろく</b>：きょうかや しゅるいごとの せいかいりつ<br><b>ランキング</b>：かぞくの なかの ランキング<br><b>👨‍👩‍👧 かぞくで つながる</b>：かぞくコードで ほかの たんまつと つながる（せってい から）<br><b>🎁 プレゼントコード</b>：とくべつな なかまが もらえる（せってい から）<br><b>👨‍👩‍👧 おうちの ひと</b>：ぼうけんしゃを えらぶ がめんから、みんなの ようすが みられる`]];
 function helpOpen(open){
   showModal(`<div class="mt">${pi('help')}ヘルプ</div><div class="helpbox">${HELP.map(([k,t,b])=>`<details${k===open?' open':''} id="hp-${k}"><summary>${t}</summary><div>${b}</div></details>`).join('')}</div><button class="btn gray" id="cl">とじる</button>`,{cl:closeModal});
@@ -4178,7 +4190,7 @@ function shopBuyItem(k,deal){const it=SHOPI.find(x=>x[0]===k),pr=shopPrice(it,de
 function openShop(t){if(t)shTab=t;show('shop');renderShop()}
 function previewHero(c){return heroSVG(P.eq,Object.assign({},P,{cos:Object.assign({},cosOf(P),c)}))}
 function renderShop(){
-  const C=cosOf(P);$('shGold').textContent='🪙'+Math.floor(P.gold).toLocaleString();if(!$('shKeep').innerHTML)$('shKeep').innerHTML=keeperHTML('shop');
+  const C=cosOf(P);$('shGold').textContent='🪙'+(P.gold<1e7?Math.floor(P.gold).toLocaleString():fmtBig(Math.floor(P.gold)));if(!$('shKeep').innerHTML)$('shKeep').innerHTML=keeperHTML('shop');
   $('shTabs').innerHTML=[['item','どうぐ'],['outfit','すがた'],['hat','ぼうし'],['aura','オーラ'],['title','しょうごう'],['bg','はいけい'],['grow','そだて']].map(([k,n])=>`<button class="btn db${shTab===k?' sel':''}" data-k="${k}">${n}</button>`).join('');
   document.querySelectorAll('#shTabs .db').forEach(b=>b.onclick=()=>{shTab=b.dataset.k;renderShop()});
   let h='';
