@@ -1481,7 +1481,7 @@ function makeItem(st,d,boss,min=0){
 /* =============== save data =============== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-/*const APPV='v151'*/const APPV='v1.1.0',APPB=163;
+/*const APPV='v151'*/const APPV='v1.1.1',APPB=164;
 try{const c=document.createElement('canvas');c.width=9;c.height=9;const g=c.getContext('2d'),F=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};F(1,0,7,1,'#120d09');F(1,8,7,1,'#120d09');F(0,1,1,7,'#120d09');F(8,1,1,7,'#120d09');F(1,1,7,1,'#120d09');F(1,7,7,1,'#120d09');F(1,1,1,7,'#120d09');F(7,1,1,7,'#120d09');F(2,2,5,1,'#7a6a52');F(2,2,1,5,'#7a6a52');F(2,6,5,1,'#2a2018');F(6,2,1,5,'#2a2018');document.documentElement.style.setProperty('--pxf',`url(${c.toDataURL()})`)}catch(e){}
 const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));
 /* ⚡ かるい モード：ふるい たんまつは じどうで ON */
@@ -5119,40 +5119,61 @@ function chibi(eq,look){const W=40,H=46,G=[...Array(H)].map(()=>Array(W).fill(nu
   const E=k=>eq&&eq[k]||null,a=E('a'),h=E('h'),bt=E('b'),gl=E('g'),cape=E('k'),shd=E('s'),c=E('c'),ring=E('r'),wpn=E('w')||E('q')||{slot:'w',icon:'🪵',rar:0};
   const out=L.cos&&L.cos.outfit,PO=out&&OUTFITS[out],PR=PO&&PO[3],HOLY=out==='holy',MAOU=out==='maou';
   const OY=9,OX=4,P=(x,y,col,o={})=>{y+=OY;x+=OX;if(x<0||y<0||x>=W||y>=H)return;if(!col){G[y][x]=null;return}G[y][x]=Object.assign({c:col},o)},R=(x,y,w,hh,col,o)=>{for(let j=0;j<hh;j++)for(let i=0;i<w;i++)P(x+i,y+j,col,o)},
-    EL=(cx,cy,rx,ry,col,o)=>{for(let y=Math.floor(cy-ry);y<=Math.ceil(cy+ry);y++)for(let x=Math.floor(cx-rx);x<=Math.ceil(cx+rx);x++)if(((x-cx)/rx)**2+((y-cy)/ry)**2<=1)P(x,y,col,o)};
-  const skin=L.skin,hc=L.hc;let armor=a&&a.icon!=='👕'?(a.color||L.color):null,shirt=armor||L.color;
-  let capeC=cape?cape.color:null,helmC=h?h.color:null,bootC=bt?bt.color:'#4a3426',gloveC=gl?gl.color:null,eyeC='#3a3a90',trim=null,horn=null;
+    EL=(cx,cy,rx,ry,col,o)=>{for(let y=Math.floor(cy-ry);y<=Math.ceil(cy+ry);y++)for(let x=Math.floor(cx-rx);x<=Math.ceil(cx+rx);x++)if(((x-cx)/rx)**2+((y-cy)/ry)**2<=1)P(x,y,col,o)},
+    ELR=(cx,cy,rx,ry,col,onlyLow)=>{const inE=(x,y)=>((x-cx)/rx)**2+((y-cy)/ry)**2<=1;for(let y=Math.floor(cy-ry);y<=Math.ceil(cy+ry);y++)for(let x=Math.floor(cx-rx);x<=Math.ceil(cx+rx);x++)if(inE(x,y)&&(!inE(x+1,y)||!inE(x-1,y)||!inE(x,y+1)||!inE(x,y-1))&&(!onlyLow||y>=cy))P(x,y,col,{flat:1})},LN_='#1c1220';
+  const MET=(c,t=.42)=>c?tx(hx('#a0aabe').map((v,i)=>v+(hx(c)[i]-v)*t)):c;
+  const skin=L.skin,hc=L.hc;let armor=a&&a.icon!=='👕'?MET(a.color||L.color):null,shirt=armor||L.color;
+  let capeC=cape?cape.color:null,helmC=h?MET(h.color):null,bootC=bt?MET(bt.color,.5):'#4a3426',gloveC=gl?MET(gl.color,.5):null,eyeC='#3a3a90',trim=null,horn=null;
   if(HOLY){armor=shirt='#eceef8';trim='#e8c13a';capeC='#3a6ad8';helmC='#f4f4fc';bootC='#d8dce8';gloveC='#e8eaf4';eyeC='#2a8aff';horn='#e8c13a'}
   if(MAOU){armor=shirt='#2a1a3a';trim='#c02a3a';capeC='#5a0a1a';helmC='#24243a';bootC='#14141c';gloveC='#1a1a24';eyeC='#ff2a3a';horn='#d8d0e8'}
   const PANT='#3a3f62';
-  /* マント（うしろ） */
-  if(capeC){for(let y=14;y<=27;y++){const sp=Math.floor((y-14)/4);R(9-sp,y,10+sp*2,1,y>25?sh(capeC,-.25):sh(capeC,-.12))}R(9,14,10,1,sh(capeC,.1))}
+  const AR=HOLY||MAOU?4:(a?a.rar||0:0),GOLD='#e8c13a',GOLD2='#a87a18';if(armor&&!trim&&AR>=2)trim=AR>=4?GOLD:AR>=3?'#c8ccd8':'#b07a3a';
+  const M1=armor?sh(shirt,.32):null,M2=armor?sh(shirt,-.28):null,M3=armor?sh(shirt,-.48):null,RIV=trim||(armor?sh(shirt,.5):null);
+  /* マント（うしろ・おおきく なびく） */
+  if(capeC){for(let y=14;y<=26;y++){const sp=Math.floor((y-14)/6);R(9-sp,y,10+sp*2,1,y>25?sh(capeC,-.3):(y%4===0?sh(capeC,-.2):sh(capeC,-.1)))}R(8,13,12,1,sh(capeC,.15));if(cape&&cape.rar>=2||HOLY||MAOU)R(8,26,12,1,trim||RAR[cape?cape.rar:2].h)}
   /* ながい かみ（うしろ） */
   if(L.hair==='long'||PR){R(6,8,16,10,sh(hc,-.18));R(7,18,14,2,sh(hc,-.25))}
   /* あし・くつ */
   if(PR){const{D:PD,Lt,Dk,T}=PR;for(let y=20;y<=28;y++){const g=Math.floor((y-20)/2);R(9-g,y,10+g*2,1,y%3===0?Lt:PD)}R(5,29,18,1,Dk);for(let x=6;x<22;x+=3)P(x,28,T);if(PR.star)[[8,22],[12,24],[17,21],[19,25],[10,27],[15,26]].forEach(([x,y])=>P(x,y,T,{flat:1}));R(10,30,3,2,'#ffffff');R(15,30,3,2,'#ffffff')}
-  else{R(10,23,3,4,PANT);R(15,23,3,4,sh(PANT,-.15));P(12,23,sh(PANT,-.3));
-    R(9,27,4,2,bootC);R(15,27,4,2,sh(bootC,-.12));P(9,27,sh(bootC,.35));P(15,27,sh(bootC,.25));if(bt||HOLY||MAOU){R(10,25,3,2,bootC);R(15,25,3,2,sh(bootC,-.12))}}
+  else{const heavy=bt||HOLY||MAOU;
+    R(10,23,3,4,PANT);R(15,23,3,4,sh(PANT,-.15));P(12,23,sh(PANT,-.3));
+    if(heavy){/* すねあて＋ひざ＋おおきな ブーツ */for(const [x,d] of [[9,0],[15,-.12]]){R(x,24,4,3,sh(bootC,d));R(x,24,1,3,sh(bootC,d+.25));P(x+1,23,sh(bootC,d+.3));P(x+2,23,sh(bootC,d+.15));R(x-1,27,6,2,sh(bootC,d-.05));R(x-1,27,6,1,sh(bootC,d+.2));R(x-1,29,6,1,LN_,{flat:1});if(trim)R(x,26,4,1,trim)}}
+    else{R(9,27,4,2,bootC);R(15,27,4,2,sh(bootC,-.12));P(9,27,sh(bootC,.35));P(15,27,sh(bootC,.25))}}
   /* からだ */
-  if(!PR){R(9,15,10,8,shirt);R(9,15,1,8,sh(shirt,.16));R(18,15,1,8,sh(shirt,-.22));
-    if(armor){R(11,16,6,4,sh(shirt,.12));R(11,16,6,1,sh(shirt,.3));if(trim){R(9,15,10,1,trim);R(13,16,2,5,trim)}else if(a&&a.rar>=1)P(14,17,RAR[a.rar].h)}
-    else{P(12,15,sh(shirt,-.35));P(15,15,sh(shirt,-.35));R(13,15,2,2,skin);P(13,17,sh(shirt,-.2));P(14,17,sh(shirt,-.2))}
-    R(9,21,10,1,'#3a2414');R(13,21,2,1,'#e8c13a')}
+  if(!PR){
+    if(armor){/* むねあて：はばひろ・だんだん プレート */R(8,15,12,8,shirt);R(8,15,1,8,M1);R(19,15,1,8,M2);
+      R(10,15,8,1,M1);R(10,16,8,3,sh(shirt,.12));R(10,16,8,1,M1);R(13,16,2,4,M1);P(13,19,M2);P(14,19,M2);
+      R(9,19,10,1,M2);R(9,20,10,1,sh(shirt,-.08));R(9,21,10,1,M3);
+      if(trim){R(8,15,12,1,trim);R(13,15,2,1,GOLD)}[[10,17],[17,17],[10,20],[17,20]].forEach(([x,y])=>P(x,y,RIV));
+      if(AR>=3||HOLY||MAOU){R(12,17,4,2,trim||GOLD);P(13,17,AR>=4?'#7af0ff':RAR[Math.max(1,AR)].h,{flat:1});P(14,17,AR>=4?'#7af0ff':RAR[Math.max(1,AR)].h,{flat:1})}
+      R(8,15,1,8,LN_,{flat:1});R(19,15,1,8,LN_,{flat:1});R(9,14,10,1,LN_,{flat:1});
+      /* くさずり（こしの プレート） */R(8,22,12,1,'#3a2414');R(13,22,2,1,GOLD);R(8,23,4,2,sh(shirt,-.05));R(16,23,4,2,sh(shirt,-.18));R(8,23,4,1,M1);R(16,23,4,1,sh(shirt,.1));R(7,23,1,2,LN_,{flat:1});R(12,23,1,2,LN_,{flat:1});R(15,23,1,2,LN_,{flat:1});R(20,23,1,2,LN_,{flat:1});if(trim){R(8,24,4,1,trim);R(16,24,4,1,trim)}}
+    else{R(9,15,10,8,shirt);R(9,15,1,8,sh(shirt,.16));R(18,15,1,8,sh(shirt,-.22));P(12,15,sh(shirt,-.35));P(15,15,sh(shirt,-.35));R(13,15,2,2,skin);P(13,17,sh(shirt,-.2));P(14,17,sh(shirt,-.2));R(9,21,10,1,'#3a2414');R(13,21,2,1,'#e8c13a')}}
   else{const{D:PD,Lt,Dk,T,A}=PR;R(9,15,10,6,PD);R(9,15,10,1,'#ffffff');R(13,16,2,4,Lt);P(13,17,A);P(14,17,A);R(9,20,10,1,Dk)}
-  if(c){P(13,18,RAR[c.rar].h);P(14,18,RAR[c.rar].h)}
-  /* かた（よろいの とき） */
-  if(armor&&!PR){EL(8,16,2.4,1.8,sh(shirt,.08));EL(19,16,2.4,1.8,sh(shirt,-.05));if(trim){R(6,17,5,1,trim);R(17,17,5,1,trim)}
-    if(MAOU)[[6,14],[7,13],[20,14],[21,13]].forEach(([x,y])=>P(x,y,'#c8c0d8'))}
-  /* うで・て */
-  const hand=gloveC||skin;
-  R(7,17,2,4,armor?sh(shirt,-.05):skin);R(19,17,2,4,armor?sh(shirt,-.15):skin);if(!armor){R(7,16,2,2,shirt);R(19,16,2,2,sh(shirt,-.1))}
-  R(7,21,2,2,hand);R(19,21,2,2,hand);if(ring)P(20,22,RAR[ring.rar||0].h);
+  if(c&&!(armor&&AR>=3)){P(13,18,RAR[c.rar].h);P(14,18,RAR[c.rar].h)}
+  /* うで */
+  const hand=gloveC||skin,big=!!(gl||HOLY||MAOU);
+  if(armor){R(4,17,3,4,sh(shirt,-.05));R(21,17,3,4,sh(shirt,-.18));R(7,17,1,4,LN_,{flat:1});R(20,17,1,4,LN_,{flat:1})}else{R(6,17,2,4,skin);R(20,17,2,4,skin)}if(!armor){R(7,16,2,2,shirt);R(19,16,2,2,sh(shirt,-.1));R(7,17,2,4,skin);R(19,17,2,4,skin)}
+  if(armor){R(4,19,3,1,M2);R(21,19,3,1,M3)}
+  /* かたあて（おおきく 2だん） */
+  if(armor&&!PR){for(const [cx,d] of [[4.5,0],[23.5,-.14]]){EL(cx,17.8,3.6,1.8,sh(shirt,d-.14));ELR(cx,17.8,3.6,1.8,LN_,1);EL(cx,15.2,4.2,2.9,sh(shirt,d+.06));EL(cx-.9,14.2,1.9,1,sh(shirt,d+.4));ELR(cx,15.2,4.2,2.9,LN_,1);if(trim){for(let x=Math.ceil(cx-3.6);x<=Math.floor(cx+3.6);x++)P(x,17,trim)}}
+    if(AR>=2||MAOU){const SP=MAOU?'#d8d0e8':(trim||M1);[[2,12],[2,11],[1,10],[5,12],[5,11],[5,10],[5,9],[25,12],[25,11],[26,10],[22,12],[22,11],[22,10],[22,9]].forEach(([x,y])=>P(x,y,SP))}
+    if(AR>=4&&!MAOU)[[4,16],[24,16]].forEach(([x,y])=>P(x,y,HOLY?'#7af0ff':RAR[4].h,{flat:1}))}
+  /* て（こて） */
+  if(big||armor){const hd=big?hand:sh(shirt,-.1);R(3,20,4,3,hd);R(3,20,4,1,sh(hd,.3));R(21,20,4,3,sh(hd,-.1));R(21,20,4,1,sh(hd,.2));if(trim){R(3,20,4,1,trim);R(21,20,4,1,trim)}R(3,23,4,1,LN_,{flat:1});R(21,23,4,1,LN_,{flat:1});R(7,20,1,3,LN_,{flat:1});R(20,20,1,3,LN_,{flat:1})}
+  else{R(7,21,2,2,hand);R(19,21,2,2,hand)}
+  if(ring)P(armor?22:20,22,RAR[ring.rar||0].h);
   /* あたま */
   EL(14,9,7.4,6.6,skin);R(8,13,12,2,skin);R(9,15,10,1,sh(skin,-.1));P(7,13,null);P(20,13,null);
   P(6,11,sh(skin,-.08));P(21,11,sh(skin,-.14));
   const HL=sh(hc,.55),HD=sh(hc,-.28),HM=hc;
   const helm=!PR&&(helmC||HOLY||MAOU);
-  if(helm){EL(14,5.6,8.4,5,helmC);R(6,6,16,3,helmC);R(6,9,16,1,sh(helmC,-.3));R(6,9,2,5,helmC);R(20,9,2,5,sh(helmC,-.15));
+  if(helm){const HR=HOLY||MAOU?4:(h?h.rar||0:0),HT=HOLY?GOLD:MAOU?'#c02a3a':HR>=3?GOLD:HR>=2?'#c8ccd8':sh(helmC,.35);
+    EL(14,5.6,8.4,5.2,helmC);R(6,6,16,3,helmC);EL(11,3.2,2.8,1.3,sh(helmC,.42));R(6,9,16,1,HT);R(6,10,16,1,LN_,{flat:1});ELR(14,5.6,8.4,5.2,sh(helmC,-.45),1);
+    /* ほおあて */R(5,10,3,5,helmC);R(20,10,3,5,sh(helmC,-.15));R(5,10,1,5,sh(helmC,.25));R(22,10,1,5,sh(helmC,-.35));R(8,10,1,5,LN_,{flat:1});R(19,10,1,5,LN_,{flat:1});R(5,15,3,1,LN_,{flat:1});R(20,15,3,1,LN_,{flat:1});P(6,12,HT);P(21,12,HT);
+    /* はなあて */R(14,10,1,2,sh(helmC,-.1));
+    /* かざり（とさか） */if(!HOLY&&!MAOU){const PC=HR>=4?RAR[4].h:HR>=3?'#e8413c':HR>=2?'#4aa0ff':null;if(PC){for(let k=0;k<6;k++)R(13-Math.round(k*.6),-1-k+1,3,1,k%2?sh(PC,-.2):PC);R(14,0,2,1,HT)}}
+    [[8,7],[20,7],[11,8],[17,8]].forEach(([x,y])=>P(x,y,HT));
     EL(11,3.6,2.6,1.3,sh(helmC,.35));if(h&&h.rar>=2&&!HOLY&&!MAOU)R(13,4,2,2,RAR[h.rar].h);if(h&&h.rar>=3&&!HOLY&&!MAOU){P(14,0,'#ffd23f');P(13,1,'#ffd23f');P(15,1,'#ffd23f')}
     if(horn){[[6,4],[5,3],[4,2],[4,1],[3,0]].forEach(([x,y])=>{P(x,y,horn);P(27-x,y,horn)})}
     if(HOLY){R(13,2,2,4,trim);P(13,8,'#5ab0ff');P(14,8,'#5ab0ff')}if(MAOU){P(13,7,'#ff2a3a');P(14,7,'#ff2a3a')}
@@ -5209,7 +5230,9 @@ function chibi(eq,look){const W=40,H=46,G=[...Array(H)].map(()=>Array(W).fill(nu
   /* ===== ペット（ひだりした） ===== */
   const pet=E('pet');if(pet&&typeof petTo==='function'){try{const pm=new Map();petTo(pm,PETT[pet.icon]||'puppy',0,0);let mx=0,my=0;for(const [x,y] of pm.values()){mx=Math.max(mx,x);my=Math.max(my,y)}const sc=mx>12?.6:1;const seen=new Set();for(const [x,y,col] of pm.values()){const X=Math.round(x*sc)-2,Y=Math.round(y*sc)+30-Math.round(my*sc),k=X+','+Y;if(seen.has(k))continue;seen.add(k);if(X+OX>=0&&Y+OY<H&&!G[Y+OY][X+OX])P(X,Y,col)}}catch(e){}}
   /* たて（ひだり） */
-  if(shd&&!PR){const sc=shd.color||'#8a8aa0';EL(6,20,3.2,3.8,sc);R(4,17,5,1,sh(sc,.3));R(6,18,1,5,sh(sc,.35));R(5,20,3,1,sh(sc,.35));if(shd.rar>=2)P(6,20,RAR[shd.rar].h)}
+  if(shd&&!PR){const sc=shd.color||'#8a8aa0',SR=shd.rar||0,ST=SR>=3?GOLD:SR>=2?'#c8ccd8':sh(sc,.35);
+    for(let y=19;y<=29;y++){const w=y<25?7:Math.max(1,7-(y-24)*2),x0=3-Math.floor(w/2);R(x0,y,w,1,y===19?ST:sc);P(x0,y,ST);P(x0+w-1,y,sh(ST,-.2))}
+    R(3,20,1,8,sh(sc,.4));R(1,22,5,1,sh(sc,.4));if(SR>=1)EL(3,22,1.4,1.4,RAR[SR].h,{flat:1});if(SR>=3)P(3,22,'#ffffff',{flat:1})}
   /* ぶき（みぎてに もつ） */
   try{const wm=new Map();itemPixels(Object.assign({slot:'w'},wpn),wm,0,0);for(const [x,y,col] of wm.values()){const X=x+16+OX,Y=y+6+OY;if(X>=0&&X<W&&Y>=0&&Y<H&&!(G[Y][X]&&X<21+OX&&Y>15+OY))G[Y][X]={c:col}}}catch(e){}
   R(19,21,2,2,hand);
