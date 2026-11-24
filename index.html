@@ -1498,7 +1498,7 @@ function makeItem(st,d,boss,min=0){
 /* =============== save data =============== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-/*const APPV='v151'*/const APPV='v1.1.8',APPB=171;
+/*const APPV='v151'*/const APPV='v1.1.9',APPB=172;
 try{const c=document.createElement('canvas');c.width=9;c.height=9;const g=c.getContext('2d'),F=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};F(1,0,7,1,'#120d09');F(1,8,7,1,'#120d09');F(0,1,1,7,'#120d09');F(8,1,1,7,'#120d09');F(1,1,7,1,'#120d09');F(1,7,7,1,'#120d09');F(1,1,1,7,'#120d09');F(7,1,1,7,'#120d09');F(2,2,5,1,'#7a6a52');F(2,2,1,5,'#7a6a52');F(2,6,5,1,'#2a2018');F(6,2,1,5,'#2a2018');document.documentElement.style.setProperty('--pxf',`url(${c.toDataURL()})`)}catch(e){}
 const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));
 /* ⚡ かるい モード：ふるい たんまつは じどうで ON */
@@ -5400,12 +5400,15 @@ window.monDesc=function(k){const s=SP[k];if(!s)return '';let d=DESC[k]||DESC[s.a
 const ELN=[['ほのお','🔥 ほのお'],['ひのたま','🔥 ほのお'],['フェニックス','🔥 ほのお'],['こおり','❄️ こおり'],['イエティ','❄️ こおり'],['かみなり','⚡ かみなり'],['らいじん','⚡ かみなり'],['やみ','🌙 やみ'],['ひかり','✨ ひかり'],['いわ','🪨 いわ'],['ゴーレム','🪨 いわ'],['うみ','💧 みず'],['しんかい','💧 みず'],['さかな','💧 みず'],['クラゲ','💧 みず'],['カニ','💧 みず'],['クラーケン','💧 みず'],['アビス','💧 みず'],['もり','🌿 くさ'],['はな','🌿 くさ'],['キノコ','🌿 くさ'],['サボテン','🌿 くさ'],['いもむし','🌿 くさ']];
 const elOf=s=>{const e=ELN.find(([w])=>s.name.indexOf(w)>=0);return e?e[1]:'⭐ ふつう'};
 const num=v=>Math.round(v*100);
+let DXR=null;window.dexRank=function(){return dexRank()};function dexRank(){if(DXR)return DXR;const L=[];for(const k in SP){let p=0,p1=0;try{p=monPow({sp:k,lv:50});p1=monPow({sp:k,lv:1})}catch(e){}const t=spStat(k),av=(t.a+t.h)/2||1;L.push({k,p,p1,a:Math.max(1,Math.round(p*t.a/av)),h:Math.max(1,Math.round(p*t.h/av*1.5))})}
+  L.sort((x,y)=>y.p-x.p);const n=L.length,m={};L.forEach((e,i)=>{e.r=i+1;const q=i/n;e.g=e.k==='darulu'?'SS':q<.08?'S':q<.25?'A':q<.5?'B':q<.78?'C':'D';m[e.k]=e});window.dexRank=dexRank;
+  const ma=Math.max(...L.map(e=>e.a)),mh=Math.max(...L.map(e=>e.h)),mn=Math.min(...L.map(e=>Math.min(e.a,e.h)));return DXR={m,n,ma,mh,min:mn*.8}}
 function howHTML(k){try{const u=ULTS.find(x=>x.k===k);if(u)return `<div class="dexhow">🌟 なかまの しゅるいが <b>${u.need}しゅ</b>に なると どこかで であえるように なるよ。<br>💠 カケラを 10こ あつめても なかまに できる（いま ${(P.frag&&P.frag[k])||0}/10）</div>`;
   const g=specDexGroups().find(x=>x.ks.includes(k));if(g)return `<div class="dexhow">てに いれかた：${g.how}</div>`}catch(e){}return recipeHTML(k,4)}
 window.dexMonModal=dexMonModal=function(k){const s=SP[k],o=P.dex.owned[k],se=P.dex.seen[k];snd(660,.04);const R=RAR[s.rar];
-  let stat='';if(o){const t=spStat(k),g=spGrade(k),bar=(v,mx)=>{const n=Math.max(1,Math.min(5,Math.round(v/mx*5)));return '<i class="sbf">'+'■'.repeat(n)+'</i><i class="sbe">'+'■'.repeat(5-n)+'</i>'};
-    let p1=0,p50=0;try{p1=monPow({sp:k,lv:1});p50=monPow({sp:k,lv:50})}catch(e){}
-    stat=`<div class="dexst"><div class="spg g${g}">${g}</div><div class="dexsb"><div>⚔️ こうげき <b>${num(t.a)}</b> ${bar(t.a,2)}</div><div>❤️ たいりょく <b>${num(t.h)}</b> ${bar(t.h,2.4)}</div><div>💪 パワー Lv1 <b>${p1}</b> → Lv50 <b>${p50}</b></div></div></div>`}
+  let stat='';if(o){const R2=dexRank(),e=R2.m[k];
+    const bar=(v,mx)=>{const n=Math.max(1,Math.min(10,Math.round(Math.log(v/R2.min*1.0001)/Math.log(mx/R2.min)*10)));return '<i class="sbf">'+'■'.repeat(n)+'</i><i class="sbe">'+'■'.repeat(10-n)+'</i>'};
+    stat=`<div class="dexst"><div class="spg g${e.g}">${e.g}</div><div class="dexsb"><div>⚔️ こうげき <b>${e.a}</b> ${bar(e.a,R2.ma)}</div><div>❤️ たいりょく <b>${e.h}</b> ${bar(e.h,R2.mh)}</div><div>💪 パワー Lv1 <b>${e.p1}</b> → Lv50 <b>${e.p}</b></div><small>ずかん ${R2.n}しゅの なかで <b>${e.r}い</b></small></div></div>`}
   const desc=o||se?monDesc(k):'';
   showModal(`<div class="dexbig${o?'':' sil'}" id="dxb" style="--rh:${R.h}"><div class="flip">${monsterSVG(k)}</div></div>
     <div class="mt">${o||se?s.name:'？？？'}</div>
@@ -5431,6 +5434,7 @@ const st=document.createElement('style');st.textContent=`
 .dexdesc{font-size:13px;line-height:1.6;text-align:left;background:rgba(255,255,255,.05);border-radius:10px;padding:8px 10px;margin:6px 0}
 .dexst{display:flex;gap:10px;align-items:center;background:rgba(255,255,255,.05);border-radius:10px;padding:8px 10px;margin:6px 0;text-align:left;font-size:13px}
 .dexhow{font-size:12px;line-height:1.6;text-align:left;border:1px solid rgba(255,210,63,.45);border-radius:10px;padding:7px 10px;margin:6px 0}.dexhow b{color:var(--gold)}
+.dexsb i{font-style:normal;letter-spacing:-1px;font-size:11px}.dexsb .sbf{color:#ffd23f}.dexsb .sbe{color:rgba(255,255,255,.15)}.dexsb small{color:var(--sub);font-size:11px}
 .dexsb{display:flex;flex-direction:column;gap:3px}.dexsb b{color:var(--gold)}`;
 document.head.appendChild(st);
 })();
