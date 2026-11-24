@@ -1498,7 +1498,7 @@ function makeItem(st,d,boss,min=0){
 /* =============== save data =============== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-/*const APPV='v151'*/const APPV='v1.2.1',APPB=174;
+/*const APPV='v151'*/const APPV='v1.2.2',APPB=175;
 try{const c=document.createElement('canvas');c.width=9;c.height=9;const g=c.getContext('2d'),F=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};F(1,0,7,1,'#120d09');F(1,8,7,1,'#120d09');F(0,1,1,7,'#120d09');F(8,1,1,7,'#120d09');F(1,1,7,1,'#120d09');F(1,7,7,1,'#120d09');F(1,1,1,7,'#120d09');F(7,1,1,7,'#120d09');F(2,2,5,1,'#7a6a52');F(2,2,1,5,'#7a6a52');F(2,6,5,1,'#2a2018');F(6,2,1,5,'#2a2018');document.documentElement.style.setProperty('--pxf',`url(${c.toDataURL()})`)}catch(e){}
 const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));
 /* ⚡ かるい モード：ふるい たんまつは じどうで ON */
@@ -4832,7 +4832,7 @@ function castle(x,side){const el=$(side==='e'?'lnCEi':'lnCPi');if(!el||!el.compl
     x.fillStyle='#000';x.fillRect(-L-3,-10,6,20);x.fillStyle=rdy?cc:'#6a6a80';x.fillRect(-L-1.5,-8.5,3,17);x.fillStyle='#d8a838';x.fillRect(-L*.45,-9,3,18);
     x.fillStyle='#000';x.beginPath();x.arc(4,0,10,0,7);x.fill();x.fillStyle='#4a4a5a';x.beginPath();x.arc(4,0,7.5,0,7);x.fill();x.fillStyle='#d8a838';x.beginPath();x.arc(4,0,3,0,7);x.fill();
     if(rdy){x.globalAlpha=.55+.45*Math.sin(t*10);x.fillStyle='#fff';x.beginPath();x.arc(-L-2,0,5+3*Math.sin(t*10),0,7);x.fill();x.globalAlpha=.3;x.fillStyle=cc;x.beginPath();x.arc(-L-2,0,12+4*Math.sin(t*10),0,7);x.fill()}x.restore()}}
-function unitDraw(x,u,dt){const S=(u.boss?1.85:u.hero?1.05:1)*US()*(.84+u.dy*.16),gy=GY()+u.dy*CV.H*.09,dir=u.side==='p'?-1:1,im=spriteOf(u),key=u.hero?('hero'+(im&&im.getContext?'c':'s')):u.sp;
+function unitDraw(x,u,dt){const S=(u.boss?1.85:u.hero?1.05:(u.sp==='darulu'?1.8:u.sp==='zenon'?1.6:SP[u.sp]&&SP[u.sp].boss?1.3:1))*US()*(.84+u.dy*.16),gy=GY()+u.dy*CV.H*.09,dir=u.side==='p'?-1:1,im=spriteOf(u),key=u.hero?('hero'+(im&&im.getContext?'c':'s')):u.sp;
   let px=PX(u.x),py=gy,rot=0,sx=1,sy=1,lift=0,alpha=1,white=0;
 
   if(u.spT<.4){u.spT+=dt;const p=Math.min(1,u.spT/.4);const s=ease.outBack(p);sx*=s;sy*=s;lift+=(1-p)*S*.5}
@@ -5460,6 +5460,13 @@ window.heroFaceURL=function(eq,look){try{const c=heroCanvas(eq||{},look||{},'');
   og.drawImage(c,Math.round(cx-S/2),Math.max(0,ty-3),S,S,0,0,S,S);return c.__face=o.toDataURL()}catch(e){return null}};
 const _rh=window.renderHome;window.renderHome=renderHome=function(){const r=_rh.apply(this,arguments);try{const h=document.querySelector('#who .hav');if(h){const u=heroFaceURL(P.eq,Object.assign({},P,{cos:Object.assign({},cosOf(P),{aura:null})}));if(u)h.innerHTML=`<img class="havf" src="${u}" alt="">`}}catch(e){}return r};
 const st=document.createElement('style');st.textContent='.hav img.havf{position:absolute;inset:0;width:100%!important;height:100%!important;image-rendering:pixelated;object-fit:cover;bottom:auto!important}';document.head.appendChild(st);
+})();
+/* ===== ヘッダーに ずかん ===== */
+(function(){
+const add=()=>{if(document.getElementById('dexBtn'))return;const bx=document.getElementById('boxBtn');if(!bx)return;const b=document.createElement('button');b.className='btn dk';b.id='dexBtn';b.style.setProperty('--dc','#2a7a7a');b.onclick=()=>{try{boxF='all'}catch(e){}openBox('dex')};bx.after(b)};
+const _ph=window.pixHome;window.pixHome=pixHome=function(){add();const r=_ph.apply(this,arguments);try{const e=document.getElementById('dexBtn');if(e){let n=0;try{n=Object.keys(P.dex.owned).filter(k=>P.dex.owned[k]).length}catch(_){}e.innerHTML=pi('book')+'<i>ずかん</i>'}}catch(e){}return r};
+add();
+const st=document.createElement('style');st.textContent='.dock{grid-template-columns:repeat(9,1fr)!important;gap:3px!important;padding:2px 6px 6px!important}.dock .dk i{font-size:9px!important;letter-spacing:-.8px!important}.dock .dk .pi{width:24px!important;height:24px!important}';document.head.appendChild(st);
 })();
 
 /* ===== ほしくい ゼノンを なかまに ===== */
