@@ -1498,7 +1498,7 @@ function makeItem(st,d,boss,min=0){
 /* =============== save data =============== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-/*const APPV='v151'*/const APPV='v1.3.3',APPB=185;
+/*const APPV='v151'*/const APPV='v1.4.0',APPB=186;
 try{const c=document.createElement('canvas');c.width=9;c.height=9;const g=c.getContext('2d'),F=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};F(1,0,7,1,'#120d09');F(1,8,7,1,'#120d09');F(0,1,1,7,'#120d09');F(8,1,1,7,'#120d09');F(1,1,7,1,'#120d09');F(1,7,7,1,'#120d09');F(1,1,1,7,'#120d09');F(7,1,1,7,'#120d09');F(2,2,5,1,'#7a6a52');F(2,2,1,5,'#7a6a52');F(2,6,5,1,'#2a2018');F(6,2,1,5,'#2a2018');document.documentElement.style.setProperty('--pxf',`url(${c.toDataURL()})`)}catch(e){}
 const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));
 /* ⚡ かるい モード：ふるい たんまつは じどうで ON */
@@ -4567,7 +4567,7 @@ function spawn(){
   if(B.weakOnly&&!P.weak.length&&B.wave>0){stageClear();return}
   B.wave++;const wb=B.tower?B.wave%10===0:B.wave===B.waves,st=B.stage,uu=B.weakOnly||B.tower||B.xmas||B.ny?[]:ultUnlocked();
   const ult=uu.length&&Math.random()<ultRate(wb)?pick(uu).k:null,boss=wb||!!ult;
-  const sp=(boss&&B.stage===ZENST&&!B.tower&&!B.xmas&&!B.ny&&!B.weakOnly)?'zenon':B.ny?(boss?'nyeto':pick(NYMON)):B.xmas?(boss?'xsanta':pick(XMON)):ult||pickSpecies(boss?BOSSES:NORMALS,B.blv),S_=SP[sp],rar=S_.rar,m=[sp,S_.name];P.dex.seen[sp]=1;
+  const sp=(boss&&B.gdBoss)?B.gdBoss:(boss&&B.stage===ZENST&&!B.tower&&!B.xmas&&!B.ny&&!B.weakOnly)?'zenon':B.ny?(boss?'nyeto':pick(NYMON)):B.xmas?(boss?'xsanta':pick(XMON)):ult||pickSpecies(boss?BOSSES:NORMALS,B.blv),S_=SP[sp],rar=S_.rar,m=[sp,S_.name];P.dex.seen[sp]=1;
   const mlv=Math.max(1,Math.max(st*2,P.lv)+(ult?10:boss?3:R(-1,1))),es=mlv/2;
   B.mon={boss,ult:!!ult,sp,rar,lv:mlv,es,n:(ult?'🌟 ':boss?'👑 ':'')+m[1],maxHp:Math.round((14+es*9)*(boss?3.2:1)*(1+.25*rar)*(ult?2.5:1)),dmg:Math.round((4+es*2.2)*(boss?1.4:1)*(1+.15*rar)*(ult?1.6:1))};scaleMon(B.mon);{const f=B.df||1;B.mon.maxHp=Math.round(B.mon.maxHp*Math.pow(f,.8));B.mon.dmg=Math.round(B.mon.dmg*Math.pow(f,1.1));B.mon.cdMax=B.weakOnly?99:boss?2:3;B.mon.cd=B.mon.cdMax;B.mon.na=0}if(B.tower){const f=B.wave;B.mon.maxHp=Math.round(B.mon.maxHp*(1+(f-1)*.07));B.mon.dmg=Math.round(B.mon.dmg*(1+(f-1)*.06));B.mon.n=(boss?'👑 ':'')+m[1]}B.mon.hp=B.mon.maxHp;
   B.gaugeDur=GAUGE[B.blv]*(boss?.85:1);B.gBase=B.gaugeDur;
@@ -5492,6 +5492,47 @@ const _sc=window.stageClear;window.stageClear=stageClear=function(){try{if(B&&!B
 const _rh=window.renderHome;window.renderHome=renderHome=function(){const r=_rh.apply(this,arguments);try{if(P&&!P.zenonGot&&bestSt()>=ZENST&&!document.getElementById('modal').classList.contains('on'))setTimeout(()=>{if(P&&!P.zenonGot&&!document.getElementById('modal').classList.contains('on')){zenonJoin(true);try{_rh()}catch(e){}}},600)}catch(e){}return r};
 /* ずかんの とくべつな なかまに のせる */
 const _g=window.specDexGroups;window.specDexGroups=specDexGroups=function(){const G=_g();G.splice(1,0,{t:'ほしくい ゼノン',how:`🌌 ステージ${ZENST}の ゼノンを たおす`,ks:['zenon']});return G};
+})();
+
+/* ===== ステージ100ごとの しゅごしゃ（たおすと なかまに） ===== */
+(function(){
+/* [ステージ, キー, なまえ, ぞくせい, レア, かりの え, かりの いろ, かいせつ] */
+const GL=[
+ [100,'gd100','ほしまもりの きし ルクス','ひかり',4,'knight',{b:'#e8d070',d:'#8a6a20',l:'#fff6c0'},'ぎんがの はてを まもる ひかりの きし。ほしの つるぎで やみを はらう。'],
+ [200,'gd200','らいめいの とら ライガ','かみなり',4,'wolf',{b:'#f0d040',d:'#8a6a10',l:'#fff8a0'},'かみなりを まとって はしる とら。その はやさは いなずまと おなじ。'],
+ [300,'gd300','てんくうの つばさ エアリス','ひかり',4,'phoenix',{b:'#f4f4ff',d:'#9aa0c8',l:'#ffffff'},'そらの しまに すむ しろい つばさの せいれい。かぜに のって うたう。'],
+ [400,'gd400','ひょうがの おおかみ フリード','こおり',4,'wolf',{b:'#8ad8f0',d:'#3a7aa0',l:'#e8fbff'},'こおりの やまの ぬし。いきを はくと あたりが いっしゅんで こおる。'],
+ [500,'gd500','やみよの きし ノクス','やみ',4,'knight',{b:'#5a3a8a',d:'#2a1a4a',l:'#a080e0'},'いにしえの おしろを まもる やみの きし。こころは まっすぐで やさしい。'],
+ [600,'gd600','かいおう ネプト','みず',4,'kraken',{b:'#3a8ae8',d:'#1a4a8a',l:'#a0d8ff'},'まかいの うみを おさめる うみの おうさま。なみを じゆうに あやつる。'],
+ [700,'gd700','だいちの きょじん ガイア','いわ',4,'golem',{b:'#b08a50',d:'#6a4a20',l:'#e8c890'},'どうくつの おくで ねむって いた きょじん。あるくと じめんが ゆれる。'],
+ [800,'gd800','せかいじゅの せいれい ユグ','もり',4,'troll',{b:'#4caf50',d:'#2a6a2a',l:'#b8f0a0'},'かみがみの もりの いちばん おおきな きの せいれい。いのちを はぐくむ。'],
+ [900,'gd900','らいじん おに ゴロ','かみなり',4,'oni',{b:'#f0c030',d:'#8a5a10',l:'#fff0a0'},'たいこを たたいて かみなりを よぶ おに。おまつりが だいすき。'],
+ [1000,'gd1000','にじいろの てんま ペガ','にじ',5,'bird',{b:'#ff9ad8',d:'#8a5ab0',l:'#c8f0ff'},'にじの はしを かける てんま。せなかに のせた ゆうしゃは そらを とべる。'],
+ [1100,'gd1100','つきの めがみ ルナ','こおり',5,'ghost',{b:'#c8d8ff',d:'#6a7ab0',l:'#ffffff'},'つきの さばくに ひかる めがみ。つきの ひかりで なかまを まもる。'],
+ [1200,'gd1200','ほしくずの せいじゅう キリン','もり',5,'boar',{b:'#7ae0a0',d:'#2a8a5a',l:'#e0fff0'},'ほしくずの もりに すむ せいなる けもの。あしあとに はなが さく。'],
+ [1300,'gd1300','ブラックホールの まりゅう ヴォイド','やみ',5,'dragon',{b:'#3a2a6a',d:'#140a2a',l:'#9a6aff'},'ほしくいの しろを まもる まりゅう。ゼノンの さいごの しもべ。']];
+const GSTAGE={};window.GSTAGE=GSTAGE;window.GUARDS=GL;
+GL.forEach(([st,k,n,el,rar,art,p])=>{SP[k]={k,art,name:n,rar,boss:true,p,el,pmul:1.15,special:'gift',gst:st};GSTAGE[st]=k});
+const isMain=()=>B&&!B.weakOnly&&!B.tower&&!B.xmas&&!B.ny;
+const bestSt=()=>Math.max(0,...Object.values(P.best||{}).map(v=>+v||0));
+function give(k){if(!P.gdGot)P.gdGot={};if(P.gdGot[k])return null;P.gdGot[k]=1;const s=SP[k],m={id:uid(),sp:k,lv:Math.max(1,Math.min(P.lv||1,s.gst)),xp:0,bond:0};P.mons.push(m);P.dex.owned[k]=1;P.dex.seen[k]=1;let inP=false;if(P.party.length<partyMax()){P.party.push(m.id);inP=true}return {k,inP}}
+function joinModal(list){if(!list.length)return;fanfare();fxConfetti(90);const one=list.length===1,s=SP[list[0].k];
+  showModal(`<div class="mt">🏆 ${one?s.name+'が なかまに なった！':'しゅごしゃ '+list.length+'たいが なかまに なった！'}</div>
+   <div class="gdjoin">${list.map(o=>`<div class="gdj"><div class="flip">${monsterSVG(o.k)}</div><small>ステージ${SP[o.k].gst}</small><b>${SP[o.k].name}</b></div>`).join('')}</div>
+   <p>ステージを 100 すすむ ごとに、その ばしょを まもる しゅごしゃが なかまに なるよ！</p><p><small>${list.some(o=>o.inP)?'パーティに あきが あったので いれたよ。':''}ボックスの「なかま」で みられるよ</small></p><button class="btn green big" id="ok">OK</button>`,{ok:closeModal},'r5')}
+window.guardJoin=k=>{const r=give(k);save();if(r)joinModal([r])};
+/* たたかい：ステージ 100ばいの ボスを しゅごしゃに */
+const _sb=window.startBattle;window.startBattle=startBattle=function(...a){const r=_sb.apply(this,a);try{if(B&&isMain()&&GSTAGE[B.stage])B.gdBoss=GSTAGE[B.stage]}catch(e){}return r};
+/* クリアで なかまに（はじめての とき） */
+const _sc=window.stageClear;window.stageClear=stageClear=function(){let got=null;try{if(B&&isMain()&&GSTAGE[B.stage])got=give(GSTAGE[B.stage])}catch(e){}const r=_sc.apply(this,arguments);
+  if(got){save();const wait=()=>{if(document.getElementById('modal').classList.contains('on')){setTimeout(wait,500);return}joinModal([got])};setTimeout(wait,900)}return r};
+/* もう こえている子には ホームで まとめて わたす */
+let busy=0;const _rh=window.renderHome;window.renderHome=renderHome=function(){const r=_rh.apply(this,arguments);try{if(P&&!busy){const bs=bestSt(),miss=GL.filter(g=>g[0]<=bs&&!(P.gdGot||{})[g[1]]);
+  if(miss.length){busy=1;setTimeout(()=>{busy=0;if(document.getElementById('modal').classList.contains('on'))return;const got=miss.map(g=>give(g[1])).filter(Boolean);save();joinModal(got);try{_rh()}catch(e){}},700)}}}catch(e){}return r};
+/* ずかん：とくべつな なかまに */
+const _g=window.specDexGroups;window.specDexGroups=specDexGroups=function(){const G=_g();G.splice(2,0,{t:'ステージの しゅごしゃ',how:'💯 ステージ100ごとの ボスを たおす',ks:GL.map(g=>g[1])});return G};
+const _md=window.monDesc;if(_md)window.monDesc=function(k){const g=GL.find(x=>x[1]===k);if(g)return g[7]+`（ステージ${g[0]}で であえる）`;return _md(k)};
+const st=document.createElement('style');st.textContent='.gdjoin{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;max-height:46vh;overflow:auto;margin:6px 0}.gdj{width:86px;display:flex;flex-direction:column;align-items:center;font-size:10px}.gdj>div{width:72px;height:72px}.gdj img,.gdj svg{width:100%!important;height:100%!important;image-rendering:pixelated}.gdj small{color:var(--gold)}.gdj b{font-size:10px;line-height:1.2;text-align:center}';document.head.appendChild(st);
 })();
 
 /* ===== ゆうしゃの くわしい ページ ===== */
