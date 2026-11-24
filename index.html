@@ -1498,7 +1498,7 @@ function makeItem(st,d,boss,min=0){
 /* =============== save data =============== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-/*const APPV='v151'*/const APPV='v1.1.3',APPB=166;
+/*const APPV='v151'*/const APPV='v1.1.4',APPB=167;
 try{const c=document.createElement('canvas');c.width=9;c.height=9;const g=c.getContext('2d'),F=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};F(1,0,7,1,'#120d09');F(1,8,7,1,'#120d09');F(0,1,1,7,'#120d09');F(8,1,1,7,'#120d09');F(1,1,7,1,'#120d09');F(1,7,7,1,'#120d09');F(1,1,1,7,'#120d09');F(7,1,1,7,'#120d09');F(2,2,5,1,'#7a6a52');F(2,2,1,5,'#7a6a52');F(2,6,5,1,'#2a2018');F(6,2,1,5,'#2a2018');document.documentElement.style.setProperty('--pxf',`url(${c.toDataURL()})`)}catch(e){}
 const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));
 /* ⚡ かるい モード：ふるい たんまつは じどうで ON */
@@ -5396,6 +5396,8 @@ window.monDesc=function(k){const s=SP[k];if(!s)return '';let d=DESC[k]||DESC[s.a
 const ELN=[['ほのお','🔥 ほのお'],['ひのたま','🔥 ほのお'],['フェニックス','🔥 ほのお'],['こおり','❄️ こおり'],['イエティ','❄️ こおり'],['かみなり','⚡ かみなり'],['らいじん','⚡ かみなり'],['やみ','🌙 やみ'],['ひかり','✨ ひかり'],['いわ','🪨 いわ'],['ゴーレム','🪨 いわ'],['うみ','💧 みず'],['しんかい','💧 みず'],['さかな','💧 みず'],['クラゲ','💧 みず'],['カニ','💧 みず'],['クラーケン','💧 みず'],['アビス','💧 みず'],['もり','🌿 くさ'],['はな','🌿 くさ'],['キノコ','🌿 くさ'],['サボテン','🌿 くさ'],['いもむし','🌿 くさ']];
 const elOf=s=>{const e=ELN.find(([w])=>s.name.indexOf(w)>=0);return e?e[1]:'⭐ ふつう'};
 const num=v=>Math.round(v*100);
+function howHTML(k){try{const u=ULTS.find(x=>x.k===k);if(u)return `<div class="dexhow">🌟 なかまの しゅるいが <b>${u.need}しゅ</b>に なると どこかで であえるように なるよ。<br>💠 カケラを 10こ あつめても なかまに できる（いま ${(P.frag&&P.frag[k])||0}/10）</div>`;
+  const g=specDexGroups().find(x=>x.ks.includes(k));if(g)return `<div class="dexhow">てに いれかた：${g.how}</div>`}catch(e){}return recipeHTML(k,4)}
 window.dexMonModal=dexMonModal=function(k){const s=SP[k],o=P.dex.owned[k],se=P.dex.seen[k];snd(660,.04);const R=RAR[s.rar];
   let stat='';if(o){const t=spStat(k),g=spGrade(k),bar=(v,mx)=>{const n=Math.max(1,Math.min(5,Math.round(v/mx*5)));return '<i class="sbf">'+'■'.repeat(n)+'</i><i class="sbe">'+'■'.repeat(5-n)+'</i>'};
     let p1=0,p50=0;try{p1=monPow({sp:k,lv:1});p50=monPow({sp:k,lv:50})}catch(e){}
@@ -5406,8 +5408,12 @@ window.dexMonModal=dexMonModal=function(k){const s=SP[k],o=P.dex.owned[k],se=P.d
     <p class="dextag"><span style="color:${R.h}">${R.n}</span>${o||se?'<span>'+elOf(s)+'</span>':''}${s.boss?'<span>👑 ボス</span>':''}<span>${o?'✅ なかま':se?'👀 であった':'まだ であって いない'}</span></p>
     ${desc?`<p class="dexdesc">${desc}</p>`:'<p class="dexdesc" style="color:var(--sub)">であうと かいせつが よめるよ</p>'}
     ${stat||(se?'<p class="dexdesc" style="color:var(--sub)">なかまに すると つよさが わかるよ</p>':'')}
-    ${recipeHTML(k,4)}<button class="btn gray" id="cl">とじる</button>`,{cl:closeModal});
+    ${howHTML(k)}<button class="btn gray" id="cl">とじる</button>`,{cl:closeModal});
   const b=document.getElementById('dxb');if(b)b.onclick=()=>{b.classList.toggle('zoom');snd(880,.03)}};
+/* とくべつな なかま・きゅうきょく も タップで おなじ ずかん がめんに */
+const _rb=window.renderBox;window.renderBox=renderBox=function(){const r=_rb.apply(this,arguments);try{
+  document.querySelectorAll('.ultrow .ultc').forEach((e,i)=>{const k=ULTS[i]&&ULTS[i].k;if(k&&SP[k]){e.style.cursor='pointer';e.onclick=()=>dexMonModal(k)}});
+  const ks=specDexGroups().flatMap(g=>g.ks);document.querySelectorAll('.spdex .bcell').forEach((e,i)=>{const k=ks[i];if(k&&SP[k]){e.style.cursor='pointer';e.onclick=()=>dexMonModal(k)}})}catch(e){}return r};
 const st=document.createElement('style');st.textContent=`
 .dexbig{width:200px;height:200px;margin:4px auto 2px;border-radius:18px;display:flex;align-items:flex-end;justify-content:center;cursor:zoom-in;transition:width .25s,height .25s;
  background:radial-gradient(circle at 50% 62%,color-mix(in srgb,var(--rh) 38%,transparent),transparent 68%),linear-gradient(180deg,#2c3550,#1a2033);box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--rh) 55%,transparent)}
@@ -5420,6 +5426,7 @@ const st=document.createElement('style');st.textContent=`
 .dextag span{background:rgba(255,255,255,.08);border-radius:10px;padding:2px 8px}
 .dexdesc{font-size:13px;line-height:1.6;text-align:left;background:rgba(255,255,255,.05);border-radius:10px;padding:8px 10px;margin:6px 0}
 .dexst{display:flex;gap:10px;align-items:center;background:rgba(255,255,255,.05);border-radius:10px;padding:8px 10px;margin:6px 0;text-align:left;font-size:13px}
+.dexhow{font-size:12px;line-height:1.6;text-align:left;border:1px solid rgba(255,210,63,.45);border-radius:10px;padding:7px 10px;margin:6px 0}.dexhow b{color:var(--gold)}
 .dexsb{display:flex;flex-direction:column;gap:3px}.dexsb b{color:var(--gold)}`;
 document.head.appendChild(st);
 })();
