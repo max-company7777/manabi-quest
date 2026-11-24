@@ -1498,7 +1498,7 @@ function makeItem(st,d,boss,min=0){
 /* =============== save data =============== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-/*const APPV='v151'*/const APPV='v1.4.3',APPB=189;
+/*const APPV='v151'*/const APPV='v1.4.4',APPB=190;
 try{const c=document.createElement('canvas');c.width=9;c.height=9;const g=c.getContext('2d'),F=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};F(1,0,7,1,'#120d09');F(1,8,7,1,'#120d09');F(0,1,1,7,'#120d09');F(8,1,1,7,'#120d09');F(1,1,7,1,'#120d09');F(1,7,7,1,'#120d09');F(1,1,1,7,'#120d09');F(7,1,1,7,'#120d09');F(2,2,5,1,'#7a6a52');F(2,2,1,5,'#7a6a52');F(2,6,5,1,'#2a2018');F(6,2,1,5,'#2a2018');document.documentElement.style.setProperty('--pxf',`url(${c.toDataURL()})`)}catch(e){}
 const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));
 /* ⚡ かるい モード：ふるい たんまつは じどうで ON */
@@ -5513,7 +5513,7 @@ const GL=[
  [1300,'gd1300','ブラックホールの まりゅう ヴォイド','やみ',5,'dragon',{b:'#3a2a6a',d:'#140a2a',l:'#9a6aff'},'ほしくいの しろを まもる まりゅう。ゼノンの さいごの しもべ。']];
 const GSTAGE={};window.GSTAGE=GSTAGE;window.GUARDS=GL;
 GL.forEach(([st,k,n,el,rar,art,p])=>{const own=window.MONDOT&&MONDOT[k];SP[k]={k,art:own?k:art,name:n,rar,boss:true,p:own?{}:p,el,pmul:1.15,special:'gift',gst:st};GSTAGE[st]=k;if(own&&typeof MONART!=='undefined'&&!MONART[k])MONART[k]=MONART[art];if(own&&typeof LTRAIT!=='undefined'&&!LTRAIT[k]&&LTRAIT[art])LTRAIT[k]=LTRAIT[art]});
-['raijin','abyss','omega'].forEach(k=>{if(SP[k])SP[k].pmul=2});/* きゅうきょく3たいは しゅごしゃより つよく */
+Object.entries({raijin:1.3,abyss:2,omega:2,gd1300:1.43,gd1200:1.94}).forEach(([k,v])=>{if(SP[k])SP[k].pmul=v});/* きゅうきょく3たいは しゅごしゃより つよく */
 const isMain=()=>B&&!B.weakOnly&&!B.tower&&!B.xmas&&!B.ny;
 const bestSt=()=>Math.max(0,...Object.values(P.best||{}).map(v=>+v||0));
 function give(k){if(!P.gdGot)P.gdGot={};if(P.gdGot[k])return null;P.gdGot[k]=1;const s=SP[k],m={id:uid(),sp:k,lv:Math.max(1,Math.min(P.lv||1,s.gst)),xp:0,bond:0};P.mons.push(m);P.dex.owned[k]=1;P.dex.seen[k]=1;let inP=false;if(P.party.length<partyMax()){P.party.push(m.id);inP=true}return {k,inP}}
