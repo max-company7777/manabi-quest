@@ -1498,7 +1498,7 @@ function makeItem(st,d,boss,min=0){
 /* =============== save data =============== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-/*const APPV='v151'*/const APPV='v1.2.2',APPB=175;
+/*const APPV='v151'*/const APPV='v1.2.3',APPB=176;
 try{const c=document.createElement('canvas');c.width=9;c.height=9;const g=c.getContext('2d'),F=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};F(1,0,7,1,'#120d09');F(1,8,7,1,'#120d09');F(0,1,1,7,'#120d09');F(8,1,1,7,'#120d09');F(1,1,7,1,'#120d09');F(1,7,7,1,'#120d09');F(1,1,1,7,'#120d09');F(7,1,1,7,'#120d09');F(2,2,5,1,'#7a6a52');F(2,2,1,5,'#7a6a52');F(2,6,5,1,'#2a2018');F(6,2,1,5,'#2a2018');document.documentElement.style.setProperty('--pxf',`url(${c.toDataURL()})`)}catch(e){}
 const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));
 /* ⚡ かるい モード：ふるい たんまつは じどうで ON */
@@ -5483,6 +5483,48 @@ const _sc=window.stageClear;window.stageClear=stageClear=function(){try{if(B&&!B
 const _rh=window.renderHome;window.renderHome=renderHome=function(){const r=_rh.apply(this,arguments);try{if(P&&!P.zenonGot&&bestSt()>=ZENST&&!document.getElementById('modal').classList.contains('on'))setTimeout(()=>{if(P&&!P.zenonGot&&!document.getElementById('modal').classList.contains('on')){zenonJoin(true);try{_rh()}catch(e){}}},600)}catch(e){}return r};
 /* ずかんの とくべつな なかまに のせる */
 const _g=window.specDexGroups;window.specDexGroups=specDexGroups=function(){const G=_g();G.splice(1,0,{t:'ほしくい ゼノン',how:`🌌 ステージ${ZENST}の ゼノンを たおす`,ks:['zenon']});return G};
+})();
+
+/* ===== ゆうしゃの くわしい ページ ===== */
+(function(){
+let HV={back:0};
+function heroDetail(){const c=cosOf(P),L=Object.assign({},P,{back:HV.back?1:0}),u=heroCanvas(P.eq,L,'');const url=u?u.toDataURL():'';
+  const out=c.outfit&&OUTFITS[c.outfit],hat=c.hat&&HATS[c.hat],aura=c.aura&&AURAS[c.aura],bg=c.bg&&BGS[c.bg];
+  const hairN={short:'ふつう',long:'ながい',pony:'ポニー',spiky:'ふつう'}[P.hair||'short'];
+  const SI=o=>itemIcon(Object.assign({rar:0},o));
+  const st=[['こうげき',SI({slot:'w',icon:'🗡️'}),fmtS(atk())],['たいりょく',SI({slot:'c',eff:'heal'}),fmtS(maxHp())],['ぼうぎょ',SI({slot:'s',rar:1}),fmtS(def())],['かいひ',SI({slot:'b',color:'#5fbf6a'}),dodge()+'%'],['クリティカル',SI({slot:'c',eff:'crit'}),crit()+'%'],['ペット',SI({slot:'pet',icon:'🐶'}),fmtS(petAtk())]];
+  const eqRows=SLOTS.map(k=>{const it=P.eq[k];return `<div class="hdq${it?'':' none'}" data-s="${k}" style="--rc:${it?RAR[it.rar].h:'#555'}"><span class="hdqi">${it?itemIcon(it):''}</span><span class="hdqt"><small>${SLOTN[k]}</small><b>${it?esc(it.name)+(it.plus?` <i>+${it.plus}</i>`:''):'なし'}</b></span><span class="hdqp">${it?fmtS(iscore(it)):''}</span></div>`}).join('');
+  const sc=setCounts(),sets=Object.keys(sc).filter(t=>sc[t]>=2).sort((a,b)=>sc[b]-sc[a]);
+  showModal(`<div class="mt">🛡️ ゆうしゃ ${esc(P.name)}</div>${titleOf(P)?`<div class="hdttl">「${esc(titleOf(P))}」</div>`:''}
+   <div class="hdbig" id="hdBig"><img src="${url}" alt=""></div>
+   <div class="row" style="justify-content:center;gap:6px"><button class="btn ${HV.back?'gray':'green'}" id="hdF" style="flex:none;padding:6px 14px">まえ</button><button class="btn ${HV.back?'green':'gray'}" id="hdB" style="flex:none;padding:6px 14px">うしろ</button></div>
+   <div class="hdpow"><small>パワー</small><b>${power().toLocaleString()}</b><small>Lv ${P.lv>=MAXLV?'MAX':P.lv}</small></div>
+   <div class="hdst">${st.map(([n,i,v])=>`<div><span>${i}</span><small>${n}</small><b>${v}</b></div>`).join('')}</div>
+   <div class="hdh">👗 みため</div>
+   <div class="hdlk"><div><small>すがた</small><b>${out?out[0]:'ふつうの ふく'}</b></div><div><small>ぼうし</small><b>${hat?hat[0]:'なし'}</b></div><div><small>かみがた</small><b>${hairN}</b></div><div><small>オーラ</small><b>${aura?aura[0]:'なし'}</b></div><div><small>はいけい</small><b>${bg?bg[0]:'なし'}</b></div><div><small>しょうごう</small><b>${titleOf(P)||'なし'}</b></div></div>
+   <div class="hdh">⚔️ そうび <small>タップで くわしく</small></div><div class="hdeq">${eqRows}</div>
+   ${sets.length?`<div class="hdh">🔗 セット ボーナス</div><div class="hdsets">${sets.map(t=>`<div><b>${t}</b> ${sc[t]}/${SETMAX}　${setBonus(t,sc[t]).map(b=>FX[b.k][0]+'+'+b.v+'%').join('　')}</div>`).join('')}</div>`:''}
+   <button class="btn purple" id="hdC">👗 きせかえを かえる</button><button class="btn gray" id="cl">とじる</button>`,
+   {cl:closeModal,hdF:()=>{HV.back=0;heroDetail()},hdB:()=>{HV.back=1;heroDetail()},hdC:()=>{closeModal();try{openShop('outfit')}catch(e){}}});
+  const big=document.getElementById('hdBig');if(big)big.onclick=()=>{big.classList.toggle('zoom');snd(880,.03)};
+  document.querySelectorAll('.hdq[data-s]').forEach(e=>e.onclick=()=>{const it=P.eq[e.dataset.s];if(!it)return;showModal(`<div class="mt">${SLOTN[e.dataset.s]}</div>${itemCard(it)}<button class="btn gray" id="bk">もどる</button>`,{bk:heroDetail})})}
+window.heroDetail=heroDetail;
+const _rh=window.renderHome;window.renderHome=renderHome=function(){const r=_rh.apply(this,arguments);try{const h=$('hHero');if(h&&!h.__hd){h.__hd=1;h.style.cursor='pointer';h.addEventListener('click',()=>{HV.back=0;heroDetail()})}
+  if(h&&!h.querySelector('.hdtap')){const t=document.createElement('i');t.className='hdtap';t.textContent='🔍 くわしく';h.appendChild(t)}}catch(e){}return r};
+const st=document.createElement('style');st.textContent=`
+.hs-hero #hHero>img.hsimg{height:112%!important;bottom:-3%!important}
+#hHero .hdtap{position:absolute;right:4px;top:4px;z-index:3;font-style:normal;font-size:10px;background:#000a;color:#fff;border-radius:8px;padding:1px 6px;animation:none!important}
+.hdttl{text-align:center;color:var(--gold);font-size:13px;margin:-4px 0 4px}
+.hdbig{height:230px;margin:4px auto;border-radius:14px;background:radial-gradient(circle at 50% 70%,#ffd23f33,transparent 65%),linear-gradient(#2c3550,#1a2033);border:2px solid #ffd23f66;display:flex;align-items:flex-end;justify-content:center;overflow:hidden;cursor:zoom-in;transition:height .25s}
+.hdbig.zoom{height:min(420px,70vh);cursor:zoom-out}.hdbig img{height:100%;image-rendering:pixelated}
+.hdpow{display:flex;align-items:baseline;justify-content:center;gap:8px;margin:6px 0}.hdpow b{font-size:26px;color:var(--gold)}.hdpow small{color:var(--sub)}
+.hdst{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin:4px 0}.hdst>div{background:rgba(255,255,255,.06);border-radius:8px;padding:4px;display:flex;flex-direction:column;align-items:center;font-size:11px}
+.hdst span .pxi{width:22px;height:22px}.hdst b{font-size:15px;color:#fff}.hdst small{color:var(--sub)}
+.hdh{text-align:left;font-size:13px;color:var(--gold);margin:10px 2px 4px}.hdh small{color:var(--sub);font-size:10px}
+.hdlk{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}.hdlk>div{background:rgba(255,255,255,.06);border-radius:8px;padding:4px 6px;text-align:left;font-size:11px;display:flex;flex-direction:column}.hdlk small{color:var(--sub)}.hdlk b{font-size:12px}
+.hdeq{display:flex;flex-direction:column;gap:3px}.hdq{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.05);border-left:3px solid var(--rc);border-radius:6px;padding:3px 6px;text-align:left;cursor:pointer}
+.hdq.none{opacity:.45}.hdqi{width:26px;height:26px;flex:none}.hdqi .pxi{width:26px;height:26px}.hdqt{flex:1;min-width:0;display:flex;flex-direction:column}.hdqt small{font-size:10px;color:var(--sub)}.hdqt b{font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.hdqt i{color:#5be36a;font-style:normal}.hdqp{font-size:12px;color:var(--gold)}
+.hdsets{display:flex;flex-direction:column;gap:3px;font-size:11px;text-align:left}.hdsets>div{background:rgba(255,255,255,.05);border-radius:6px;padding:4px 6px}.hdsets b{color:var(--gold)}`;document.head.appendChild(st);
 })();
 
 /* ===== ふつうの バトル：ぐんだんバトルと おなじ ような うごき（WAAPIで かるく） ===== */
