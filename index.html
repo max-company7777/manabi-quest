@@ -1498,7 +1498,7 @@ function makeItem(st,d,boss,min=0){
 /* =============== save data =============== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-/*const APPV='v151'*/const APPV='v1.2.3',APPB=176;
+/*const APPV='v151'*/const APPV='v1.2.4',APPB=177;
 try{const c=document.createElement('canvas');c.width=9;c.height=9;const g=c.getContext('2d'),F=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};F(1,0,7,1,'#120d09');F(1,8,7,1,'#120d09');F(0,1,1,7,'#120d09');F(8,1,1,7,'#120d09');F(1,1,7,1,'#120d09');F(1,7,7,1,'#120d09');F(1,1,1,7,'#120d09');F(7,1,1,7,'#120d09');F(2,2,5,1,'#7a6a52');F(2,2,1,5,'#7a6a52');F(2,6,5,1,'#2a2018');F(6,2,1,5,'#2a2018');document.documentElement.style.setProperty('--pxf',`url(${c.toDataURL()})`)}catch(e){}
 const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));
 /* ⚡ かるい モード：ふるい たんまつは じどうで ON */
@@ -5437,6 +5437,8 @@ const st=document.createElement('style');st.textContent=`
 .dexst{display:flex;gap:10px;align-items:center;background:rgba(255,255,255,.05);border-radius:10px;padding:8px 10px;margin:6px 0;text-align:left;font-size:13px}
 .dexhow{font-size:12px;line-height:1.6;text-align:left;border:1px solid rgba(255,210,63,.45);border-radius:10px;padding:7px 10px;margin:6px 0}.dexhow b{color:var(--gold)}
 .dexsb i{font-style:normal;letter-spacing:-1px;font-size:11px}.dexsb .sbf{color:#ffd23f}.dexsb .sbe{color:rgba(255,255,255,.15)}.dexsb small{color:var(--sub);font-size:11px}
+ @media(min-width:600px){#bxBody .bgrid,#bxBody .spdr{grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:8px}#bxBody .bcell b,#bxBody .spdr .bcell b,#bxBody .dexc b{font-size:12px}#bxBody .bcell .bt,#bxBody .spdr .bt{font-size:10px!important}#bxBody .bcell .eb{font-size:14px}#bxBody .ultrow{max-width:620px;margin:0 auto}#bxBody .ultc b{font-size:14px}#bxBody .ultc small{font-size:11px}#bxBody .sth{font-size:17px}#bxBody .spdt{font-size:15px}}
+ @media(min-width:900px){#bxBody .bgrid,#bxBody .spdr{grid-template-columns:repeat(auto-fill,minmax(124px,1fr))}#bxBody .bcell b{font-size:13px}}
 .dexsb{display:flex;flex-direction:column;gap:3px}.dexsb b{color:var(--gold)}`;
 document.head.appendChild(st);
 })();
