@@ -1498,7 +1498,7 @@ function makeItem(st,d,boss,min=0){
 /* =============== save data =============== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-/*const APPV='v151'*/const APPV='v1.2.7',APPB=180;
+/*const APPV='v151'*/const APPV='v1.2.8',APPB=181;
 try{const c=document.createElement('canvas');c.width=9;c.height=9;const g=c.getContext('2d'),F=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};F(1,0,7,1,'#120d09');F(1,8,7,1,'#120d09');F(0,1,1,7,'#120d09');F(8,1,1,7,'#120d09');F(1,1,7,1,'#120d09');F(1,7,7,1,'#120d09');F(1,1,1,7,'#120d09');F(7,1,1,7,'#120d09');F(2,2,5,1,'#7a6a52');F(2,2,1,5,'#7a6a52');F(2,6,5,1,'#2a2018');F(6,2,1,5,'#2a2018');document.documentElement.style.setProperty('--pxf',`url(${c.toDataURL()})`)}catch(e){}
 const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));
 /* ⚡ かるい モード：ふるい たんまつは じどうで ON */
@@ -4852,7 +4852,7 @@ function unitDraw(x,u,dt){const S=(u.boss?1.85:u.hero?1.05:(u.sp==='darulu'?1.8:
   /* かげ */
   x.save();x.globalAlpha=.32*alpha*(u.fly||lift>S*.3?.55:1);x.fillStyle='#000';x.beginPath();x.ellipse(px,gy,S*.32*(1-Math.min(.5,lift/S)),S*.07,0,0,7);x.fill();x.restore();
   if(u.hero&&!u.dead){const lk=u.look||P,au=lk.cos&&lk.cos.aura,A=au&&AURAS[au];if(A){const t=performance.now()/1000,col=A[2]||`hsl(${(t*120)%360},90%,60%)`;x.save();const r=S*.75*(1+.06*Math.sin(t*4)),gg=x.createRadialGradient(px,gy-S*.55,S*.1,px,gy-S*.55,r);gg.addColorStop(0,col);gg.addColorStop(1,'rgba(0,0,0,0)');x.globalAlpha=.45;x.fillStyle=gg;x.beginPath();x.arc(px,gy-S*.55,r,0,7);x.fill();x.restore()}}
-  if(!u.dead&&u.side==='p'&&window.LUX){const lv=u.hero?LUX.heroLv((u.look||P).eq,u.look||P):LUX.monLv(u.sp);if(lv){const col=LUX.lvCol(lv,u.hero?null:u.sp),t=performance.now()/1000;x.save();x.globalCompositeOperation='lighter';
+  if(!u.dead&&u.side==='p'&&window.LUX){const lv=u.hero?LUX.heroLv((u.look||P).eq,u.look||P):LUX.monLv(u.sp);if(lv&&window.DECOLANE){DECOLANE(x,u,px,gy,S,lv,LUX.lvCol(lv,u.hero?null:u.sp))}else if(lv){const col=LUX.lvCol(lv,u.hero?null:u.sp),t=performance.now()/1000;x.save();x.globalCompositeOperation='lighter';
     const rr=S*.42*(1+.06*Math.sin(t*4));x.globalAlpha=.35+.15*Math.sin(t*3);const gg=x.createRadialGradient(px,gy,1,px,gy,rr);gg.addColorStop(0,col);gg.addColorStop(1,'rgba(0,0,0,0)');x.fillStyle=gg;x.beginPath();x.ellipse(px,gy,rr,rr*.28,0,0,7);x.fill();
     if(lv>=3){x.globalAlpha=.18+.08*Math.sin(t*2);const pg=x.createLinearGradient(0,gy-S*1.2,0,gy);pg.addColorStop(0,'rgba(0,0,0,0)');pg.addColorStop(1,col);x.fillStyle=pg;x.fillRect(px-S*.22,gy-S*1.2,S*.44,S*1.2)}
     const n=[0,3,5,8][lv];x.fillStyle='#fff';for(let i=0;i<n;i++){const ph=(t*.45+i/n+(u.dy||0))%1,sx2=px+Math.sin(i*2.4+t*1.3)*S*.32,sy2=gy-ph*S*1.15,a=Math.sin(ph*Math.PI),z=Math.max(1,S*.035*(.6+a));x.globalAlpha=a*.9;x.fillStyle=i%2?col:'#ffffff';x.fillRect(sx2-z/2,sy2-z*1.5,z,z*3);x.fillRect(sx2-z*1.5,sy2-z/2,z*3,z)}
@@ -5557,7 +5557,7 @@ const _dm=window.dexMonModal;window.dexMonModal=dexMonModal=function(k){const r=
 const _hd=window.heroDetail;if(_hd)window.heroDetail=function(){const r=_hd.apply(this,arguments);try{const lv=heroLv(P.eq,P);put(document.getElementById('hdBig'),lv,lvCol(lv))}catch(e){}return r};
 const _mm=window.monModal;window.monModal=monModal=function(id){const r=_mm.apply(this,arguments);try{const m=P.mons.find(x=>x.id===id),h=document.querySelector('#mbox .hatch');if(m&&h){const l=monLv(m.sp);put(h,l,lvCol(l,m.sp))}}catch(e){}return r};
 const st=document.createElement('style');st.textContent=`
-.luxon{position:relative}
+.luxon{position:relative}#partyB .pm.luxon,#hero.luxon{position:absolute}
 .lxw{position:absolute;inset:0;pointer-events:none;z-index:3;overflow:visible;animation:none!important;transform:none!important}
 #hHero>.lxw,.dexbig>.lxw,.hdbig>.lxw{z-index:1}#hHero>.lxf,.dexbig>.lxf,.hdbig>.lxf{z-index:4}
 .lxr{position:absolute;left:12%;right:12%;bottom:3%;height:14%;border-radius:50%;background:radial-gradient(closest-side,var(--lc),transparent);opacity:.55;animation:lxpul 1.8s ease-in-out infinite;mix-blend-mode:screen}
