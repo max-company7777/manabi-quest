@@ -1498,7 +1498,7 @@ function makeItem(st,d,boss,min=0){
 /* =============== save data =============== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-/*const APPV='v151'*/const APPV='v1.3.1',APPB=183;
+/*const APPV='v151'*/const APPV='v1.3.2',APPB=184;
 try{const c=document.createElement('canvas');c.width=9;c.height=9;const g=c.getContext('2d'),F=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};F(1,0,7,1,'#120d09');F(1,8,7,1,'#120d09');F(0,1,1,7,'#120d09');F(8,1,1,7,'#120d09');F(1,1,7,1,'#120d09');F(1,7,7,1,'#120d09');F(1,1,1,7,'#120d09');F(7,1,1,7,'#120d09');F(2,2,5,1,'#7a6a52');F(2,2,1,5,'#7a6a52');F(2,6,5,1,'#2a2018');F(6,2,1,5,'#2a2018');document.documentElement.style.setProperty('--pxf',`url(${c.toDataURL()})`)}catch(e){}
 const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));
 /* ⚡ かるい モード：ふるい たんまつは じどうで ON */
@@ -5596,7 +5596,10 @@ function put(el,lv,col,sp,hero){if(!el)return;el.querySelectorAll(':scope>.lxw,:
 window.DECO={put,decoHTML};
 const wait=()=>{if(!window.LUX){setTimeout(wait,50);return}const L=window.LUX;
   const hp=el=>{const lv=L.heroLv(P.eq,P);put(el,lv,L.lvCol(lv),null,1)};
-  const _rh=window.renderHome;window.renderHome=renderHome=function(){const r=_rh.apply(this,arguments);try{hp($('hHero'));document.querySelectorAll('.pslot[data-id] .pms').forEach(e=>{const m=P.mons.find(x=>x.id===e.parentNode.dataset.id);if(m){const l=L.monLv(m.sp);put(e,l,L.lvCol(l,m.sp),m.sp)}})}catch(e){}return r};
+  const monsDeco=()=>{try{document.querySelectorAll('.pslot[data-id] .pms, #bxBody .bcell.mc[data-id] > .flip').forEach(e=>{const m=P.mons.find(x=>x.id===e.parentNode.dataset.id);if(m){const l=L.monLv(m.sp);put(e,l,L.lvCol(l,m.sp),m.sp)}})}catch(e){}};window.DECOMONS=monsDeco;
+  const _rh=window.renderHome;window.renderHome=renderHome=function(){const r=_rh.apply(this,arguments);try{hp($('hHero'))}catch(e){}monsDeco();return r};
+  const _rp=window.renderParty;if(_rp)window.renderParty=renderParty=function(){const r=_rp.apply(this,arguments);monsDeco();return r};
+  const _rb=window.renderBox;if(_rb)window.renderBox=renderBox=function(){const r=_rb.apply(this,arguments);monsDeco();return r};
   const _uh=window.updHud;window.updHud=updHud=function(){const r=_uh.apply(this,arguments);try{document.querySelectorAll('#hero>.lxw,#hero>.dkw').forEach(o=>o.remove());$('hero').classList.remove('luxon');hp($('heroSpr'));const pm=partyMons();document.querySelectorAll('#partyB .pm').forEach(el=>{const m=pm[+el.dataset.i];if(m){const l=L.monLv(m.sp);put(el,l,L.lvCol(l,m.sp),m.sp)}})}catch(e){}return r};
   const _dm=window.dexMonModal;window.dexMonModal=dexMonModal=function(k){const r=_dm.apply(this,arguments);try{if(P.dex.owned[k]){const l=L.monLv(k);put(document.getElementById('dxb'),l,L.lvCol(l,k),k)}}catch(e){}return r};
   const _hd=window.heroDetail;if(_hd)window.heroDetail=heroDetail=function(){const r=_hd.apply(this,arguments);try{hp(document.getElementById('hdBig'))}catch(e){}return r};
@@ -5633,7 +5636,7 @@ html body .dkw img.dkfl{width:26%!important;height:auto!important;opacity:0;anim
 @keyframes dkst{0%{opacity:0;transform:translate(-30%,40%)}10%{opacity:.5}35%{opacity:0;transform:translate(60%,-60%)}100%{opacity:0;transform:translate(60%,-60%)}}
 @keyframes dktw{0%,100%{opacity:.1;transform:scale(.5)}50%{opacity:.85;transform:scale(1)}}
 @keyframes dkfl{0%{opacity:0}8%{opacity:1}14%{opacity:0}20%{opacity:.9}24%{opacity:0}}
-html body #heroSpr{display:inline-block}#partyB .pm.luxon,#hero.luxon{position:absolute!important}html body #heroSpr .dkw img.dkg{display:none}html body #heroSpr .dkw img.dkring{opacity:.28}html body .pslot .pms .dkw img.dkwp,html body .pslot .pms .dkw img.dks{display:none}html body .pslot .pms .dkw img.dkg,html body .pslot .pms .dkw img.dkring{display:none}
+html body #heroSpr{display:inline-block}#partyB .pm.luxon,#hero.luxon{position:absolute!important}html body #heroSpr .dkw img.dkg{display:none}html body #heroSpr .dkw img.dkring{opacity:.28}html body #hParty .pslot .pms .dkw img.dkwp,html body .pslot .pms .dkw img.dks,html body .bcell .dkw img.dkwp,html body .bcell .dkw img.dks,html body .bcell .dkw img.dkg,html body .bcell .dkw img.dkt.big,html body .bcell .dkw img.dkfl{display:none}html body .prow.big .pslot .pms .dkw img.dkwp{height:20%!important}html body .bcell.mc>.flip.luxon{position:relative}html body .prow .pslot{overflow:hidden}html body .pslot .pms .dkw img.dkg,html body .pslot .pms .dkw img.dkring{display:none}
 html.lite .dkw img{animation:none!important}html.lite .dkw img.dks,html.lite .dkw img.dkt:nth-of-type(n+3){display:none}`;document.head.appendChild(st);
 })();
 
