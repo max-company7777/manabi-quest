@@ -1498,7 +1498,7 @@ function makeItem(st,d,boss,min=0){
 /* =============== save data =============== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-/*const APPV='v151'*/const APPV='v1.6.1',APPB=193;
+/*const APPV='v151'*/const APPV='v1.6.2',APPB=194;
 try{const c=document.createElement('canvas');c.width=9;c.height=9;const g=c.getContext('2d'),F=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};F(1,0,7,1,'#120d09');F(1,8,7,1,'#120d09');F(0,1,1,7,'#120d09');F(8,1,1,7,'#120d09');F(1,1,7,1,'#120d09');F(1,7,7,1,'#120d09');F(1,1,1,7,'#120d09');F(7,1,1,7,'#120d09');F(2,2,5,1,'#7a6a52');F(2,2,1,5,'#7a6a52');F(2,6,5,1,'#2a2018');F(6,2,1,5,'#2a2018');document.documentElement.style.setProperty('--pxf',`url(${c.toDataURL()})`)}catch(e){}
 const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));
 /* ⚡ かるい モード：ふるい たんまつは じどうで ON */
@@ -4773,7 +4773,7 @@ function liteSuggest(){if(G.lite)return;if(B){setTimeout(liteSuggest,5000);retur
 /* =============== boot =============== */
 setTimeout(()=>{try{if(FB_CONFIG&&G.fam)syncUp()}catch(e){}},3000);
 if(G.profiles.some(p=>p.master)){G.profiles=G.profiles.filter(p=>!p.master);if(!G.profiles.some(p=>p.id===G.cur))G.cur=null;save()}
-if(G.cur&&G.profiles.find(p=>p.id===G.cur))selectProfile(G.cur);else{show('players');renderPlayers()}
+/* boot は さいごに */
 {try{const jc=new URLSearchParams(location.search).get('join');const st=isStandalone();
   if(st&&(location.search||/index\.html$/.test(location.pathname)))history.replaceState(null,'',location.pathname.replace(/index\.html$/,''));
   if(jc){const c=famNorm(jc);if(c.length!==12)toast('しょうたい コードが ただしくないよ');else if(G.fam!==c&&G.joinSkip!==c)setTimeout(()=>joinInvite(c),900)}}catch(e){}
@@ -5775,6 +5775,9 @@ html.rio .hs,html.rio #hHero>img,html.rio #hHero>svg,html.rio .pm img,html.rio .
 document.head.appendChild(st);
 window.rioToggle=()=>{G.rio=!G.rio;if(G.rio){G.lite=true;G.bgmOn=false}store.set('mq1',G);toast(G.rio?'🐣 リオルばんに するよ':'🐣 リオルばんを やめるよ');setTimeout(()=>location.reload(),500)};
 })();
+
+/* ===== きどう（ぜんぶの パッチの あとで） ===== */
+try{if(G.cur&&G.profiles.find(p=>p.id===G.cur))selectProfile(G.cur);else{show('players');renderPlayers()}}catch(e){console.error(e);try{show('players');renderPlayers()}catch(_){}}
 
 </script>
 <script>
