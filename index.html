@@ -1498,7 +1498,7 @@ function makeItem(st,d,boss,min=0){
 /* =============== save data =============== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-/*const APPV='v151'*/const APPV='v1.5.0',APPB=191;
+/*const APPV='v151'*/const APPV='v1.6.0',APPB=192;
 try{const c=document.createElement('canvas');c.width=9;c.height=9;const g=c.getContext('2d'),F=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};F(1,0,7,1,'#120d09');F(1,8,7,1,'#120d09');F(0,1,1,7,'#120d09');F(8,1,1,7,'#120d09');F(1,1,7,1,'#120d09');F(1,7,7,1,'#120d09');F(1,1,1,7,'#120d09');F(7,1,1,7,'#120d09');F(2,2,5,1,'#7a6a52');F(2,2,1,5,'#7a6a52');F(2,6,5,1,'#2a2018');F(6,2,1,5,'#2a2018');document.documentElement.style.setProperty('--pxf',`url(${c.toDataURL()})`)}catch(e){}
 const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));
 /* ⚡ かるい モード：ふるい たんまつは じどうで ON */
@@ -1987,7 +1987,7 @@ function profileForm(p){
     <div class="lbl">はだの いろ</div><div class="colors" id="fSkin">${SKINS.map(c=>`<button class="col" data-c="${c}" style="background:${c}"></button>`).join('')}</div>
     <div class="lbl">なんさい？</div><div class="opts" id="fAge" style="grid-template-columns:repeat(5,1fr)">${ages.map(a=>`<button class="btn opt" data-a="${a}">${a}${a===12?'+':''}</button>`).join('')}</div>
     <div class="lbl">ふくの いろ</div><div class="colors" id="fCol">${COLORS.map(c=>`<button class="col" data-c="${c}" style="background:${c}"></button>`).join('')}</div>
-    ${p?`<button class="btn ${p.parent?'purple':'gray'}" id="fPar">👨‍👩 おやの アカウント ${p.parent?'ON':'OFF'}<small style="display:block;font-size:11px">ONに すると「みんなの ようす」に でない（ランキングには でる）</small></button><div class="row"><button class="btn ${p.voice?'green':'gray'}" id="fVoice">🗣️ よみあげ ${p.voice?'ON':'OFF'}</button><button class="btn ${G.snd?'green':'gray'}" id="fSnd">🔊 こうかおん ${G.snd?'ON':'OFF'}</button></div><div class="row"><button class="btn ${G.bgmOn?'green':'gray'}" id="fBgm">🎵 BGM ${G.bgmOn?'ON':'OFF'}</button><button class="btn ${G.lite?'green':'gray'}" id="fLite">⚡ かるい モード ${G.lite?'ON':'OFF'}</button></div><small style="color:var(--sub);font-size:11px">うごきが おもい ときは「かるい モード」を ONに してね（キラキラや うごく かざりを へらすよ）</small><button class="btn" id="fUpd">🔄 さいしんばんに する <small>（いま ${APPV}）</small></button>`:''}
+    ${p?`<button class="btn ${p.parent?'purple':'gray'}" id="fPar">👨‍👩 おやの アカウント ${p.parent?'ON':'OFF'}<small style="display:block;font-size:11px">ONに すると「みんなの ようす」に でない（ランキングには でる）</small></button><div class="row"><button class="btn ${p.voice?'green':'gray'}" id="fVoice">🗣️ よみあげ ${p.voice?'ON':'OFF'}</button><button class="btn ${G.snd?'green':'gray'}" id="fSnd">🔊 こうかおん ${G.snd?'ON':'OFF'}</button></div><div class="row"><button class="btn ${G.bgmOn?'green':'gray'}" id="fBgm">🎵 BGM ${G.bgmOn?'ON':'OFF'}</button><button class="btn ${G.lite?'green':'gray'}" id="fLite">⚡ かるい モード ${G.lite?'ON':'OFF'}</button></div><div class="row"><button class="btn ${G.rio?'green':'gray'}" id="fRio">🐣 リオルばん ${G.rio?'ON':'OFF'}<small style="display:block;font-size:11px">ふるい タブレットむけ。いちばん かるく なるよ</small></button></div><small style="color:var(--sub);font-size:11px">うごきが おもい ときは「かるい モード」を ONに してね（キラキラや うごく かざりを へらすよ）</small><button class="btn" id="fUpd">🔄 さいしんばんに する <small>（いま ${APPV}）</small></button>`:''}
     <button class="btn green big" id="fOk">${p?'OK':'つくる！'}</button>
     ${p?'<button class="btn gray" id="fSwitch">👥 ぼうけんしゃを かえる</button><button class="btn gray" id="fData">💾 データの ひっこし</button><button class="btn gray" id="fCloud">👨‍👩‍👧 かぞくで つながる</button><button class="btn orange" id="fCode">🎁 プレゼント コード</button>':'<button class="btn gray" id="fCancel">やめる</button>'}`,
     {fOk:()=>{const name=$('fName').value.trim()||'ゆうしゃ';
@@ -2000,7 +2000,7 @@ function profileForm(p){
      fCloud:()=>cloudSetup(),
      fCode:()=>giftCode(),
      fVoice:()=>{p.voice=!p.voice;save();profileForm(p)},fPar:()=>{p.parent=!p.parent;save();toast(p.parent?'👨‍👩 おやの アカウントに したよ':'こどもの アカウントに したよ');profileForm(p)},
-     fSnd:()=>{G.snd=!G.snd;save();profileForm(p)},fUpd:()=>{toast('🔄 さいしんばんを よみこむよ');setTimeout(()=>location.reload(),400)},fLite:()=>{G.lite=!G.lite;document.documentElement.classList.toggle('lite',G.lite);try{fxSize()}catch(e){}save();profileForm(p);toast(G.lite?'⚡ かるい モード ON':'かるい モード OFF')},fBgm:()=>{G.bgmOn=!G.bgmOn;save();if(G.bgmOn)bgm('home');else bgmStop();profileForm(p)}});
+     fSnd:()=>{G.snd=!G.snd;save();profileForm(p)},fUpd:()=>{toast('🔄 さいしんばんを よみこむよ');setTimeout(()=>location.reload(),400)},fRio:()=>rioToggle(),fLite:()=>{G.lite=!G.lite;document.documentElement.classList.toggle('lite',G.lite);try{fxSize()}catch(e){}save();profileForm(p);toast(G.lite?'⚡ かるい モード ON':'かるい モード OFF')},fBgm:()=>{G.bgmOn=!G.bgmOn;save();if(G.bgmOn)bgm('home');else bgmStop();profileForm(p)}});
   const sync=()=>{document.querySelectorAll('#fAge .opt').forEach(b=>b.classList.toggle('sel',+b.dataset.a===age));
     document.querySelectorAll('#fCol .col').forEach(b=>b.classList.toggle('sel',b.dataset.c===color));
     document.querySelectorAll('#fHair .opt').forEach(b=>b.classList.toggle('sel',b.dataset.h===hair));
@@ -5750,6 +5750,32 @@ const _df=defeat;window.defeat=function(){try{const M=$('monE'),im=M&&M.querySel
 })();
 
 try{renderHome()}catch(e){}
+/* ===== 🐣 リオルばん（ふるい タブレット むけ：いちばん かるい モード） ===== */
+(function(){
+const HT=document.documentElement;
+try{const q=new URLSearchParams(location.search).get('rio');if(q==='1'&&!G.rio){G.rio=true;G.lite=true;G.bgmOn=false;store.set('mq1',G)}else if(q==='0'&&G.rio){G.rio=false;store.set('mq1',G)}}catch(e){}
+const rio=()=>!!G.rio;
+HT.classList.toggle('rio',rio());
+if(rio()){HT.classList.add('lite');G.lite=true;
+  /* がぞうの こまかさを 1ばいに（がめんが おもい げんいん） */
+  try{Object.defineProperty(window,'devicePixelRatio',{get:()=>1,configurable:true})}catch(e){}
+  /* うごきを 1びょうに 20かいだけ */
+  const _raf=window.requestAnimationFrame.bind(window),_caf=window.cancelAnimationFrame.bind(window),map=new Map();let vid=0;
+  window.requestAnimationFrame=function(cb){const v=1e9+(++vid),t0=performance.now();
+    const run=t=>{if(performance.now()-t0<44&&!document.hidden){map.set(v,_raf(run));return}map.delete(v);cb(t)};map.set(v,_raf(run));return v};
+  window.cancelAnimationFrame=function(id){if(id>=1e9){const r=map.get(id);if(r!=null)_caf(r);map.delete(id)}else _caf(id)};
+  /* かざり（ほのお・まほうじん・ひかり）は ぜんぶ なし */
+  if(window.LUX){LUX.monLv=()=>0;LUX.heroLv=()=>0}
+  window.DECOLANE=null;
+  try{if(typeof G.bgmOn!=='undefined')G.bgmOn=false}catch(e){}
+}
+const st=document.createElement('style');st.textContent=`html.rio *,html.rio *::before,html.rio *::after{animation-duration:.01s!important;animation-delay:0s!important;animation-iteration-count:1!important;transition-duration:.01s!important;box-shadow:none!important;text-shadow:none!important;filter:none!important;backdrop-filter:none!important}
+html.rio .lxs,html.rio .lxp,html.rio .dkw,html.rio .dkb,html.rio .dkt,html.rio .dks,html.rio .wx,html.rio .luxon::before,html.rio .luxon::after{display:none!important}
+html.rio .hs,html.rio #hHero>img,html.rio #hHero>svg,html.rio .pm img,html.rio .slot.tile .ic,html.rio .lnu{animation:none!important}`;
+document.head.appendChild(st);
+window.rioToggle=()=>{G.rio=!G.rio;if(G.rio){G.lite=true;G.bgmOn=false}store.set('mq1',G);toast(G.rio?'🐣 リオルばんに するよ':'🐣 リオルばんを やめるよ');setTimeout(()=>location.reload(),500)};
+})();
+
 </script>
 <script>
 if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').then(r=>{r.addEventListener('updatefound',()=>{const w=r.installing;w&&w.addEventListener('statechange',()=>{if(w.state==='activated'&&navigator.serviceWorker.controller){try{toast('あたらしい バージョンに なったよ！')}catch(e){}}})})}).catch(()=>{})})}
