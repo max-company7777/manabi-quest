@@ -1498,7 +1498,7 @@ function makeItem(st,d,boss,min=0){
 /* =============== save data =============== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-/*const APPV='v151'*/const APPV='v1.7.0',APPB=195;
+/*const APPV='v151'*/const APPV='v1.7.1',APPB=196;
 try{const c=document.createElement('canvas');c.width=9;c.height=9;const g=c.getContext('2d'),F=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};F(1,0,7,1,'#120d09');F(1,8,7,1,'#120d09');F(0,1,1,7,'#120d09');F(8,1,1,7,'#120d09');F(1,1,7,1,'#120d09');F(1,7,7,1,'#120d09');F(1,1,1,7,'#120d09');F(7,1,1,7,'#120d09');F(2,2,5,1,'#7a6a52');F(2,2,1,5,'#7a6a52');F(2,6,5,1,'#2a2018');F(6,2,1,5,'#2a2018');document.documentElement.style.setProperty('--pxf',`url(${c.toDataURL()})`)}catch(e){}
 const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));
 /* ⚡ かるい モード：ふるい たんまつは じどうで ON */
@@ -5832,6 +5832,105 @@ html.rio .lxs,html.rio .lxp,html.rio .dkw,html.rio .dkb,html.rio .dkt,html.rio .
 html.rio .hs,html.rio #hHero>img,html.rio #hHero>svg,html.rio .pm img,html.rio .slot.tile .ic,html.rio .lnu{animation:none!important}`;
 document.head.appendChild(st);
 window.rioToggle=()=>{G.rio=!G.rio;if(G.rio){G.lite=true;G.bgmOn=false}store.set('mq1',G);toast(G.rio?'🐣 リオルばんに するよ':'🐣 リオルばんを やめるよ');setTimeout(()=>location.reload(),500)};
+})();
+
+/* ===== スタートがめん：ゆうしゃと なかまの ぼうけんシーン（キャンバス） ===== */
+(function(){
+const W=200,H=112,GY=92;                       /* ないぶの ドット かいぞうど（CSSで 2ばい いじょうに ひきのばす） */
+let cv=null,cx=null,raf=0,T0=0,cast=null,loopN=0,fx=[],stars=[],lastT=0;
+const IMG={};
+function img(u){if(!u)return null;if(IMG[u])return IMG[u];const i=new Image();i.src=u;IMG[u]=i;return i}
+function ok(i){return i&&(i.getContext||(i.complete&&i.naturalWidth))}
+function monImg(k){try{return img(monsterURL(k))}catch(e){return null}}
+function heroImg(p){try{const c=window.heroCanvas&&heroCanvas(p?p.eq:{w:{slot:'w',icon:'🗡️',rar:0}},p||{lv:1,eq:{}},'title|'+(p?p.id:'0'));if(c)return c}catch(e){}return null}
+const FOES=[['slime',.8],['bat',.8],['golem',1],['dragon',1.25],['ghost',.9],['wolf',1]];
+const BOSS=['darulu','zenon','omega','abyss','raijin','gd1300','gd1000','gd600'];
+function pickCast(){const p0=G.profiles&&G.profiles[0];let pals=[];
+  try{if(p0&&p0.party&&p0.mons)pals=p0.party.map(id=>p0.mons.find(m=>m.id===id)).filter(Boolean).slice(0,2).map(m=>m.sp)}catch(e){}
+  if(!pals.length)pals=['slime'];
+  const boss=loopN%3===2;let fk;
+  if(boss){const owned=BOSS.filter(k=>typeof SP!=='undefined'&&SP[k]);fk=owned[(loopN/3|0)%owned.length]||'dragon'}
+  else{const f=FOES[loopN%FOES.length];fk=(typeof SP!=='undefined'&&!SP[f[0]]&&!(window.MONDOT&&MONDOT[f[0]]))?'slime':f[0]}
+  return {p0,hero:heroImg(p0),pals:pals.map(monImg),foe:monImg(fk),boss}}
+function initStars(){stars=[];for(let i=0;i<34;i++)stars.push({x:Math.random()*W,y:Math.random()*58,p:Math.random()*6.28,s:Math.random()<.15?2:1})}
+function spark(x,y,n,col,spd){for(let i=0;i<n;i++){const a=Math.random()*6.28,v=(spd||1)*(.6+Math.random()*1.6);fx.push({k:'p',x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-.6,l:1,c:col[i%col.length],s:Math.random()<.3?2:1})}}
+function dust(x,y){for(let i=0;i<2;i++)fx.push({k:'d',x:x+Math.random()*4-2,y,vx:-.3-Math.random()*.4,vy:-.15,l:1,r:1+Math.random()*1.5})}
+function draw(o,x,y,h,opt){if(!ok(o))return;opt=opt||{};const w=o.width||o.naturalWidth,hh=o.height||o.naturalHeight,s=h/hh;
+  cx.save();cx.translate(Math.round(x),Math.round(y));if(opt.rot)cx.rotate(opt.rot);cx.scale((opt.flip?-1:1)*s*(opt.sx||1),s*(opt.sy||1));
+  if(opt.alpha!=null)cx.globalAlpha=opt.alpha;if(opt.white){cx.filter='brightness(4)'}
+  cx.drawImage(o,-w/2,-hh,w,hh);cx.restore()}
+function shadow(x,w,a){cx.fillStyle=`rgba(0,0,0,${a||.35})`;cx.beginPath();cx.ellipse(Math.round(x),GY+1,w,2.2,0,0,6.28);cx.fill()}
+/* 1しゅう 9びょう：はしる → であう → こうげき → やっつけ → よろこぶ → はしりさる */
+const L=9000;
+function frame(now){raf=requestAnimationFrame(frame);
+  const on=document.querySelector('.screen.on');if(!cv||!cv.isConnected||(on&&on.id!=='players')){stop();return}
+  if(now-lastT<28)return;const dt=Math.min(3,(now-(lastT||now))/16.7);lastT=now;
+  let t=now-T0;if(t>L){T0=now;t=0;loopN++;cast=pickCast()}
+  if(!cast.hero)cast.hero=heroImg(cast.p0);
+  cx.clearRect(0,0,W,H);
+  /* ほし */
+  for(const s of stars){const a=.35+.65*Math.abs(Math.sin(now/700+s.p));cx.fillStyle=`rgba(255,255,230,${a})`;cx.fillRect(s.x|0,s.y|0,s.s,s.s)}
+  if(Math.random()<.004*dt)fx.push({k:'sh',x:40+Math.random()*140,y:4+Math.random()*16,l:1});
+  const ph=t/L,boss=cast.boss,fh=boss?46:28;
+  /* ゆうしゃの いち */
+  let hx,hy=GY,hr=0,hsy=1,hsx=1,run=true,cheer=false;
+  const meetX=92;
+  if(ph<.3){hx=-20+(meetX+20)*(ph/.3)}
+  else if(ph<.62){hx=meetX;run=false}
+  else if(ph<.72){hx=meetX;run=false;cheer=true}
+  else{hx=meetX+(W+40-meetX)*((ph-.72)/.28)}
+  const bob=run?Math.abs(Math.sin(now/90))*3:0;
+  if(run){hr=Math.sin(now/90)*.06;if(Math.sin(now/90)>.95)dust(hx-6,GY)}
+  /* こうげき（ジャンプぎり） */
+  let atk=0;if(ph>=.34&&ph<.46){atk=(ph-.34)/.12;const j=Math.sin(atk*Math.PI);hy=GY-j*15;hr=atk<.5?-.25:.5*(1-atk);hx=meetX+atk*14}
+  if(ph>=.46&&ph<.62){hx=meetX+14-(ph-.46)/.16*14}
+  if(cheer){const c=(ph-.62)/.1;hy=GY-Math.abs(Math.sin(c*Math.PI*2))*10;hsy=1+Math.sin(c*Math.PI*4)*.06}
+  if(!run&&!cheer&&atk===0){hsy=1+Math.sin(now/260)*.03;hsx=2-hsy}
+  /* てき */
+  let ex=W+30,ey=GY,er=0,ea=1,ewhite=false;
+  const ebob=Math.abs(Math.sin(now/(boss?240:150)))*(boss?2:4);
+  if(ph<.3){ex=W+30-(W+30-(meetX+34+(boss?10:0)))*Math.min(1,ph/.26)}
+  else ex=meetX+34+(boss?10:0);
+  const hitT=.42;
+  if(ph>=hitT&&ph<hitT+.03)ewhite=true;
+  if(ph>=hitT+.03){const k=(ph-hitT-.03)/.2;ex+=k*90;ey=GY-Math.sin(Math.min(1,k)*Math.PI*.9)*16-k*4;er=k*8;ea=Math.max(0,1-k*1.1)}
+  /* かげ */
+  if(ea>.05)shadow(ex,boss?16:10,.3*ea);
+  shadow(hx,9,.35);
+  cast.pals.forEach((pi,i)=>{const px=hx-22-i*18;shadow(px,7,.3)});
+  /* なかま（ゆうしゃの うしろを ぴょこぴょこ） */
+  cast.pals.forEach((pi,i)=>{const px=hx-22-i*18,b=Math.abs(Math.sin(now/120+i*1.7))*(run||cheer?5:2);draw(pi,px,GY-b,22,{flip:true,sy:1+(b>4?.06:0)})});
+  /* てき */
+  if(ea>.02)draw(cast.foe,ex,ey-(ph<hitT?ebob:0),fh,{rot:er,alpha:ea,white:ewhite});
+  /* ボスの オーラ */
+  if(boss&&ea>.2&&ph<hitT){cx.save();cx.globalAlpha=.25+.15*Math.sin(now/200);cx.fillStyle='#b070ff';cx.beginPath();cx.ellipse(ex,GY-fh*.45,fh*.55,fh*.5,0,0,6.28);cx.fill();cx.restore()}
+  /* ゆうしゃ */
+  draw(cast.hero,hx,hy-bob,40,{rot:hr,sy:hsy,sx:hsx});
+  /* けんの きせき */
+  if(ph>=.38&&ph<.45){const k=(ph-.38)/.07;cx.save();cx.strokeStyle=`rgba(255,255,255,${1-k})`;cx.lineWidth=3;cx.beginPath();cx.arc(hx+10,hy-18,18,-1.9+k*2.2,-0.3+k*2.4);cx.stroke();cx.strokeStyle=`rgba(255,220,90,${.8*(1-k)})`;cx.lineWidth=1.5;cx.beginPath();cx.arc(hx+10,hy-18,15,-1.9+k*2.2,-0.3+k*2.4);cx.stroke();cx.restore()}
+  /* ヒット */
+  if(ph>=hitT&&!cast.hitDone){cast.hitDone=1;spark(ex,GY-fh*.5,boss?36:22,['#fff','#ffd23f','#ff8a3d','#8af'],boss?1.6:1.2);fx.push({k:'n',x:ex,y:Math.max(72,GY-fh-4),v:boss?'9999':String(100+((loopN*137)%800)),l:1,big:boss});fx.push({k:'ring',x:ex,y:GY-fh*.5,l:1})}
+  if(ph<hitT)cast.hitDone=0;
+  /* よろこび：キラキラ */
+  if(cheer&&Math.random()<.5*dt)spark(hx+Math.random()*30-15,hy-30-Math.random()*10,1,['#ffd23f','#fff','#7ef'],.5);
+  /* エフェクト */
+  for(let i=fx.length-1;i>=0;i--){const f=fx[i];
+    if(f.k==='p'){f.x+=f.vx*dt;f.y+=f.vy*dt;f.vy+=.05*dt;f.l-=.025*dt;cx.fillStyle=f.c;cx.globalAlpha=Math.max(0,f.l);cx.fillRect(f.x|0,f.y|0,f.s,f.s);cx.globalAlpha=1}
+    else if(f.k==='d'){f.x+=f.vx*dt;f.y+=f.vy*dt;f.r+=.06*dt;f.l-=.04*dt;cx.fillStyle=`rgba(220,210,190,${.45*Math.max(0,f.l)})`;cx.beginPath();cx.arc(f.x,f.y,f.r,0,6.28);cx.fill()}
+    else if(f.k==='n'){f.y-=.35*dt;f.l-=.016*dt;cx.save();cx.globalAlpha=Math.min(1,f.l*2);cx.font=`bold ${f.big?11:9}px monospace`;cx.textAlign='center';cx.lineWidth=3;cx.strokeStyle='#000';cx.strokeText(f.v,f.x,f.y);cx.fillStyle=f.big?'#ff5a5a':'#ffd23f';cx.fillText(f.v,f.x,f.y);cx.restore()}
+    else if(f.k==='ring'){f.l-=.05*dt;const r=(1-f.l)*26;cx.strokeStyle=`rgba(255,240,180,${Math.max(0,f.l)})`;cx.lineWidth=2;cx.beginPath();cx.arc(f.x,f.y,r,0,6.28);cx.stroke()}
+    else if(f.k==='sh'){f.x+=2.6*dt;f.y+=1.1*dt;f.l-=.03*dt;const g=cx.createLinearGradient(f.x-16,f.y-7,f.x,f.y);g.addColorStop(0,'rgba(255,255,255,0)');g.addColorStop(1,`rgba(255,255,255,${Math.max(0,f.l)})`);cx.strokeStyle=g;cx.lineWidth=1;cx.beginPath();cx.moveTo(f.x-16,f.y-7);cx.lineTo(f.x,f.y);cx.stroke()}
+    if(f.l<=0)fx.splice(i,1)}
+}
+function stop(){if(raf)cancelAnimationFrame(raf);raf=0}
+function start(){const ts=document.getElementById('tScene');if(!ts)return;const tr=ts.querySelector('.trun');if(!tr)return;
+  if(G.rio)return;                          /* リオルばんは いままでの かるい うごき */
+  tr.innerHTML='';tr.classList.add('tcan');
+  cv=document.createElement('canvas');cv.width=W;cv.height=H;cv.className='tcv';ts.insertBefore(cv,ts.querySelector('.tlogo'));cx=cv.getContext('2d');cx.imageSmoothingEnabled=false;
+  initStars();fx=[];if(!cast)cast=pickCast();else cast=pickCast();stop();T0=performance.now()-1500;lastT=0;raf=requestAnimationFrame(frame)}
+const _rp=window.renderPlayers||renderPlayers;
+window.renderPlayers=renderPlayers=function(){const r=_rp.apply(this,arguments);try{const old=document.querySelector('#tScene .tcv');if(old)old.remove();start()}catch(e){console.error(e)}return r};
+const st=document.createElement('style');st.textContent=`#tScene .tcv{position:absolute;inset:0;width:100%;height:100%;image-rendering:pixelated;z-index:2;pointer-events:none}#tScene .trun.tcan{display:none}#tScene .tlogo{z-index:3}`;document.head.appendChild(st);
 })();
 
 /* ===== ホームの ゆうしゃ：ぐんだんバトルと おなじ パーツアニメ（あたま・からだ・あし）で うごく ===== */
