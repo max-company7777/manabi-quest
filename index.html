@@ -1498,7 +1498,7 @@ function makeItem(st,d,boss,min=0){
 /* =============== save data =============== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-/*const APPV='v151'*/const APPV='v1.6.2',APPB=194;
+/*const APPV='v151'*/const APPV='v1.7.0',APPB=195;
 try{const c=document.createElement('canvas');c.width=9;c.height=9;const g=c.getContext('2d'),F=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};F(1,0,7,1,'#120d09');F(1,8,7,1,'#120d09');F(0,1,1,7,'#120d09');F(8,1,1,7,'#120d09');F(1,1,7,1,'#120d09');F(1,7,7,1,'#120d09');F(1,1,1,7,'#120d09');F(7,1,1,7,'#120d09');F(2,2,5,1,'#7a6a52');F(2,2,1,5,'#7a6a52');F(2,6,5,1,'#2a2018');F(6,2,1,5,'#2a2018');document.documentElement.style.setProperty('--pxf',`url(${c.toDataURL()})`)}catch(e){}
 const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));
 /* ⚡ かるい モード：ふるい たんまつは じどうで ON */
@@ -3811,18 +3811,35 @@ function renderParty(){
 
 /* ---- box screen ---- */
 let boxTab='items',boxF='all';
-function openBox(t){boxTab=t||'items';show('box');renderBox()}
+/* ☑️ えらんで うる（そうびを いくつでも えらんで まとめて うる） */
+let BSELM=false;const BSEL=new Set();
+function openBox(t){boxTab=t||'items';BSELM=false;BSEL.clear();show('box');renderBox()}
+const bselVis=()=>P.box.filter(it=>boxF==='all'||it.slot===boxF);
+function bselBar(){const bar=$('bxSelBar');if(!bar)return;const L=[...BSEL],g=L.reduce((a,it)=>a+itPrice(it),0),vis=bselVis(),all=vis.length&&vis.every(it=>BSEL.has(it));
+  bar.innerHTML=`<div class="bsi"><b>${L.length}こ</b> えらんだ<span class="goldt">🪙+${g.toLocaleString()}</span></div><div class="bsb"><button class="btn gray" id="bsAll">${all?'ぜんぶ はずす':'ぜんぶ えらぶ'}</button><button class="btn orange" id="bsGo"${L.length?'':' disabled'}>🪙 うる</button></div>`;
+  $('bsAll').onclick=()=>{if(all)vis.forEach(it=>BSEL.delete(it));else vis.forEach(it=>BSEL.add(it));renderBox()};
+  $('bsGo').onclick=bselSell}
+function bselSell(){const L=P.box.filter(it=>BSEL.has(it));if(!L.length)return;const g=L.reduce((a,it)=>a+itPrice(it),0),hi=L.filter(it=>it.rar>=3).length,pl=L.filter(it=>it.plus>0).length;
+  showModal(`<div class="mt">🪙 えらんだ そうびを うる</div>
+    <div class="bgrid swg">${L.slice(0,40).map(it=>`<div class="bcell" style="--rc:${RAR[it.rar].c}">${itemIcon(it)}<b>${it.plus?'+'+it.plus+' ':''}${fmtS(iscore(it))}</b></div>`).join('')}${L.length>40?`<small>…ほか ${L.length-40}こ</small>`:''}</div>
+    ${hi||pl?`<p class="byewarn">⚠️ ${hi?`${RAR[3].n}いじょうが <b>${hi}こ</b>`:''}${hi&&pl?'・':''}${pl?`きょうか（+）ずみが <b>${pl}こ</b>`:''} はいっているよ！<br>うると もう もどってこないよ。</p>`:'<p style="font-size:13px">うると もう もどってこないよ。</p>'}
+    <p><b>${L.length}こ</b> → <b class="goldt">🪙+${g.toLocaleString()}</b></p>
+    <button class="btn orange big" id="go">まとめて うる！</button><button class="btn gray" id="cl">やめる</button>`,
+    {cl:closeModal,go:()=>{const set=new Set(L);P.box=P.box.filter(it=>!set.has(it));P.gold+=g;BSEL.clear();BSELM=false;save();coin();closeModal();renderBox();toast(`🪙 ${L.length}こ うって +${g.toLocaleString()}！`)}})}
 function renderBox(){
   ensureP(P);if(!CAT_N)CAT_N=catalog().length;
   $('bxTabs').innerHTML=[['items','そうび'],['mons','なかま'],['eggs','たまご'],['dex','ずかん']].map(([k,n])=>`<button class="btn db${boxTab===k?' sel':''}" data-t="${k}">${n}</button>`).join('');
-  document.querySelectorAll('#bxTabs .db').forEach(b=>b.onclick=()=>{boxTab=b.dataset.t;renderBox()});
+  document.querySelectorAll('#bxTabs .db').forEach(b=>b.onclick=()=>{boxTab=b.dataset.t;BSELM=false;BSEL.clear();renderBox()});
   let h='';
   if(boxTab==='items'){
     $('bxCount').textContent=`${P.box.length} / ${P.master?'∞':boxCap()}`;
     h+=`<div class="fchips">${['all',...SLOTS].map(k=>`<button class="fchip${boxF===k?' sel':''}" data-f="${k}">${k==='all'?'ぜんぶ':SLOTN[k]}</button>`).join('')}</div>`;
-    if(P.box.length)h+=`<button class="btn orange" id="bxSellWeak" style="width:100%;margin:4px 0">🪙 よわい そうびを まとめて うる</button>`;
+    for(const it of [...BSEL])if(!P.box.includes(it))BSEL.delete(it);if(!P.box.length)BSELM=false;
+    if(P.box.length)h+=`<div class="bxsellrow"><button class="btn orange" id="bxSellWeak">🪙 よわい そうびを まとめて うる</button><button class="btn ${BSELM?'purple sel':'gray'}" id="bxSelM">${BSELM?'✓ えらぶの おわり':'☑️ えらんで うる'}</button></div>`;
     const list=P.box.map((it,i)=>({it,i})).filter(o=>boxF==='all'||o.it.slot===boxF).sort((a,b)=>b.it.rar-a.it.rar||iscore(b.it)-iscore(a.it));
-    h+=`<div class="bgrid">${list.map(o=>`<button class="bcell r${o.it.rar}" data-i="${o.i}" style="--rc:${RAR[o.it.rar].c};--rh:${RAR[o.it.rar].h}">${itemIcon(o.it)}<b>${o.it.plus?'+'+o.it.plus+' ':''}${iscore(o.it)}</b></button>`).join('')||'<small style="color:var(--sub)">まだ なにも ないよ。たからばこで「ボックスへ」を えらぶと ここに はいるよ</small>'}</div>`;
+    if(BSELM)h+=`<div class="bselhint">うりたい そうびを タップして えらんでね（もう いちど タップで やめる）</div>`;
+    h+=`<div class="bgrid${BSELM?' selm':''}">${list.map(o=>`<button class="bcell r${o.it.rar}${BSEL.has(o.it)?' picked':''}" data-i="${o.i}" style="--rc:${RAR[o.it.rar].c};--rh:${RAR[o.it.rar].h}">${itemIcon(o.it)}<b>${o.it.plus?'+'+o.it.plus+' ':''}${iscore(o.it)}</b>${BSELM?'<i class="bck">✓</i>':''}</button>`).join('')||'<small style="color:var(--sub)">まだ なにも ないよ。たからばこで「ボックスへ」を えらぶと ここに はいるよ</small>'}</div>`;
+    if(BSELM)h+=`<div class="bselbar" id="bxSelBar"></div>`;
   }else if(boxTab==='mons'){
     $('bxCount').textContent=`なかま ${P.mons.length}たい`;
     const pm=partyMons();
@@ -3853,7 +3870,9 @@ function renderBox(){
   }
   $('bxBody').innerHTML=h;
   document.querySelectorAll('.fchip').forEach(b=>b.onclick=()=>{boxF=b.dataset.f;renderBox()});
-  document.querySelectorAll('.bcell[data-i]').forEach(b=>b.onclick=()=>boxItemModal(+b.dataset.i));document.querySelectorAll('[data-dx]').forEach(b=>b.onclick=()=>dexClaim(+b.dataset.dx));document.querySelectorAll('[data-dxm]').forEach(b=>b.onclick=()=>dexMonModal(b.dataset.dxm));
+  document.querySelectorAll('.bcell[data-i]').forEach(b=>b.onclick=()=>{if(boxTab==='items'&&BSELM){const it=P.box[+b.dataset.i];if(!it)return;if(BSEL.has(it))BSEL.delete(it);else BSEL.add(it);b.classList.toggle('picked',BSEL.has(it));snd(BSEL.has(it)?880:520,.03,'square',.03);bselBar();return}boxItemModal(+b.dataset.i)});
+  if($('bxSelM'))$('bxSelM').onclick=()=>{BSELM=!BSELM;if(!BSELM)BSEL.clear();renderBox()};
+  if(BSELM&&boxTab==='items')bselBar();document.querySelectorAll('[data-dx]').forEach(b=>b.onclick=()=>dexClaim(+b.dataset.dx));document.querySelectorAll('[data-dxm]').forEach(b=>b.onclick=()=>dexMonModal(b.dataset.dxm));
   if($('bxSellWeak'))$('bxSellWeak').onclick=sellWeakFlow;
   document.querySelectorAll('.mc').forEach(b=>b.onclick=()=>monModal(b.dataset.id));
   document.querySelectorAll('.ec').forEach(b=>b.onclick=()=>eggModal(b.dataset.id));
@@ -3876,16 +3895,55 @@ function enhAllFlow(items,title,cb){const pl=enhPlan(items,P.gold);
 const spentOn=it=>{let t=0;const base=(10+(it.lv||Math.round(it.p/RAR[it.rar].m))*3)*(it.rar+1);for(let i=0;i<(it.plus||0);i++)t+=Math.round(base*Math.pow(1.25,i));return t};
 const xferCost=it=>Math.max(10,Math.round(spentOn(it)*.25));
 const withPlus=(it,cur)=>cur&&cur.plus>0?Object.assign({},it,{plus:(it.plus||0)+cur.plus}):it;
-function bestPlan(){const eq=Object.assign({},P.eq),box=P.box.slice(),ch=[];
-  for(const k of SLOTS){const cur=eq[k];let best=null,bp=power(eq);
-    for(const c of box){if(c.slot!==k)continue;const v=power(Object.assign({},eq,{[k]:withPlus(c,cur)}));if(v>bp){bp=v;best=c}}
-    if(best){ch.push({k,cur,it:best});eq[k]=withPlus(best,cur);box.splice(box.indexOf(best),1)}}
-  return{ch,after:power(eq)}}
+/* ⚡ さいきょう そうび：シリーズ（セット）ボーナスも ふくめて いちばん パワーが たかく なる くみあわせを さがす
+   1まいずつ くらべるだけだと「2つ そろえて はじめて つよい」セットを みのがすので、
+   いろいろな スタート（いまの そうび・1まいずつ さいきょう・シリーズごとに そろえた もの）から
+   「1かしょ いれかえ」と「シリーズを まとめて そろえる」を くりかえして いちばん よい ものを えらぶ */
+const setTot=eq=>{const c=setCounts(eq);let v=0;for(const t in c)for(const b of setBonus(t,c[t]))v+=b.v;return v};
+function bestPlan(){const cur0=P.eq||{},cand={},t0=performance.now(),leg={};
+  /* むかしの やりかた（1かしょずつ じゅんばんに）の こたえも こうほに いれておく：これより わるく ならない */
+  {const eq=Object.assign({},cur0),box=P.box.slice();for(const k of SLOTS){const cur=eq[k];let best=null,bp=power(eq);for(const c of box){if(c.slot!==k)continue;const v=power(Object.assign({},eq,{[k]:withPlus(c,cur)}));if(v>bp){bp=v;best=c}}if(best){leg[k]=best;eq[k]=withPlus(best,cur);box.splice(box.indexOf(best),1)}}}
+  for(const k of SLOTS){const cur=cur0[k],L=[];if(cur)L.push({it:cur,v:cur});
+    for(const c of P.box)if(c&&c.slot===k)L.push({it:c,v:withPlus(c,cur)});
+    /* m = いまの そうびに その 1まいだけ つけた ときの パワー（なかまパワー などの こうかも はいる） */
+    L.forEach((o,i)=>{o.s=iscore(o.v);o.t=setOf(o.v);o.id=i;o.m=power(Object.assign({},cur0,{[k]:o.v}))});L.sort((a,b)=>b.m-a.m||b.s-a.s);
+    /* つよい じゅんに 6つ ＋ シリーズごとに 2つ ＋ いまの そうび だけ のこす（かるく するため） */
+    const keep=new Set(L.slice(0,6)),seen={};if(cur)keep.add(L.find(o=>o.it===cur));if(leg[k])keep.add(L.find(o=>o.it===leg[k]));
+    if(SETSL.includes(k))for(const o of L){if(!o.t)continue;seen[o.t]=(seen[o.t]||0)+1;if(seen[o.t]<=2)keep.add(o)}
+    cand[k]=L.filter(o=>keep.has(o))}
+  const toEq=a=>{const eq={};for(const k of SLOTS)if(a[k])eq[k]=a[k].v;return eq};
+  const memo=new Map(),score=a=>{const key=SLOTS.map(k=>a[k]?a[k].id:-1).join(',');let s=memo.get(key);if(s)return s;const eq=toEq(a);
+    s=[power(eq),setTot(eq),SLOTS.reduce((t,k)=>t+(a[k]?a[k].s:0),0)];memo.set(key,s);return s};
+  const cmp=(x,y)=>x[0]-y[0]||x[1]-y[1]||x[2]-y[2];
+  const series=[...new Set(SETSL.flatMap(k=>(cand[k]||[]).map(o=>o.t).filter(Boolean)))];
+  const topOf=(k,t)=>(cand[k]||[]).find(o=>o.t===t);
+  function local(a){let bs=score(a);
+    for(let it=0;it<12;it++){let up=false;
+      for(const k of SLOTS)for(const o of cand[k]){if(o===a[k])continue;const b=Object.assign({},a,{[k]:o}),s=score(b);if(cmp(s,bs)>0){a=b;bs=s;up=true}}
+      /* シリーズを n こ まとめて そろえる（へらす パワーが すくない かしょ から じゅんに） */
+      let bb=null,bbs=bs;for(const t of series){const mv=SETSL.filter(k=>!(a[k]&&a[k].t===t)).map(k=>{const o=topOf(k,t);return o?{k,o,loss:(a[k]?a[k].m:0)-o.m}:null}).filter(Boolean).sort((x,y)=>x.loss-y.loss);
+        let b=a;for(const m of mv){b=Object.assign({},b,{[m.k]:m.o});const s=score(b);if(cmp(s,bbs)>0){bb=b;bbs=s}}}
+      if(bb){a=bb;bs=bbs;up=true}
+      if(!up)break}
+    return{a,s:bs}}
+  const cur={},greedy={};for(const k of SLOTS){const L=cand[k];if(!L.length)continue;cur[k]=L.find(o=>o.it===cur0[k])||null;if(!cur[k])delete cur[k];greedy[k]=L[0]}
+  const legA=Object.assign({},cur);for(const k in leg){const o=cand[k].find(o=>o.it===leg[k]);if(o)legA[k]=o}
+  const starts=[legA,greedy,cur];
+  series.map(t=>({t,n:SETSL.filter(k=>topOf(k,t)).length})).filter(x=>x.n>=2).sort((x,y)=>y.n-x.n).forEach(({t})=>{const a=Object.assign({},greedy);for(const k of SETSL){const o=topOf(k,t);if(o)a[k]=o}starts.push(a)});
+  let best=null;for(let i=0;i<starts.length;i++){if(i>=3&&performance.now()-t0>900)break;const r=local(starts[i]);if(!best||cmp(r.s,best.s)>0)best=r}
+  const base=score(cur),ch=[];
+  if(best&&cmp(best.s,base)>0&&best.s[0]>=base[0])for(const k of SLOTS){const o=best.a[k];if(o&&o.it!==cur0[k])ch.push({k,cur:cur0[k],it:o.it})}
+  const eq=ch.length?toEq(best.a):Object.assign({},cur0);return{ch,after:power(eq),eq}}
+/* セット ボーナスの かわりかた（まえ → あと） */
+function setDiffHTML(a,b){const ca=setCounts(a),cb=setCounts(b),ks=[...new Set([...Object.keys(ca),...Object.keys(cb)])].filter(t=>(ca[t]||0)>=2||(cb[t]||0)>=2).sort((x,y)=>(cb[y]||0)-(cb[x]||0));
+  if(!ks.length)return '';return `<div class="bsets"><div class="bsh">🔗 シリーズ ボーナス</div>${ks.map(t=>{const n0=ca[t]||0,n1=cb[t]||0,bn=setBonus(t,n1);
+    return `<div class="bsr${n1>n0?' up':n1<n0?' dn':''}"><b>${t}</b><span>${n0} → <b>${n1}</b>/${SETMAX}</span><small>${bn.length?bn.map(x=>FX[x.k][0]+'+'+x.v+'%').join('・'):'ボーナス なし'}</small></div>`}).join('')}</div>`}
 function bestFlow(cb){const now=power(),pl=bestPlan();
   if(!pl.ch.length){toast('もう いちばん つよい そうびだよ！');return}
-  showModal(`<div class="mt">⚡ さいきょう そうび</div><p>ボックスの なかから いちばん つよく なる そうびに かえるよ</p>
+  showModal(`<div class="mt">⚡ さいきょう そうび</div><p>シリーズ ボーナスも かんがえて、いちばん つよく なる くみあわせに かえるよ</p>
     <div class="enhlist">${pl.ch.map(c=>`<div><span>${SLOTN[c.k]}</span><span>${c.cur?esc(c.cur.name):'なし'} → <b>${esc(c.it.name)}${(c.it.plus||0)+(c.cur&&c.cur.plus||0)?' +'+((c.it.plus||0)+(c.cur&&c.cur.plus||0)):''}</b></span></div>`).join('')}</div>
-    <div class="powchg">パワー ${now} → <b class="up">${pl.after}（▲${pl.after-now}）</b></div>
+    ${setDiffHTML(P.eq,pl.eq)}
+    <div class="powchg">パワー ${now} → <b class="up">${pl.after}（${pl.after>now?'▲'+(pl.after-now):'おなじ・ボーナス アップ'}）</b></div>
     <small style="color:var(--sub)">⚒️ きょうかの + は あたらしい そうびに ひきつぐよ・はずした そうびは ボックスへ</small>
     <button class="btn orange big" id="go">⚡ かえる！</button><button class="btn gray" id="cl">やめる</button>`,
     {cl:closeModal,go:()=>{for(const c of pl.ch){const cur=P.eq[c.k],i=P.box.indexOf(c.it);if(i<0)continue;
@@ -5775,6 +5833,92 @@ html.rio .hs,html.rio #hHero>img,html.rio #hHero>svg,html.rio .pm img,html.rio .
 document.head.appendChild(st);
 window.rioToggle=()=>{G.rio=!G.rio;if(G.rio){G.lite=true;G.bgmOn=false}store.set('mq1',G);toast(G.rio?'🐣 リオルばんに するよ':'🐣 リオルばんを やめるよ');setTimeout(()=>location.reload(),500)};
 })();
+
+/* ===== ホームの ゆうしゃ：ぐんだんバトルと おなじ パーツアニメ（あたま・からだ・あし）で うごく ===== */
+(function(){
+if(G.rio)return;/* リオルばんは かるさ ゆうせん（いままでの え のまま） */
+const HOST=$('hHero');if(!HOST)return;
+const oq=t=>1-(1-t)*(1-t),outBack=t=>{const c1=1.70158,c3=c1+1;return 1+c3*Math.pow(t-1,3)+c1*Math.pow(t-1,2)};
+let A=null,raf=0,tm=0,rid=0;
+function rgOf(c){if(c.__rg)return c.__rg;let t=0,b=c.height-1;try{const d=c.getContext('2d').getImageData(0,0,c.width,c.height).data,on=y=>{for(let x=0;x<c.width;x++)if(d[(y*c.width+x)*4+3]>20)return true;return false};
+  while(b>0&&!on(b))b--;while(t<b&&!on(t))t++}catch(e){}/* ぐんだんバトルの パーツわけと おなじ きりかた */return c.__rg={feet:b,legY:Math.round(b-(b-t+1)*.24)}}
+const atypeHero=()=>{try{const k=wpnKind();return k==='bow'||k==='boomer'?'shot':k==='staff'?'wave':k==='heavy'?'smash':'slash'}catch(e){return 'slash'}};
+function swap(){const im=HOST.querySelector(':scope>img.hsimg');if(!im)return;let src=null;try{src=heroCanvas(P.eq||{},P,'')}catch(e){}if(!src||!src.getContext)return;
+  const cv=document.createElement('canvas');cv.className='hsanim'+(im.classList.contains('aura-rb')?' aura-rb':'');const st=im.getAttribute('style');if(st)cv.setAttribute('style',st);
+  im.replaceWith(cv);HOST.classList.add('hanim');if(!src.__rid)src.__rid=++rid;
+  const same=A&&A.src===src;
+  A={cv,ctx:cv.getContext('2d'),src,key:'homehero|'+src.__rid,rg:rgOf(src),feet:rgOf(src).feet,last:0,
+    u:same?A.u:{ph:0,dy:.5,atkT:9,fly:false,spT:0},act:same?A.act:null,next:same?A.next:performance.now()+1600,fx:same?A.fx:[],x:same?A.x:0,face:same?A.face:1};
+  A.u.atype=atypeHero();go()}
+function go(){if(!raf&&!tm)raf=requestAnimationFrame(frame)}
+function frame(now){raf=0;if(!A||!A.cv.isConnected)return;
+  if(document.hidden||!A.cv.offsetParent){tm=setTimeout(()=>{tm=0;go()},600);return}
+  if(G.lite&&now-A.last<42){raf=requestAnimationFrame(frame);return}
+  const dt=Math.min(.05,A.last?(now-A.last)/1000:.016);A.last=now;
+  try{draw(dt,now)}catch(e){console.error(e);return}
+  raf=requestAnimationFrame(frame)}
+/* つぎの うごき：あるく・こうげき・ジャンプ を じゅんばんに まぜる */
+function pick(now){const r=Math.random(),prev=A.act0;let k=r<.42?'walk':r<.8?'atk':'hop';if(k===prev&&k!=='atk')k='atk';A.act0=k;
+  A.act={k,t:0,dur:k==='walk'?2.2:k==='hop'?.75:.5,n:k==='atk'&&Math.random()<.35?2:1};A.u.atype=atypeHero();if(k==='atk')A.u.atkT=0}
+function draw(dt,now){const cv=A.cv,W=HOST.clientWidth,H=HOST.clientHeight;if(!W||!H)return;const d=G.lite?1:Math.min(2,devicePixelRatio||1);
+  if(cv.width!==Math.round(W*d)||cv.height!==Math.round(H*d)){cv.width=Math.round(W*d);cv.height=Math.round(H*d)}
+  const x=A.ctx;x.setTransform(d,0,0,d,0,0);x.clearRect(0,0,W,H);x.imageSmoothingEnabled=false;
+  const src=A.src,ih=H*1.12,iw=ih*src.width/src.height,base=H*1.03,gy=base-ih*(1-(A.feet+1)/src.height),S=ih*.62,u=A.u;
+  let px=W/2,rot=0,sx=1,sy=1,lift=0,moving=false;
+  if(u.spT<.45){u.spT+=dt;const p=Math.min(1,u.spT/.45),s=outBack(p);sx*=s;sy*=s;lift+=(1-p)*S*.5}
+  if(!A.act&&now>A.next)pick(now);
+  const a=A.act;
+  if(a){a.t+=dt;const p=Math.min(1,a.t/a.dur);
+    if(a.k==='walk'){/* みぎへ あるいて、くるっと ふりむいて もどる */moving=true;u.ph+=dt*7.5;const b=Math.abs(Math.sin(u.ph));lift+=b*S*.07;rot+=Math.sin(u.ph)*.07*-A.face;sx*=1+.05*Math.cos(u.ph*2);sy*=1-.05*Math.cos(u.ph*2);
+      const half=p<.5,q=half?p/.5:(p-.5)/.5;A.face=half?1:-1;A.x=(half?Math.sin(q*Math.PI/2):Math.cos(q*Math.PI/2))*S*.22;
+      if(Math.random()<dt*5)A.fx.push({k:'dust',x:px+A.x-A.face*S*.22,y:gy,t:0})}
+    else if(a.k==='hop'){if(p<.18){const e=p/.18;sy*=1-.16*e;sx*=1+.12*e}else if(p<.78){const e=(p-.18)/.6;lift+=Math.sin(e*Math.PI)*S*.42;sy*=1+.08*Math.sin(e*Math.PI);sx*=1-.05*Math.sin(e*Math.PI);rot+=Math.sin(e*Math.PI*2)*.06}
+      else{const e=(p-.78)/.22;sy*=.84+.16*e;sx*=1.14-.14*e;if(!a.land){a.land=1;for(let i=0;i<3;i++)A.fx.push({k:'dust',x:px+A.x+(i-1)*S*.18,y:gy,t:0})}}}
+    else{/* こうげき：ぐんだんバトルと おなじ ポーズ */
+      if(!a.hit&&p>=.46){a.hit=1;const fx=px+A.x+A.face*S*.55,fy=gy-S*.62;if(u.atype==='shot')A.fx.push({k:'arw',x:px+A.x+A.face*S*.3,y:fy,t:0,dir:A.face});else if(u.atype==='wave')A.fx.push({k:'wave',x:fx,y:fy,t:0,dir:A.face});else A.fx.push({k:'slash',x:fx,y:fy,t:0,dir:A.face,big:u.atype==='smash'});}}
+    if(a.t>=a.dur){if(a.k==='atk'&&a.n>1){a.n--;a.t=0;a.hit=0;u.atkT=0}else{A.act=null;A.next=now+1800+Math.random()*2200;if(a.k==='walk'){A.x=0;A.face=1}}}}
+  u.atkT=Math.min(9,u.atkT);if(u.atkT<.5){u.atkT+=dt;const r=window.LNPOSE?LNPOSE(u,Math.min(1,u.atkT/.5),S,A.face):{off:0,rot:0,sx:1,sy:1,lift:0};px+=A.face*r.off;rot+=r.rot;sx*=r.sx;sy*=r.sy;lift+=r.lift}
+  else if(!moving){u.ph+=dt*2.2}
+  px+=A.x;
+  /* かげ */
+  x.save();x.globalAlpha=.32*(lift>S*.3?.6:1);x.fillStyle='#000';x.beginPath();x.ellipse(px,gy,S*.34*(1-Math.min(.5,lift/S)),S*.075,0,0,7);x.fill();x.restore();
+  /* ゆうしゃ（あし を じくに） */
+  x.save();x.translate(px,gy-lift);x.rotate(rot);x.scale(sx*A.face,sy);x.translate(0,base-gy);
+  /* したじに うごかない え を しいて、パーツの つなぎめの すきまを うめる（大きく かくと すきまが みえるため） */
+  {const g=A.rg,k=iw/src.width,hh=Math.min(src.height,g.legY+2);x.drawImage(src,0,0,src.width,hh,-iw/2,-ih,iw,hh*k)}if(window.LNRIG)LNRIG(x,src,A.key,iw,ih,u,moving);x.restore();
+  /* エフェクト */
+  const keep=[];for(const f of A.fx){f.t+=dt;let done=false;x.save();
+    if(f.k==='dust'){const p=f.t/.45;if(p>=1)done=true;else{x.globalAlpha=.5*(1-p);x.fillStyle='#e8dcc0';x.beginPath();x.arc(f.x,f.y-p*8,2+p*S*.06,0,7);x.fill()}}
+    else if(f.k==='slash'){const p=f.t/.24;if(p>=1)done=true;else{const r=S*(f.big?.5:.38)*(.7+.4*p);x.translate(f.x,f.y);x.scale(f.dir,1);x.globalAlpha=1-p*p;x.lineCap='round';
+      x.strokeStyle='#ffd23f';x.lineWidth=S*.09*(1-p);x.beginPath();x.arc(-r*.4,0,r,-1.1+p*.6,1.0+p*.6);x.stroke();x.strokeStyle='#fff';x.lineWidth=S*.045*(1-p);x.beginPath();x.arc(-r*.4,0,r,-1.0+p*.6,.9+p*.6);x.stroke()}}
+    else if(f.k==='arw'){const p=f.t/.32;if(p>=1)done=true;else{const ax=f.x+f.dir*p*W*.7;x.globalAlpha=1-p*.5;x.strokeStyle='#ffe9a0';x.lineWidth=Math.max(2,S*.03);x.beginPath();x.moveTo(ax,f.y);x.lineTo(ax-f.dir*S*.3,f.y);x.stroke();x.fillStyle='#fff';x.beginPath();x.arc(ax,f.y,Math.max(2,S*.03),0,7);x.fill()}}
+    else if(f.k==='wave'){const p=f.t/.4;if(p>=1)done=true;else{x.globalAlpha=.8*(1-p);x.globalCompositeOperation='lighter';const r=S*(.15+.45*p),g=x.createRadialGradient(f.x,f.y,1,f.x,f.y,r);g.addColorStop(0,'#fff');g.addColorStop(.5,'#9a7aff');g.addColorStop(1,'rgba(0,0,0,0)');x.fillStyle=g;x.beginPath();x.arc(f.x+f.dir*p*S*.4,f.y,r,0,7);x.fill()}}
+    x.restore();if(!done)keep.push(f)}
+  A.fx=keep}
+new MutationObserver(swap).observe(HOST,{childList:true});swap();
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)go()});
+const st=document.createElement('style');st.textContent=`
+#hHero>canvas.hsanim{position:absolute!important;left:0;top:0;width:100%!important;height:100%!important;max-width:none!important;animation:none!important;transform:none!important;z-index:2;image-rendering:pixelated;pointer-events:none;display:block}
+#hHero>canvas.hsanim.aura-rb{animation:aurarb 2.4s linear infinite!important}
+.hs-hero #hHero.hanim::after{display:none}`;document.head.appendChild(st);
+})();
+
+/* ===== ボックス：えらんで うる・さいきょう そうびの シリーズ ひょうじ ===== */
+(function(){const st=document.createElement('style');st.textContent=`
+.bxsellrow{display:flex;gap:6px;margin:4px 0}.bxsellrow .btn{flex:1;margin:0;font-size:13px;padding:8px 4px}
+#bxBody .bcell{position:relative}
+.bgrid.selm .bcell{transition:transform .12s}.bgrid.selm .bcell:not(.picked){opacity:.72}
+.bgrid.selm .bcell .bck{position:absolute;right:2px;top:2px;width:18px;height:18px;border-radius:50%;border:2px solid #fff8;background:#0008;color:transparent;font-style:normal;font-size:12px;line-height:14px;text-align:center}
+.bgrid.selm .bcell.picked{opacity:1;outline:3px solid #ffd23f;outline-offset:-3px;transform:scale(.94)}
+.bgrid.selm .bcell.picked .bck{background:#ffd23f;border-color:#000;color:#000;font-weight:bold}
+.bselhint{font-size:12px;color:var(--sub);text-align:center;margin:2px 0 4px}
+.bselbar{position:sticky;bottom:0;z-index:5;display:flex;align-items:center;gap:8px;margin-top:8px;padding:8px 10px;background:#141a2cf2;border:2px solid #ffd23f;border-radius:10px;box-shadow:0 -4px 14px #0008}
+.bselbar .bsi{flex:1;font-size:13px;display:flex;flex-direction:column;line-height:1.3}.bselbar .bsi b{font-size:18px;color:#ffd23f}
+.bselbar .bsb{display:flex;gap:6px}.bselbar .btn{margin:0;padding:8px 10px;font-size:13px}.bselbar .btn[disabled]{opacity:.45}
+.bsets{margin:6px 0;padding:6px 8px;border:1px solid #ffd23f66;border-radius:10px;background:#ffffff0d;text-align:left}
+.bsets .bsh{font-size:12px;color:var(--gold);margin-bottom:2px}
+.bsr{display:grid;grid-template-columns:auto auto 1fr;gap:2px 8px;align-items:baseline;font-size:13px;padding:2px 0}
+.bsr small{color:var(--sub);text-align:right;font-size:11px}.bsr.up>span b{color:#8af59a}.bsr.dn>span b{color:#ff8a7a}`;document.head.appendChild(st)})();
 
 /* ===== きどう（ぜんぶの パッチの あとで） ===== */
 try{if(G.cur&&G.profiles.find(p=>p.id===G.cur))selectProfile(G.cur);else{show('players');renderPlayers()}}catch(e){console.error(e);try{show('players');renderPlayers()}catch(_){}}
