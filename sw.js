@@ -1,7 +1,7 @@
 // まなびクエスト service worker
 // ゲーム本体(index.html)は「ネット優先」：つながっていれば常に最新、オフラインなら保存済みの版を使う。
 // キャッシュの書きこみは waitUntil で最後まで待つ（iOS で とちゅうで止められて 古い版が のこるのを ふせぐ）。
-const CACHE = 'mq-cache-v197';
+const CACHE = 'mq-cache-v198';
 const SHELL = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
 
 self.addEventListener('install', e => {
