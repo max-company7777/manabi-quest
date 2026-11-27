@@ -1498,7 +1498,7 @@ function makeItem(st,d,boss,min=0){
 /* =============== save data =============== */
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
              set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-/*const APPV='v151'*/const APPV='v1.7.1',APPB=196;
+/*const APPV='v151'*/const APPV='v1.7.2',APPB=197;
 try{const c=document.createElement('canvas');c.width=9;c.height=9;const g=c.getContext('2d'),F=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};F(1,0,7,1,'#120d09');F(1,8,7,1,'#120d09');F(0,1,1,7,'#120d09');F(8,1,1,7,'#120d09');F(1,1,7,1,'#120d09');F(1,7,7,1,'#120d09');F(1,1,1,7,'#120d09');F(7,1,1,7,'#120d09');F(2,2,5,1,'#7a6a52');F(2,2,1,5,'#7a6a52');F(2,6,5,1,'#2a2018');F(6,2,1,5,'#2a2018');document.documentElement.style.setProperty('--pxf',`url(${c.toDataURL()})`)}catch(e){}
 const G=Object.assign({profiles:[],cur:null,snd:true,bgmOn:true},store.get('mq1',{}));
 /* ⚡ かるい モード：ふるい たんまつは じどうで ON */
@@ -3339,7 +3339,7 @@ function cheatOpen(){if(!P||!P.cheat)return;try{cheatSyncCats();save()}catch(e){
     tot:()=>ask('せいかいすう（ぜんぶで）',P.total||0,n=>{cheatWeekAdd(n-(P.total||0));P.total=n;cheatSyncCats();done('せいかい '+n.toLocaleString()+'もん')}),
     twr:()=>ask('とうの さいこう きろく',(P.tower&&P.tower.best)||0,n=>{P.tower=P.tower||{best:0,runs:0};P.tower.best=n;done('とう '+n+'かい')}),
     mst:()=>{P.mast=P.mast||{};SUBK.forEach(k=>{for(let i=0;i<LVN;i++)P.mast[k+i]=1});done('ぜんぶ マスター')},
-    eq:()=>{const st=Math.max(10,Math.round(P.lv/2));for(const k of SLOTS){let it,g=0;do{it=makeItem(st,7,true,4)}while((it.slot!==k||it.rar<4)&&g++<6000);if(it.slot===k){it.plus=(P.eq[k]&&P.eq[k].plus)||0;P.eq[k]=it;P.dex.items[ikey(it)]=1}}done('しんわ そうび')},
+    eq:()=>{const r=cheatBestEq();done(r.changed?`さいきょう そうび（${r.changed}かしょ） パワー ${r.before.toLocaleString()} → ${r.after.toLocaleString()}`:'いまの そうびが いちばん つよいよ')},
     plus:()=>ask('すべての そうびの +',20,n=>{SLOTS.forEach(k=>{if(P.eq[k])P.eq[k].plus=n});done('+'+n)}),
     box:()=>{if(confirm('ボックスの そうびを ぜんぶ けす？')){P.box=[];done('からっぽ')}},
     mall:()=>{SPECIES.filter(x=>x[3]<5).forEach(x=>{P.dex.owned[x[0]]=1;P.dex.seen[x[0]]=1;if(!P.mons.some(m=>m.sp===x[0]))P.mons.push({id:uid(),sp:x[0],lv:1,xp:0,bond:0})});done('151しゅ')},
@@ -5932,6 +5932,26 @@ const _rp=window.renderPlayers||renderPlayers;
 window.renderPlayers=renderPlayers=function(){const r=_rp.apply(this,arguments);try{const old=document.querySelector('#tScene .tcv');if(old)old.remove();start()}catch(e){console.error(e)}return r};
 const st=document.createElement('style');st.textContent=`#tScene .tcv{position:absolute;inset:0;width:100%;height:100%;image-rendering:pixelated;z-index:2;pointer-events:none}#tScene .trun.tcan{display:none}#tScene .tlogo{z-index:3}`;document.head.appendChild(st);
 })();
+
+/* ===== かんりしゃ：さいきょう そうびを つくる（いまより よわく ならない） ===== */
+window.cheatBestEq=function(){
+  const cur=Object.assign({},P.eq||{}),st=Math.max(10,Math.round(P.lv/2),...Object.values(P.best||{}).map(v=>+v||0));
+  const top=THEMES[4].map(x=>x[0]);
+  const maxFx=it=>{(it.fx||[]).forEach(f=>{if(f.u){const u=UFX[f.k];if(u&&u[2])f.v=u[3]}else{const d=FX[f.k];if(d)f.v=Math.round(d[3]*(1+.5*it.rar))}})};
+  const mk=(k,theme)=>{let best=null,bv=-1;for(let n=0;n<(SETSL.includes(k)?3:12);n++){let it,g=0;do{it=makeItem(st,7,true,4)}while((it.slot!==k||it.rar<4)&&g++<8000);if(it.slot!==k)continue;
+      const lv=Math.max(1,Math.round(st*2));it.p=Math.round((3+lv+21)*RAR[4].m*1.15);it.lv=lv;
+      if(theme&&SETSL.includes(k)){const i=it.name.indexOf('の');if(i>0)it.name=theme+it.name.slice(i);const c=THEMES[4].find(x=>x[0]===theme);if(c&&it.color)it.color=c[1]}
+      maxFx(it);it.plus=(cur[k]&&cur[k].plus)||0;it.price=Math.round(it.p*2*5);
+      const v=iscore(it);if(v>bv){bv=v;best=it}}return best};
+  let bestEq=null,bp=-1;
+  for(const th of top){const eq={};for(const k of SLOTS){const it=mk(k,th);if(it)eq[k]=it}
+    /* いまの ほうが つよい ばしょは いまの まま */
+    let p=power(eq);for(const k of SLOTS){if(!cur[k])continue;const t=Object.assign({},eq,{[k]:cur[k]}),v=power(t);if(v>p){eq[k]=cur[k];p=v}}
+    if(p>bp){bp=p;bestEq=eq}}
+  const p0=power(cur);
+  if(!bestEq||bp<=p0)return {changed:0,before:p0,after:p0};
+  let n=0;for(const k of SLOTS){if(bestEq[k]&&bestEq[k]!==cur[k]){P.eq[k]=bestEq[k];n++;try{P.dex.items[ikey(bestEq[k])]=1}catch(e){}}}
+  return {changed:n,before:p0,after:power()}};
 
 /* ===== ホームの ゆうしゃ：ぐんだんバトルと おなじ パーツアニメ（あたま・からだ・あし）で うごく ===== */
 (function(){
